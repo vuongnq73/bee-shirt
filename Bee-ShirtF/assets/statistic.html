@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Bee-Shirt Admin Dashboard</title>
+  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+  <link rel="icon" href="img/kaiadmin/favicon.ico" type="image/x-icon" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+  <!-- Fonts and icons -->
+  <script src="js/plugin/webfont/webfont.min.js"></script>
+  <script>
+    WebFont.load({
+      google: { families: ["Public Sans:300,400,500,600,700"] },
+      custom: {
+        families: [
+          "Font Awesome 5 Solid",
+          "Font Awesome 5 Regular",
+          "Font Awesome 5 Brands",
+          "simple-line-icons",
+        ],
+        urls: ["css/fonts.min.css"],
+      },
+      active: function () {
+        sessionStorage.fonts = true;
+      },
+    });
+  </script>
+  <style>
+ 
+#statistics-table_wrapper .dataTables_filter {
+  float: left; /* Đưa thanh tìm kiếm sang trái */
+  /* Tạo khoảng cách bên phải của thanh tìm kiếm */
+}
+
+#statistics-table_wrapper .dataTables_filter label {
+  font-weight: normal;
+  white-space: nowrap;
+  text-align: left; /* Đảm bảo nhãn căn trái */
+}
+
+#statistics-table_wrapper .dataTables_filter input {
+  margin-left: 0.5em;
+  display: inline-block;
+  width: 100px; /* Chiều rộng của input tự động điều chỉnh */
+}
+  </style>
+  <script src="path/to/jquery.sparkline.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/plugins.min.css" />
+  <link rel="stylesheet" href="css/kaiadmin.min.css" />
+  <!-- angularjs -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+  <!-- CSS Just for demo purpose, don't include it in your project -->
+  <link rel="stylesheet" href="css/demo.css" />
+</head>
+
+<body ng-app="orderApp" ng-controller="OrderController">
+  <div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar" data-background-color="dark">
+      <div class="sidebar-logo">
+        <!-- Logo Header -->
+        <div class="logo-header" data-background-color="dark">
+          <a href="BanHang.html" class="logo">
+            <img src="img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20" />
+          </a>
+          <div class="nav-toggle">
+            <button class="btn btn-toggle toggle-sidebar">
+              <i class="gg-menu-right"></i>
+            </button>
+            <button class="btn btn-toggle sidenav-toggler">
+              <i class="gg-menu-left"></i>
+            </button>
+          </div>
+          <button class="topbar-toggler more">
+            <i class="gg-more-vertical-alt"></i>
+          </button>
+        </div>
+        <!-- End Logo Header -->
+      </div>
+      <div class="sidebar-wrapper scrollbar scrollbar-inner">
+        <div class="sidebar-content">
+          <ul class="nav nav-secondary">
+            <li class="nav-item">
+              <a href="BanHang.html" class="collapsed" aria-expanded="false">
+                <i class="fas fa-home"></i>
+                <p>Bán Hàng </p>
+              </a>
+            </li>
+            <li class="nav-section">
+              <span class="sidebar-mini-icon">
+                <i class="fa fa-ellipsis-h"></i>
+              </span>
+            </li>
+            <li class="nav-item">
+              <a data-bs-toggle="collapse" href="#">
+                <i class="fas fa-layer-group"></i>
+                <p>Quản Lý</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a data-bs-toggle="collapse" href="#sidebarLayouts">
+                <i class="fas fa-ticket-alt"></i>
+                <p>Voucher</p>
+                <span class="caret"></span>
+              </a>
+              <div class="collapse" id="sidebarLayouts">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a href="sidebar-style-2.html">
+                      <span class="sub-item">Sidebar Style 2</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="icon-menu.html">
+                      <span class="sub-item">Icon Menu</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a href="/assets/Bill.html">
+                <i class="fas fa-pen-square"></i>
+                <span class="sub-item">Hóa Đơn</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a data-bs-toggle="collapse" href="#tables">
+                <i class="fas fa-table"></i>
+                <p>Sản Phẩm</p>
+                <span class="caret"></span>
+              </a>
+              <div class="collapse" id="tables">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a href="#">
+                      <span class="sub-item">Basic Table</span>
+                    </a>
+                  </li>
+                  <li>
+
+                    <span class="sub-item">Datatables</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a data-bs-toggle="collapse" href="#account">
+                <i class="fas fa-user"></i>
+                <p>Account</p>
+                <span class="caret"></span>
+              </a>
+              <div class="collapse" id="account">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a href="staff/Staff.html">
+                      <span class="sub-item">Nhân Viên</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="Customer.html">
+                      <span class="sub-item">Khách Hàng</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="nav-item active submenu">
+              <a href="statistic.html">
+                <i class="far fa-chart-bar"></i>
+                <p>Thống Kê</p>
+
+              </a>
+              <!-- <div class="collapse" id="charts">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a href="charts/charts.html">
+                      <span class="sub-item">Chart Js</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="charts/sparkline.html">
+                      <span class="sub-item">Sparkline</span>
+                    </a>
+                  </li>
+                </ul>
+              </div> -->
+            </li>
+
+
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- End Sidebar -->
+
+    <div class="main-panel">
+      <div class="main-header">
+        <div class="main-header-logo">
+          <!-- Logo Header -->
+          <div class="logo-header" data-background-color="dark">
+            <a href="statistic.html" class="logo">
+              <img src="img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20" />
+            </a>
+            <div class="nav-toggle">
+              <button class="btn btn-toggle toggle-sidebar">
+                <i class="gg-menu-right"></i>
+              </button>
+              <button class="btn btn-toggle sidenav-toggler">
+                <i class="gg-menu-left"></i>
+              </button>
+            </div>
+            <button class="topbar-toggler more">
+              <i class="gg-more-vertical-alt"></i>
+            </button>
+          </div>
+          <!-- End Logo Header -->
+        </div>
+        <!-- Navbar Header -->
+        <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+          <div class="container-fluid">
+            <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <button type="submit" class="btn btn-search pe-1">
+                    <i class="fa fa-search search-icon"></i>
+                  </button>
+                </div>
+                <input type="text" placeholder="Search ..." class="form-control" />
+              </div>
+            </nav>
+
+            <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+              <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                  aria-expanded="false" aria-haspopup="true">
+                  <i class="fa fa-search"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-search animated fadeIn">
+                  <form class="navbar-left navbar-form nav-search">
+                    <div class="input-group">
+                      <input type="text" placeholder="Search ..." class="form-control" />
+                    </div>
+                  </form>
+                </ul>
+              </li>
+              <li class="nav-item topbar-icon dropdown hidden-caret">
+                <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button"
+                  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-envelope"></i>
+                </a>
+                <ul class="dropdown-menu messages-notif-box animated fadeIn" aria-labelledby="messageDropdown">
+                  <li>
+                    <div class="dropdown-title d-flex justify-content-between align-items-center">
+                      Tin Nhắn
+                      <a href="#" class="small">Đánh dấu tất cả các tin nhắn đã đọc</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="message-notif-scroll scrollbar-outer">
+                      <div class="notif-center">
+                        <a href="#">
+                          <div class="notif-img">
+                            <img src="img/jm_denis.jpg" alt="Img Profile" />
+                          </div>
+                          <div class="notif-content">
+                            <span class="subject">Jimmy Denis</span>
+                            <span class="block"> How are you ? </span>
+                            <span class="time">5 phút trước</span>
+                          </div>
+                        </a>
+                        <a href="#">
+                          <div class="notif-img">
+                            <img src="img/chadengle.jpg" alt="Img Profile" />
+                          </div>
+                          <div class="notif-content">
+                            <span class="subject">Nguyễn Quốc Vượng</span>
+                            <span class="block"> Ok,Cảm ơn Shop nhé ! </span>
+                            <span class="time">12 phút trước</span>
+                          </div>
+                        </a>
+                        <a href="#">
+                          <div class="notif-img">
+                            <img src="img/mlane.jpg" alt="Img Profile" />
+                          </div>
+                          <div class="notif-content">
+                            <span class="subject">Đỗ Trung Đăng</span>
+                            <span class="block">
+                              Xin chào !
+                            </span>
+                            <span class="time">12 phút trước</span>
+                          </div>
+                        </a>
+                        <a href="#">
+                          <div class="notif-img">
+                            <img src="img/talha.jpg" alt="Img Profile" />
+                          </div>
+                          <div class="notif-content">
+                            <span class="subject">Đỗ Trường Giang</span>
+                            <span class="block"> Shop còn mẫu áo này không ? </span>
+                            <span class="time">17 phút trước</span>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <a class="see-all" href="javascript:void(0);">Xem tất cả các tin nhắn<i
+                        class="fa fa-angle-right"></i>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item topbar-icon dropdown hidden-caret">
+                <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-bell"></i>
+                  <span class="notification">4</span>
+                </a>
+                <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
+                  <li>
+                    <div class="dropdown-title">
+                      Bạn có 4 thông báo mới
+                    </div>
+                  </li>
+                  <li>
+                    <div class="notif-scroll scrollbar-outer">
+                      <div class="notif-center">
+                        <a href="#">
+                          <div class="notif-icon notif-primary">
+                            <i class="fa fa-user-plus"></i>
+                          </div>
+                          <div class="notif-content">
+                            <span class="block"> Người dùng mới đăng ký </span>
+                            <span class="time">5 phút trước</span>
+                          </div>
+                        </a>
+                        <a href="#">
+                          <div class="notif-icon notif-success">
+                            <i class="fa fa-comment"></i>
+                          </div>
+                          <div class="notif-content">
+                            <span class="block">
+                              Đỗ Trường Giang đã bình luận
+                            </span>
+                            <span class="time">12 phút trước</span>
+                          </div>
+                        </a>
+                        <a href="#">
+                          <div class="notif-img">
+                            <img src="img/profile2.jpg" alt="Img Profile" />
+                          </div>
+                          <div class="notif-content">
+                            <span class="block">
+                              Đỗ Trung Đăng đã gửi tin nhắn
+                            </span>
+                            <span class="time">12 phút trước</span>
+                          </div>
+                        </a>
+                        <a href="#">
+                          <div class="notif-icon notif-danger">
+                            <i class="fa fa-heart"></i>
+                          </div>
+                          <div class="notif-content">
+                            <span class="block"> Nguyễn Quốc Vượng đã like </span>
+                            <span class="time">17 phút trước</span>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <a class="see-all" href="javascript:void(0);">Xem tất cả các thông báo<i
+                        class="fa fa-angle-right"></i>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <!-- <li class="nav-item topbar-icon dropdown hidden-caret">
+                  <a
+                    class="nav-link"
+                    data-bs-toggle="dropdown"
+                    href="#"
+                    aria-expanded="false"
+                  >
+                    <i class="fas fa-layer-group"></i>
+                  </a>
+                  <div class="dropdown-menu quick-actions animated fadeIn">
+                    <div class="quick-actions-header">
+                      <span class="title mb-1">Quick Actions</span>
+                      <span class="subtitle op-7">Shortcuts</span>
+                    </div>
+                    <div class="quick-actions-scroll scrollbar-outer">
+                      <div class="quick-actions-items">
+                        <div class="row m-0">
+                          <a class="col-6 col-md-4 p-0" href="#">
+                            <div class="quick-actions-item">
+                              <div class="avatar-item bg-danger rounded-circle">
+                                <i class="far fa-calendar-alt"></i>
+                              </div>
+                              <span class="text">Calendar</span>
+                            </div>
+                          </a>
+                          <a class="col-6 col-md-4 p-0" href="#">
+                            <div class="quick-actions-item">
+                              <div
+                                class="avatar-item bg-warning rounded-circle"
+                              >
+                                <i class="fas fa-map"></i>
+                              </div>
+                              <span class="text">Maps</span>
+                            </div>
+                          </a>
+                          <a class="col-6 col-md-4 p-0" href="#">
+                            <div class="quick-actions-item">
+                              <div class="avatar-item bg-info rounded-circle">
+                                <i class="fas fa-file-excel"></i>
+                              </div>
+                              <span class="text">Reports</span>
+                            </div>
+                          </a>
+                          <a class="col-6 col-md-4 p-0" href="#">
+                            <div class="quick-actions-item">
+                              <div
+                                class="avatar-item bg-success rounded-circle"
+                              >
+                                <i class="fas fa-envelope"></i>
+                              </div>
+                              <span class="text">Emails</span>
+                            </div>
+                          </a>
+                          <a class="col-6 col-md-4 p-0" href="#">
+                            <div class="quick-actions-item">
+                              <div
+                                class="avatar-item bg-primary rounded-circle"
+                              >
+                                <i class="fas fa-file-invoice-dollar"></i>
+                              </div>
+                              <span class="text">Invoice</span>
+                            </div>
+                          </a>
+                          <a class="col-6 col-md-4 p-0" href="#">
+                            <div class="quick-actions-item">
+                              <div
+                                class="avatar-item bg-secondary rounded-circle"
+                              >
+                                <i class="fas fa-credit-card"></i>
+                              </div>
+                              <span class="text">Payments</span>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li> -->
+
+              <li class="nav-item topbar-user dropdown hidden-caret">
+                <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
+                  <div class="avatar-sm">
+                    <img src="img/profile.jpg" alt="..." class="avatar-img rounded-circle" />
+                  </div>
+                  <span class="profile-username">
+                    <span class="op-7">Hi,</span>
+                    <span class="fw-bold">Đăng Ngố</span>
+                  </span>
+                </a>
+                <ul class="dropdown-menu dropdown-user animated fadeIn">
+                  <div class="dropdown-user-scroll scrollbar-outer">
+                    <li>
+                      <div class="user-box">
+                        <div class="avatar-lg">
+                          <img src="img/profile.jpg" alt="image profile" class="avatar-img rounded" />
+                        </div>
+                        <div class="u-text">
+                          <h4>Hizrian</h4>
+                          <p class="text-muted">hello@example.com</p>
+                          <a href="profile.html" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">My Profile</a>
+                      <a class="dropdown-item" href="#">My Balance</a>
+                      <a class="dropdown-item" href="#">Inbox</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Account Setting</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Logout</a>
+                    </li>
+                  </div>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <!-- End Navbar -->
+      </div>
+
+      <div class="container">
+        <div class="page-inner">
+          <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+            <div>
+              <h3 class="fw-bold mb-3">Dashboard</h3>
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="col-sm-6 col-md-4">
+                <div class="card card-stats card-round">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-primary bubble-shadow-small">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                            </div>
+                            <div class="col col-stats ms-3 ms-sm-0">
+                                <div class="numbers">
+                                    <p class="card-category">Sản Phẩm</p>
+                                    <h4 class="card-title">{{ totalProducts }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="col-sm-6 col-md-4">
+              <div class="card card-stats card-round">
+                  <div class="card-body">
+                      <div class="row align-items-center">
+                          <div class="col-icon">
+                              <div class="icon-big text-center icon-success bubble-shadow-small">
+                                  <i class="fas fa-luggage-cart"></i>
+                              </div>
+                          </div>
+                          <div class="col col-stats ms-3 ms-sm-0">
+                              <div class="numbers">
+                                  <p class="card-category">Doanh Thu</p>
+                                  <h4 class="card-title">{{ formatCurrency(totalRevenue) }}</h4>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+        
+            <div class="col-sm-6 col-md-4">
+                <div class="card card-stats card-round">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-secondary bubble-shadow-small">
+                                    <i class="far fa-check-circle"></i>
+                                </div>
+                            </div>
+                            <div class="col col-stats ms-3 ms-sm-0">
+                                <div class="numbers">
+                                    <p class="card-category">Đơn Hàng</p>
+                                    <h4 class="card-title">{{ totalOrders }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+          <div class="row">
+            <div class="col-md-8">
+              <div class="card card-round">
+                <div class="card-header">
+                  <div class="card-head-row">
+                    <div class="card-title">Thống kê</div>
+                    <div class="card-tools d-flex justify-content-between">
+                      <!-- Export Button -->
+                      <a href="#" class="btn btn-label-success btn-round btn-sm me-2">
+                        <span class="btn-label">
+                          <i class="fa fa-pencil"></i>
+                        </span>
+                        Export
+                      </a>
+                
+                      <!-- Filter Dropdown -->
+                      <div class="dropdown">
+                        <button class="btn btn-label-info btn-round btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
+                          data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <span class="btn-label">
+                            <i class="fa fa-filter"></i>
+                          </span>
+                          Lọc
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <select id="filterOptions" class="form-select">
+                            <option value="all">Tất cả</option>
+                            <option value="today">Hôm nay</option>
+                            <option value="this-week">Tuần này</option>
+                            <option value="this-month">Tháng này</option>
+                            <option value="last-month">Tháng trước</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="card-body">
+                  <div class="chart-container" style="min-height: 375px">
+                    <canvas id="statisticsChart"></canvas>
+                  </div>
+                  <div id="myChartLegend"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card card-primary card-round">
+                <div class="card-header">
+                  <div class="card-head-row">
+                    <div class="card-title">Doanh thu theo ngày</div>
+                    <div class="card-tools">
+                      <div class="dropdown">
+                        <button class="btn btn-sm btn-label-light dropdown-toggle" type="button" id="dropdownMenuButton"
+                          data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Export
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <!-- <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#"
+                              >Something else here</a
+                            > -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-category">
+                    <input type="text" id="dateRangePicker" class="form-control" placeholder="Select date range" />
+                  </div>
+
+                </div>
+                <div class="card-body pb-0">
+                  <div class="mb-4 mt-2">
+                    <h1>$420</h1>
+                  </div>
+                  <div class="pull-in">
+                    <canvas id="dailySalesChart"></canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="card card-round">
+                <div class="card-body pb-0">
+                  <div class="h1 fw-bold float-end text-primary">+5%</div>
+                  <h2 class="mb-2">17</h2>
+                  <p class="text-muted">Mua online</p>
+                  <div class="pull-in sparkline-fix">
+                    <div id="lineChart"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="card card-round">
+                <div class="card-header">
+                  <div class="card-head-row card-tools-still-right">
+                    <div class="card-title">Sản Phẩm Bán Chạy</div>
+                    <div class="card-tools">
+                      <div class="dropdown">
+                        <label>Lọc</label>
+                        <button class="btn btn-icon btn-clean me-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-funnel" viewBox="0 0 16 16">
+                            <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2z"/>
+                          </svg>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <!-- Combobox cho Brand -->
+                          <label for="brandSelect" style="margin-left: 10px; margin-right: 5px;">Chọn Thương Hiệu</label>
+                          <select class="dropdown-item" id="brandSelect" ng-model="selectedBrand" ng-change="applyFilter()" style="width: 150px; padding: 2px 5px;">
+                            <option value="">Tất Cả</option>
+                            <option value="Brand A">Brand A</option>
+                            <option value="Brand B">Brand B</option>
+                            <option value="Brand C">Brand C</option>
+                          </select>
+              
+                          <!-- Combobox cho Shirt Name
+                          <label for="shirtNameSelect" style="margin-left: 10px; margin-right: 5px;">Chọn Sản Phẩm</label>
+                          <select class="dropdown-item" id="shirtNameSelect" ng-model="selectedShirtName" ng-change="applyFilter()" style="width: 150px; padding: 2px 5px;">
+                            <option value="">Tất Cả</option>
+                            <option value="Shirt A">Shirt A</option>
+                            <option value="Shirt B">Shirt B</option>
+                          </select>
+               -->
+                          <!-- Combobox cho Size -->
+                          <label for="sizeSelect" style="margin-left: 10px; margin-right: 5px;">Chọn Size</label>
+                          <select class="dropdown-item" id="sizeSelect" ng-model="selectedSize" ng-change="applyFilter()" style="width: 150px; padding: 2px 5px;">
+                            <option value="">Tất Cả</option>
+                            <option value="S">Size S</option>
+                            <option value="M">Size M</option>
+                            <option value="L">Size L</option>
+                          </select>
+              
+                          <!-- Lọc theo Thời gian
+                          <label for="startDateInput" style="margin-left: 10px; margin-right: 5px;">Thời gian</label>
+                          <input type="date" id="startDateInput" ng-model="startDate" class="dropdown-item" style="width: 150px; padding: 2px 5px;" />
+              
+                          Lọc theo Ngày Kết Thúc -->
+                          <!-- <label for="endDateInput" style="margin-left: 10px; margin-right: 5px;">Đến Ngày</label>
+                          <input type="date" id="endDateInput" ng-model="endDate" class="dropdown-item" style="width: 150px; padding: 2px 5px;" />
+               -->
+                          <!-- Nút áp dụng lọc -->
+                          <!-- <button class="dropdown-item" id="applyFilterButton" ng-click="applyFilter()">Áp dụng lọc</button> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              
+                <div class="card-body">
+                  <table class="table align-items-center mb-0" id="statistics-table">
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col">STT</th>
+                        <th scope="col">Sản phẩm</th>
+                        <th scope="col">Số Lượng</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Do not use ng-repeat for DataTable, it's handled by DataTable -->
+                    </tbody>
+                  </table>
+                  
+                  
+                </div>
+              </div>
+              
+
+
+            </div>
+            <div class="col-md-8">
+              <div class="card card-round">
+                <div class="card-header">
+                  <div class="card-head-row card-tools-still-right">
+                    <div class="card-title">Lịch Sử Mua Hàng</div>
+
+                  </div>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <div style="display: flex; align-items: center; gap: 5px; font-size: 0.9em;">
+                      <label for="startDate" style="margin-right: 5px;">Từ ngày:</label>
+                      <input type="date" id="startDate" ng-model="startDate" class="form-control"
+                        style="width: 150px; padding: 2px 5px;" />
+                    
+                      <label for="endDate" style="margin-left: 10px; margin-right: 5px;">Đến ngày:</label>
+                      <input type="date" id="endDate" ng-model="endDate" class="form-control"
+                        style="width: 150px; padding: 2px 5px;" />
+                    
+                      <button ng-click="applyDateFilter()" class="btn btn-primary"
+                        style="padding: 3px 10px; font-size: 0.9em;">Lọc</button>
+                    </div>
+                    <table class="table align-items-center mb-0" id="order-table">
+                      <thead class="thead-light">
+                        <tr>
+                          <th scope="col">STT</th>
+                          <th scope="col">Mã Hóa Đơn</th>
+                          <th scope="col" class="text-end">Ngày Thanh Toán</th>
+                          <th scope="col" class="text-end">Tổng Tiền</th>
+                          <th scope="col" class="text-end">Trạng Thái</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-repeat="order in filteredOrders || orders">
+                          <td>{{order.stt}}</td>
+                          <td>{{order.codeBill}}</td>
+                          <td class="text-end">{{order.desiredDate}}</td>
+                          <td class="text-end">{{order.totalMoney}}</td>
+                          <td class="text-end">{{order.statusBill}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    
+                    
+                    
+                    
+
+                    <!-- Hiển thị thông báo lỗi hoặc thành công
+                    <div ng-if="errorMessage" class="alert alert-danger">
+                      {{errorMessage}}
+                    </div>
+                    <div ng-if="successMessage" class="alert alert-success">
+                      {{successMessage}}
+                    </div> -->
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="footer">
+          <div class="container-fluid d-flex justify-content-between">
+            <nav class="pull-left">
+              <ul class="nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    Home
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#"> Help </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#"> Licenses </a>
+                </li>
+              </ul>
+            </nav>
+            <div class="copyright">
+              2024, made with <i class="fa fa-heart heart text-danger"></i> by
+              <a href="#">5 Anh Em Siêu Nhân</a>
+            </div>
+            <div>
+              Distributed by
+              <a target="_blank" href="https://themewagon.com/">Bee-Shirt</a>.
+            </div>
+          </div>
+        </footer>
+      </div>
+
+      <!-- Custom template | don't include it in your project! -->
+      <div class="custom-template">
+        <div class="title">Settings</div>
+        <div class="custom-content">
+          <div class="switcher">
+            <div class="switch-block">
+              <h4>Logo Header</h4>
+              <div class="btnSwitch">
+                <button type="button" class="selected changeLogoHeaderColor" data-color="dark"></button>
+                <button type="button" class="changeLogoHeaderColor" data-color="blue"></button>
+                <button type="button" class="changeLogoHeaderColor" data-color="purple"></button>
+                <button type="button" class="changeLogoHeaderColor" data-color="light-blue"></button>
+                <button type="button" class="changeLogoHeaderColor" data-color="green"></button>
+                <button type="button" class="changeLogoHeaderColor" data-color="orange"></button>
+                <button type="button" class="changeLogoHeaderColor" data-color="red"></button>
+                <button type="button" class="changeLogoHeaderColor" data-color="white"></button>
+                <br />
+                <button type="button" class="changeLogoHeaderColor" data-color="dark2"></button>
+                <button type="button" class="changeLogoHeaderColor" data-color="blue2"></button>
+                <button type="button" class="changeLogoHeaderColor" data-color="purple2"></button>
+                <button type="button" class="changeLogoHeaderColor" data-color="light-blue2"></button>
+                <button type="button" class="changeLogoHeaderColor" data-color="green2"></button>
+                <button type="button" class="changeLogoHeaderColor" data-color="orange2"></button>
+                <button type="button" class="changeLogoHeaderColor" data-color="red2"></button>
+              </div>
+            </div>
+            <div class="switch-block">
+              <h4>Navbar Header</h4>
+              <div class="btnSwitch">
+                <button type="button" class="changeTopBarColor" data-color="dark"></button>
+                <button type="button" class="changeTopBarColor" data-color="blue"></button>
+                <button type="button" class="changeTopBarColor" data-color="purple"></button>
+                <button type="button" class="changeTopBarColor" data-color="light-blue"></button>
+                <button type="button" class="changeTopBarColor" data-color="green"></button>
+                <button type="button" class="changeTopBarColor" data-color="orange"></button>
+                <button type="button" class="changeTopBarColor" data-color="red"></button>
+                <button type="button" class="selected changeTopBarColor" data-color="white"></button>
+                <br />
+                <button type="button" class="changeTopBarColor" data-color="dark2"></button>
+                <button type="button" class="changeTopBarColor" data-color="blue2"></button>
+                <button type="button" class="changeTopBarColor" data-color="purple2"></button>
+                <button type="button" class="changeTopBarColor" data-color="light-blue2"></button>
+                <button type="button" class="changeTopBarColor" data-color="green2"></button>
+                <button type="button" class="changeTopBarColor" data-color="orange2"></button>
+                <button type="button" class="changeTopBarColor" data-color="red2"></button>
+              </div>
+            </div>
+            <div class="switch-block">
+              <h4>Sidebar</h4>
+              <div class="btnSwitch">
+                <button type="button" class="changeSideBarColor" data-color="white"></button>
+                <button type="button" class="selected changeSideBarColor" data-color="dark"></button>
+                <button type="button" class="changeSideBarColor" data-color="dark2"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="custom-toggle">
+          <i class="icon-settings"></i>
+        </div>
+      </div>
+      <!-- End Custom template -->
+    </div>
+    <!--   Core JS Files   -->
+    <script src="js/core/jquery-3.7.1.min.js"></script>
+    <script src="js/core/popper.min.js"></script>
+    <script src="js/core/bootstrap.min.js"></script>
+
+    <!-- jQuery Scrollbar -->
+    <script src="js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+    <!-- Chart JS -->
+    <script src="js/plugin/chart.js/chart.min.js"></script>
+
+    <!-- jQuery Sparkline -->
+    <script src="/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- Chart Circle -->
+    <script src="js/plugin/chart-circle/circles.min.js"></script>
+
+    <!-- Datatables -->
+    <script src="js/plugin/datatables/datatables.min.js"></script>
+
+    <!-- Bootstrap Notify -->
+    <script src="js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+    <!-- jQuery Vector Maps -->
+    <script src="js/plugin/jsvectormap/jsvectormap.min.js"></script>
+    <script src="js/plugin/jsvectormap/world.js"></script>
+
+    <!-- Sweet Alert -->
+    <script src="js/plugin/sweetalert/sweetalert.min.js"></script>
+
+    <!-- Kaiadmin JS -->
+    <script src="js/kaiadmin.min.js"></script>
+
+    <!-- Kaiadmin DEMO methods, don't include it in your project! -->
+    <script src="js/setting-demo.js"></script>
+    <script src="js/demo.js"></script>
+    <script src="js/oders.js"></script>
+
+    <script>
+      $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
+        type: "line",
+        height: "70",
+        width: "100%",
+        lineWidth: "2",
+        lineColor: "#177dff",
+        fillColor: "rgba(23, 125, 255, 0.14)",
+      });
+
+      $("#lineChart2").sparkline([99, 125, 122, 105, 110, 124, 115], {
+        type: "line",
+        height: "70",
+        width: "100%",
+        lineWidth: "2",
+        lineColor: "#f3545d",
+        fillColor: "rgba(243, 84, 93, .14)",
+      });
+
+      $("#lineChart3").sparkline([105, 103, 123, 100, 95, 105, 115], {
+        type: "line",
+        height: "70",
+        width: "100%",
+        lineWidth: "2",
+        lineColor: "#ffa534",
+        fillColor: "rgba(255, 165, 52, .14)",
+      });
+    </script>
+    <!-- //Lịch thống kê ngày tháng năm -->
+    <!-- Thêm CSS và JS cho Daterangepicker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+
+    <script>
+
+    </script>
+</body>
+
+</html>
