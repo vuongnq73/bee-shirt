@@ -55,7 +55,6 @@ public class AccountService {
     public List<AccountResponse> getAll() {
         return getAccountsWithRoles(accountRepository.getAll());
     }
-
     public List<AccountResponse> getAllClient() {
         return getAccountsWithRoles(accountRepository.getAllClient());
     }
@@ -137,11 +136,13 @@ public class AccountService {
         return accountMapper.toUserResponse(accountRepository.save(account));
     }
 
+
     public AccountResponse updateAccount(AccountUpdateRequest request, String code) {
         Account account = accountRepository.findByCode(code)
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
 
         // Giữ nguyên giá trị cũ nếu là null
+
         if (request.getFirstName() != null) {
             account.setFirstName(request.getFirstName());
         }
@@ -176,7 +177,6 @@ public class AccountService {
             // Cập nhật mật khẩu mới
             account.setPass(encodePassword(request.getPass()));
         }
-
         account.setUpdateBy(this.getMyInfo().getCode());
         account.setUpdateAt(LocalDate.now());
 

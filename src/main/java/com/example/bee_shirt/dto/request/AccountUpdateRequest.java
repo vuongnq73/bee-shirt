@@ -1,5 +1,6 @@
 package com.example.bee_shirt.dto.request;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micrometer.common.lang.Nullable;
 import jakarta.validation.constraints.*;
@@ -19,6 +20,7 @@ import java.util.List;
 //Access ModiFier
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AccountUpdateRequest {
+
     String code;
     @NotEmpty(message = "FIRST NAME NOT EMPTY")
     String firstName;
@@ -38,6 +40,7 @@ public class AccountUpdateRequest {
 
     Integer status;
 
+
     Boolean deleted;
 
     @NotEmpty(message = "EMAIL NOT EMPTY")
@@ -48,12 +51,15 @@ public class AccountUpdateRequest {
     @Size(min = 3,message = "USERNAME_INVALID")
     String username;
 
+
     //validate password
+
     @NotNull(message = "PASSWORD NOT EMPTY")
     @Size(min = 5,message = "PASSWORD_INVALID")
     String pass;
 
     String oldPassword;
+
 
     String createBy;
 
