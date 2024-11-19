@@ -52,9 +52,14 @@ public class AccountUpdateRequest {
     String username;
 
 
+    //validate password
+
     @NotNull(message = "PASSWORD NOT EMPTY")
     @Size(min = 5,message = "PASSWORD_INVALID")
     String pass;
+
+    String oldPassword;
+
 
     String createBy;
 

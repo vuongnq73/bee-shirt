@@ -3,7 +3,6 @@ package com.example.bee_shirt.service;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.bee_shirt.dto.request.AccountCreationRequest;
-
 import com.example.bee_shirt.dto.request.AccountUpdateRequest;
 import com.example.bee_shirt.dto.response.AccountResponse;
 import com.example.bee_shirt.entity.Account;
@@ -17,7 +16,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,7 +31,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
-
 import java.util.stream.Collectors;
 
 @Service
@@ -58,8 +55,6 @@ public class AccountService {
     public List<AccountResponse> getAll() {
         return getAccountsWithRoles(accountRepository.getAll());
     }
-
-
     public List<AccountResponse> getAllClient() {
         return getAccountsWithRoles(accountRepository.getAllClient());
     }
@@ -67,7 +62,6 @@ public class AccountService {
     public List<AccountResponse> getAllStaff() {
         return getAccountsWithRoles(accountRepository.getAllStaff());
     }
-
 
     public List<AccountResponse> getAllPagingStaff(Pageable pageable) {
         Page<Account> page = accountRepository.getAllPagingStaff(pageable);
@@ -147,7 +141,8 @@ public class AccountService {
         Account account = accountRepository.findByCode(code)
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
 
-        // giữ nguyên giá trị cũ nếu là null
+        // Giữ nguyên giá trị cũ nếu là null
+
         if (request.getFirstName() != null) {
             account.setFirstName(request.getFirstName());
         }
@@ -159,9 +154,6 @@ public class AccountService {
         }
         if (request.getEmail() != null) {
             account.setEmail(request.getEmail());
-        }
-        if (request.getPass() != null) {
-            account.setPass(encodePassword(request.getPass()));
         }
         if (request.getAddress() != null) {
             account.setAddress(request.getAddress());
@@ -176,7 +168,15 @@ public class AccountService {
             account.setAvatar(uploadAvatar(request.getAvatarFile()));
         }
 
-        // Set metadata fields
+        // Xử lý logic đổi mật khẩu (nếu có yêu cầu)
+        if (request.getOldPassword() != null && request.getOldPassword().isEmpty() && request.getPass() != null && request.getPass().isEmpty()) {
+            // Kiểm tra mật khẩu cũ
+            if (!passwordEncoder.matches(request.getOldPassword(), account.getPass())) {
+                throw new AppException(ErrorCode.INVALID_OLD_PASSWORD);
+            }
+            // Cập nhật mật khẩu mới
+            account.setPass(encodePassword(request.getPass()));
+        }
         account.setUpdateBy(this.getMyInfo().getCode());
         account.setUpdateAt(LocalDate.now());
 
@@ -216,7 +216,6 @@ public class AccountService {
             return "ACC1";
         }
     }
-
 
     public AccountResponse findByCode(String code){
         Account account = accountRepository.findByCode(code)

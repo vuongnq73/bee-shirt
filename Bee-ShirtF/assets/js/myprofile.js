@@ -6,18 +6,18 @@ angular
     "$location",
     "$window",
     function ($scope, $http, $location, $window) {
-      // Lấy userCode từ sessionStorage
+      // Cấu hình URL và token
+      const API_BASE_URL = "http://localhost:8080/admin";
+      const token = sessionStorage.getItem("jwtToken");
       const userCode = sessionStorage.getItem("userCode");
 
-      const token = sessionStorage.getItem("jwtToken");
-
-      // Kiểm tra nếu không có userCode, chuyển về trang đăng nhập
-      if (!userCode) {
+      // Kiểm tra đăng nhập
+      if (!token || !userCode) {
         $location.path("/login");
         return;
       }
 
-      // Khai báo biến để lưu thông tin người dùng
+      // Khởi tạo biến
       $scope.user = {
         firstName: "",
         lastName: "",
@@ -26,90 +26,25 @@ angular
         username: "",
         pass: "",
         address: "",
-        avatarFile: null, // File ảnh đại diện từ input
+        avatarFile: null,
         status: [],
       };
-      $scope.errorMessage = ""; // Để lưu thông báo lỗi
-      $scope.successMessage = ""; // Để lưu thông báo thành công
-      $scope.isSubmitting = false; // Biến để kiểm tra trạng thái submit
+      $scope.errorMessage = "";
+      $scope.successMessage = "";
+      $scope.isSubmitting = false;
+      $scope.statuses = [
+        { value: 0, name: "Active" },
+        { value: 1, name: "Inactive" },
+      ];
 
-      if (!token) {
-        $location.path("/login");
-        return;
-      }
+      // Biến cho chức năng đổi mật khẩu
+      $scope.passwordData = {
+        oldPassword: "",
+        pass: "",
+        confirmPassword: "",
+      };
 
-      // Hàm giải mã token
-      // function decodeToken(token) {
-      //   const base64Url = token.split(".")[1];
-      //   const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      //   const jsonPayload = decodeURIComponent(
-      //     atob(base64)
-      //       .split("")
-      //       .map(function (c) {
-      //         return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-      //       })
-      //       .join("")
-      //   );
-      //   return JSON.parse(jsonPayload);
-      // }
-
-      // // Hàm xử lý khi nhấn View Profile
-      // $scope.viewProfile = function () {
-      //   token = sessionStorage.getItem("jwtToken");
-
-      //   if (token) {
-      //     const decodedToken = decodeToken(token);
-      //     userCode = decodedToken["user Code"]; // Truy cập vào 'user Code' trong payload
-
-      //     if (userCode) {
-      //       // Lưu userCode vào sessionStorage
-      //       sessionStorage.setItem("userCode", userCode);
-      //       console.log("UserCode đã được lưu vào sessionStorage: ", userCode);
-      //     } else {
-      //       console.log("Không tìm thấy userCode trong token.");
-      //     }
-      //   } else {
-      //     console.log("Token không tồn tại trong sessionStorage.");
-      //   }
-
-      //   // Chuyển hướng đến trang Profile của người dùng
-      //   $location.path("/my-profile");
-      // };
-
-      // // Gọi API để lấy thông tin người dùng
-      // $scope.getUserInfo = function () {
-      //   userCode = sessionStorage.getItem("userCode");
-
-      //   if (!userCode) {
-      //     $location.path("/login");
-      //     return;
-      //   }
-
-      //   $http({
-      //     method: "GET",
-      //     url: `http://localhost:8080/admin/account/${userCode}`, // Đảm bảo đúng API ở đây
-      //     headers: {
-      //       Authorization: "Bearer " + token,
-      //     },
-      //   })
-      //     .then(function (response) {
-      //       if (response.data && response.data.result) {
-      //         $scope.user = response.data.result;
-      //       } else {
-      //         $scope.errorMessage = "Không thể lấy thông tin người dùng.";
-      //       }
-      //     })
-      //     .catch(function (error) {
-      //       $scope.errorMessage = "Có lỗi xảy ra khi lấy dữ liệu.";
-      //     })
-      //     .finally(function () {
-      //       $scope.loading = false;
-      //     });
-      // };
-
-      // // Gọi hàm getUserInfo để tải dữ liệu người dùng khi vào trang My Profile
-      // $scope.getUserInfo();
-
+      // Validate form thông tin người dùng
       function validateForm() {
         const phoneRegex = /^(0[3|5|7|8|9])[0-9]{8}$/;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -118,11 +53,11 @@ angular
           $scope.errorMessage = "Tên và họ không được để trống.";
           return false;
         }
-        if (!$scope.user.phone || !$scope.user.phone.match(phoneRegex)) {
+        if (!$scope.user.phone.match(phoneRegex)) {
           $scope.errorMessage = "Số điện thoại không hợp lệ.";
           return false;
         }
-        if (!$scope.user.email || !$scope.user.email.match(emailRegex)) {
+        if (!$scope.user.email.match(emailRegex)) {
           $scope.errorMessage = "Email không hợp lệ.";
           return false;
         }
@@ -134,106 +69,157 @@ angular
         $scope.errorMessage = "";
         return true;
       }
-      function submitupdation() {
-        const token = sessionStorage.getItem("jwtToken");
 
-        const formData = new FormData(); // Tạo FormData để gửi file
+      // Gửi dữ liệu cập nhật thông tin người dùng
+      function submitUpdate() {
+        const formData = new FormData();
         formData.append("firstName", $scope.user.firstName);
         formData.append("lastName", $scope.user.lastName);
         formData.append("phone", $scope.user.phone);
         formData.append("email", $scope.user.email);
         formData.append("address", $scope.user.address);
         formData.append("status", $scope.user.status);
+
+        // Nếu có ảnh avatar, thêm vào form data
         if ($scope.user.avatarFile) {
-          formData.append("avatarFile", $scope.user.avatarFile); // Chỉ thêm nếu file không null
+          formData.append("avatarFile", $scope.user.avatarFile);
         }
 
-        // Gửi dữ liệu đến API
+        // Gửi yêu cầu cập nhật
         $http
-          .put(`http://localhost:8080/admin/update/${userCode}`, formData, {
+          .put(`${API_BASE_URL}/update/${userCode}`, formData, {
             transformRequest: angular.identity,
             headers: {
-              Authorization: "Bearer " + token,
+              Authorization: `Bearer ${token}`,
               "Content-Type": undefined,
             },
           })
           .then(function (response) {
-            console.log("Response nhận được từ server:", response);
-            $scope.successMessage = "Sửa thành công!"; // Thông báo thành công
-            $window.history.back(); // Quay lại trang trước
-            $scope.errorMessage = ""; // Xóa thông báo lỗi (nếu có)
+            console.log("Server response:", response);
+            // Kiểm tra kết quả trả về từ API
+            if (
+              response.data &&
+              response.data.code === 1000 &&
+              response.data.result
+            ) {
+              // Nếu có kết quả và code là 1000, cập nhật thành công
+              $scope.successMessage = "Cập nhật thành công!";
+              $scope.goBack();
+              $scope.errorMessage = "";
+            } else {
+              // Trường hợp có lỗi trong dữ liệu trả về
+              $scope.errorMessage = "Cập nhật thất bại.";
+            }
           })
           .catch(function (error) {
-            console.log("Lỗi:", error);
-            // Kiểm tra cấu trúc của đối tượng lỗi
-            if (error.data && error.data.message) {
-              $scope.errorMessage = error.data.message;
-            } else {
-              $scope.errorMessage = "Sửa thất bại.";
-            }
-            $scope.successMessage = ""; // Xóa thông báo thành công (nếu có)
+            console.error("Lỗi khi cập nhật tài khoản:", error);
+            // Xử lý lỗi từ server
+            $scope.errorMessage = error.data
+              ? error.data.message
+              : "Cập nhật thất bại.";
+            $scope.successMessage = "";
           })
           .finally(function () {
-            $scope.isSubmitting = false; // Kích hoạt lại nút sau khi xử lý xong
+            $scope.isSubmitting = false;
           });
       }
 
+      // Cập nhật thông tin người dùng
       $scope.updateAccount = function () {
-        // Kiểm tra điều kiện và trạng thái submit
-        if (!validateForm() || $scope.isSubmitting) {
+        if (!validateForm() || $scope.isSubmitting) return;
+
+        $scope.isSubmitting = true;
+        submitUpdate();
+      };
+
+      // Gọi API lấy thông tin người dùng
+      function loadUserProfile() {
+        $http({
+          method: "GET",
+          url: `${API_BASE_URL}/account/${userCode}`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => {
+            if (response.data && response.data.result) {
+              $scope.user = response.data.result;
+              console.log("User profile loaded:", $scope.user);
+            } else {
+              $scope.errorMessage = "Không thể lấy thông tin người dùng.";
+            }
+          })
+          .catch((error) => {
+            console.error("Lỗi khi lấy thông tin người dùng:", error);
+            $scope.errorMessage = "Có lỗi xảy ra khi lấy dữ liệu.";
+          });
+      }
+
+      $scope.showChangePasswordForm = false;
+
+      // Toggle sự hiển thị form Change Password
+      $scope.toggleChangePassword = function () {
+        $scope.showChangePasswordForm = !$scope.showChangePasswordForm;
+      };
+
+      // Thay đổi mật khẩu
+      $scope.updatePassword = function () {
+        // Kiểm tra mật khẩu cũ và mật khẩu mới
+        if (
+          !$scope.passwordData.oldPassword ||
+          !$scope.passwordData.pass ||
+          !$scope.passwordData.confirmPassword
+        ) {
+          $scope.errorMessage = "Vui lòng nhập đầy đủ thông tin mật khẩu.";
           return;
         }
 
-        // Đặt trạng thái đang xử lý
-        $scope.isSubmitting = true;
+        // Kiểm tra mật khẩu mới và mật khẩu xác nhận có khớp không
+        if ($scope.passwordData.pass !== $scope.passwordData.confirmPassword) {
+          $scope.errorMessage = "Mật khẩu mới và xác nhận mật khẩu không khớp.";
+          return;
+        }
 
-        // Gọi hàm xử lý create
-        submitupdation();
+        // Tạo formData để gửi dữ liệu lên server
+        var formData = new FormData();
+        formData.append("oldPassword", $scope.passwordData.oldPassword);
+        formData.append("pass", $scope.passwordData.pass);
+        formData.append("confirmPassword", $scope.passwordData.confirmPassword);
+
+        // Gửi yêu cầu cập nhật mật khẩu
+        $http
+          .put(`${API_BASE_URL}/update/${userCode}`, formData, {
+            transformRequest: angular.identity,
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": undefined, // Để trình duyệt tự động xác định content-type
+            },
+          })
+          .then(function (response) {
+            $scope.successMessage = "Mật khẩu đã được cập nhật thành công!";
+            $scope.toggleChangePassword(); // Ẩn form
+            $scope.goBack();
+          })
+          .catch(function (error) {
+            $scope.errorMessage = "Mật khẩu cũ không chính xác.";
+          });
       };
 
-      // Gọi API để lấy thông tin người dùng
-      $http({
-        method: "GET",
-        url: `http://localhost:8080/admin/account/${userCode}`, // Đảm bảo đúng API ở đây
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-        .then(function (response) {
-          // Kiểm tra xem API trả về dữ liệu không
-          if (response.data && response.data.result) {
-            $scope.user = response.data.result; // Gán dữ liệu người dùng vào scope
-            console.log("Status after data load: ", $scope.user.status);
-          } else {
-            $scope.errorMessage = "Không thể lấy thông tin người dùng.";
-          }
-        })
-        .catch(function (error) {
-          console.error("Lỗi khi lấy thông tin người dùng:", error);
-          $scope.errorMessage = "Có lỗi xảy ra khi lấy dữ liệu.";
-        })
-        .finally(function () {
-          $scope.loading = false; // Tắt trạng thái loading sau khi nhận được phản hồi
-        });
-
-      //Quay về trang trước
+      // Quay lại trang trước
       $scope.goBack = function () {
-        $window.history.back(); // Quay lại trang trước
+        $window.history.back();
       };
-      $scope.statuses = [
-        { value: 0, name: "Active" },
-        { value: 1, name: "Inactive" },
-      ];
 
-      // Hàm để xử lý dữ liệu roles
+      // Xử lý roles
       $scope.getRoles = function (roles) {
         if (Array.isArray(roles)) {
-          // Nếu roles là mảng, tạo một chuỗi từ tên các vai trò
-          return roles.map((role) => role.name).join(", "); // Lấy tên của mỗi vai trò và nối lại thành chuỗi
-        } else {
-          return "No roles assigned"; // Nếu không có vai trò nào
+          return roles.map((role) => role.name).join(", ");
         }
+        return "No roles assigned";
       };
+
+      // Gọi API khi khởi tạo controller
+      loadUserProfile();
     },
   ])
   .directive("fileInput", function () {
@@ -241,9 +227,9 @@ angular
       restrict: "A",
       link: function (scope, element) {
         element.on("change", function (event) {
-          var file = event.target.files[0];
-          scope.$apply(function () {
-            scope.user.avatarFile = file; // Lưu file vào scope
+          const file = event.target.files[0];
+          scope.$apply(() => {
+            scope.user.avatarFile = file;
           });
         });
       },

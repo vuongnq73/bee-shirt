@@ -2,7 +2,6 @@ package com.example.bee_shirt.repository;
 
 import com.example.bee_shirt.dto.response.AccountResponse;
 import com.example.bee_shirt.entity.Account;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -35,7 +34,6 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     List<Account> getAllStaff();
 
     @Query(value = """
-
             SELECT a.*, ar.role_id, r.code_role
             FROM account a
             INNER JOIN account_role ar ON a.id = ar.account_id
