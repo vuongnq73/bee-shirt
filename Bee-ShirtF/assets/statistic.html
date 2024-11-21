@@ -29,21 +29,13 @@
   </script>
   <style>
  
-#statistics-table_wrapper .dataTables_filter {
-  float: left; /* Đưa thanh tìm kiếm sang trái */
-  /* Tạo khoảng cách bên phải của thanh tìm kiếm */
-}
 
-#statistics-table_wrapper .dataTables_filter label {
-  font-weight: normal;
-  white-space: nowrap;
-  text-align: left; /* Đảm bảo nhãn căn trái */
-}
+
 
 #statistics-table_wrapper .dataTables_filter input {
   margin-left: 0.5em;
   display: inline-block;
-  width: 100px; /* Chiều rộng của input tự động điều chỉnh */
+  width: 400px; /* Chiều rộng của input tự động điều chỉnh */
 }
   </style>
   <script src="path/to/jquery.sparkline.min.js"></script>
@@ -674,11 +666,11 @@
           </div>
 
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-12">
               <div class="card card-round">
                 <div class="card-header">
                   <div class="card-head-row card-tools-still-right">
-                    <div class="card-title">Sản Phẩm Bán Chạy</div>
+                    <div class="card-title">Sản Phẩm Bán Chạy Nhất Trong Tháng </div>
                     <div class="card-tools">
                       <div class="dropdown">
                         <label>Lọc</label>
@@ -751,7 +743,7 @@
 
 
             </div>
-            <div class="col-md-8">
+             <!-- <div class="col-md-8">
               <div class="card card-round">
                 <div class="card-header">
                   <div class="card-head-row card-tools-still-right">
@@ -798,19 +790,21 @@
                     
                     
 
-                    <!-- Hiển thị thông báo lỗi hoặc thành công
+                    Hiển thị thông báo lỗi hoặc thành công
                     <div ng-if="errorMessage" class="alert alert-danger">
                       {{errorMessage}}
                     </div>
                     <div ng-if="successMessage" class="alert alert-success">
                       {{successMessage}}
-                    </div> -->
+                    </div> 
 
                   </div>
 
                 </div>
               </div>
-            </div>
+            </div> -->
+
+
           </div>
         </div>
 

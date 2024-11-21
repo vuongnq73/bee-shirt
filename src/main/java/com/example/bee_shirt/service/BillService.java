@@ -26,11 +26,13 @@ public class BillService {
 
         return results.stream().map(result -> new BillDTO(
                 (String) result[0],                      // codeBill
-                (String) result[1],                      // customerName
-                result[2] != null ? ((Date) result[2]).toLocalDate() : null,   // desiredDate, convert sql Date to LocalDate
-                (String) result[3],                      // namePaymentMethod
-                (BigDecimal) result[4],                  // totalMoney
-                (Integer) result[5]                      // statusBill
+                (String) result[1],
+                (String) result[2],                      // codeBill
+                (String) result[3], // customerName
+                result[4] != null ? ((Date) result[4]).toLocalDate() : null,   // desiredDate, convert sql Date to LocalDate
+                (String) result[5],                      // namePaymentMethod
+                (BigDecimal) result[6],                  // totalMoney
+                (Integer) result[7]                      // statusBill
         )).collect(Collectors.toList());
     }
 

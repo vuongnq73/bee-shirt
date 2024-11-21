@@ -10,6 +10,10 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+
   <!-- Fonts and icons -->
   <script src="../assets/js/plugin/webfont/webfont.min.js"></script>
   <script>
@@ -133,8 +137,8 @@
                 </ul>
               </div>
             </li>
-            <li class="nav-item"  >
-              <a data-bs-toggle="collapse" href="#account" >
+            <li class="nav-item">
+              <a data-bs-toggle="collapse" href="#account">
                 <i class="fas fa-user"></i>
                 <p>Account</p>
                 <span class="caret"></span>
@@ -495,7 +499,7 @@
               <a href="BanHang.html" class="btn btn-primary btn-round">Thêm Hóa Đơn</a>
             </div>
           </div>
-          
+
           <div class="row">
             <div class="col-md-12">
               <div class="card">
@@ -504,12 +508,26 @@
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
+                    <div style="display: flex; align-items: center; gap: 5px; font-size: 0.9em; margin-bottom: 10px;">
+                      <label for="startDate" style="margin-right: 5px;">Từ ngày:</label>
+                      <input type="date" id="startDate" ng-model="startDate" class="form-control"
+                        style="width: 150px; padding: 2px 5px;" />
+
+                      <label for="endDate" style="margin-left: 10px; margin-right: 5px;">Đến ngày:</label>
+                      <input type="date" id="endDate" ng-model="endDate" class="form-control"
+                        style="width: 150px; padding: 2px 5px;" />
+
+                      <button ng-click="applyDateFilter()" class="btn btn-primary"
+                        style="padding: 3px 10px; font-size: 0.9em;">Lọc</button>
+                    </div>
                     <table id="basic-datatables" class="display table table-striped table-hover">
                       <thead>
                         <tr>
                           <th>STT</th>
                           <th>Mã Hóa Đơn</th>
                           <th>Tên Khách Hàng</th>
+                          <th>SĐT</th>
+                          <th>Loại Hóa Đơn</th>
                           <th>Ngày Thanh Toán</th>
                           <th>Hình Thức Thanh Toán</th>
                           <th>Tổng Tiền</th>
@@ -517,12 +535,12 @@
                         </tr>
                       </thead>
                       <tbody>
-                  
+
                       </tbody>
                     </table>
                   </div>
                 </div>
-                
+
               </div>
             </div>
 
@@ -630,7 +648,7 @@
   <script src="/assets/js/core/jquery-3.7.1.min.js"></script>
   <script src="/path/to/jquery.scrollbar.min.js"></script> <!-- Đảm bảo đây là đường dẫn đúng -->
   <script src="/assets/js/kaiadmin.min.js"></script>
-  
+
   <!-- jQuery Scrollbar -->
   <script src="../assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
   <!-- Datatables -->
@@ -702,126 +720,254 @@
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-<!-- dataTable -->
-<script>
-  angular
-  .module("billApp", [])
-  .controller("BillController", [
-    "$scope", "$timeout",
-    function ($scope, $timeout) {
-      $scope.showCreateForm = false;
-      $scope.orders = [];
-      $scope.errorMessage = "";
-      $scope.successMessage = "";
+  <!-- dataTable -->
+  <script>
+    angular
+      .module("billApp", [])
+      .controller("BillController", [
+        "$scope", "$timeout",
+        function ($scope, $timeout) {
+          $scope.startDate = null;
+          $scope.endDate = null;
+          $scope.showCreateForm = false;
+          $scope.orders = [];
+          $scope.errorMessage = "";
+          $scope.successMessage = "";
 
-      $scope.formatDate = function (dateString) {
-        const options = { year: "numeric", month: "2-digit", day: "2-digit" };
-        const date = new Date(dateString);
-        return date.toLocaleDateString("vi-VN", options);
-      };
+          $scope.formatDate = function (dateString) {
+            const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+            const date = new Date(dateString);
+            return date.toLocaleDateString("vi-VN", options);
+          };
 
-      $scope.loadDataOrderToTable = function () {
-        const token = sessionStorage.getItem("jwtToken");
-        if (!token) {
-          alert("Bạn chưa đăng nhập. Vui lòng đăng nhập lại.");
-          window.location.href = "http://127.0.0.1:5500/assets/account/login.html#!/login";
-          return;
-        }
+          $scope.loadDataOrderToTable = function () {
+            const token = sessionStorage.getItem("jwtToken");
+            if (!token) {
+              alert("Bạn chưa đăng nhập. Vui lòng đăng nhập lại.");
+              window.location.href = "http://127.0.0.1:5500/assets/account/login.html#!/login";
+              return;
+            }
 
-        $.ajax({
-          type: "GET",
-          url: "http://localhost:8080/bills/list",
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-          success: function (response) {
-   console.log("Phản hồi từ server:", response);
+            $.ajax({
+              type: "GET",
+              url: "http://localhost:8080/bills/list",
+              headers: {
+                Authorization: "Bearer " + token,
+              },
+              success: function (response) {
+                console.log("Phản hồi từ server:", response);
 
-   // Sử dụng response.result thay vì response.data
-   const ordersData = Array.isArray(response.result) ? response.result : [];
-   
-   if (ordersData.length > 0) {
-     $scope.orders = ordersData.map((order, index) => ({
-       stt: index + 1,
-       codeBill: order.codeBill,
-       customerName: order.customerName,
-       desiredDate: $scope.formatDate(order.desiredDate),
-       paymentMethod: order.namePaymentMethod,
-       totalMoney: order.totalMoney.toLocaleString("vi-VN", {
-         style: "currency",
-         currency: "VND",
-       }),
-       statusBill: order.statusBill === 1 ? "Đã thanh toán" : "Chưa thanh toán",
-     }));
-     $scope.successMessage = "Tải dữ liệu thành công!";
-     $timeout($scope.initializeDataTable, 0); // Khởi tạo DataTable sau khi $scope.orders được cập nhật
-   } else {
-     $scope.errorMessage = "Không có dữ liệu đơn hàng nào để hiển thị.";
-   }
-   $scope.$apply(); // Áp dụng thay đổi cho Angular
-},
+                // Sử dụng response.result thay vì response.data
+                const ordersData = Array.isArray(response.result) ? response.result : [];
 
-        });
-      };
+                if (ordersData.length > 0) {
+                  $scope.orders = ordersData.map((order, index) => ({
+                    stt: index + 1,
+                    codeBill: order.codeBill,
+                    customerName: order.customerName,
+                    phoneNumber: order.phoneNumber,
+                    typeBill: order.typeBill,
+                    desiredDate: $scope.formatDate(order.desiredDate),
+                    paymentMethod: order.namePaymentMethod,
+                    totalMoney: order.totalMoney.toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    }),
+                    statusBill: order.statusBill === 1 ? "Đã thanh toán" : "Chưa thanh toán",
+                  }));
+                  $scope.successMessage = "Tải dữ liệu thành công!";
+                  $timeout($scope.initializeDataTable, 0); // Khởi tạo DataTable sau khi $scope.orders được cập nhật
+                } else {
+                  $scope.errorMessage = "Không có dữ liệu đơn hàng nào để hiển thị.";
+                }
+                $scope.$apply(); // Áp dụng thay đổi cho Angular
+              },
 
-      $scope.initializeDataTable = function () {
-        // Hủy DataTable nếu đã tồn tại
-        if ($.fn.DataTable.isDataTable("#basic-datatables")) {
-          $("#basic-datatables").DataTable().destroy();
-        }
+            });
+          };
 
-        // Khởi tạo DataTable mới với dữ liệu từ $scope.orders
-        const table = $("#basic-datatables").DataTable({
-          paging: true,
-          searching: true,
-          ordering: true,
-          pageLength: 5,
-          data: $scope.orders.map((order) => [
-            order.stt,
-            order.codeBill,
-            order.customerName,
-            order.desiredDate,
-            order.paymentMethod,
-            order.totalMoney,
-            order.statusBill,
-          ]),
-          columns: [
-            { title: "STT" },
-            { title: "Mã Hóa Đơn" },
-            { title: "Tên Khách Hàng" },
-            { title: "Ngày Thanh Toán" },
-            { title: "Hình Thức Thanh Toán" },
-            { title: "Tổng Tiền" },
-            { title: "Trạng Thái" },
-          ],
-          language: {
-            search: "Tìm kiếm:",
-            lengthMenu: "Hiện _MENU_ mục",
-            info: "Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ mục",
-            paginate: {
-              first: "Đầu",
-              last: "Cuối",
-              next: "Tiếp",
-              previous: "Trước",
-            },
-          },
-        });
-        // Xử lý sự kiện click vào hàng để mở rộng thông tin chi tiết
-        $("#basic-datatables tbody").on("click", "tr", function () {
-          const rowData = table.row(this).data();
-          const codeBill = rowData[1];
-          window.location.href = `/assets/BillDetail.html?codeBill=${encodeURIComponent(codeBill)}`;
-        });
-      };
+          $scope.initializeDataTable = function () {
+            // Hủy DataTable nếu đã tồn tại
+            if ($.fn.DataTable.isDataTable("#basic-datatables")) {
+              $("#basic-datatables").DataTable().destroy();
+            }
 
-      angular.element(document).ready(function () {
-        $scope.loadDataOrderToTable();
-      });
-    },
-  ]);
+            // Khởi tạo DataTable mới với dữ liệu từ $scope.orders
+            const table = $("#basic-datatables").DataTable({
+              paging: true,
+              searching: true,
+              ordering: true,
+              pageLength: 5,
+              data: $scope.orders.map((order) => [
+                order.stt,
+                order.codeBill,
+                order.customerName,
+                order.phoneNumber,
+                order.typeBill,
+                order.desiredDate,
+                order.paymentMethod,
+                order.totalMoney,
+                order.statusBill,
+              ]),
+              columns: [
+                { title: "STT" },
+                { title: "Mã Hóa Đơn" },
+                { title: "Tên Khách Hàng" },
+                { title: "SĐT" },
+                { title: "Loại Hóa Đơn" },
+                { title: "Ngày Thanh Toán" },
+                { title: "Hình Thức Thanh Toán" },
+                { title: "Tổng Tiền" },
+                { title: "Trạng Thái" },
+              ],
+              language: {
+                search: "Tìm kiếm:",
+                lengthMenu: "Hiện _MENU_ mục",
+                info: "Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ mục",
+                paginate: {
+                  first: "Đầu",
+                  last: "Cuối",
+                  next: "Tiếp",
+                  previous: "Trước",
+                },
+              },
+            });
+            // Xử lý sự kiện click vào hàng để mở rộng thông tin chi tiết
+            $("#basic-datatables tbody").on("click", "tr", function () {
+              const rowData = table.row(this).data();
+              const codeBill = rowData[1];
+              window.location.href = `/assets/BillDetail.html?codeBill=${encodeURIComponent(codeBill)}`;
+            });
+
+          };
+          // 
+          //filter by time
+          //
+          $scope.applyDateFilter = function () {
+            // Kiểm tra nếu không có giá trị cho startDate hoặc endDate
+            if (!$scope.startDate && !$scope.endDate) {
+              // Nếu không có ngày bắt đầu và ngày kết thúc, lấy toàn bộ dữ liệu
+              $scope.filteredOrders = $scope.orders;
+            } else {
+              // Sử dụng moment.js để đảm bảo tính chính xác trong việc định dạng và so sánh ngày
+              const formattedStartDate = moment($scope.startDate, "DD/MM/YYYY").startOf('day'); // Đặt thời gian bắt đầu là 00:00
+              const formattedEndDate = moment($scope.endDate, "DD/MM/YYYY").endOf('day'); // Đặt thời gian kết thúc là 23:59
+
+              // Kiểm tra xem ngày bắt đầu có lớn hơn ngày kết thúc hay không
+              if (formattedStartDate.isAfter(formattedEndDate)) {
+                alert("'Từ ngày' không được lớn hơn 'Đến ngày'.");
+                return;
+              }
+              if (!$scope.startDate) {
+                alert("Chưa Chọn Ngày Bắt Đầu.");
+                return;
+              }
+              if (!$scope.endDate) {
+                alert("Chưa Chọn Ngày Kết Kết Thúc.");
+                return;
+              }
+              // Lọc dữ liệu từ mảng orders
+              $scope.filteredOrders = $scope.orders.filter(function (order) {
+                // Chuyển đổi ngày thanh toán trong order sang định dạng chuẩn sử dụng moment.js
+                const orderDate = moment(order.desiredDate, "DD/MM/YYYY");
+
+                return orderDate.isBetween(formattedStartDate, formattedEndDate, null, '[]'); // '[]' bao gồm cả start và end date
+              });
+
+              // Nếu không có dữ liệu sau khi lọc, hiển thị thông báo
+              if ($scope.filteredOrders.length === 0) {
+                alert("Không có dữ liệu trong khoảng thời gian này.");
+              }
+            }
+
+            // Cập nhật lại bảng dữ liệu
+            $timeout($scope.initializeOrderTable, 0); // Khởi tạo lại bảng với dữ liệu đã lọc
+          };
+
+          // xử lý lại bảng sau khi lọc
+          //
+          //
+          $scope.initializeOrderTable = function () {
+            const data = $scope.filteredOrders = $scope.startDate || $scope.endDate
+              ? $scope.filteredOrders
+              : $scope.orders;
+            // Nếu có lọc, sử dụng filteredOrders, nếu không thì dùng toàn bộ orders
+
+            // Kiểm tra xem bảng đã được khởi tạo chưa
+            if ($.fn.DataTable.isDataTable("#basic-datatables")) {
+              const table = $("#basic-datatables").DataTable();
+              // Lấy đối tượng DataTable hiện tại
+              table.clear(); // Xóa dữ liệu cũ
+
+              // Thêm dữ liệu mới vào bảng
+              table.rows.add(data.map((order) => [
+              order.stt,
+                order.codeBill,
+                order.customerName,
+                order.phoneNumber,
+                order.typeBill,
+                order.desiredDate,
+                order.paymentMethod,
+                order.totalMoney,
+                order.statusBill,
+              ])).draw(); // Thêm .draw() ở cuối
 
 
-</script>
+              // Vẽ lại bảng và giữ nguyên các tính năng như phân trang, tìm kiếm, sắp xếp
+              table.draw();
+            } else {
+              // Nếu bảng chưa được khởi tạo, tạo mới bảng với các cấu hình đầy đủ
+              $("#basic-datatables").DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                pageLength: 5,
+                data: $scope.orders.map((order) => [
+                order.stt,
+                order.codeBill,
+                order.customerName,
+                order.phoneNumber,
+                order.typeBill,
+                order.desiredDate,
+                order.paymentMethod,
+                order.totalMoney,
+                order.statusBill,
+                ]),
+                columns: [
+                  { title: "STT" },
+                  { title: "Mã Hóa Đơn" },
+                  { title: "Tên Khách Hàng" },
+                  { title: "SĐT" },
+                  { title: "Loại Hóa Đơn" },
+                  { title: "Ngày Thanh Toán" },
+                  { title: "Hình Thức Thanh Toán" },
+                  { title: "Tổng Tiền" },
+                  { title: "Trạng Thái" },
+                ],
+                language: {
+                  search: "Tìm kiếm:",
+                  lengthMenu: "Hiện _MENU_ mục",
+                  info: "Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ mục",
+                  paginate: {
+                    first: "Đầu",
+                    last: "Cuối",
+                    next: "Tiếp",
+                    previous: "Trước",
+                  },
+                },
+              });
+            }
+          };
+
+
+          angular.element(document).ready(function () {
+            $scope.loadDataOrderToTable();
+          });
+        },
+      ]);
+
+
+  </script>
 
 </body>
 

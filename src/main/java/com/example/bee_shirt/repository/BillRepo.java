@@ -11,6 +11,8 @@ public interface BillRepo extends JpaRepository<Bill, Integer> {
 
     @Query(value = "SELECT bl.code_bill, " +
             "bl.customer_name, " +
+            "bl.phone_number, " +         // Thêm số điện thoại
+            "bl.type_bill, " +            // Thêm loại hóa đơn
             "bl.desired_date, " +
             "pm.name_paymentmethod, " +
             "bl.total_money, " +
