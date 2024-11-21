@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="loginApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Page</title>
+    <link rel="stylesheet" href="/assets/css/login.css" />
+    <!-- Gọi file CSS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+    <script src="/assets/js/login.js"></script>
+    <!-- Đảm bảo login.js chứa module loginApp -->
+    <script src="/assets/js/staff.js"></script>
+    <script src="/assets/js/myprofile.js"></script>
+  </head>
+  <body ng-controller="loginController">
+    <div class="login-container">
+      <div class="login-box">
+        <h2>Đăng Nhập</h2>
+        <form name="loginForm" ng-submit="login()">
+          <div class="input-group">
+            <input
+              type="text"
+              id="username"
+              placeholder="Tài khoản"
+              ng-model="user.username"
+              required
+            />
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="input-group">
+            <input
+              type="password"
+              id="password"
+              placeholder="Mật khẩu"
+              ng-model="user.password"
+              required
+            />
+            <i class="fas fa-lock"></i>
+          </div>
+          <div class="remember-forgot">
+            <label
+              ><input type="checkbox" ng-model="rememberMe" /> Remember
+              Me</label
+            >
+            <a href="#">Quên mật khẩu?</a>
+          </div>
+          <button
+            type="submit"
+            class="login-btn"
+            ng-disabled="loginForm.$invalid"
+          >
+            Đăng Nhập
+          </button>
+          <!-- Thông báo lỗi -->
+          <div class="error" ng-if="errorMessage">{{ errorMessage }}</div>
+          <div class="register-link">
+            Bạn chưa có tài khoản?
+            <a href="/assets/account/register.html">Đăng ký</a>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
