@@ -7,10 +7,6 @@
   <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
   <link rel="icon" href="img/kaiadmin/favicon.ico" type="image/x-icon" />
 
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <!-- Fonts and icons -->
   <script src="js/plugin/webfont/webfont.min.js"></script>
   <script>
@@ -48,9 +44,7 @@
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
           <a href="BanHang.html" class="logo">
-
             <img src="img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20" />
-
           </a>
           <div class="nav-toggle">
             <button class="btn btn-toggle toggle-sidebar">
@@ -95,7 +89,7 @@
               <div class="collapse" id="sidebarLayouts">
                 <ul class="nav nav-collapse">
                   <li>
-                    <a href="sidebar-style-2.html">
+                    <a href="/assets/Voucher.html">
                       <span class="sub-item">Sidebar Style 2</span>
                     </a>
                   </li>
@@ -122,7 +116,7 @@
               <div class="collapse" id="tables">
                 <ul class="nav nav-collapse">
                   <li>
-                    <a href="pro">
+                    <a href="#">
                       <span class="sub-item">Basic Table</span>
                     </a>
                   </li>
@@ -156,11 +150,10 @@
               </div>
             </li>
             <li class="nav-item">
-
-              <a href="statistic.html">
+              <a  href="statistic.html">
                 <i class="far fa-chart-bar"></i>
                 <p>Thống Kê</p>
-
+             
               </a>
               <!-- <div class="collapse" id="charts">
                 <ul class="nav nav-collapse">
@@ -488,285 +481,109 @@
         </nav>
         <!-- End Navbar -->
       </div>
-
-      <!-- container -->
+<!-- container -->
       <div class="container">
         <div class="page-inner">
-          <div class="page-header">
-            <h3 class="fw-bold mb-3">Bán Hàng</h3>
-            <ul class="breadcrumbs mb-3">
-              <li class="nav-home">
-                <a href="/statistic.html">
-                  <i class="fas fa-layer-group"></i>
+          <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+            <div>
+              <h3 class="fw-bold mb-3">Bán Hàng ở đây nhé</h3>
+            </div>
+           
+          </div>
+        </div>
+      </div>
+   <!-- end container -->
+      <footer class="footer">
+        <div class="container-fluid d-flex justify-content-between">
+          <nav class="pull-left">
+            <ul class="nav">
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  Home
                 </a>
               </li>
-              <li class="separator">
-                <i class="icon-arrow-right"></i>
+              <li class="nav-item">
+                <a class="nav-link" href="#"> Help </a>
               </li>
               <li class="nav-item">
-                <a href="/assets/Bill.html">Bán Hàng</a>
-              </li>
-              <li class="separator">
-                <i class="icon-arrow-right"></i>
-              </li>
-              <li class="nav-item">
-                <a href="/assets/BillDetail.html">Tạo Hóa Đơn</a>
+                <a class="nav-link" href="#"> Licenses </a>
               </li>
             </ul>
-            <div class="ms-md-auto py-2 py-md-0">
-              <!-- <a href="#" class="btn btn-label-info btn-round me-2">Quản Lý</a> -->
-              <a href="BanHang.html" class="btn btn-primary btn-round" onclick="creatBill()">Thêm Hóa Đơn</a>
-            </div>
+          </nav>
+          <div class="copyright">
+            2024, made with <i class="fa fa-heart heart text-danger"></i> by
+            <a href="#">5 Anh Em Siêu Nhân</a>
           </div>
-          <!-- endheader bán hàng -->
-
-
-          <div class="row">
-            <nav class="navbar navbar-light bg-light p-3">
-              <div class="container-fluid">
-                <form id="searchForm">
-                  <div class="input-group">
-                    <div class="position-relative">
-                      <input type="text" class="form-control" id="searchInput" placeholder="Search..."
-                        onkeyup="performSearch()" autocomplete="off">
-                      <ul id="suggestions" class="suggestions-list list-group position-absolute w-100"></ul>
-                    </div>
-                    <button class="btn btn-outline-secondary" type="button" onclick="scanBarcode()">
-                      <i class="bi bi-upc-scan"></i>
-                    </button>
-
-                  </div>
-                </form>
-                <div class="d-flex align-items-center">
-                  <span class="me-3">muốn thêm nút gì thì thêm</span>
-                  <span> cho đỡ trống </span>
-                </div>
-              </div>
-            </nav>
-            <div class="col-md-8">
-              <!-- Bill -->
-              <div class="container mt-3">
-                  <div class="row justify-content-center">
-                      <div class="col text-center" id="bill-buttons">
-                          <!-- Nơi chứa các nút sau khi lấy dữ liệu từ API -->
-                          <!-- Đây sẽ là phần có thanh cuộn khi nội dung vượt quá chiều cao -->
-                      </div>
-                  </div>
-              </div>
-              <div class="modal" id="myModal">
-                  <div class="modal-dialog">
-                      <div class="modal-content">
-                          <!-- Modal Header -->
-                          <div class="modal-header">
-                              <h4 class="modal-title">Thêm sản phẩm</h4>
-                              <button type="button" class="btn-close" id="closeModal" data-bs-dismiss="modal"></button>
-                          </div>
-                          <!-- Modal body -->
-                          <div class="modal-body">
-                              <p id="shirtCodeDetail">Modal body..</p>
-                              <div class="mb-3">
-                                  <label for="quantityInput" class="form-label">Số lượng</label>
-                                  <input type="number" id="quantityInput" class="form-control" placeholder="Nhập số lượng" min="1" value="1">
-                              </div>
-                          </div>
-                          <!-- Modal footer -->
-                          <div class="modal-footer">
-                              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                              <button type="button" class="btn btn-primary" onclick="addItemToCart()">Thêm vào giỏ</button>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          
-              <!-- Modal 2 -->
-              <div class="modal" id="myModal2">
-                  <div class="modal-dialog">
-                      <div class="modal-content">
-                          <!-- Modal Header -->
-                          <div class="modal-header">
-                              <h4 class="modal-title">Thêm sản phẩm</h4>
-                              <button type="button" class="btn-close" id="closeModal2" data-bs-dismiss="modal"></button>
-                          </div>
-                          <!-- Modal body -->
-                          <div class="modal-body">
-                              <p id="shirtCodeDetail2">Modal body..</p>
-                              <div class="mb-3">
-                                  <label for="quantityInput" class="form-label">Số lượng</label>
-                                  <input type="number" id="quantityInput2" class="form-control" placeholder="Nhập số lượng" min="1" value="1">
-                              </div>
-                          </div>
-                          <!-- Modal footer -->
-                          <div class="modal-footer">
-                              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                              <button type="button" class="btn btn-primary" onclick="changQuantity()">Xác nhận</button>
-                          </div>
-                      </div>
-                  </div>
-              </div>
+          <div>
+            Distributed by
+            <a target="_blank" href="https://themewagon.com/">Bee-Shirt</a>.
           </div>
-          
-            <div class="col-md-4">
-              <!-- Invoice Section -->
-              <div class="col-lg-12">
-                <h3>Hóa Đơn</h3>
-                <button type="button" class="btn btn-danger btn-sm" onclick="cancel()">
-                  <i class="fas fa-times"></i>
-                  Hủy đơn
-                </button>
-                <!-- Nút "Sửa" -->
-                <button type="button" class="btn btn-primary btn-sm" onclick="openModal2()">
-                  <i class="fas fa-pen"></i>
-                  Sửa
-                </button>
-                <!-- Nút "Xóa" -->
-                <button type="button" class="btn btn-danger btn-sm" onclick="remove()">
-                  <i class="fas fa-trash"></i>
-                  Xóa
-                </button>
-
-                <ul class="list-group mb-3" id="product-list">
-                  <!-- Sản phẩm sẽ được thêm vào đây -->
-                </ul>
-
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Payment Summary</h5>
-                    <div class="d-flex justify-content-between">
-                      <span>Sub Total</span>
-                      <span id="subtotal">$131.2</span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                      <span>Tax</span>
-                      <span id="tax">$5.2</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-3">
-                      <span><strong>Total Payment</strong></span>
-                      <span><strong id="totalPayment">$136.4</strong></span>
-                    </div>
-                    <button class="btn btn-primary w-100" onclick="checkout()">Place An Order</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-          <h3>Sản phẩm</h3>
-            <!-- Sample Menu Item -->
-            <div th:each="product:${products}" class="col-lg-4 col-md-6 mb-4">
-              <div class="card">
-                <img src="abc.jpg" class="card-img-top" alt="Image">
-                <div class="card-body">
-                  <h5
-                    th:text="${product.shirt.nameShirt + product.color.nameColor + product.size.nameSize + product.brand.nameBrand+product.material.nameMaterial}"
-                    class="card-title">Tự thiết kế nhé. Đây sẽ là giao diện ảnh của các SP trong hóa đơn</h5>
-                  <p th:text="${product.price}" class="card-text">Giá:$50.5</p>
-                  <div class="d-flex align-items-center">
-                    Số Lượng:
-                    <button class="btn btn-sm btn-outline-secondary">-</button>
-                    <input type="number" class="form-control w-25 mx-2 text-center" value="1">
-                    <button class="btn btn-sm btn-outline-secondary">+</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Repeat for other menu items -->
-
         </div>
-      </div>
+      </footer>
     </div>
-    <!-- end container -->
-    <footer class="footer">
-      <div class="container-fluid d-flex justify-content-between">
-        <nav class="pull-left">
-          <ul class="nav">
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                Home
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#"> Help </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#"> Licenses </a>
-            </li>
-          </ul>
-        </nav>
-        <div class="copyright">
-          2024, made with <i class="fa fa-heart heart text-danger"></i> by
-          <a href="#">5 Anh Em Siêu Nhân</a>
-        </div>
-        <div>
-          Distributed by
-          <a target="_blank" href="https://themewagon.com/">Bee-Shirt</a>.
-        </div>
-      </div>
-    </footer>
-  </div>
 
-  <!-- Custom template | don't include it in your project! -->
-  <div class="custom-template">
-    <div class="title">Settings</div>
-    <div class="custom-content">
-      <div class="switcher">
-        <div class="switch-block">
-          <h4>Logo Header</h4>
-          <div class="btnSwitch">
-            <button type="button" class="selected changeLogoHeaderColor" data-color="dark"></button>
-            <button type="button" class="changeLogoHeaderColor" data-color="blue"></button>
-            <button type="button" class="changeLogoHeaderColor" data-color="purple"></button>
-            <button type="button" class="changeLogoHeaderColor" data-color="light-blue"></button>
-            <button type="button" class="changeLogoHeaderColor" data-color="green"></button>
-            <button type="button" class="changeLogoHeaderColor" data-color="orange"></button>
-            <button type="button" class="changeLogoHeaderColor" data-color="red"></button>
-            <button type="button" class="changeLogoHeaderColor" data-color="white"></button>
-            <br />
-            <button type="button" class="changeLogoHeaderColor" data-color="dark2"></button>
-            <button type="button" class="changeLogoHeaderColor" data-color="blue2"></button>
-            <button type="button" class="changeLogoHeaderColor" data-color="purple2"></button>
-            <button type="button" class="changeLogoHeaderColor" data-color="light-blue2"></button>
-            <button type="button" class="changeLogoHeaderColor" data-color="green2"></button>
-            <button type="button" class="changeLogoHeaderColor" data-color="orange2"></button>
-            <button type="button" class="changeLogoHeaderColor" data-color="red2"></button>
+    <!-- Custom template | don't include it in your project! -->
+    <div class="custom-template">
+      <div class="title">Settings</div>
+      <div class="custom-content">
+        <div class="switcher">
+          <div class="switch-block">
+            <h4>Logo Header</h4>
+            <div class="btnSwitch">
+              <button type="button" class="selected changeLogoHeaderColor" data-color="dark"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="blue"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="purple"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="light-blue"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="green"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="orange"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="red"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="white"></button>
+              <br />
+              <button type="button" class="changeLogoHeaderColor" data-color="dark2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="blue2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="purple2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="light-blue2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="green2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="orange2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="red2"></button>
+            </div>
           </div>
-        </div>
-        <div class="switch-block">
-          <h4>Navbar Header</h4>
-          <div class="btnSwitch">
-            <button type="button" class="changeTopBarColor" data-color="dark"></button>
-            <button type="button" class="changeTopBarColor" data-color="blue"></button>
-            <button type="button" class="changeTopBarColor" data-color="purple"></button>
-            <button type="button" class="changeTopBarColor" data-color="light-blue"></button>
-            <button type="button" class="changeTopBarColor" data-color="green"></button>
-            <button type="button" class="changeTopBarColor" data-color="orange"></button>
-            <button type="button" class="changeTopBarColor" data-color="red"></button>
-            <button type="button" class="selected changeTopBarColor" data-color="white"></button>
-            <br />
-            <button type="button" class="changeTopBarColor" data-color="dark2"></button>
-            <button type="button" class="changeTopBarColor" data-color="blue2"></button>
-            <button type="button" class="changeTopBarColor" data-color="purple2"></button>
-            <button type="button" class="changeTopBarColor" data-color="light-blue2"></button>
-            <button type="button" class="changeTopBarColor" data-color="green2"></button>
-            <button type="button" class="changeTopBarColor" data-color="orange2"></button>
-            <button type="button" class="changeTopBarColor" data-color="red2"></button>
+          <div class="switch-block">
+            <h4>Navbar Header</h4>
+            <div class="btnSwitch">
+              <button type="button" class="changeTopBarColor" data-color="dark"></button>
+              <button type="button" class="changeTopBarColor" data-color="blue"></button>
+              <button type="button" class="changeTopBarColor" data-color="purple"></button>
+              <button type="button" class="changeTopBarColor" data-color="light-blue"></button>
+              <button type="button" class="changeTopBarColor" data-color="green"></button>
+              <button type="button" class="changeTopBarColor" data-color="orange"></button>
+              <button type="button" class="changeTopBarColor" data-color="red"></button>
+              <button type="button" class="selected changeTopBarColor" data-color="white"></button>
+              <br />
+              <button type="button" class="changeTopBarColor" data-color="dark2"></button>
+              <button type="button" class="changeTopBarColor" data-color="blue2"></button>
+              <button type="button" class="changeTopBarColor" data-color="purple2"></button>
+              <button type="button" class="changeTopBarColor" data-color="light-blue2"></button>
+              <button type="button" class="changeTopBarColor" data-color="green2"></button>
+              <button type="button" class="changeTopBarColor" data-color="orange2"></button>
+              <button type="button" class="changeTopBarColor" data-color="red2"></button>
+            </div>
           </div>
-        </div>
-        <div class="switch-block">
-          <h4>Sidebar</h4>
-          <div class="btnSwitch">
-            <button type="button" class="changeSideBarColor" data-color="white"></button>
-            <button type="button" class="selected changeSideBarColor" data-color="dark"></button>
-            <button type="button" class="changeSideBarColor" data-color="dark2"></button>
+          <div class="switch-block">
+            <h4>Sidebar</h4>
+            <div class="btnSwitch">
+              <button type="button" class="changeSideBarColor" data-color="white"></button>
+              <button type="button" class="selected changeSideBarColor" data-color="dark"></button>
+              <button type="button" class="changeSideBarColor" data-color="dark2"></button>
+            </div>
           </div>
         </div>
       </div>
+      <div class="custom-toggle">
+        <i class="icon-settings"></i>
+      </div>
     </div>
-    <div class="custom-toggle">
-      <i class="icon-settings"></i>
-    </div>
-  </div>
-  <!-- End Custom template -->
+    <!-- End Custom template -->
   </div>
   <!--   Core JS Files   -->
   <script src="js/core/jquery-3.7.1.min.js"></script>
@@ -805,410 +622,6 @@
   <script src="js/setting-demo.js"></script>
   <script src="js/demo.js"></script>
   <script src="js/oders.js"></script>
-
-
-  <style>
-    body {
-      background-color: #f8f8f8;
-    }
-
-    .navbar {
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .card {
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-      border: none;
-      border-radius: 8px;
-    }
-
-    .list-group-item {
-      font-size: 14px;
-    }
-
-    .card-body h5 {
-      font-weight: bold;
-    }
-
-
-    .suggestions-list {
-      max-height: 200px;
-      overflow-y: auto;
-      z-index: 1000;
-      /* Đảm bảo hiển thị trên các thành phần khác */
-      border: 1px solid #ddd;
-      background-color: white;
-      border-radius: 0 0 5px 5px;
-      margin-top: -1px;
-      /* Để tránh khoảng trống giữa input và ul */
-    }
-
-    .suggestions-list li {
-      padding: 10px;
-      cursor: pointer;
-    }
-
-    .suggestions-list li:hover {
-      background-color: #f1f1f1;
-    }
-
-    button.active {
-      background-color: #007bff;
-      color: white;
-      border-color: #007bff;
-    }
-
-    /* CSS cho lớp highlight */
-    .highlight {
-      background-color: #f0f8ff;
-      /* Màu nền khi highlight */
-      font-weight: bold;
-      /* Có thể thêm các hiệu ứng khác */
-    }
-  </style>
-
-  <script type="text/javascript">
-
-    let activeBillCode;
-
-    let currentCodeShirtDetail = 'cocainit';
-
-    let currentCodeBillDetail = 'cocainit';
-
-    let camStat = true;
-
-    const apiUrl = "http://localhost:8080/point-of-sale/get-pending-bill";
-
-    const token = sessionStorage.getItem('jwtToken');
-
-    // Tạo một đối tượng headers chứa token
-    const headers = {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    };
-
-
-    async function fetchBillDetails(codeBill) {
-      try {
-        const response = await fetch(`http://localhost:8080/point-of-sale/get-bill-detail?codeBill=${codeBill}`, {
-          method: 'GET',
-          headers: headers // Thêm headers vào yêu cầu
-        });
-
-        // Kiểm tra xem phản hồi có thành công không
-        if (!response.ok) {
-          throw new Error('Network response was not ok ' + response.statusText);
-        }
-
-        currentCodeShirtDetail = 'cocainit';
-
-        // Chuyển đổi dữ liệu thành JSON
-        const data = await response.json();
-
-        // Lấy phần tử danh sách
-        const productList = document.getElementById('product-list');
-
-        // Xóa các phần tử cũ trong danh sách
-        productList.innerHTML = '';
-
-        // Khai báo biến để tính toán tổng tiền
-        let subtotal = 0;
-        let tax = 0; // Giả sử bạn có một tỷ lệ thuế cố định hoặc tính toán theo yêu cầu
-
-        // Duyệt qua từng sản phẩm và thêm vào danh sách
-        data.forEach(item => {
-          const listItem = document.createElement('li');
-          listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
-
-          // Tính toán subtotal
-          const itemTotal = item.price * item.quantity; // Tính tổng cho từng sản phẩm
-          subtotal += itemTotal; // Cộng dồn vào subtotal
-
-          // Tạo nội dung cho mỗi sản phẩm
-          listItem.innerHTML = `
-                ${item.shirtDetail.codeShirtDetail}
-                <span>${item.quantity}x</span>
-                <span>$${item.price}</span>
-            `;
-
-          listItem.addEventListener('click', () => {
-            // Kiểm tra xem hàng hiện tại có đang được highlight không
-            if (listItem.classList.contains('highlight')) {
-              // Nếu đang highlight, bỏ highlight
-              listItem.classList.remove('highlight');
-              currentCodeShirtDetail = 'cocainit';
-              currentCodeBillDetail = 'cocainit';
-            } else {
-              // Nếu chưa highlight, bỏ highlight ở các hàng khác và thêm highlight cho hàng này
-              document.querySelectorAll('.list-group-item').forEach(item => {
-                item.classList.remove('highlight');
-              });
-              listItem.classList.add('highlight');
-              currentCodeShirtDetail = item.shirtDetail.codeShirtDetail;
-              currentCodeBillDetail = item.codeBillDetail;
-            }
-
-          });
-
-          // Thêm phần tử vào danh sách
-          productList.appendChild(listItem);
-        });
-
-        // Giả sử tỷ lệ thuế là 4%
-        tax = subtotal * 0.04;
-
-        // Tính toán tổng tiền
-        const totalPayment = subtotal + tax;
-
-        // Cập nhật giao diện
-        activeBillCode = codeBill;
-        document.getElementById('subtotal').innerText = `$${subtotal.toFixed(2)}`;
-        document.getElementById('tax').innerText = `$${tax.toFixed(2)}`;
-        document.getElementById('totalPayment').innerText = `$${totalPayment.toFixed(2)}`;
-
-        // Cập nhật trạng thái active cho nút
-        const buttons = document.querySelectorAll('#bill-buttons button');
-        buttons.forEach(button => {
-          button.classList.toggle('active', button.value === codeBill); // Thêm/lớp active nếu trùng mã hóa đơn
-        });
-
-      } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
-      }
-    }
-
-
-    // Gọi API để lấy dữ liệu hóa đơn
-    async function fetchBills() {
-      try {
-        const response = await fetch(apiUrl, {
-          method: 'GET',
-          headers: headers // Thêm headers vào yêu cầu
-        });
-        const bills = await response.json(); // Chuyển đổi response thành JSON
-
-        if (bills.length > 0) {
-          activeBillCode = bills[0].codeBill;
-          fetchBillDetails(activeBillCode); // Gọi hàm để hiển thị thông tin hóa đơn đầu tiên
-        }
-
-        // Hiển thị các nút hóa đơn dựa trên dữ liệu từ API
-        const billButtonsContainer = document.getElementById('bill-buttons');
-        billButtonsContainer.innerHTML = ''; // Xóa nội dung cũ (nếu có)
-
-        bills.forEach(bill => {
-          const button = document.createElement('button');
-          button.className = 'btn btn-outline-primary m-1';
-          button.textContent = bill.codeBill;  // Hiển thị mã hóa đơn
-          button.value = bill.codeBill;  // Gán giá trị mã hóa đơn
-
-          if (bill.codeBill === activeBillCode) {
-            button.classList.add('active');
-          }
-
-          // Thêm sự kiện khi người dùng click vào nút
-          button.addEventListener('click', () => {
-            fetchBillDetails(bill.codeBill);
-          });
-
-          // Thêm nút vào container
-          billButtonsContainer.appendChild(button);
-        });
-      } catch (error) {
-        console.error('Lỗi khi gọi API:', error);
-      }
-    }
-
-    // Gọi hàm fetchBills khi trang load
-    window.onload = fetchBills;
-
-
-    function creatBill() {
-      fetch(`http://localhost:8080/point-of-sale/create-blank-bill`, {
-        method: 'GET',
-        headers: headers
-      }).then(data => {
-        console.log("Create blank bill successfully", data);
-        currentCodeShirtDetail = 'cocainit';
-        fetchBills()
-      }
-      ).catch(error => console.error("Error creating blank bill", error));
-
-    }
-
-    function checkout() {
-      fetch(`http://localhost:8080/point-of-sale/checkout?codeBill=${activeBillCode}&codeVoucher=`, {
-        method: 'POST',
-        headers: headers
-      }).then(data => {
-        console.log("Check out successfully", data);
-        currentCodeShirtDetail = 'cocainit';
-        fetchBills()
-      }
-      ).catch(error => console.error("Error with checkout", error));
-    }
-
-    function cancel() {
-      fetch(`http://localhost:8080/point-of-sale/cancel?codeBill=${activeBillCode}`, {
-        method: 'POST',
-        headers: headers
-      }).then(data => {
-        console.log("Cancel successfully", data);
-        currentCodeShirtDetail = 'cocainit';
-        fetchBills()
-      }
-      ).catch(error => console.error("Error with canceling", error));
-    }
-
-    function scanBarcode() {
-      const codeBill = activeBillCode;
-      if (camStat) {
-        fetch(`http://localhost:8080/point-of-sale/scanBarcode?billCode=${codeBill}`, {
-          method: 'GET',
-          headers: headers
-        }).then(response => response.text())
-          .then(result => {
-            if (result === "Webcam end") {
-              console.log("Webcam đã kết thúc, không mở modal.");
-              return; // Kết thúc hàm mà không làm gì thêm
-            }
-            // Gán kết quả quét vào phần tử shirtCodeDetail
-            document.getElementById("shirtCodeDetail").innerText = result;
-
-            // Đặt lại số lượng về 1
-            document.getElementById("quantityInput").value = 1;
-
-            // Mở modal
-            openModal();
-          })
-          .catch(error => console.error("Lỗi khi quét mã vạch:", error));
-        camStat = false;
-      } else {
-        fetch(`http://localhost:8080/point-of-sale/close`, {
-          method: 'GET',
-          headers: headers
-        }).catch(error => console.error("Error adding item to cart:", error));
-        camStat = true;
-      }
-    }
-
-    function performSearch() {
-      let searchQuery = document.getElementById("searchInput").value;
-
-      if (searchQuery.length > 0) {
-        fetch(`http://localhost:8080/point-of-sale/search?query=${searchQuery}`, {
-          method: 'GET',
-          headers: headers // Thêm headers vào yêu cầu
-        })
-          .then(response => response.json())
-          .then(data => {
-            let suggestionsList = document.getElementById("suggestions");
-            suggestionsList.innerHTML = "";
-
-            if (data.length > 0) {
-              data.forEach(item => {
-                let suggestionItem = document.createElement("li");
-                suggestionItem.innerHTML = item.shirt.nameShirt;
-                suggestionItem.onclick = function () {
-                  // Call the /add/ endpoint when a suggestion is clicked
-                  document.getElementById("shirtCodeDetail").innerText = item.codeShirtDetail;
-                  openModal(); // Gọi hàm mở modal
-                  suggestionsList.innerHTML = ""; // Clear suggestions after the click
-                  document.getElementById("searchInput").value = "";
-
-                };
-                suggestionsList.appendChild(suggestionItem);
-              });
-            } else {
-              suggestionsList.innerHTML = "<li>No results found</li>";
-            }
-          })
-          .catch(error => console.error("Error fetching data:", error));
-      } else {
-        document.getElementById("suggestions").innerHTML = "";
-      }
-    }
-
-    function openModal() {
-      document.getElementById("quantityInput").value = 1;
-
-      var myModal = new bootstrap.Modal(document.getElementById('myModal'), {
-        keyboard: false // Thay đổi nếu bạn muốn tắt tính năng đóng bằng phím ESC
-      });
-      myModal.show(); // Mở modal
-    }
-
-    function addItemToCart() {
-
-      const codeBill = activeBillCode;
-      const codeShirtDetail = document.getElementById("shirtCodeDetail").innerText;
-      const quantity = document.getElementById("quantityInput").value;
-      // Send a POST request to the /add/ endpoint with the item ID
-      fetch(`http://localhost:8080/point-of-sale/add-to-cart?codeShirtDetail=${codeShirtDetail}&codeBill=${codeBill}&quantity=${quantity}`, {
-        method: 'POST',
-        headers: headers
-      })
-        // .then(response => response.json())
-        .then
-        (data => {
-          console.log("Item added to cart:", data);
-          // You can update the UI or show a message that the item has been added
-          document.getElementById("searchInput").value = "";
-          fetchBillDetails(codeBill);
-          camStat = true;
-        })
-        .catch(error => console.error("Error adding item to cart:", error));
-      document.getElementById('closeModal').click()
-    }
-
-    function openModal2() {
-      document.getElementById("quantityInput2").value = 1;
-
-      var myModal = new bootstrap.Modal(document.getElementById('myModal2'), {
-        keyboard: false // Thay đổi nếu bạn muốn tắt tính năng đóng bằng phím ESC
-      });
-      myModal.show(); // Mở modal
-    }
-
-    function changQuantity() {
-
-      const codeBill = activeBillCode;
-      const codeShirtDetail = currentCodeShirtDetail;
-      const codeBillDetail = currentCodeBillDetail;
-      const quantity = document.getElementById("quantityInput2").value;
-      // Send a POST request to the /add/ endpoint with the item ID
-      fetch(`http://localhost:8080/point-of-sale/change-quantity?codeBillDetail=${codeBillDetail}&quantity=${quantity}`, {
-        method: 'POST',
-        headers: headers
-      })
-        // .then(response => response.json())
-        .then
-        (data => {
-          console.log("Item changed:", data);
-          // You can update the UI or show a message that the item has been added
-          // document.getElementById("searchInput").value = "";
-          fetchBillDetails(codeBill);
-          // camStat = true;
-        })
-        .catch(error => console.error("Error adding item to cart:", error));
-      document.getElementById('closeModal2').click()
-    }
-
-    function remove() {
-      const codeBill = activeBillCode;
-      const codeBillDetail = currentCodeBillDetail;
-      fetch(`http://localhost:8080/point-of-sale/remove-item-from-cart?codeBillDetail=${codeBillDetail}`, {
-        method: 'POST',
-        headers: headers
-      }).then(data => {
-        console.log("Remove successfully", data);
-        currentCodeBillDetail = 'cocainit';
-        fetchBillDetails(codeBill);
-      }
-      ).catch(error => console.error("Error with removing", error));
-    }
-
-  </script>
 
   <script>
     $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
