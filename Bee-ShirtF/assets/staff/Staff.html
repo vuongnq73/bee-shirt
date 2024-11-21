@@ -476,13 +476,13 @@
                 </th>
               </tr>
               <tr>
-                <th>Code</th>
-                <th>Username</th>
+                <th>Mã</th>
+                <th>Tên đăng nhập</th>
                 <th>Email</th>
-                <th>Phone</th>
-                <th>Address</th>
-                <th>Status</th>
-                <th>Action</th>
+                <th>SĐT</th>
+                <th>Địa chỉ</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
               </tr>
             </thead>
             <tbody>
@@ -492,19 +492,19 @@
                 <td>{{ staff.email }}</td>
                 <td>{{ staff.phone }}</td>
                 <td>{{ staff.address }}</td>
-                <td>{{ staff.status === 0 ? 'Active' : 'Inactive' }}</td>
+                <td>{{ staff.status === 0 ? 'Hoạt động' : 'Ngưng hoạt động' }}</td>
                 <td>
-                  <button  ng-click="goToUpdateProfile(staff.code)" class="btn btn-warning btn-sm">Detail</button>
-                  <button ng-click="deleteAccount(staff.code)" class="btn btn-danger btn-sm">Remove</button>
+                  <button  ng-click="goToUpdateProfile(staff.code)" class="btn btn-warning btn-sm">Chi tiết</button>
+                  <button ng-click="deleteAccount(staff.code)" class="btn btn-danger btn-sm">Xóa</button>
                 </td>
               </tr>
             </tbody>
           </table>
           <!-- Pagination Controls -->
           <div class="pagination mt-3 d-flex justify-content-center">
-            <button ng-click="previousPage()" class="btn btn-secondary" ng-disabled="currentPage === 1">Previous</button>
+            <button ng-click="previousPage()" class="btn btn-secondary" ng-disabled="currentPage === 1">Trước</button>
             <span class="mx-3">Page {{ currentPage }} of {{ totalPages }}</span>
-            <button ng-click="nextPage()" class="btn btn-secondary" ng-disabled="currentPage === totalPages">Next</button>
+            <button ng-click="nextPage()" class="btn btn-secondary" ng-disabled="currentPage === totalPages">Sau</button>
           </div>
         </div>
       </div>
