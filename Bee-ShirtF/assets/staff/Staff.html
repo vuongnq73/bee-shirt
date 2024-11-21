@@ -417,14 +417,14 @@
   <div class="page-inner">
     <div class="card">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <h3>Staff List</h3>
-        <button ng-click="showCreateAccountForm = true" class="btn btn-primary">Create Staff</button>
+        <h3>Danh sách</h3>
+        <button ng-click="showCreateAccountForm = true" class="btn btn-primary">Tạo tài khoản</button>
       </div>
       <div class="card-body">
         
         <!-- New Account Creation Form -->
         <div ng-if="showCreateAccountForm" class="my-3 p-3 bg-light">
-          <h3>Create New Account</h3>
+          <h3>Tạo tài khoản mới</h3>
           <form ng-submit="createAccount()" enctype="multipart/form-data" class="account-form">
             <div class="form-group">
               <input type="text" ng-model="user.firstName" placeholder="First Name" required class="form-control" />
@@ -448,18 +448,18 @@
               <input type="password" ng-model="user.pass" placeholder="Password" required class="form-control" />
             </div>
             <div class="form-group">
-              <label for="avatar">Select Avatar:</label>
+              <label for="avatar">Chọn ảnh:</label>
               <input type="file" id="avatar" file-input="user.avatarFile" class="form-control" />
             </div>
             <div class="form-group">
-              <label for="role">Select Role(s):</label>
+              <label for="role">Chọn quyền:</label>
               <select multiple ng-model="user.role" id="role" class="form-control" required>
                 <option ng-repeat="role in availableRoles" ng-value="role">{{ role }}</option>
               </select>
             </div>
             <div class="form-actions">
-              <button type="submit" class="btn btn-success" ng-disabled="isSubmitting">Create Account</button>
-              <button type="button" ng-click="cancelCreateAccount()" class="btn btn-secondary">Cancel</button>
+              <button type="submit" class="btn btn-success" ng-disabled="isSubmitting">Tạo tài khoản</button>
+              <button type="button" ng-click="cancelCreateAccount()" class="btn btn-secondary">Đóng</button>
             </div>
           </form>
           <div ng-if="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
@@ -476,13 +476,13 @@
                 </th>
               </tr>
               <tr>
-                <th>Code</th>
-                <th>Username</th>
+                <th>Mã</th>
+                <th>Tên đăng nhập</th>
                 <th>Email</th>
-                <th>Phone</th>
-                <th>Address</th>
-                <th>Status</th>
-                <th>Action</th>
+                <th>SĐT</th>
+                <th>Địa chỉ</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
               </tr>
             </thead>
             <tbody>
@@ -492,19 +492,18 @@
                 <td>{{ staff.email }}</td>
                 <td>{{ staff.phone }}</td>
                 <td>{{ staff.address }}</td>
-                <td>{{ staff.status === 0 ? 'Active' : 'Inactive' }}</td>
-                <td>
-                  <button  ng-click="goToUpdateProfile(staff.code)" class="btn btn-warning btn-sm">Detail</button>
-                  <button ng-click="deleteAccount(staff.code)" class="btn btn-danger btn-sm">Remove</button>
+                <td>{{ staff.status === 0 ? 'Hoạt động' : 'Ngưng hoạt động' }}</td>                <td>
+                  <button  ng-click="goToUpdateProfile(staff.code)" class="btn btn-warning btn-sm">Chi tiết</button>
+                  <button ng-click="deleteAccount(staff.code)" class="btn btn-danger btn-sm">Xóa</button>
                 </td>
               </tr>
             </tbody>
           </table>
           <!-- Pagination Controls -->
           <div class="pagination mt-3 d-flex justify-content-center">
-            <button ng-click="previousPage()" class="btn btn-secondary" ng-disabled="currentPage === 1">Previous</button>
+            <button ng-click="previousPage()" class="btn btn-secondary" ng-disabled="currentPage === 1">Trước</button>
             <span class="mx-3">Page {{ currentPage }} of {{ totalPages }}</span>
-            <button ng-click="nextPage()" class="btn btn-secondary" ng-disabled="currentPage === totalPages">Next</button>
+            <button ng-click="nextPage()" class="btn btn-secondary" ng-disabled="currentPage === totalPages">Sau</button>
           </div>
         </div>
       </div>
