@@ -35,15 +35,8 @@
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link rel="stylesheet" href="/assets/css/demo.css" />
 
-<!-- Tải AngularJS -->
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-
-<!-- Tải Angular Route -->
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
-
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
   <script src="/assets/js/staff.js"></script>
-  <script src="/assets/js/myprofile.js"></script>
-  <script src="/assets/js/login.js"></script>
 </head>
 
 <body ng-app="staffApp" ng-controller="StaffController">
@@ -152,7 +145,7 @@
                     </a>
                   </li>
                   <li>
-                    <a href="/assets/Customer.html">
+                    <a href="Customer.html">
                       <span class="sub-item">Khách Hàng</span>
                     </a>
                   </li>
@@ -160,7 +153,7 @@
               </div>
             </li>
             <li class="nav-item">
-              <a  href="/assets/statistic.html">
+              <a  href="statistic.html">
                 <i class="far fa-chart-bar"></i>
                 <p>Thống Kê</p>
              
@@ -370,42 +363,122 @@
                   </li>
                 </ul>
               </li>
+              <!-- <li class="nav-item topbar-icon dropdown hidden-caret">
+                  <a
+                    class="nav-link"
+                    data-bs-toggle="dropdown"
+                    href="#"
+                    aria-expanded="false"
+                  >
+                    <i class="fas fa-layer-group"></i>
+                  </a>
+                  <div class="dropdown-menu quick-actions animated fadeIn">
+                    <div class="quick-actions-header">
+                      <span class="title mb-1">Quick Actions</span>
+                      <span class="subtitle op-7">Shortcuts</span>
+                    </div>
+                    <div class="quick-actions-scroll scrollbar-outer">
+                      <div class="quick-actions-items">
+                        <div class="row m-0">
+                          <a class="col-6 col-md-4 p-0" href="#">
+                            <div class="quick-actions-item">
+                              <div class="avatar-item bg-danger rounded-circle">
+                                <i class="far fa-calendar-alt"></i>
+                              </div>
+                              <span class="text">Calendar</span>
+                            </div>
+                          </a>
+                          <a class="col-6 col-md-4 p-0" href="#">
+                            <div class="quick-actions-item">
+                              <div
+                                class="avatar-item bg-warning rounded-circle"
+                              >
+                                <i class="fas fa-map"></i>
+                              </div>
+                              <span class="text">Maps</span>
+                            </div>
+                          </a>
+                          <a class="col-6 col-md-4 p-0" href="#">
+                            <div class="quick-actions-item">
+                              <div class="avatar-item bg-info rounded-circle">
+                                <i class="fas fa-file-excel"></i>
+                              </div>
+                              <span class="text">Reports</span>
+                            </div>
+                          </a>
+                          <a class="col-6 col-md-4 p-0" href="#">
+                            <div class="quick-actions-item">
+                              <div
+                                class="avatar-item bg-success rounded-circle"
+                              >
+                                <i class="fas fa-envelope"></i>
+                              </div>
+                              <span class="text">Emails</span>
+                            </div>
+                          </a>
+                          <a class="col-6 col-md-4 p-0" href="#">
+                            <div class="quick-actions-item">
+                              <div
+                                class="avatar-item bg-primary rounded-circle"
+                              >
+                                <i class="fas fa-file-invoice-dollar"></i>
+                              </div>
+                              <span class="text">Invoice</span>
+                            </div>
+                          </a>
+                          <a class="col-6 col-md-4 p-0" href="#">
+                            <div class="quick-actions-item">
+                              <div
+                                class="avatar-item bg-secondary rounded-circle"
+                              >
+                                <i class="fas fa-credit-card"></i>
+                              </div>
+                              <span class="text">Payments</span>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li> -->
 
-              <li class="nav-item topbar-user dropdown hidden-caret" ng-if="myProfile">
+              <li class="nav-item topbar-user dropdown hidden-caret">
                 <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
                   <div class="avatar-sm">
-                    <!-- Hiển thị avatar của người dùng hoặc ảnh mặc định -->
-                    <img ng-src="{{ myProfile.avatar }}" alt="..." class="avatar-img rounded-circle" />
+                    <img src="/assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle" />
                   </div>
                   <span class="profile-username">
                     <span class="op-7">Hi,</span>
-                    <span class="fw-bold">{{ myProfile.firstName }}</span> <!-- Hiển thị tên người dùng -->
+                    <span class="fw-bold">Đăng Ngố</span>
                   </span>
                 </a>
-              
                 <ul class="dropdown-menu dropdown-user animated fadeIn">
                   <div class="dropdown-user-scroll scrollbar-outer">
-                    <li ng-if="myProfile"> <!-- Ngăn lỗi nếu myProfile chưa tải xong -->
+                    <li>
                       <div class="user-box">
                         <div class="avatar-lg">
-                          <img ng-src="{{ myProfile.avatar }}" alt="image profile" class="avatar-img rounded" />
+                          <img src="/assets/img/profile.jpg" alt="image profile" class="avatar-img rounded" />
                         </div>
                         <div class="u-text">
-                          <h4>{{ myProfile.firstName }} {{ myProfile.lastName }}</h4>
-                          <p class="text-muted">{{ myProfile.email }}</p>
-                          <a href="#" ng-click="viewProfile()" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+                          <h4>Hizrian</h4>
+                          <p class="text-muted">hello@example.com</p>
+                          <a href="profile.html" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
                         </div>
                       </div>
                     </li>
                     <li>
                       <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="/assets/account/login.html" ng-click="logout()">Logout</a>
+                      <a class="dropdown-item" href="#">My Profile</a>
+                      <a class="dropdown-item" href="#">My Balance</a>
+                      <a class="dropdown-item" href="#">Inbox</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Account Setting</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Logout</a>
                     </li>
                   </div>
                 </ul>
               </li>
-              
-                             
             </ul>
           </div>
         </nav>
@@ -417,65 +490,19 @@
     <div class="card">
       <div class="card-header d-flex justify-content-between align-items-center">
         <h3>Staff List</h3>
-        <button ng-click="showCreateAccountForm = true" class="btn btn-primary">Create Staff</button>
+        <button ng-click="createStaff()" class="btn btn-primary">Create Staff</button>
       </div>
       <div class="card-body">
-        
-        <!-- New Account Creation Form -->
-        <div ng-if="showCreateAccountForm" class="my-3 p-3 bg-light">
-          <h3>Create New Account</h3>
-          <form ng-submit="createAccount()" enctype="multipart/form-data" class="account-form">
-            <div class="form-group">
-              <input type="text" ng-model="user.firstName" placeholder="First Name" required class="form-control" />
-            </div>
-            <div class="form-group">
-              <input type="text" ng-model="user.lastName" placeholder="Last Name" required class="form-control" />
-            </div>
-            <div class="form-group">
-              <input type="text" ng-model="user.username" placeholder="Username" required class="form-control" />
-            </div>
-            <div class="form-group">
-              <input type="email" ng-model="user.email" placeholder="Email" required class="form-control" />
-            </div>
-            <div class="form-group">
-              <input type="text" ng-model="user.phone" placeholder="Phone" required class="form-control" />
-            </div>
-            <div class="form-group">
-              <input type="text" ng-model="user.address" placeholder="Address" required class="form-control" />
-            </div>
-            <div class="form-group">
-              <input type="password" ng-model="user.pass" placeholder="Password" required class="form-control" />
-            </div>
-            <div class="form-group">
-              <label for="avatar">Select Avatar:</label>
-              <input type="file" id="avatar" file-input="user.avatarFile" class="form-control" />
-            </div>
-            <div class="form-group">
-              <label for="role">Select Role(s):</label>
-              <select multiple ng-model="user.role" id="role" class="form-control" required>
-                <option ng-repeat="role in availableRoles" ng-value="role">{{ role }}</option>
-              </select>
-            </div>
-            <div class="form-actions">
-              <button type="submit" class="btn btn-success" ng-disabled="isSubmitting">Create Account</button>
-              <button type="button" ng-click="cancelCreateAccount()" class="btn btn-secondary">Cancel</button>
-            </div>
-          </form>
-          <div ng-if="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
-          <div ng-if="successMessage" class="alert alert-success mt-3">{{ successMessage }}</div>
-        </div>
-
-        <!-- Staff List -->
-        <div class="table-responsive mt-4">
+        <div class="table-responsive">
           <table id="basic-datatables" class="display table table-striped table-hover">
             <thead>
               <tr>
-                <th colspan="7">
-                  <input type="text" id="searchInput" class="form-control w-50 float-end" placeholder="Search..." ng-model="searchQuery" ng-change="searchStaff()" />
+                <th colspan="4">
+                  <input type="text" id="searchInput" class="form-control w-50" placeholder="Search..." ng-model="searchQuery" ng-change="searchStaff()" style="float: right;">
                 </th>
+                
               </tr>
               <tr>
-                <th>Code</th>
                 <th>Username</th>
                 <th>Email</th>
                 <th>Phone</th>
@@ -486,32 +513,29 @@
             </thead>
             <tbody>
               <tr ng-repeat="staff in filteredStaffList">
-                <td>{{ staff.code }}</td>
-                <td>{{ staff.username }}</td>
-                <td>{{ staff.email }}</td>
-                <td>{{ staff.phone }}</td>
-                <td>{{ staff.address }}</td>
-                <td>{{ staff.status === 0 ? 'Active' : 'Inactive' }}</td>
+                <!-- <td>{{staff.firstName}} {{staff.lastName}}</td> -->
+                <td>{{staff.username}}</td>
+                <td>{{staff.email}}</td>
+                <td>{{staff.phone}}</td>
+                <!-- <td><img ng-src="{{staff.avatar}}" alt="Avatar" style="width: 50px; height: 50px;"></td> -->
+                <td>{{staff.address}}</td>
+                <td>{{staff.status === 1 ? 'Active' : 'Inactive'}}</td>
+                <!-- <td>{{staff.createAt | date:'yyyy-MM-dd'}}</td>
+                <td>{{staff.updateAt ? (staff.updateAt | date:'yyyy-MM-dd') : 'N/A'}}</td>
+                <td>{{staff.createBy}}</td>
+                <td>{{staff.updateBy || 'N/A'}}</td> -->
                 <td>
-                  <button  ng-click="goToUpdateProfile(staff.code)" class="btn btn-warning btn-sm">Detail</button>
-                  <button ng-click="deleteAccount(staff.code)" class="btn btn-danger btn-sm">Remove</button>
+                  <button ng-click="updateStaff(staff.id)" class="btn btn-warning btn-sm">Update</button>
+                  <button ng-click="removeStaff(staff.id)" class="btn btn-danger btn-sm">Remove</button>
                 </td>
               </tr>
             </tbody>
           </table>
-          <!-- Pagination Controls -->
-          <div class="pagination mt-3 d-flex justify-content-center">
-            <button ng-click="previousPage()" class="btn btn-secondary" ng-disabled="currentPage === 1">Previous</button>
-            <span class="mx-3">Page {{ currentPage }} of {{ totalPages }}</span>
-            <button ng-click="nextPage()" class="btn btn-secondary" ng-disabled="currentPage === totalPages">Next</button>
-          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-
 
 
 

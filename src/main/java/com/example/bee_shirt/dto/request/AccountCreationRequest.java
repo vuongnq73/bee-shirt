@@ -1,6 +1,5 @@
 package com.example.bee_shirt.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micrometer.common.lang.Nullable;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -38,7 +37,6 @@ public class AccountCreationRequest {
     String phone;
 
     @Builder.Default
-    @JsonProperty("status")
     Integer status = 0;
 
     @NotEmpty(message = "EMAIL NOT EMPTY")
@@ -53,6 +51,8 @@ public class AccountCreationRequest {
     @NotNull(message = "PASSWORD NOT EMPTY")
     @Size(min = 5,message = "PASSWORD_INVALID")
     String pass;
+
+    LocalDate createAt;
 
     String createBy;
 

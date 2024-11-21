@@ -30,10 +30,7 @@ public enum ErrorCode {
 
     FILE_UPLOAD_FAILED(1011,"File upload has been fail",HttpStatus.BAD_REQUEST),
 
-
-    INVALID_FILE_TYPE(1012,"This file is not image",HttpStatus.BAD_REQUEST),
-
-    ACCOUNT_NOT_FOUND(1012,"Account not found",HttpStatus.NOT_FOUND)
+    INVALID_FILE_TYPE(1012,"This file is not image",HttpStatus.BAD_REQUEST)
 
     ;
     private int code;

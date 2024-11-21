@@ -310,9 +310,3 @@ body[data-background-color="dark"] .demo-icon .icon-class {
     right: -85%; } }
 
 /*# sourceMappingURL=demo.css.map */
-#bill-buttons {
-  max-height: 250px; /* Chiều cao tối đa mà bạn muốn */
-  overflow-y: auto; /* Hiển thị thanh cuộn dọc nếu nội dung vượt quá chiều cao */
-  padding-right: 10px; /* Thêm khoảng cách bên phải nếu thanh cuộn xuất hiện */
-}
-
