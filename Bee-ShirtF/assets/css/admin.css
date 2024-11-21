@@ -1,0 +1,15 @@
+body {
+  font-family: Arial, sans-serif;
+}
+
+.admin-container {
+  padding: 20px;
+}
+
+h2 {
+  color: #333;
+}
+
+.logout {
+  margin-top: 20px;
+}
