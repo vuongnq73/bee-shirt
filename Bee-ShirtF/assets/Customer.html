@@ -512,13 +512,13 @@
                         </th>
                       </tr>
                       <tr>
-                        <th>Code</th>
-                        <th>Username</th>
+                        <th>Mã</th>
+                        <th>Tên đăng nhập</th>
                         <th>Email</th>
-                        <th>Phone</th>
-                        <th>Address</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                        <th>SĐT</th>
+                        <th>Địa chỉ</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -529,20 +529,21 @@
                         <td>{{ custom.phone }}</td>
                         <td>{{ custom.address }}</td>
                         <td>
-                          {{ custom.status === 0 ? 'Active' : 'Inactive' }}
+                          {{ custom.status === 0 ? 'Hoạt động' : 'Ngưng hoạt
+                          động' }}
                         </td>
                         <td>
                           <button
                             ng-click="goToUpdateProfile(custom.code)"
                             class="btn btn-warning btn-sm"
                           >
-                            Detail
+                          Chi tiết
                           </button>
                           <button
                             ng-click="deleteAccount(custom.code)"
                             class="btn btn-danger btn-sm"
                           >
-                            Remove
+                          Xóa
                           </button>
                         </td>
                       </tr>
@@ -555,7 +556,7 @@
                       class="btn btn-secondary"
                       ng-disabled="currentPage === 1"
                     >
-                      Previous
+                    Trước
                     </button>
                     <span class="mx-3"
                       >Page {{ currentPage }} of {{ totalPages }}</span
@@ -565,7 +566,7 @@
                       class="btn btn-secondary"
                       ng-disabled="currentPage === totalPages"
                     >
-                      Next
+                    Sau
                     </button>
                   </div>
                 </div>

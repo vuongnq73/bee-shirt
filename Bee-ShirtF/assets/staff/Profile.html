@@ -15,7 +15,7 @@
   </head>
   <body ng-app="profileApp" ng-controller="ProfileController">
     <div class="profile-section">
-      <h2>My Profile</h2>
+      <h2>Thông tin</h2>
 
       <!-- Avatar Image -->
       <div class="form-group">
@@ -29,7 +29,7 @@
       <!-- Avatar input in the form, centered and immediately below avatar -->
       <form id="profileForm">
         <div class="form-group">
-          <label for="avatarFile">Select Avatar:</label>
+          <label for="avatarFile">Chọn ảnh:</label>
           <input
             type="file"
             id="avatarFile"
@@ -42,11 +42,11 @@
 
         <!-- Other form fields -->
         <div class="field">
-          <label for="firstName">Code:</label>
+          <label for="firstName">Mã:</label>
           <input type="text" id="code" ng-model="user.code" disabled />
         </div>
         <div class="field">
-          <label for="firstName">First Name:</label>
+          <label for="firstName">Họ:</label>
           <input
             type="text"
             id="firstName"
@@ -55,7 +55,7 @@
           />
         </div>
         <div class="field">
-          <label for="lastName">Last Name:</label>
+          <label for="lastName">Tên:</label>
           <input
             type="text"
             id="lastName"
@@ -73,7 +73,7 @@
           />
         </div>
         <div class="field">
-          <label for="phone">Phone:</label>
+          <label for="phone">SĐT:</label>
           <input
             type="text"
             id="phone"
@@ -82,7 +82,7 @@
           />
         </div>
         <div class="field">
-          <label for="address">Address:</label>
+          <label for="address">Địa chỉ:</label>
           <input
             type="text"
             id="address"
@@ -93,7 +93,7 @@
 
         <!-- Status Field updated to show "Active" or "Inactive" in a dropdown -->
         <div class="field">
-          <label for="status">Status:</label>
+          <label for="status">Trạng thái:</label>
           <select
             id="status"
             ng-model="user.status"
@@ -103,31 +103,31 @@
         </div>
 
         <div class="field">
-          <label for="username">Username:</label>
+          <label for="username">Tên đăng nhập:</label>
           <input type="text" id="username" ng-model="user.username" disabled />
         </div>
 
         <!-- Account Creation and Update Info -->
         <div class="field">
-          <label for="createAt">Account Created:</label>
+          <label for="createAt">Ngày tạo:</label>
           <input type="text" id="createAt" ng-model="user.createAt" disabled />
         </div>
         <div class="field">
-          <label for="updateAt">Last Update:</label>
+          <label for="updateAt">Ngày cập nhật:</label>
           <input type="text" id="updateAt" ng-model="user.updateAt" disabled />
         </div>
         <div class="field">
-          <label for="createBy">Created By:</label>
+          <label for="createBy">Tạo bởi:</label>
           <input type="text" id="createBy" ng-model="user.createBy" disabled />
         </div>
         <div class="field">
-          <label for="updateBy">Updated By:</label>
+          <label for="updateBy">Cập nhật bởi:</label>
           <input type="text" id="updateBy" ng-model="user.updateBy" disabled />
         </div>
 
         <!-- Role Information -->
         <div class="field">
-          <label for="role">Roles:</label>
+          <label for="role">Quyền:</label>
           <span id="role">{{getRoles(user.role)}}</span>
         </div>
 
@@ -140,20 +140,20 @@
 
         <!-- Buttons -->
         <div class="buttons">
-          <button type="button" ng-click="updateAccount()">Update</button>
+          <button type="button" ng-click="updateAccount()">Cập nhật</button>
           <button type="button" ng-click="toggleChangePassword()">
-            Change Password
+            Đổi mật khẩu
           </button>
-          <button type="button" ng-click="goBack()">Close</button>
+          <button type="button" ng-click="goBack()">Đóng</button>
         </div>
       </form>
 
       <!-- Change Password Form (Initially Hidden) -->
       <div ng-show="showChangePasswordForm" class="change-password-form">
-        <h3>Change Password</h3>
+        <h3>Đổi mật khẩu</h3>
         <form ng-submit="updatePassword()">
           <div class="form-group">
-            <label for="oldPassword">Old Password:</label>
+            <label for="oldPassword">Mật khẩu cũ:</label>
             <input
               type="password"
               id="oldPassword"
@@ -163,7 +163,7 @@
           </div>
 
           <div class="form-group">
-            <label for="newPassword">New Password:</label>
+            <label for="newPassword">Mật khẩu mới: </label>
             <input
               type="password"
               id="newPassword"
@@ -173,7 +173,7 @@
           </div>
 
           <div class="form-group">
-            <label for="confirmPassword">Confirm New Password:</label>
+            <label for="confirmPassword">Xác nhận mật khẩu:</label>
             <input
               type="password"
               id="confirmPassword"
@@ -184,9 +184,9 @@
           </div>
 
           <div class="buttons">
-            <button type="submit">Update Password</button>
+            <button type="submit">Cập nhật</button>
             <button type="button" ng-click="toggleChangePassword()">
-              Cancel
+              Đóng
             </button>
           </div>
         </form>
