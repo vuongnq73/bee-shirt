@@ -8,8 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+
 
 @Service
 public class ShirtDetailService {
@@ -28,17 +31,70 @@ public class ShirtDetailService {
     public Page<ShirtDetailDTO> getAllShirtDetails(Pageable pageable) {
         return shirtDetailRepository.findAllShirtDetails(pageable);
     }
+    public List<ShirtDetail> addShirtDetails(List<ShirtDetailDTO> shirtDetailDTOs) {
+        // Chuyển đổi từ DTO sang entity và xử lý liên kết
+        List<ShirtDetail> shirtDetails = shirtDetailDTOs.stream().map(dto -> {
+            ShirtDetail shirtDetail = new ShirtDetail();
 
-    // Thêm chi tiết áo
-    public ShirtDetail addShirtDetail(ShirtDetail shirtDetail) {
-        // Tạo mã ngẫu nhiên bắt đầu bằng "S" và theo sau là 6 số ngẫu nhiên
-        String generatedCode = "SDT" + generateRandomNumber(6);
+            // Tạo mã ngẫu nhiên cho chi tiết áo thun
+            String generatedCode = "SDT" + generateRandomNumber(6);
+            shirtDetail.setCodeShirtDetail(generatedCode);
 
-        // Gán mã sản phẩm vào đối tượng shirt
-        shirtDetail.setCodeShirtDetail(generatedCode);
-        return shirtDetailRepository.save(shirtDetail);
+            // Gán các giá trị từ DTO vào entity
+            shirtDetail.setQuantity(dto.getQuantity());
+            shirtDetail.setPrice(dto.getPrice());
+            shirtDetail.setStatusshirtdetail(dto.getStatusshirtdetail());
+            shirtDetail.setCreateBy(dto.getCreateBy());
+            shirtDetail.setCreateAt(dto.getCreateAt());
+            shirtDetail.setUpdateBy(dto.getUpdateBy());
+            shirtDetail.setUpdateAt(dto.getUpdateAt());
+            shirtDetail.setDeleted(dto.isDeleted());
+
+            // Gán các đối tượng từ ID trong DTO
+            // Lấy các đối tượng từ repository và gán vào entity
+            Shirt shirt = shirtRepository.findById(dto.getShirtId())
+                    .orElseThrow(() -> new RuntimeException("Shirt not found"));
+            shirtDetail.setShirt(shirt);
+
+            Material material = materialRepository.findById(dto.getMaterialId())
+                    .orElseThrow(() -> new RuntimeException("Material not found"));
+            shirtDetail.setMaterial(material);
+
+            Pattern pattern = patternRepository.findById(dto.getPatternId())
+                    .orElseThrow(() -> new RuntimeException("Pattern not found"));
+            shirtDetail.setPattern(pattern);
+
+            Gender gender = genderRepository.findById(dto.getGenderId())
+                    .orElseThrow(() -> new RuntimeException("Gender not found"));
+            shirtDetail.setGender(gender);
+
+            Origin origin = originRepository.findById(dto.getOriginId())
+                    .orElseThrow(() -> new RuntimeException("Origin not found"));
+            shirtDetail.setOrigin(origin);
+
+            Season season = seasonRepository.findById(dto.getSeasonId())
+                    .orElseThrow(() -> new RuntimeException("Season not found"));
+            shirtDetail.setSeason(season);
+
+            Size size = sizeRepository.findById(dto.getSizeId())
+                    .orElseThrow(() -> new RuntimeException("Size not found"));
+            shirtDetail.setSize(size);
+
+            Color color = colorRepository.findById(dto.getColorId())
+                    .orElseThrow(() -> new RuntimeException("Color not found"));
+            shirtDetail.setColor(color);
+
+            return shirtDetail;
+        }).collect(Collectors.toList());
+
+        // Lưu tất cả vào cơ sở dữ liệu và trả về
+        return shirtDetailRepository.saveAll(shirtDetails);
     }
 
+
+    public List<ShirtDetail> saveAll(List<ShirtDetail> shirtDetails) {
+        return shirtDetailRepository.saveAll(shirtDetails);
+    }
     // Cập nhật chi tiết áo
     public ShirtDetail updateShirtDetail(String codeShirtDetail, ShirtDetail updatedShirtDetail) {
         ShirtDetail shirtDetail = shirtDetailRepository.findByCodeShirtDetail(codeShirtDetail);
@@ -129,7 +185,6 @@ public class ShirtDetailService {
     public ShirtDetailDTO getShirtDetail(String codeShirtDetail) {
         // Tìm kiếm ShirtDetail theo mã codeShirtDetail
         ShirtDetail shirtDetail = shirtDetailRepository.findByCodeShirtDetail(codeShirtDetail);
-        System.out.println(shirtDetail.getCodeShirtDetail());
         if (shirtDetail != null) {
             // Chuyển đổi ShirtDetail thành ShirtDetailDTO và trả về
             ShirtDetailDTO shirtDetailDTO = new ShirtDetailDTO(
@@ -169,6 +224,13 @@ public class ShirtDetailService {
     }
 
 
+    public List<ShirtDetailDTO> getShirtDetailsByCodeShirt(String codeshirt) {
+        // Gọi phương thức repository để lấy danh sách ShirtDetailDTO
+        List<ShirtDetailDTO> shirtDetailDTOList = shirtDetailRepository.findAllShirtDetailByCodeShirt(codeshirt);
+
+        // Trả về danh sách các ShirtDetailDTO, nếu không có dữ liệu trả về danh sách rỗng
+        return shirtDetailDTOList != null ? shirtDetailDTOList : new ArrayList<>();
+    }
 
     // Lấy tất cả các màu sắc
     public Iterable<Color> getAllColors() {
