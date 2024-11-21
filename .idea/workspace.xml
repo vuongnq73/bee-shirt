@@ -4,103 +4,54 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="acef9cec-200f-4782-9549-c368fdaef721" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="fd9265ae-f338-43dd-a636-9dfe4a2339b3" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/README.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/BanHang.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/Bill.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/BillDetail.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/Customer.html" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/Customer.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/ProductDetail.html" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/ProductDetail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/Products.html" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/Products.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/Staff.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/Voucher.html" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/Voucher.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/aaa.html" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/aaa.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/account/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/account/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/addProduct.html" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/addProduct.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/addProductDetail.html" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/addProductDetail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/css/button.css" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/css/button.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/css/demo.css" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/css/demo.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/css/myprofile.css" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/css/myprofile.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/css/plugins.css" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/css/plugins.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/css/productDetail.css" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/css/productDetail.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/css/productShirt.css" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/css/productShirt.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/detailProduct.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/js/customer.js" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/js/customer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/js/demo.js" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/js/demo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/js/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/js/login.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/js/myprofile.js" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/js/myprofile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/js/oders.js" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/js/oders.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/js/productDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/js/productDetail.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/js/productShirt.js" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/js/productShirt.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/js/staff.js" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/js/staff.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/product.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/staff/Profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/staff/Profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/staff/Staff.html" beforeDir="false" afterPath="$PROJECT_DIR$/Bee-ShirtF/assets/staff/Staff.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/Products.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/Voucher.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/admin/admin.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/js/demo.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/js/oders.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/statistic.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/updateProductDetail.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bee-ShirtF/assets/user/home.html" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Interface" />
-        <option value="Class" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="lyntph43414" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 8
-}</component>
-  <component name="ProjectId" id="2nv9dZLqLCXrzE2OjS2P1YPQ2Q2" />
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="ProjectId" id="2oCzRTQcImJcK2krGAOgcgYS1gl" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "Spring Boot.BeeShirtApplication.executor": "Run",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/1a_DATN_2024/bee-shirt-main/bee-shirt-main",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
-  }
-}]]></component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="E:\DATN\bee-shirt\src\main\java\com\example\bee_shirt\dto" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.example.bee_shirt.service" />
-    </key>
+  <component name="PropertiesComponent">
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunManager">
-    <configuration name="BeeShirtApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <configuration name="BeeShirtApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="shopmohinh" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.bee_shirt.BeeShirtApplication" />
       <method v="2">
@@ -108,47 +59,40 @@
       </method>
     </configuration>
   </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="jdk-17.0.10-corretto-17.0.10-4caba194b151-5cd809f4" />
-      </set>
-    </attachedChunks>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="acef9cec-200f-4782-9549-c368fdaef721" name="Changes" comment="" />
-      <created>1729842772481</created>
+      <changelist id="fd9265ae-f338-43dd-a636-9dfe4a2339b3" name="Default Changelist" comment="" />
+      <created>1730388341715</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1729842772481</updated>
-      <workItem from="1729842773537" duration="20000" />
-      <workItem from="1729843587753" duration="4722000" />
-      <workItem from="1729854343379" duration="601000" />
-      <workItem from="1729865937976" duration="11000" />
-      <workItem from="1729920447591" duration="5861000" />
-      <workItem from="1730031124874" duration="7755000" />
-      <workItem from="1730435868829" duration="64000" />
-      <workItem from="1730605531180" duration="193000" />
-      <workItem from="1730606121601" duration="6235000" />
-      <workItem from="1730617912371" duration="1189000" />
-      <workItem from="1731155597373" duration="1539000" />
-      <workItem from="1731222722655" duration="147000" />
-      <workItem from="1731222976449" duration="21000" />
-      <workItem from="1731235511915" duration="1406000" />
-      <workItem from="1731240449468" duration="18000" />
-      <workItem from="1731263125707" duration="371000" />
-      <workItem from="1731314876417" duration="1825000" />
-      <workItem from="1731322771545" duration="5000" />
-      <workItem from="1731636964603" duration="12222000" />
-      <workItem from="1731677450942" duration="2328000" />
-      <workItem from="1731729395412" duration="15137000" />
-      <workItem from="1731771835109" duration="3066000" />
-      <workItem from="1731827831616" duration="6765000" />
-      <workItem from="1731837914173" duration="428000" />
-      <workItem from="1731838919822" duration="1295000" />
-      <workItem from="1731843251857" duration="430000" />
+      <updated>1730388341715</updated>
+      <workItem from="1730388345647" duration="350000" />
+      <workItem from="1730388895592" duration="700000" />
+      <workItem from="1730457026134" duration="2269000" />
+      <workItem from="1730482648612" duration="13098000" />
+      <workItem from="1730538340516" duration="4131000" />
+      <workItem from="1730579901879" duration="5000" />
+      <workItem from="1730618078487" duration="5566000" />
+      <workItem from="1730729015502" duration="35000" />
+      <workItem from="1730972419595" duration="16141000" />
+      <workItem from="1731060100597" duration="2479000" />
+      <workItem from="1731075750627" duration="3198000" />
+      <workItem from="1731147656204" duration="2482000" />
+      <workItem from="1731232803884" duration="5049000" />
+      <workItem from="1731321844515" duration="104000" />
+      <workItem from="1731323129769" duration="1694000" />
+      <workItem from="1731409205092" duration="598000" />
+      <workItem from="1731639359547" duration="596000" />
+      <workItem from="1731664855833" duration="7732000" />
+      <workItem from="1731676859658" duration="634000" />
+      <workItem from="1731771053459" duration="1361000" />
+      <workItem from="1731817111435" duration="7000" />
+      <workItem from="1731845855728" duration="286000" />
+      <workItem from="1731858446309" duration="1563000" />
+      <workItem from="1731894167304" duration="596000" />
+      <workItem from="1731904007210" duration="19000" />
+      <workItem from="1732177064342" duration="920000" />
     </task>
     <servers />
   </component>
