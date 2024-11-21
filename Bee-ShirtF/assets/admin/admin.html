@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Page</title>
+    <link rel="stylesheet" href="/css/admin.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="/assets/js/admin.js"></script>
+  </head>
+  <body ng-app="adminApp" ng-controller="AdminController">
+    <div class="admin-container">
+      <h2>Trang Quản Trị</h2>
+
+      <div class="roles">
+        <h3>Danh sách vai trò</h3>
+        <ul>
+          <li ng-repeat="role in roles">{{ role.name }}</li>
+        </ul>
+      </div>
+
+      <div class="accounts">
+        <h3>Danh sách tài khoản</h3>
+        <ul>
+          <li ng-repeat="account in accounts">{{ account.username }}</li>
+        </ul>
+      </div>
+
+      <div class="create-account">
+        <h3>Tạo tài khoản mới</h3>
+        <form ng-submit="createAccount()">
+          <input
+            type="text"
+            ng-model="newAccount.username"
+            placeholder="Username"
+            required
+          />
+          <input
+            type="password"
+            ng-model="newAccount.password"
+            placeholder="Password"
+            required
+          />
+          <input
+            type="email"
+            ng-model="newAccount.email"
+            placeholder="Email"
+            required
+          />
+          <button type="submit">Tạo tài khoản</button>
+        </form>
+      </div>
+
+      <div class="logout">
+        <button ng-click="logout()">Đăng xuất</button>
+      </div>
+    </div>
+  </body>
+</html>
