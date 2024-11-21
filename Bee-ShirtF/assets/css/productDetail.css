@@ -1,0 +1,8 @@
+.d-flex {
+    display: flex;
+    align-items: center;
+}
+
+.custom-radio {
+    margin-right: 20px; /* Khoảng cách giữa các lựa chọn */
+}
