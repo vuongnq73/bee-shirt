@@ -18,7 +18,7 @@ public class Bill {
 
     @ManyToOne
     @JoinColumn(name = "voucher_id")
-    private Voucher voucher;
+    private Voucher1 voucher;
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
