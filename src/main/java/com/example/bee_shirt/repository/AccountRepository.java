@@ -2,10 +2,12 @@ package com.example.bee_shirt.repository;
 
 import com.example.bee_shirt.dto.response.AccountResponse;
 import com.example.bee_shirt.entity.Account;
+import com.example.bee_shirt.entity.ShirtDetail;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -90,4 +92,7 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
             SELECT TOP 1 * FROM account ORDER BY id DESC
             """, nativeQuery = true)
     Account getTop1();
+
+    @Query("SELECT a FROM Account a JOIN a.role r WHERE a.deleted = false and r.code NOT IN ('Admin', 'Staff')")
+    List<Account> getAllCustomer();
 }

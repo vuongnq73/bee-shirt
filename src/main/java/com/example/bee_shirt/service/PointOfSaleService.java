@@ -252,4 +252,8 @@ public class PointOfSaleService {
         }
         return "Webcam end";
     }
+
+    public List<Account> getAllCustomer() {
+        return accountRepository.getAllCustomer();
+    }
 }
