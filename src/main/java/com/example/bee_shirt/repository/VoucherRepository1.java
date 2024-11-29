@@ -37,6 +37,7 @@ public interface VoucherRepository1 extends JpaRepository<Voucher1, Long> {
     @Query("SELECT v FROM Voucher1 v WHERE v.startdate >= :batdau AND v.enddate <= :ketthuc")
     List<Voucher1> findByDateRange(@Param("batdau") LocalDate batdau, @Param("ketthuc") LocalDate ketthuc);
 
-
+    @Query("SELECT v FROM Voucher1 v WHERE v.code_voucher LIKE :query")
+    Optional<Voucher1> findVoucherByCode(String query);
 
 }

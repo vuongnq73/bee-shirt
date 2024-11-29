@@ -17,9 +17,38 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
     Bill findBillByCode(String query);
 
     @Query("SELECT b FROM Bill b WHERE b.statusBill = 0")
-
     List<Bill> findPendingBill();
 
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Bill b SET b.statusBill = 2 WHERE b.createAt < CURRENT_DATE AND b.statusBill = 0")
+    int cancelOldPendingBills();
+
+//    @Query(value = "SELECT bl.code_bill, " +
+//            "bl.customer_name, " +
+//            "bl.desired_date, " +
+//            "pm.name_paymentmethod, " +
+//            "bl.total_money, " +
+//            "bl.status_bill " +
+//            "FROM bill bl " +
+//            "JOIN bill_payment bp ON bl.id = bp.bill_id " +
+//            "JOIN payment_method pm ON bp.payment_method_id = pm.id " +
+//            "LEFT JOIN voucher v ON bl.voucher_id = v.id",
+//            nativeQuery = true)
+//    List<Object[]> findBillSummaryNative();
+
+
+//    //Thống k số hóa đơn,doanh thu ,sản phẩm trong ngày
+//    @Query(value = "SELECT "
+//            + "COUNT(DISTINCT b.id) AS BillCount, "
+//            + "SUM(bd.quantity) AS TotalShirtQuantity, "
+//            + "SUM(DISTINCT b.total_money) AS TotalRevenue "
+//            + "FROM bill b "
+//            + "JOIN bill_detail bd ON bd.bill_id = b.id "
+//            + "WHERE DATE(b.created_at) = CURRENT_DATE",
+//            nativeQuery = true)
+//    List<Object[]> findBillStatisticsNative();
 
 //Thống kê theo tháng trong năm
 //thống kê sản phẩm

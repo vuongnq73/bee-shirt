@@ -254,6 +254,7 @@ function applyFilter(filterValue) {
 // Gọi API lần đầu để hiển thị dữ liệu mặc định (tất cả)
 applyFilter("all");
 
+
 ////
 // Biểu đồ tròn
 // Biểu đồ tròn

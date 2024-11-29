@@ -94,6 +94,7 @@
 
             </li>
             <li class="nav-item ">
+
               <a href="/assets/Bill.html">
                 <i class="fas fa-pen-square"></i>
                 <span class="sub-item">Hóa Đơn</span>
@@ -159,6 +160,7 @@
                   </li>
 
 
+
                 </ul>
               </div>
             </li>
@@ -171,12 +173,14 @@
               <div class="collapse" id="account">
                 <ul class="nav nav-collapse">
                   <li>
-                    <a href="staff/Staff.html">
+
+                    <a href="/assets/staff/Staff.html">
                       <span class="sub-item">Nhân Viên</span>
                     </a>
                   </li>
                   <li>
-                    <a href="#">
+
+                    <a href="Customer.html">
                       <span class="sub-item">Khách Hàng</span>
                     </a>
                   </li>
@@ -189,20 +193,7 @@
                 <p>Thống Kê</p>
 
               </a>
-              <!-- <div class="collapse" id="charts">
-                  <ul class="nav nav-collapse">
-                    <li>
-                      <a href="charts/charts.html">
-                        <span class="sub-item">Chart Js</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="charts/sparkline.html">
-                        <span class="sub-item">Sparkline</span>
-                      </a>
-                    </li>
-                  </ul>
-                </div> -->
+
             </li>
 
 
@@ -219,6 +210,7 @@
           <div class="logo-header" data-background-color="dark">
             <a href="BanHang.html" class="logo">
               <img src="img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="20" />
+
             </a>
             <div class="nav-toggle">
               <button class="btn btn-toggle toggle-sidebar">
@@ -394,7 +386,7 @@
                   </li>
                 </ul>
               </li>
-              
+     
               <li class="nav-item topbar-user dropdown hidden-caret">
                 <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
                   <div class="avatar-sm">
@@ -535,6 +527,8 @@
                       <th>Số lượng</th>
                       <th>Giá</th>
                       <th>Tổng</th>
+
+                      <th>Hành động</th>
                     </tr>
                   </thead>
                   <tbody id="billDetailsTableBody"></tbody>
@@ -578,7 +572,7 @@
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
-                      <!-- <p id="shirtCodeDetail2">Modal body..</p> -->
+                      <p id="shirtCodeDetail2">Modal body..</p>
                       <div class="mb-3">
                         <label for="quantityInput" class="form-label">Số lượng</label>
                         <input type="number" id="quantityInput2" class="form-control" placeholder="Nhập số lượng"
@@ -662,7 +656,6 @@
                   <i class="fas fa-trash"></i>
                   Xóa
                 </button>
-
                 <ul class="list-group mb-3" id="product-list">
                   <!-- Sản phẩm sẽ được thêm vào đây -->
                 </ul>
@@ -679,9 +672,15 @@
                     </div>
                     <div class="mb-3">
                       <label for="codeCustomer" class="form-label">Khách hàng</label>
-                      <input type="text" id="codeCustomer" class="form-control" placeholder="Nhập mã khách hàng"
+
+                      <input hidden type="text" id="codeCustomer" class="form-control" placeholder="Nhập mã khách hàng"
                         oninput="applyAccountOnChange()">
                       <div id="accountFeedback" class="feedback" style="display:none;"></div>
+                      <div class="dropdown">
+                        <input type="text" id="customerSearch" class="form-control"
+                          placeholder="Nhập số điện thoại hoặc tên khách hàng">
+                        <ul id="customerList" class="suggestions-list list-group position-absolute w-100"></ul>
+                      </div>
                     </div>
                     <div class="mb-3">
                       <label for="paymentInput" class="form-label">Tiền phải trả</label>
@@ -957,6 +956,10 @@
       max-height: 200px;
       overflow-y: auto;
       z-index: 1000;
+
+      display: none;
+      /* Mặc định ẩn */
+
       /* Đảm bảo hiển thị trên các thành phần khác */
       border: 1px solid #ddd;
       background-color: white;
@@ -1000,13 +1003,18 @@
 
   <script type="text/javascript">
 
-    let activeBillCode;
+    let noVoucher = true;
+
+    let activeBillCode = 'none';
 
     let currentCodeShirtDetail = 'none';
 
     let currentCodeBillDetail = 'none';
 
     let camStat = true;
+
+
+    const tableBody = document.getElementById("billDetailsTableBody");
 
     const apiUrl = "http://localhost:8080/point-of-sale/get-pending-bill";
 
@@ -1023,6 +1031,7 @@
 
 
     async function fetchBillDetails(codeBill) {
+
       try {
         const response = await fetch(`http://localhost:8080/point-of-sale/get-bill-detail?codeBill=${codeBill}`, {
           method: 'GET',
@@ -1041,12 +1050,10 @@
 
         currentCodeShirtDetail = 'none';
 
+        tableBody.innerHTML = ""; // Xóa dữ liệu cũ nếu có
+
         // Chuyển đổi dữ liệu thành JSON
         const data = await response.json();
-        const dataBill = await responseBill.json();
-
-        const tableBody = document.getElementById("billDetailsTableBody");
-        tableBody.innerHTML = ""; // Xóa dữ liệu cũ nếu có
 
         data.forEach((detail, index) => {
           const row = document.createElement("tr");
@@ -1061,7 +1068,8 @@
       <td>${total.toFixed(2)}</td>
       <td>
     <!-- Nút "Sửa" -->
-    <button type="button" class="btn btn-primary btn-sm" onclick="openModal2('${detail.codeBillDetail}')">
+
+    <button type="button" class="btn btn-primary btn-sm" onclick="openModal2('${detail.codeBillDetail}','${detail.shirtDetail.codeShirtDetail}')">
         <i class="fas fa-pen"></i> Sửa
     </button>
     <!-- Nút "Xóa" -->
@@ -1148,9 +1156,22 @@
 
         feedback.style.display = "block";
         feedback.textContent = "";
-        document.getElementById('codeCustomer').value = dataBill.customer?.username || '';
+
+
+        if (codeBill === 'none') {
+          // Gán giá trị rỗng khi codeBill là 'none'
+          document.getElementById('codeCustomer').value = '';
+          document.getElementById('customerSearch').value = '';
+        } else {
+          const dataBill = await responseBill.json();
+
+          // Gán giá trị từ dữ liệu trả về nếu có
+          document.getElementById('codeCustomer').value = dataBill.customer?.username || '';
+          document.getElementById('customerSearch').value = dataBill.customer?.username || '';
+        }
 
         moneyCaculating()
+        fetchProducts();
 
       } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
@@ -1191,8 +1212,12 @@
         if (bills.length > 0) {
           activeBillCode = bills[0].codeBill;
           fetchBillDetails(activeBillCode);
+
+          toggleInputFields(activeBillCode);
         } else {
           activeBillCode = "none";
+          fetchBillDetails(activeBillCode);
+          toggleInputFields(activeBillCode);
         }
 
         const billButtonsContainer = document.getElementById('bill-buttons');
@@ -1264,9 +1289,28 @@
 
     }
 
-    function checkout() {
+
+    async function checkout() {
       const codeVoucherCheckout = document.getElementById("codeVoucher").value;
       const username = document.getElementById("codeCustomer").value;
+
+      const resp = await fetch(`http://localhost:8080/point-of-sale/get-bill-detail?codeBill=${activeBillCode}`, {
+        method: 'GET',
+        headers: headers // Thêm headers vào yêu cầu
+      });
+
+      if (!resp.ok) {
+        toastr.error('Không thể kết nối tới máy chủ hoặc xảy ra lỗi', 'Lỗi');
+        return;
+      }
+
+      const data = await resp.json(); // Parse dữ liệu trả về dưới dạng JSON
+
+      if (!Array.isArray(data) || data.length === 0) {
+        toastr.error('Hóa đơn chưa có sản phẩm nào', 'Lỗi');
+        return;
+      }
+      if (noVouchers) { codeVoucherCheckout = ''; }
 
       fetch(`http://localhost:8080/point-of-sale/checkout?codeBill=${activeBillCode}&codeVoucher=${codeVoucherCheckout}&username=${username}`, {
         method: 'POST',
@@ -1291,12 +1335,21 @@
       }).then(data => {
         console.log("Cancel successfully", data);
         currentCodeShirtDetail = 'none';
+
+        fetchBillDetails(activeBillCode)
+        moneyCaculating()
+        fetchProducts()
         fetchBills()
       }
       ).catch(error => console.error("Error with canceling", error));
     }
 
     function scanBarcode() {
+
+      if (activeBillCode == 'none') {
+        toastr.error('Chưa chọn hóa đơn', 'Lỗi');
+        return;
+      }
       const codeBill = activeBillCode;
       if (camStat) {
         fetch(`http://localhost:8080/point-of-sale/scanBarcode?billCode=${codeBill}`, {
@@ -1329,40 +1382,81 @@
     }
 
     function performSearch() {
-      let searchQuery = document.getElementById("searchInput").value;
 
-      if (searchQuery.length > 0) {
-        fetch(`http://localhost:8080/point-of-sale/search?query=${searchQuery}`, {
+      const searchInput = document.getElementById("searchInput");
+      const suggestionsList = document.getElementById("suggestions");
+
+      if (searchInput.value.length < 1) {
+        suggestionsList.innerHTML = ''; // Nếu không có từ khóa tìm kiếm, ẩn danh sách
+        suggestionsList.style.display = 'none'; // Ẩn hoàn toàn danh sách
+        return;
+      }
+
+      if (searchInput.value.length > 0) {
+        fetch(`http://localhost:8080/point-of-sale/search?query=${searchInput.value}`, {
           method: 'GET',
           headers: headers // Thêm headers vào yêu cầu
         })
           .then(response => response.json())
           .then(data => {
-            let suggestionsList = document.getElementById("suggestions");
+
             suggestionsList.innerHTML = "";
+            // Kiểm tra nếu không có kết quả tìm kiếm
+            if (data.length === 0) {
+              suggestionsList.style.display = 'none'; // Ẩn danh sách khi không có kết quả
+              return;
+            }
 
             if (data.length > 0) {
               data.forEach(item => {
                 let suggestionItem = document.createElement("li");
                 suggestionItem.innerHTML = item.shirt.nameshirt + " " + item.size.namesize + " " + item.color.nameColor + " " + item.material.nameMaterial;
                 suggestionItem.onclick = function () {
+
+                  if (activeBillCode == 'none') {
+                    toastr.error('Chưa chọn hóa đơn', 'Lỗi');
+                    return;
+                  }
                   // Call the /add/ endpoint when a suggestion is clicked
                   document.getElementById("shirtCodeDetail").innerText = item.codeShirtDetail;
                   openModal(); // Gọi hàm mở modal
                   suggestionsList.innerHTML = ""; // Clear suggestions after the click
-                  document.getElementById("searchInput").value = "";
+
+                  searchInput.value = ""; // Clear search input after selection
                 };
                 suggestionsList.appendChild(suggestionItem);
               });
+              suggestionsList.style.display = 'block';
             } else {
               suggestionsList.innerHTML = "<li>No results found</li>";
             }
           })
           .catch(error => console.error("Error fetching data:", error));
       } else {
-        document.getElementById("suggestions").innerHTML = "";
+
+        suggestionsList.innerHTML = "";
       }
+
+      // Sự kiện blur: khi người dùng rời khỏi ô tìm kiếm
+      searchInput.addEventListener("blur", () => {
+        // Đợi một thời gian ngắn trước khi ẩn danh sách để người dùng có thể click vào một mục
+        setTimeout(() => {
+          suggestionsList.style.display = 'none'; // Ẩn danh sách khi rời khỏi ô tìm kiếm
+        }, 200);
+      });
+
+      // Sự kiện focus: khi người dùng quay lại ô tìm kiếm
+      searchInput.addEventListener("focus", () => {
+        const sq = searchInput.value.trim();
+        if (sq.length > 0) {
+          suggestionsList.style.display = 'block'; // Hiển thị lại danh sách khi người dùng focus vào ô tìm kiếm
+        }
+      });
     }
+
+    // Gọi hàm `performSearch` khi người dùng nhập vào ô tìm kiếm
+    document.getElementById("searchInput").addEventListener("input", performSearch);
+
 
     function openModal() {
       document.getElementById("quantityInput").value = 1;
@@ -1414,7 +1508,9 @@
     }
 
 
-    function openModal2(codeBillDetail) {
+
+    function openModal2(codeBillDetail, codeShirtDetail) {
+      document.getElementById("shirtCodeDetail2").innerText = codeShirtDetail;
       document.getElementById("quantityInput2").value = 1;
       currentCodeBillDetail = codeBillDetail
       var myModal = new bootstrap.Modal(document.getElementById('myModal2'), {
@@ -1466,6 +1562,8 @@
         data.forEach(item => {
           subtotal += item.price * item.quantity;
         });
+
+
         // Hiển thị tổng tiền vào ô input
         document.getElementById('totalMoney').value = subtotal.toFixed(2);
 
@@ -1672,6 +1770,8 @@
           feedback.style.display = "block";
           feedback.textContent = "Mã voucher không hợp lệ hoặc đã hết hạn!";
           totalMoneyInput.value = totalMoney.toFixed(2); // Giữ nguyên tổng tiền
+
+          noVoucher = true
           validatePayment()
           return;
         }
@@ -1681,11 +1781,15 @@
           feedback.style.display = "block";
           feedback.style.color = "red";
           feedback.textContent = `Hóa đơn phải từ ${voucher.minBillValue.toFixed(2)} mới áp dụng được voucher này.`;
+
+          noVoucher = true
           totalMoneyInput.value = totalMoney.toFixed(2); // Giữ nguyên tổng tiền
           validatePayment()
           return;
         }
 
+
+        noVoucher = false;
         // Tính toán giảm giá
         let discount = 0;
         if (voucher.typeVoucher === "Percent") {
@@ -1696,7 +1800,9 @@
 
         // Cập nhật tổng tiền
         const newTotal = totalMoney - discount;
-        totalMoneyInput.value = newTotal.toFixed(2);
+
+
+        totalMoneyInput.value = newTotal > 0 ? newTotal.toFixed(2) : 0;
         validatePayment()
 
         // Hiển thị thông báo thành công
@@ -1874,12 +1980,149 @@
 
 
 
+
+    function toggleInputFields(activeBillCode) {
+      const customerCodeInput = document.getElementById("customerSearch");
+      const voucherInput = document.getElementById("codeVoucher");
+      const changeAmountInput = document.getElementById("paymentInput");
+
+      // Kiểm tra nếu activeBillCode là "none"
+      const isDisabled = activeBillCode === "none";
+
+      // Cập nhật trạng thái của các ô nhập
+      customerCodeInput.disabled = isDisabled;
+      voucherInput.disabled = isDisabled;
+      changeAmountInput.disabled = isDisabled;
+
+      // Nếu bị vô hiệu hóa, xóa giá trị trong các ô nhập
+      if (isDisabled) {
+        customerCodeInput.value = "";
+        voucherInput.value = "";
+        changeAmountInput.value = "";
+      }
+    }
+
+    // Ví dụ: Cập nhật trạng thái khi trang được tải
+    document.addEventListener("DOMContentLoaded", () => {
+      toggleInputFields(activeBillCode); // Giả sử `activeBillCode` được khai báo trước đó
+    });
+
+
+
+    async function setupCustomerSearch() {
+      const customerInput = document.getElementById("customerSearch");
+      const customerList = document.getElementById("customerList");
+
+      // Thêm sự kiện khi nhập dữ liệu vào ô tìm kiếm
+      customerInput.addEventListener("input", async (e) => {
+        const searchQuery = e.target.value.trim().toLowerCase();
+
+        if (searchQuery.length < 1) {
+          customerList.innerHTML = ''; // Nếu không có từ khóa tìm kiếm, ẩn danh sách
+          customerList.style.display = 'none'; // Ẩn hoàn toàn danh sách
+          return;
+        }
+
+        try {
+          // Gửi yêu cầu đến API để lấy danh sách khách hàng
+          const response = await fetch("http://localhost:8080/point-of-sale/get-all-customer", {
+            method: "GET",
+            headers: headers, // Nếu cần thêm headers như Authorization, thêm tại đây
+          });
+
+          if (!response.ok) {
+            throw new Error("Không thể tải danh sách khách hàng");
+          }
+
+          const customers = await response.json();
+
+          // Lọc danh sách khách hàng theo username và số điện thoại
+          const filteredCustomers = customers.filter((customer) => {
+            return (
+              customer.username.toLowerCase().includes(searchQuery) ||
+              customer.phone.includes(searchQuery)
+            );
+          });
+
+          // Xóa danh sách cũ
+          customerList.innerHTML = "";
+
+          // Kiểm tra nếu không có kết quả tìm kiếm
+          if (filteredCustomers.length === 0) {
+            customerList.style.display = 'none'; // Ẩn danh sách khi không có kết quả
+            return;
+          }
+
+          // Hiển thị danh sách khách hàng
+          filteredCustomers.forEach((customer) => {
+            const listItem = document.createElement("li");
+            listItem.textContent = `${customer.username} - ${customer.phone}`;
+            listItem.classList.add("dropdown-item");
+            listItem.addEventListener("click", () => {
+              // Cập nhật giá trị ô tìm kiếm khi chọn khách hàng
+              customerInput.value = customer.username;
+              document.getElementById("codeCustomer").value = customer.username
+              customerList.innerHTML = ""; // Ẩn danh sách khi chọn xong
+              customerList.style.display = 'none'; // Ẩn danh sách khi chọn xong
+              // Gửi yêu cầu kiểm tra mã khách hàng
+              const customerResponse = fetch(`http://localhost:8080/point-of-sale/update-customer-info?codeBill=${activeBillCode}&username=${customer.username}`, {
+                method: "POST",
+                headers: headers,
+              }).then(data => {
+                console.log("Update customer info: ", data);
+              }
+              ).catch(error => console.error("Error", error));
+              // Thực hiện các thao tác cần thiết với thông tin khách hàng đã chọn
+              handleCustomerSelection(customer);
+            });
+
+            customerList.appendChild(listItem);
+          });
+
+          // Hiển thị lại danh sách sau khi có kết quả tìm kiếm
+          customerList.style.display = 'block';
+
+        } catch (error) {
+          console.error("Lỗi khi tìm kiếm khách hàng:", error);
+        }
+      });
+
+      // Thêm sự kiện khi rời khỏi ô input (blur)
+      customerInput.addEventListener("blur", () => {
+        // Đợi một thời gian ngắn trước khi ẩn danh sách để người dùng có thể click vào một mục
+        setTimeout(() => {
+          customerList.style.display = 'none'; // Ẩn danh sách khi rời khỏi ô tìm kiếm
+        }, 200);
+      });
+
+      // Thêm sự kiện focus để đảm bảo danh sách được hiển thị lại khi người dùng quay lại ô tìm kiếm
+      customerInput.addEventListener("focus", () => {
+        const searchQuery = customerInput.value.trim();
+        if (searchQuery.length > 0) {
+          customerList.style.display = 'block'; // Hiển thị lại danh sách khi người dùng focus vào ô tìm kiếm
+        }
+      });
+    }
+
+    // Hàm xử lý khi chọn khách hàng
+    function handleCustomerSelection(customer) {
+      console.log("Khách hàng được chọn:", customer);
+      // Thực hiện các thao tác với khách hàng đã chọn, ví dụ:
+      // - Cập nhật thông tin khách hàng trên giao diện
+      // - Gửi yêu cầu xác nhận khách hàng
+    }
+
+    setupCustomerSearch();
+
+
+
     toastr.options = {
       "closeButton": true,               // Hiển thị nút đóng
       "debug": false,                    // Chế độ debug
       "newestOnTop": true,               // Hiển thị thông báo mới nhất lên trên
       "progressBar": true,               // Hiển thị thanh tiến trình
-      "positionClass": "toast-top-right", // Vị trí hiển thị
+
+      "positionClass": "toast-top-right",// Vị trí hiển thị
       "preventDuplicates": true,         // Ngăn chặn thông báo trùng lặp
       "onclick": null,                   // Hành động khi click
       "showDuration": "300",             // Thời gian hiển thị (ms)
