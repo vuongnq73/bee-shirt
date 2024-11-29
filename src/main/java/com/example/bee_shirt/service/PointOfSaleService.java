@@ -153,7 +153,7 @@ public class PointOfSaleService {
         Bill bill = billRepository.findBillByCode(codeBill);
         bill.setStatusBill(2);
         billRepository.save(bill);
-        List<BillDetail> oldCart = billDetailRepository.findBillDetailByBillCodeAndStatusBillDetail(codeBill,2);
+        List<BillDetail> oldCart = billDetailRepository.findBillDetailByBillCodeAndStatusBillDetail(codeBill,0);
         for (BillDetail oc : oldCart){
             oc.getShirtDetail().setQuantity(oc.getShirtDetail().getQuantity() + oc.getQuantity());
             shirtDetailRepository.save(oc.getShirtDetail());
