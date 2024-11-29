@@ -1298,7 +1298,6 @@
       const bills = await response.json();
 
       if (bills.length >= 5) {
-        alert(123)
         toastr.error('Đã đạt số lượng hóa đơn tối đa', 'Lỗi');
         return;
       }
@@ -1435,7 +1434,7 @@
         headers: headers
       });
       const sd = await response.json();
-      if (0 <= quantity) {
+      if (0 >= quantity) {
         toastr.error('Số lượng không hợp lệ', 'Lỗi');
         document.getElementById("quantityInput").value = 1
         return;
