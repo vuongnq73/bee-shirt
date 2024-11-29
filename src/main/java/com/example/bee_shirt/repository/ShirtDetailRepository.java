@@ -68,4 +68,9 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
             "ORDER BY sdt.id DESC")
     List<ShirtDetailDTO> findAllShirtDetailByCodeShirt(@Param("codeshirt") String codeshirt);
 
+    @Query("SELECT sd FROM ShirtDetail sd WHERE sd.codeShirtDetail LIKE %:query% OR sd.shirt.nameshirt LIKE %:query%")
+    Page<ShirtDetail> findListShirtDetailByCodeOrName(@Param("query") String query, Pageable pageable);
+
+    @Query("SELECT sd FROM ShirtDetail sd WHERE sd.codeShirtDetail LIKE %:query%")
+    ShirtDetail findShirtDetailByCode(@Param("query") String query);
 }
