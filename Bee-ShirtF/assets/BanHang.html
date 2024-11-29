@@ -585,6 +585,7 @@
                       <th>Số lượng</th>
                       <th>Giá</th>
                       <th>Tổng</th>
+                      <th>Hành động</th>
                     </tr>
                   </thead>
                   <tbody id="billDetailsTableBody"></tbody>
@@ -1050,13 +1051,15 @@
 
   <script type="text/javascript">
 
-    let activeBillCode;
+    let activeBillCode = 'none';
 
     let currentCodeShirtDetail = 'none';
 
     let currentCodeBillDetail = 'none';
 
     let camStat = true;
+
+    const tableBody = document.getElementById("billDetailsTableBody");
 
     const apiUrl = "http://localhost:8080/point-of-sale/get-pending-bill";
 
@@ -1074,6 +1077,8 @@
 
     async function fetchBillDetails(codeBill) {
       try {
+
+
         const response = await fetch(`http://localhost:8080/point-of-sale/get-bill-detail?codeBill=${codeBill}`, {
           method: 'GET',
           headers: headers // Thêm headers vào yêu cầu
@@ -1090,13 +1095,11 @@
         }
 
         currentCodeShirtDetail = 'none';
+        tableBody.innerHTML = ""; // Xóa dữ liệu cũ nếu có
 
         // Chuyển đổi dữ liệu thành JSON
         const data = await response.json();
         const dataBill = await responseBill.json();
-
-        const tableBody = document.getElementById("billDetailsTableBody");
-        tableBody.innerHTML = ""; // Xóa dữ liệu cũ nếu có
 
         data.forEach((detail, index) => {
           const row = document.createElement("tr");
@@ -1201,6 +1204,7 @@
         document.getElementById('codeCustomer').value = dataBill.customer?.username || '';
 
         moneyCaculating()
+        fetchProducts();
 
       } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
@@ -1241,8 +1245,11 @@
         if (bills.length > 0) {
           activeBillCode = bills[0].codeBill;
           fetchBillDetails(activeBillCode);
+          toggleInputFields(activeBillCode);
         } else {
           activeBillCode = "none";
+          fetchBillDetails(activeBillCode);
+          toggleInputFields(activeBillCode);
         }
 
         const billButtonsContainer = document.getElementById('bill-buttons');
@@ -1314,9 +1321,27 @@
 
     }
 
-    function checkout() {
+    async function checkout() {
       const codeVoucherCheckout = document.getElementById("codeVoucher").value;
       const username = document.getElementById("codeCustomer").value;
+
+      const resp = await fetch(`http://localhost:8080/point-of-sale/get-bill-detail?codeBill=${activeBillCode}`, {
+        method: 'GET',
+        headers: headers // Thêm headers vào yêu cầu
+      });
+
+      if (!resp.ok) {
+        toastr.error('Không thể kết nối tới máy chủ hoặc xảy ra lỗi', 'Lỗi');
+        return;
+      }
+
+      const data = await resp.json(); // Parse dữ liệu trả về dưới dạng JSON
+
+      if (!Array.isArray(data) || data.length === 0) {
+        toastr.error('Hóa đơn chưa có sản phẩm nào', 'Lỗi');
+        return;
+      }
+
 
       fetch(`http://localhost:8080/point-of-sale/checkout?codeBill=${activeBillCode}&codeVoucher=${codeVoucherCheckout}&username=${username}`, {
         method: 'POST',
@@ -1341,6 +1366,9 @@
       }).then(data => {
         console.log("Cancel successfully", data);
         currentCodeShirtDetail = 'none';
+        fetchBillDetails(activeBillCode)
+        moneyCaculating()
+        fetchProducts()
         fetchBills()
       }
       ).catch(error => console.error("Error with canceling", error));
@@ -1920,6 +1948,36 @@
 
     // Gọi hàm lấy dữ liệu khi tải trang
     fetchProducts();
+
+
+
+
+
+    function toggleInputFields(activeBillCode) {
+      const customerCodeInput = document.getElementById("codeCustomer");
+      const voucherInput = document.getElementById("codeVoucher");
+      const changeAmountInput = document.getElementById("paymentInput");
+
+      // Kiểm tra nếu activeBillCode là "none"
+      const isDisabled = activeBillCode === "none";
+
+      // Cập nhật trạng thái của các ô nhập
+      customerCodeInput.disabled = isDisabled;
+      voucherInput.disabled = isDisabled;
+      changeAmountInput.disabled = isDisabled;
+
+      // Nếu bị vô hiệu hóa, xóa giá trị trong các ô nhập
+      if (isDisabled) {
+        customerCodeInput.value = "";
+        voucherInput.value = "";
+        changeAmountInput.value = "";
+      }
+    }
+
+    // Ví dụ: Cập nhật trạng thái khi trang được tải
+    document.addEventListener("DOMContentLoaded", () => {
+      toggleInputFields(activeBillCode); // Giả sử `activeBillCode` được khai báo trước đó
+    });
 
 
 
