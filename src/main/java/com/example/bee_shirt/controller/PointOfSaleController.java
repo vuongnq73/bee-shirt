@@ -80,9 +80,15 @@ public class PointOfSaleController {
     @GetMapping("/get-account")
     @ResponseBody
     public Account getAccount(@RequestParam("username") String username) {
-        System.out.println(username);
         return pointOfSaleService.getAccount(username);
     }
+
+    @GetMapping("/get-all-customer")
+    @ResponseBody
+    public List<Account> getAllCustomer() {
+        return pointOfSaleService.getAllCustomer();
+    }
+
 
     @GetMapping("create-blank-bill")
     @ResponseBody
@@ -115,7 +121,6 @@ public class PointOfSaleController {
 
     @PostMapping("update-customer-info")
     public ResponseEntity<String> updateCustomerInfo(@RequestParam String codeBill, @RequestParam String username) {
-        System.out.println(123);
         return ResponseEntity.ok(pointOfSaleService.updateCustomerInfo(codeBill,username));
     }
 
