@@ -410,8 +410,128 @@ angular.module("voucherApp", []).controller("voucherController1", [
     //       $scope.errorMessage = "Failed to update voucher.";
     //     });
     // };
+// Hàm xem profile
+$scope.viewProfile = function () {
+  const token = sessionStorage.getItem("jwtToken");
 
+  if (!token || token.split(".").length !== 3) {
+    console.log("Token không hợp lệ hoặc không tồn tại");
+    return;
+  }
 
+  const payload = JSON.parse(atob(token.split(".")[1]));
+  if (payload && payload["user Code"]) {
+    const userCode = payload["user Code"];
+    sessionStorage.setItem("userCode", userCode);
+    console.log("userCode đã được lưu vào sessionStorage:", userCode);
+  } else {
+    console.log("Không tìm thấy userCode trong payload");
+  }
+
+  $window.location.href = "/assets/staff/Profile.html";
+};
+
+$scope.deleteAccount = function (code) {
+  if (confirm("Are you sure you want to delete this account?")) {
+    const token = sessionStorage.getItem("jwtToken");
+
+    // Khởi tạo biến trạng thái để tắt nút khi đang xóa
+    $scope.isDeleting = true;
+
+    $http({
+      method: "DELETE",
+      url: `http://localhost:8080/admin/delete/${code}`, // URL API cho chức năng xóa
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    })
+      .then(function (response) {
+        $scope.successMessage = "Account deleted successfully!";
+        $scope.errorMessage = ""; // Xóa thông báo lỗi (nếu có)
+        $scope.getCustomers(); // Cập nhật lại danh sách nhân viên sau khi xóa
+        $scope.isDeleting = false; // Kích hoạt lại nút sau khi hoàn tất
+
+        // Tự động ẩn thông báo sau 3 giây
+        setTimeout(function () {
+          $scope.successMessage = "";
+          $scope.$apply();
+        }, 3000);
+      })
+      .catch(function (error) {
+        console.error("Error deleting account:", error);
+        $scope.errorMessage = "Failed to delete account.";
+        $scope.successMessage = ""; // Xóa thông báo thành công (nếu có)
+        $scope.isDeleting = false; // Kích hoạt lại nút sau khi gặp lỗi
+      });
+  }
+};
+
+// Hàm tìm kiếm
+$scope.searchCustomer = function () {
+  if (!$scope.searchQuery) {
+    $scope.filteredCustomerList = $scope.customerList;
+  } else {
+    $scope.filteredCustomerList = $scope.customerList.filter(function (
+      customer
+    ) {
+      return (
+        customer.code
+          .toLowerCase()
+          .includes($scope.searchQuery.toLowerCase()) ||
+        customer.username
+          .toLowerCase()
+          .includes($scope.searchQuery.toLowerCase()) ||
+        customer.email
+          .toLowerCase()
+          .includes($scope.searchQuery.toLowerCase()) ||
+        customer.phone.includes($scope.searchQuery) ||
+        customer.address
+          .toLowerCase()
+          .includes($scope.searchQuery.toLowerCase())
+      );
+    });
+  }
+};
+
+//Lấy thông tin của tài khoản đang đăng nhập
+$scope.getMyProfile = function () {
+  const token = sessionStorage.getItem("jwtToken");
+  $http({
+    method: "GET",
+    url: `http://localhost:8080/admin/myProfile`, // Đảm bảo URL đúng
+    headers: {
+      Authorization: "Bearer " + token, // Kiểm tra xem token có hợp lệ không
+    },
+  })
+    .then(function (response) {
+      console.log("Response:", response); // Log toàn bộ response để kiểm tra
+
+      if (response.data && response.data.result) {
+        $scope.myProfile = response.data.result;
+        console.log("My Profile:", $scope.myProfile); // Kiểm tra giá trị gán vào myProfile
+      } else {
+        $scope.errorMessage = "Không thể lấy thông tin người dùng.";
+        console.log($scope.errorMessage);
+      }
+    })
+    .catch(function (error) {
+      console.error("Lỗi khi lấy thông tin người dùng:", error);
+      $scope.errorMessage = "Có lỗi xảy ra khi lấy dữ liệu.";
+    })
+    .finally(function () {
+      $scope.loading = false; // Tắt trạng thái loading sau khi nhận được phản hồi
+    });
+};
+// Hàm xem profile
+$scope.goToUpdateProfile = function (userCode) {
+  // Lưu thông tin người dùng vào sessionStorage để chuyển trang
+  sessionStorage.setItem("userCode", userCode);
+
+  // Sử dụng $location để điều hướng trong AngularJS
+  window.location.href = "/assets/staff/Profile.html";
+};
+
+$scope.getMyProfile();
 
     $scope.getVouchers();
   },
