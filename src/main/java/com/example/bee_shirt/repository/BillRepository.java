@@ -1,8 +1,10 @@
 package com.example.bee_shirt.repository;
 
 import com.example.bee_shirt.entity.Bill;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -15,8 +17,13 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
     Bill findBillByCode(String query);
 
     @Query("SELECT b FROM Bill b WHERE b.statusBill = 0")
-
     List<Bill> findPendingBill();
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Bill b SET b.statusBill = 2 WHERE b.createAt < CURRENT_DATE AND b.statusBill = 0")
+    int cancelOldPendingBills();
+
 //    @Query(value = "SELECT bl.code_bill, " +
 //            "bl.customer_name, " +
 //            "bl.desired_date, " +
