@@ -1365,6 +1365,10 @@
     }
 
     function scanBarcode() {
+      if (activeBillCode == 'none') {
+        toastr.error('Chưa chọn hóa đơn', 'Lỗi');
+        return;
+      }
       const codeBill = activeBillCode;
       if (camStat) {
         fetch(`http://localhost:8080/point-of-sale/scanBarcode?billCode=${codeBill}`, {
@@ -1414,6 +1418,10 @@
                 let suggestionItem = document.createElement("li");
                 suggestionItem.innerHTML = item.shirt.nameshirt + " " + item.size.namesize + " " + item.color.nameColor + " " + item.material.nameMaterial;
                 suggestionItem.onclick = function () {
+                  if (activeBillCode == 'none') {
+                    toastr.error('Chưa chọn hóa đơn', 'Lỗi');
+                    return;
+                  }
                   // Call the /add/ endpoint when a suggestion is clicked
                   document.getElementById("shirtCodeDetail").innerText = item.codeShirtDetail;
                   openModal(); // Gọi hàm mở modal
@@ -1980,7 +1988,7 @@
       "debug": false,                    // Chế độ debug
       "newestOnTop": true,               // Hiển thị thông báo mới nhất lên trên
       "progressBar": true,               // Hiển thị thanh tiến trình
-      "positionClass": "toast-top-right", // Vị trí hiển thị
+      "positionClass": "toast-top-right",// Vị trí hiển thị
       "preventDuplicates": true,         // Ngăn chặn thông báo trùng lặp
       "onclick": null,                   // Hành động khi click
       "showDuration": "300",             // Thời gian hiển thị (ms)
