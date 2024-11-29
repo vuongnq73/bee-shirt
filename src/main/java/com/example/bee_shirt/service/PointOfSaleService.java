@@ -117,6 +117,8 @@ public class PointOfSaleService {
             billDetail.setCodeBillDetail("CBD" + randomCode);
             billDetailRepository.save(billDetail);
         }
+        shirtDetail.setQuantity(shirtDetail.getQuantity()-quantity);
+        shirtDetailRepository.save(shirtDetail);
         return "Add to cart successfully";
     }
 
@@ -125,8 +127,12 @@ public class PointOfSaleService {
         if (billDetail == null) {
             return "No bill detail found";
         }
+        Integer oldQuantity = billDetail.getQuantity();
         billDetail.setQuantity(quantity);
         billDetailRepository.save(billDetail);
+
+        billDetail.getShirtDetail().setQuantity(billDetail.getShirtDetail().getQuantity()+oldQuantity-quantity);
+        shirtDetailRepository.save(billDetail.getShirtDetail());
         return "Change quantity successfully";
     }
 
@@ -137,6 +143,9 @@ public class PointOfSaleService {
         }
         billDetail.setStatusBillDetail(2);
         billDetailRepository.save(billDetail);
+
+        billDetail.getShirtDetail().setQuantity(billDetail.getShirtDetail().getQuantity() + billDetail.getQuantity());
+        shirtDetailRepository.save(billDetail.getShirtDetail());
         return "Remove item from cart successfully";
     }
 
@@ -144,6 +153,11 @@ public class PointOfSaleService {
         Bill bill = billRepository.findBillByCode(codeBill);
         bill.setStatusBill(2);
         billRepository.save(bill);
+        List<BillDetail> oldCart = billDetailRepository.findBillDetailByBillCodeAndStatusBillDetail(codeBill,2);
+        for (BillDetail oc : oldCart){
+            oc.getShirtDetail().setQuantity(oc.getShirtDetail().getQuantity() + oc.getQuantity());
+            shirtDetailRepository.save(oc.getShirtDetail());
+        }
         return "Cancel successfully";
     }
 
