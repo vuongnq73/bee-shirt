@@ -1310,7 +1310,7 @@
         toastr.error('Hóa đơn chưa có sản phẩm nào', 'Lỗi');
         return;
       }
-      if (noVouchers) { codeVoucherCheckout = ''; }
+      if (noVoucher) { codeVoucherCheckout = ''; }
 
       fetch(`http://localhost:8080/point-of-sale/checkout?codeBill=${activeBillCode}&codeVoucher=${codeVoucherCheckout}&username=${username}`, {
         method: 'POST',
@@ -2062,6 +2062,7 @@
               // Cập nhật giá trị ô tìm kiếm khi chọn khách hàng
               customerInput.value = customer.username;
               document.getElementById("codeCustomer").value = customer.username
+              applyVoucherOnChange()
               customerList.innerHTML = ""; // Ẩn danh sách khi chọn xong
               customerList.style.display = 'none'; // Ẩn danh sách khi chọn xong
               // Gửi yêu cầu kiểm tra mã khách hàng
