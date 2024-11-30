@@ -1291,7 +1291,7 @@
 
 
     async function checkout() {
-      const codeVoucherCheckout = document.getElementById("codeVoucher").value;
+      let codeVoucherCheckout = document.getElementById("codeVoucher").value;
       const username = document.getElementById("codeCustomer").value;
 
       const resp = await fetch(`http://localhost:8080/point-of-sale/get-bill-detail?codeBill=${activeBillCode}`, {
@@ -1310,7 +1310,7 @@
         toastr.error('Hóa đơn chưa có sản phẩm nào', 'Lỗi');
         return;
       }
-      if (noVoucher) { codeVoucherCheckout = ''; }
+      if (noVoucher) { codeVoucherCheckout = 'none'; }
 
       fetch(`http://localhost:8080/point-of-sale/checkout?codeBill=${activeBillCode}&codeVoucher=${codeVoucherCheckout}&username=${username}`, {
         method: 'POST',
