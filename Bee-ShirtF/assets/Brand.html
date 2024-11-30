@@ -13,7 +13,7 @@
    <!-- Bootstrap CSS v5.2.1 -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
   <!-- Fonts and icons -->
   <script src="js/plugin/webfont/webfont.min.js"></script>
@@ -111,57 +111,22 @@
               <div class="collapse" id="tables">
                 <ul class="nav nav-collapse">
                   <li>
-                    <a href="Category.html">
-                      <span class="sub-item">Danh Mục Sản Phẩm</span>
-                    </a>
-                  </li>
-                  <li>
                     <a href="Products.html">
-                      <span class="sub-item">Danh sách sản phẩm</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="ProductDetail.html">
-                      <span class="sub-item">Danh Sách Biến Thể Sản Phẩm<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Size.html">
-                      <span class="sub-item">Danh Sách Kích Thước<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Season.html">
-                      <span class="sub-item">Danh Sách Mùa<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Pattern.html">
-                      <span class="sub-item">Danh Sách Mẫu<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Origin.html">
-                      <span class="sub-item">Danh Sách Nguồn gốc<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Color.html">
-                      <span class="sub-item">Danh Sách Màu Sắc<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Gender.html">
-                      <span class="sub-item">Danh Sách Giới tính<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Material.html">
-                      <span class="sub-item">Danh Sách Chất Liệu<span>
+                      <span class="sub-item">Danh Sách Sản Phẩm</span>
                     </a>
                   </li>
                   
-                 
+                  <li>
+                    <a href="ProductDetail.html">
+                      <span class="sub-item">Danh Sách Sản Phẩm Chi Tiết</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="Category.html">
+                      <span class="sub-item">Danh Sách Thuộc Tính<span>
+                    </a>
+                  </li>
+
                 </ul>
               </div>
             </li>
@@ -522,141 +487,176 @@
 <!-- container -->
       <div class="container">
         <div class="page-inner">
-            <h2>Danh sách Brand</h2>
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link " href="Category.html">Danh Mục Sản Phẩm</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="Brand.html">Thương Hiệu</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="Color.html">Màu Sắc</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " href="Gender.html">Giới tính</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="Material.html">Chất Liệu</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="Origin.html">Nguồn Gốc</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="Pattern.html">Mẫu Áo</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " href="Season.html">Mùa</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="Size.html">Kích Thước</a>
+            </li>
+            
+          </ul>
+          
+          <h2>Danh sách Thương Hiệu</h2>
 
-<!-- Bảng hiển thị danh sách Brand -->
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Mã Brand</th>
-            <th>Tên Brand</th>
-            <th>Trạng Thái</th>
-            <th>Hành động</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr ng-repeat="brand in brands">
-            <td>{{ brand.codeBrand }}</td>
-            <td>{{ brand.nameBrand }}</td>
-            <td>{{ brand.statusBrand == 1 ? 'Active' : 'Inactive' }}</td>
-            <td>
-                <button class="btn btn-warning" ng-click="editBrand(brand)">Xem Chi Tiết</button>
-                <button class="btn btn-danger" ng-click="deleteBrand(brand.codeBrand)">Xóa</button>
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-<div class="d-flex justify-content-center mt-4">
-    <ul class="pagination">
-        <!-- Nút Đầu -->
-        <li class="page-item" ng-class="{'disabled': currentPage === 0}">
-            <button class="page-link" ng-click="goToPage(0)">Đầu</button>
-        </li>
-        
-        <!-- Nút Previous -->
-        <li class="page-item" ng-class="{'disabled': currentPage === 0}">
-            <button class="page-link" ng-click="goToPage(currentPage - 1)">Previous</button>
-        </li>
-
-        <!-- Các trang giữa -->
-        <li class="page-item" ng-repeat="page in pages" ng-class="{'active': currentPage === page}">
-            <button class="page-link" ng-click="goToPage(page)">{{ page + 1 }}</button>
-        </li>
-
-        <!-- Nút Next -->
-        <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
-            <button class="page-link" ng-click="goToPage(currentPage + 1)">Next</button>
-        </li>
-
-        <!-- Nút Cuối -->
-        <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
-            <button class="page-link" ng-click="goToPage(totalPages - 1)">Cuối</button>
-        </li>
-    </ul>
-</div>
-
-<!-- Nút Mở Modal Thêm Brand -->
-<button class="btn btn-success" ng-click="openAddBrandModal()" data-bs-toggle="modal" data-bs-target="#addBrandModal">Thêm Brand</button>
-
-<!-- Modal Thêm Brand -->
-<div class="modal fade" id="addBrandModal" tabindex="-1" aria-labelledby="addBrandModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addBrandModalLabel">Thêm Brand</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form ng-submit="saveNewBrand()">
-                    <div class="mb-3">
-                        <label for="codeBrand" class="form-label">Mã Brand:</label>
-                        <input type="text" id="codeBrand" ng-model="newBrand.codeBrand" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="nameBrand" class="form-label">Tên Brand:</label>
-                        <input type="text" id="nameBrand" ng-model="newBrand.nameBrand" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="statusBrand" class="form-label">Trạng Thái:</label>
-                        <div>
-                            <label>
-                                <input type="radio" ng-model="newBrand.statusBrand" value="1"> Active
-                            </label>
-                            <label>
-                                <input type="radio" ng-model="newBrand.statusBrand" value="0"> Inactive
-                            </label>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                        <button type="submit" class="btn btn-primary ms-2">Thêm Brand</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Sửa Brand -->
-<div class="modal fade" id="editBrandModal" tabindex="-1" aria-labelledby="editBrandModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editBrandModalLabel">Sửa Brand</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form ng-submit="saveEditBrand()">
-                    <div class="mb-3">
-                        <label for="codeBrand" class="form-label">Mã Brand:</label>
-                        <input type="text" id="codeBrand" ng-model="brand.codeBrand" class="form-control" disabled>
-                    </div>
-                    <div class="mb-3">
-                        <label for="nameBrand" class="form-label">Tên Brand:</label>
-                        <input type="text" id="nameBrand" ng-model="brand.nameBrand" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="statusBrand" class="form-label">Trạng Thái:</label>
-                        <div>
-                            <label>
-                                <input type="radio" ng-model="brand.statusBrand" value="1" ng-checked="brand.statusBrand === 1"> Hoạt Động
-                            </label>
-                            <label>
-                                <input type="radio" ng-model="brand.statusBrand" value="0" ng-checked="brand.statusBrand === 0"> Ngừng Hoạt Động
-                            </label>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                        <button type="submit" class="btn btn-primary ms-2">Cập nhật Brand</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
+          <!-- Bảng hiển thị danh sách thương hiệu -->
+          <table class="table table-bordered">
+              <thead>
+                  <tr>
+                     <th>STT</th>
+                      <th>Mã </th>
+                      <th>Thương Hiệu
+                        <button class="btn btn-link" ng-click="sortBrands('nameBrand')">
+                          <i class="bi bi-arrow-down-up"></i>
+                      </button>
+                      </th>
+                      <th>Trạng Thái</th>
+                      <th>Hành động</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr ng-repeat="brand in brands">
+                     <td>{{$index + 1 }}</td>
+                      <td>{{ brand.codeBrand }}</td>
+                      <td>{{ brand.nameBrand }}</td>
+                      <td>{{ brand.statusBrand == 1 ? 'Active' : 'Inactive' }}</td>
+                      <td>
+                          <button class="btn btn-warning" ng-click="editBrand(brand)">Xem Chi Tiết</button>
+                          <button class="btn btn-danger" ng-click="deleteBrand(brand.codeBrand)">Xóa</button>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+          <div class="d-flex justify-content-center mt-4">
+              <ul class="pagination">
+                  <!-- Nút Đầu -->
+                  <li class="page-item" ng-class="{'disabled': currentPage === 0}">
+                      <button class="page-link" ng-click="goToPage(0)">Đầu</button>
+                  </li>
+                  
+                  <!-- Nút Previous -->
+                  <li class="page-item" ng-class="{'disabled': currentPage === 0}">
+                      <button class="page-link" ng-click="goToPage(currentPage - 1)">Previous</button>
+                  </li>
+          
+                  <!-- Các trang giữa -->
+                  <li class="page-item" ng-repeat="page in pages" ng-class="{'active': currentPage === page}">
+                      <button class="page-link" ng-click="goToPage(page)">{{ page + 1 }}</button>
+                  </li>
+          
+                  <!-- Nút Next -->
+                  <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
+                      <button class="page-link" ng-click="goToPage(currentPage + 1)">Next</button>
+                  </li>
+          
+                  <!-- Nút Cuối -->
+                  <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
+                      <button class="page-link" ng-click="goToPage(totalPages - 1)">Cuối</button>
+                  </li>
+              </ul>
+          </div>
+  
+          <!-- Nút Mở Modal Thêm Thương Hiệu -->
+          <button class="btn btn-success" ng-click="openAddBrandModal()" data-bs-toggle="modal" data-bs-target="#addBrandModal">Thêm Thương Hiệu</button>
+  
+          <!-- Modal Thêm Thương Hiệu -->
+          <div class="modal fade" id="addBrandModal" tabindex="-1" aria-labelledby="addBrandModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="addBrandModalLabel">Thêm Thương Hiệu</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form ng-submit="saveNewBrand()">
+                              <div class="mb-3">
+                                  <label for="codeBrand" class="form-label">Mã Thương Hiệu:</label>
+                                  <input type="text" id="codeBrand" ng-model="newBrand.codeBrand" class="form-control" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="nameBrand" class="form-label">Tên Thương Hiệu:</label>
+                                  <input type="text" id="nameBrand" ng-model="newBrand.nameBrand" class="form-control" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="statusBrand" class="form-label">Trạng Thái:</label>
+                                  <div>
+                                      <label>
+                                          <input type="radio" ng-model="newBrand.statusBrand" value="1"> Active
+                                      </label>
+                                      <label>
+                                          <input type="radio" ng-model="newBrand.statusBrand" value="0"> Inactive
+                                      </label>
+                                  </div>
+                              </div>
+                              <div class="d-flex justify-content-end">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                  <button type="submit" class="btn btn-primary ms-2">Thêm Thương Hiệu</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- Modal Sửa Thương Hiệu -->
+          <div class="modal fade" id="editBrandModal" tabindex="-1" aria-labelledby="editBrandModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="editBrandModalLabel">Sửa Thương Hiệu</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form ng-submit="saveEditBrand()">
+                              <div class="mb-3">
+                                  <label for="codeBrand" class="form-label">Mã Thương Hiệu:</label>
+                                  <input type="text" id="codeBrand" ng-model="brand.codeBrand" class="form-control" disabled>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="nameBrand" class="form-label">Tên Thương Hiệu:</label>
+                                  <input type="text" id="nameBrand" ng-model="brand.nameBrand" class="form-control" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="statusBrand" class="form-label">Trạng Thái:</label>
+                                  <div>
+                                      <label>
+                                          <input type="radio" ng-model="brand.statusBrand" value="1" ng-checked="brand.statusBrand === 1"> Hoạt Động
+                                      </label>
+                                      <label>
+                                          <input type="radio" ng-model="brand.statusBrand" value="0" ng-checked="brand.statusBrand === 0"> Ngừng Hoạt Động
+                                      </label>
+                                  </div>
+                              </div>
+                              <div class="d-flex justify-content-end">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                  <button type="submit" class="btn btn-primary ms-2">Cập nhật Thương Hiệu</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
 
     </div>
 
