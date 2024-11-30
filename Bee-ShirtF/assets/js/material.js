@@ -93,6 +93,36 @@ app.controller('materialController', ['$scope', 'materialService', function($sco
     $scope.newMaterial = {};
     $scope.confirmDelete = false;
     $scope.materialToDelete = null;
+$scope.sortOrder = 'asc';  // Biến lưu trữ thứ tự sắp xếp, 'asc' là tăng dần, 'desc' là giảm dần
+
+// Hàm sắp xếp
+$scope.sortMaterials = function(field) {
+    if ($scope.sortOrder === 'asc') {
+        // Nếu đang sắp xếp tăng dần, thì sắp xếp giảm dần
+        $scope.materials = $scope.materials.sort(function(a, b) {
+            if (a[field] < b[field]) {
+                return -1;
+            }
+            if (a[field] > b[field]) {
+                return 1;
+            }
+            return 0;
+        });
+        $scope.sortOrder = 'desc';  // Sau khi sắp xếp xong, đổi sang giảm dần
+    } else {
+        // Nếu đang sắp xếp giảm dần, thì sắp xếp tăng dần
+        $scope.materials = $scope.materials.sort(function(a, b) {
+            if (a[field] < b[field]) {
+                return 1;
+            }
+            if (a[field] > b[field]) {
+                return -1;
+            }
+            return 0;
+        });
+        $scope.sortOrder = 'asc';  // Sau khi sắp xếp xong, đổi sang tăng dần
+    }
+};
 
     $scope.getMaterials = function(page) {
         materialService.getMaterials(page).then(function(response) {

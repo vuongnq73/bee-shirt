@@ -137,53 +137,18 @@
               <div class="collapse" id="tables">
                 <ul class="nav nav-collapse">
                   <li>
-                    <a href="Category.html">
+                    <a href="Products.html">
                       <span class="sub-item">Danh Mục Sản Phẩm</span>
                     </a>
                   </li>
                   <li>
-                    <a href="Products.html">
-                      <span class="sub-item">Danh sách sản phẩm</span>
-                    </a>
-                  </li>
-                  <li>
                     <a href="ProductDetail.html">
-                      <span class="sub-item">Danh Sách Biến Thể Sản Phẩm<span>
+                      <span class="sub-item">Danh Sách Sản Phẩm Chi Tiết</span>
                     </a>
                   </li>
                   <li>
-                    <a href="Size.html">
-                      <span class="sub-item">Danh Sách Kích Thước<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Season.html">
-                      <span class="sub-item">Danh Sách Mùa<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Pattern.html">
-                      <span class="sub-item">Danh Sách Mẫu<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Origin.html">
-                      <span class="sub-item">Danh Sách Nguồn gốc<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Color.html">
-                      <span class="sub-item">Danh Sách Màu Sắc<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Gender.html">
-                      <span class="sub-item">Danh Sách Giới tính<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Material.html">
-                      <span class="sub-item">Danh Sách Chất Liệu<span>
+                    <a href="Category.html">
+                      <span class="sub-item">Danh Sách Thuộc Tính<span>
                     </a>
                   </li>
                  
@@ -550,7 +515,7 @@
         <div class="page-inner">
             
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addVariantModal">
-          Thêm Biến Thể
+          Thêm Sản Phẩm Chi Tiết
         </button>
 
         <!-- Modal -->
@@ -562,133 +527,102 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <!-- Trường nhập liệu cho tên sản phẩm -->
-                <div class="mb-3">
-                  <label for="shirt" class="form-label">Sản phẩm</label>
-                  <select class="form-select" id="shirt" ng-model="newShirtDetail.shirt.id" required>
-                    <option value="" disabled selected>Chọn Sản Phẩm</option>
-                    <option ng-repeat="shirt in shirts" ng-value="{{shirt.id}}">{{shirt.nameshirt}}</option>
-                  </select>
-                </div>
-                <!-- Chọn Màu -->
-                <label>Chọn Màu:</label>
-                <div class="color-selection" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
-                  <div class="color-option" 
-                      ng-class="{'selected': selectedColors.indexOf(color.id) !== -1}" 
-                      ng-click="toggleColorSelection(color.id)" 
-                      ng-repeat="color in colors" 
-                      style="padding: 10px; border: 1px solid #ddd; cursor: pointer; border-radius: 5px; text-align: center;">
-                    {{color.nameColor}}
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="shirt" class="form-label">Sản Phẩm</label>
+                    <select class="form-select" id="shirt" ng-model="newShirtDetail.shirt.id" required>
+                      <option value="" disabled selected>Chọn Họa Tiết</option>
+                      <option ng-repeat="shirt in shirts" ng-value="shirt.id">{{shirt.nameshirt}}</option>
+                    </select>
                   </div>
-                </div>
-              
-                <!-- Chọn Size -->
-                <label>Chọn Size:</label>
-                <div class="size-selection" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
-                  <div class="size-option" 
-                      ng-class="{'selected': selectedSizes.indexOf(size.id) !== -1}" 
-                      ng-click="toggleSizeSelection(size.id)" 
-                      ng-repeat="size in sizes" 
-                      style="padding: 10px; border: 1px solid #ddd; cursor: pointer; border-radius: 5px; text-align: center;">
-                    {{size.namesize}}
+                  <div class="col-md-6">
+                    <label for="material" class="form-label">Chất Liệu</label>
+                    <select class="form-select" id="material" ng-model="newShirtDetail.material.id" required>
+                      <option value="" disabled selected>Chọn Chất Liệu</option>
+                      <option ng-repeat="material in materials" ng-value="material.id">{{material.nameMaterial}}</option>
+                    </select>
                   </div>
-                </div>
-                <div class="mb-3">
-                  <label for="material" class="form-label">Chất Liệu</label>
-                  <select class="form-select" id="material" ng-model="newShirtDetail.material.id" required>
-                    <option value="" disabled selected>Chọn Chất Liệu</option>
-                    <option ng-repeat="material in materials" ng-value="{{material.id}}">{{material.nameMaterial}}</option>
-                  </select>
-                </div>
-                <div class="mb-3">
-                  <label for="gender" class="form-label">Giới Tính</label>
-                  <select class="form-select" id="gender" ng-model="newShirtDetail.gender.id" required>
-                    <option value="" disabled selected>Chọn Giới Tính</option>
-                    <option ng-repeat="gender in genders" ng-value="gender.id">{{gender.nameGender}}</option>
-                  </select>
                 </div>
                 
-                <div class="mb-3">
-                  <label for="pattern" class="form-label">Họa Tiết</label>
-                  <select class="form-select" id="pattern" ng-model="newShirtDetail.pattern.id" required>
-                    <option value="" disabled selected>Chọn Họa Tiết</option>
-                    <option ng-repeat="pattern in patterns" ng-value="pattern.id">{{pattern.namePattern}}</option>
-                  </select>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="gender" class="form-label">Giới Tính</label>
+                    <select class="form-select" id="gender" ng-model="newShirtDetail.gender.id" required>
+                      <option value="" disabled selected>Chọn Giới Tính</option>
+                      <option ng-repeat="gender in genders" ng-value="gender.id">{{gender.nameGender}}</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="pattern" class="form-label">Họa Tiết</label>
+                    <select class="form-select" id="pattern" ng-model="newShirtDetail.pattern.id" required>
+                      <option value="" disabled selected>Chọn Họa Tiết</option>
+                      <option ng-repeat="pattern in patterns" ng-value="pattern.id">{{pattern.namePattern}}</option>
+                    </select>
+                  </div>
                 </div>
-              
-                <div class="mb-3">
-                  <label for="season" class="form-label">Mùa</label>
-                  <select class="form-select" id="season" ng-model="newShirtDetail.season.id" required>
-                    <option value="" disabled selected>Chọn Mùa</option>
-                    <option ng-repeat="season in seasons" ng-value="season.id">{{season.nameSeason}}</option>
-                  </select>
+                
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="season" class="form-label">Mùa</label>
+                    <select class="form-select" id="season" ng-model="newShirtDetail.season.id" required>
+                      <option value="" disabled selected>Chọn Mùa</option>
+                      <option ng-repeat="season in seasons" ng-value="season.id">{{season.nameSeason}}</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="origin" class="form-label">Xuất Xứ</label>
+                    <select class="form-select" id="origin" ng-model="newShirtDetail.origin.id" required>
+                      <option value="" disabled selected>Chọn Xuất Xứ</option>
+                      <option ng-repeat="origin in origins" ng-value="origin.id">{{origin.nameOrigin}}</option>
+                    </select>
+                  </div>
                 </div>
-              
-                <div class="mb-3">
-                  <label for="origin" class="form-label">Xuất xứ</label>
-                  <select class="form-select" id="origin" ng-model="newShirtDetail.origin.id" required>
-                    <option value="" disabled selected>Chọn Xuất Xứ</option>
-                    <option ng-repeat="origin in origins" ng-value="origin.id">{{origin.nameOrigin}}</option>
-                  </select>
+                
+              <!-- Chọn Màu -->
+              <label>Chọn Màu:</label>
+              <div class="color-selection" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
+                <div class="color-option" 
+                    ng-class="{'selected': selectedColors.indexOf(color.id) !== -1}" 
+                    ng-click="toggleColorSelection(color.id)" 
+                    ng-repeat="color in colors" 
+                    style="padding: 10px; border: 1px solid #ddd; cursor: pointer; border-radius: 5px; text-align: center;">
+                  {{color.nameColor}}
                 </div>
-              
+              </div>
+            
+              <!-- Chọn Size -->
+              <label>Chọn Size:</label>
+              <div class="size-selection" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
+                <div class="size-option" 
+                    ng-class="{'selected': selectedSizes.indexOf(size.id) !== -1}" 
+                    ng-click="toggleSizeSelection(size.id)" 
+                    ng-repeat="size in sizes" 
+                    style="padding: 10px; border: 1px solid #ddd; cursor: pointer; border-radius: 5px; text-align: center;">
+                  {{size.namesize}}
+                </div>
+              </div>
                 <!-- Nút tạo biến thể -->
                 <button ng-click="generateVariants()" class="btn btn-primary" style="margin-top: 10px; margin-bottom: 20px;">Tạo Biến Thể</button>
               
                 <!-- Hiển thị các biến thể và ô nhập số lượng -->
                 <div class="variant-list" ng-if="variants.length > 0" style="margin-top: 20px;">
-                  <h3>Biến Thể Được Tạo:</h3>
+                  <h3>Sản Phẩm Chi Tiết Được Tạo:</h3>
                   <div class="variant-item" ng-repeat="variant in variants" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
                     <span>
                       Màu: {{getColorName(variant.colorId)}}, Size: {{getSizeName(variant.sizeId)}}
                     </span>
+                    <label for="">Số Lượng:
                     <input type="number" ng-model="variant.quantity" placeholder="Số lượng" min="0" style="width: 80px; padding: 5px; border: 1px solid #ddd; border-radius: 5px;" />
+                  </label>
+                  <label for=""> Giá:
                     <input type="number" ng-model="variant.price" placeholder="Giá" min="0" style="width: 80px; padding: 5px; border: 1px solid #ddd; border-radius: 5px;" />
+                  </label>
                     <br>
 
                   </div>
                   <button ng-click="saveAllVariants()" class="btn btn-success" style="margin-top: 10px; margin-bottom: 20px;">Lưu Vào Danh Sách</button>
 
                 </div>
-              
-                <!-- Nút lưu tất cả biến thể -->
-              
-            <!-- Modal Hiển Thị Biến Thể Đã Lưu -->
-        <div class="modal fade" id="saveVariantsModal" tabindex="-1" aria-labelledby="saveVariantsModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="saveVariantsModalLabel">Lưu Biến Thể</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <p>Biến thể đã được lưu vào danh sách thành công.</p>
-
-                <!-- Hiển thị các biến thể đã lưu -->
-                <div class="saved-variants" ng-if="savedVariants.length > 0" style="margin-top: 20px;">
-                  <h3>Biến Thể Được Lưu:</h3>
-                  <div class="variant-item" ng-repeat="savedVariant in savedVariants" style="padding: 10px; border-bottom: 1px solid #ddd;">
-                    <strong>Tên Sản Phẩm:</strong> {{savedVariant.shirtId}} |
-                    <strong>Màu ID:</strong> {{savedVariant.colorId}}, 
-                    <strong>Size ID:</strong> {{savedVariant.sizeId}}, 
-                    <strong>Số Lượng:</strong> {{savedVariant.quantity}},
-                    <strong>Chất Liệu:</strong> {{savedVariant.materialId}},
-                    <strong>Họa Tiết:</strong> {{savedVariant.patternId}},
-                    <strong>Mùa:</strong> {{savedVariant.seasonId}},
-                    <strong>Xuất Xứ:</strong> {{savedVariant.originId}},
-                    <strong>Giá:</strong> {{savedVariant.price}}
-                  </div>
-                  
-                  <!-- Nút Lưu Tất Cả Biến Thể -->
-                  <button ng-click="submitVariants()" class="btn btn-success" style="margin-top: 10px; margin-bottom: 20px;">Lưu Tất Cả Biến Thể</button>
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-
-                </div>
-              </div>
-              
-            </div>
-          </div>
-        </div>  
 
               </div>
             </div>
@@ -699,7 +633,8 @@
           <thead>
               <tr>
                   <th>STT</th>
-                  <th>Mã Chi Tiết</th>
+                  <th>Mã Áo</th>
+                  <th>Mã Chi Tiết Áo</th>
                   <th>Tên Áo</th>
                   <th>Giá</th>
                   <th>Số Lượng</th>
@@ -713,6 +648,7 @@
           <tbody>
               <tr ng-repeat="shirtDetail in getShirtDetailsForCurrentPage()">
                   <td>{{getShirtIndex($index)}}</td> <!-- Số thứ tự tính từ trang -->
+                  <td>{{shirtDetail.codeShirt}}</td>
                   <td>{{shirtDetail.codeShirtDetail}}</td>
                   <td>{{shirtDetail.nameShirt}}</td>
                   <td>{{shirtDetail.price | currency}}</td>

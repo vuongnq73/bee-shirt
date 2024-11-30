@@ -107,6 +107,36 @@ app.controller('colorController', ['$scope', 'colorService', function($scope, co
         });
     };
     
+    $scope.sortOrder = 'asc';  // Biến lưu trữ thứ tự sắp xếp, 'asc' là tăng dần, 'desc' là giảm dần
+
+    // Hàm sắp xếp
+    $scope.sortColor = function(field) {
+        if ($scope.sortOrder === 'asc') {
+            // Nếu đang sắp xếp tăng dần, thì sắp xếp giảm dần
+            $scope.colors = $scope.colors.sort(function(a, b) {
+                if (a[field] < b[field]) {
+                    return -1;
+                }
+                if (a[field] > b[field]) {
+                    return 1;
+                }
+                return 0;
+            });
+            $scope.sortOrder = 'desc';  // Sau khi sắp xếp xong, đổi sang giảm dần
+        } else {
+            // Nếu đang sắp xếp giảm dần, thì sắp xếp tăng dần
+            $scope.colors = $scope.colors.sort(function(a, b) {
+                if (a[field] < b[field]) {
+                    return 1;
+                }
+                if (a[field] > b[field]) {
+                    return -1;
+                }
+                return 0;
+            });
+            $scope.sortOrder = 'asc';  // Sau khi sắp xếp xong, đổi sang tăng dần
+        }
+    };
     // Chuyển đến trang mới
     $scope.goToPage = function(page) {
         if (page >= 0 && page < $scope.totalPages) {
