@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+
 
 @Service
 public class ShirtDetailService {
@@ -185,7 +185,6 @@ public class ShirtDetailService {
     public ShirtDetailDTO getShirtDetail(String codeShirtDetail) {
         // Tìm kiếm ShirtDetail theo mã codeShirtDetail
         ShirtDetail shirtDetail = shirtDetailRepository.findByCodeShirtDetail(codeShirtDetail);
-
         if (shirtDetail != null) {
             // Chuyển đổi ShirtDetail thành ShirtDetailDTO và trả về
             ShirtDetailDTO shirtDetailDTO = new ShirtDetailDTO(
@@ -224,6 +223,7 @@ public class ShirtDetailService {
         return null;
     }
 
+
     public List<ShirtDetailDTO> getShirtDetailsByCodeShirt(String codeshirt) {
         // Gọi phương thức repository để lấy danh sách ShirtDetailDTO
         List<ShirtDetailDTO> shirtDetailDTOList = shirtDetailRepository.findAllShirtDetailByCodeShirt(codeshirt);
@@ -231,7 +231,6 @@ public class ShirtDetailService {
         // Trả về danh sách các ShirtDetailDTO, nếu không có dữ liệu trả về danh sách rỗng
         return shirtDetailDTOList != null ? shirtDetailDTOList : new ArrayList<>();
     }
-
 
     // Lấy tất cả các màu sắc
     public Iterable<Color> getAllColors() {
@@ -268,4 +267,5 @@ public class ShirtDetailService {
     public Iterable<Shirt> getAllShirts() {
         return shirtRepository.findAll();
     }
+
 }
