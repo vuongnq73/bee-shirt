@@ -1635,7 +1635,6 @@
       // const feedback = document.getElementById("accountFeedback");
       const totalMoneyInput = document.getElementById("totalMoney");
       const voucherFeedback = document.getElementById("voucherFeedback");
-
       // Ẩn thông báo cũ
       feedback.style.display = "none";
       voucherFeedback.style.display = "none";
@@ -1654,7 +1653,6 @@
           totalMoney += item.price * item.quantity;
         });
 
-
         // Gửi yêu cầu kiểm tra mã khách hàng
         const response = await fetch(`http://localhost:8080/point-of-sale/get-account?username=${codeCustomer}`, {
           method: "GET",
@@ -1666,15 +1664,17 @@
           throw new Error("Mã khách hàng không hợp lệ hoặc không tồn tại!");
         }
 
+
         const responseClone = response.clone();
 
         const data = await responseClone.text();
         if (data == '') {
-          feedback.style.display = "block";
-          feedback.textContent = "";
+          // feedback.style.display = "block";
+          // feedback.textContent = "";
 
           totalMoneyInput.value = totalMoney.toFixed(2);
           validatePayment()
+          applyVoucherOnChange()
           return;
         }
 
@@ -1683,9 +1683,9 @@
 
         // Nếu không tìm thấy tài khoản
         if (!accountData || Object.keys(accountData).length === 0) {
-          feedback.style.display = "block";
-          feedback.style.color = "red";
-          feedback.textContent = "Không tìm thấy tài khoản với mã khách hàng này!";
+          // feedback.style.display = "block";
+          // feedback.style.color = "red";
+          // feedback.textContent = "Không tìm thấy tài khoản với mã khách hàng này!";
           codeVoucherInput.disabled = true; // Vô hiệu hóa ô nhập mã voucher
           codeVoucherInput.value = ""; // Xóa mã voucher
           totalMoneyInput.value = ""; // Đặt lại tổng tiền
@@ -1693,9 +1693,9 @@
         }
 
         // Nếu tìm thấy tài khoản, bật ô nhập voucher
-        feedback.style.display = "block";
-        feedback.style.color = "green";
-        feedback.textContent = `Tài khoản hợp lệ`;
+        // feedback.style.display = "block";
+        // feedback.style.color = "green";
+        // feedback.textContent = `Tài khoản hợp lệ`;
         codeVoucherInput.disabled = false; // Kích hoạt ô nhập mã voucher
 
         // Gửi yêu cầu kiểm tra mã khách hàng
@@ -1711,9 +1711,9 @@
         await applyVoucherOnChange();
       } catch (error) {
         // Hiển thị lỗi nếu xảy ra
-        feedback.style.display = "block";
-        feedback.style.color = "red";
-        feedback.textContent = error.message || "Đã xảy ra lỗi khi kiểm tra mã khách hàng!";
+        // feedback.style.display = "block";
+        // feedback.style.color = "red";
+        // feedback.textContent = error.message || "Đã xảy ra lỗi khi kiểm tra mã khách hàng!";
         codeVoucherInput.disabled = true; // Vô hiệu hóa ô nhập mã voucher
         codeVoucherInput.value = ""; // Xóa mã voucher
 
@@ -2050,6 +2050,9 @@
           customerList.style.display = 'none'; // Ẩn hoàn toàn danh sách
           return;
         }
+
+        document.getElementById("codeCustomer").value = searchQuery
+        applyAccountOnChange()
 
         try {
           // Gửi yêu cầu đến API để lấy danh sách khách hàng
