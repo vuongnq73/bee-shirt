@@ -182,7 +182,7 @@ public class PointOfSaleService {
         }
         bill.setVoucher(voucher);
         bill.setCustomer(account);
-        bill.setTypeBill("POS");
+        bill.setTypeBill("In-Store");
         bill.setCustomerName("1");
         bill.setPhoneNumber("1");
         bill.setAddressCustomer("1");
