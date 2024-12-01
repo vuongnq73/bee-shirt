@@ -14,7 +14,7 @@ import java.util.Random;
 
 @RestController
 @RequestMapping("/api/categories")
-@CrossOrigin(origins = "http://127.0.0.1:5500") // Cấu hình CORS cho endpoint này
+@CrossOrigin(origins = "http://127.0.0.1:5501") // Cấu hình CORS cho endpoint này
 
 public class CategoryController {
 

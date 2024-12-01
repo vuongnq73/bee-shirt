@@ -36,4 +36,36 @@ public class StatisticsService {
         List<Object[]> result = billRepository.findBillStatisticsForLastMonth();
         return result.isEmpty() ? Collections.emptyList() : result;
     }
+    // Thống kê theo năm hiện tại
+    public List<Object[]> getStatisticsForCurrentYear() {
+        List<Object[]> result = billRepository.findBillStatisticsForCurrentYear();
+        return result.isEmpty() ? Collections.emptyList() : result;
+    }
+    //thống kê doanh thu tại cửa hàng và online theo ngày
+    public List<Object[]> getStatisticsForToDayy(){
+        List<Object[]> result = billRepository.findBillStatisticsForTodayy();
+        return result.isEmpty()? Collections.emptyList() : result;
+    }
+//thống kê doanh thu tại cửa hàng và online theo 7 ngày gâ nhất
+public List<Object[]> getStatisticsForLast7Days(){
+        List<Object[]> result = billRepository.findBillStatisticsForLast7Days();
+        return result.isEmpty()? Collections.emptyList() : result;
+
+}
+    //thống kê doanh thu tại cửa hàng và online theo tháng
+    public List<Object[]> findBillStatisticsForMonth(){
+        List<Object[]> result = billRepository.findBillStatisticsForLast30Days();
+        return result.isEmpty()? Collections.emptyList() : result;
+    }
+
+
+    //thống kê doanh thu tại cửa hàng và online theo năm
+    public List<Object[]> findBillStatisticsForYear(){
+        List<Object[]> result = billRepository.findBillStatisticsForCurrentYearr();
+        return result.isEmpty()? Collections.emptyList() : result;
+    }
+    public List<Object[]> findTotalBillsByType(){
+        List<Object[]> result = billRepository.findTotalBillsByType();
+        return result.isEmpty()? Collections.emptyList() : result;
+    }
 }

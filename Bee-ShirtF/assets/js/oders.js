@@ -30,7 +30,7 @@ angular.module("orderApp", [])
       const token = sessionStorage.getItem("jwtToken");
       if (!token) {
         alert("Bạn chưa đăng nhập. Vui lòng đăng nhập lại.");
-        window.location.href = "http://127.0.0.1:5500/assets/account/login.html#!/login";
+        window.location.href = "http://127.0.0.1:5501/assets/account/login.html#!/login";
       }
       return token;
     }
@@ -115,74 +115,6 @@ $scope.applyDateFilter = function () {
 
 //end test
 
-    // $scope.applyDateFilter = function () {
-    //   // Kiểm tra nếu không có giá trị cho startDate hoặc endDate
-    //   if (!$scope.startDate || !$scope.endDate) {
-    //     alert("Vui lòng chọn đầy đủ 'Từ ngày' và 'Đến ngày'.");
-    //     return;
-    //   }
-    
-    //   // Sử dụng moment.js để đảm bảo tính chính xác trong việc định dạng và so sánh ngày
-    //   const formattedStartDate = moment($scope.startDate, "DD/MM/YYYY").startOf('day'); // Đặt thời gian bắt đầu là 00:00
-    //   const formattedEndDate = moment($scope.endDate, "DD/MM/YYYY").endOf('day'); // Đặt thời gian kết thúc là 23:59
-    
-    //   // Kiểm tra xem ngày bắt đầu có lớn hơn ngày kết thúc hay không
-    //   if (formattedStartDate.isAfter(formattedEndDate)) {
-    //     alert("'Từ ngày' không được lớn hơn 'Đến ngày'.");
-    //     return;
-    //   }
-    
-    //   // Lọc dữ liệu từ mảng orders
-    //   $scope.filteredOrders = $scope.orders.filter(function (order) {
-    //     // Chuyển đổi ngày thanh toán trong order sang định dạng chuẩn sử dụng moment.js
-    //     const orderDate = moment(order.desiredDate, "DD/MM/YYYY");
-    
-    //     return orderDate.isBetween(formattedStartDate, formattedEndDate, null, '[]'); // '[]' bao gồm cả start và end date
-    //   });
-    
-    //   // Nếu không có dữ liệu sau khi lọc, hiển thị thông báo
-    //   if ($scope.filteredOrders.length === 0) {
-    //     alert("Không có dữ liệu trong khoảng thời gian này.");
-    //   }
-    
-    //   // Cập nhật lại bảng dữ liệu
-    //   $timeout($scope.initializeOrderTable, 0); // Khởi tạo lại bảng với dữ liệu đã lọc
-    // };
-    
-
-    // $scope.applyDateFilter = function () {
-    //   // Kiểm tra nếu không có giá trị cho startDate hoặc endDate
-    //   if (!$scope.startDate || !$scope.endDate) {
-    //     // Nếu không có ngày bắt đầu và ngày kết thúc, lấy toàn bộ dữ liệu
-    //     $scope.filteredOrders = $scope.orders;
-    //   } else {
-    //     // Sử dụng moment.js để đảm bảo tính chính xác trong việc định dạng và so sánh ngày
-    //     const formattedStartDate = moment($scope.startDate, "DD/MM/YYYY").startOf('day'); // Đặt thời gian bắt đầu là 00:00
-    //     const formattedEndDate = moment($scope.endDate, "DD/MM/YYYY").endOf('day'); // Đặt thời gian kết thúc là 23:59
-    
-    //     // Kiểm tra xem ngày bắt đầu có lớn hơn ngày kết thúc hay không
-    //     if (formattedStartDate.isAfter(formattedEndDate)) {
-    //       alert("'Từ ngày' không được lớn hơn 'Đến ngày'.");
-    //       return;
-    //     }
-    
-    //     // Lọc dữ liệu từ mảng orders
-    //     $scope.filteredOrders = $scope.orders.filter(function (order) {
-    //       // Chuyển đổi ngày thanh toán trong order sang định dạng chuẩn sử dụng moment.js
-    //       const orderDate = moment(order.desiredDate, "DD/MM/YYYY");
-    
-    //       return orderDate.isBetween(formattedStartDate, formattedEndDate, null, '[]'); // '[]' bao gồm cả start và end date
-    //     });
-        
-    //     // Nếu không có dữ liệu sau khi lọc, hiển thị thông báo
-    //     if ($scope.filteredOrders.length === 0) {
-    //       alert("Không có dữ liệu trong khoảng thời gian này.");
-    //     }
-    //   }
-    
-    //   // Cập nhật lại bảng dữ liệu
-    //   $timeout($scope.initializeOrderTable, 0); // Khởi tạo lại bảng với dữ liệu đã lọc
-    // };
     
 
     // Initialize DataTable for orders
@@ -454,13 +386,218 @@ $scope.applyDateFilter = function () {
   
   
  // Tổng số đơn hàng
+//
+$scope.selectedFilter = "today"; // Default filter option
+// $scope.selectedFilter = "last7days"; // Default filter option
+// $scope.selectedFilter = "current-month";
+// $scope.selectedFilter = "current-year";
+$scope.totalAllMoney = 0;
+$scope.totalInstoreMoney = 0;
+$scope.totalOnlineMoney = 0;
 
+// Fetch statistics based on the selected filter
+$scope.fetchStatistics = function () {
+  const token = getToken();  // Ensure this function returns a valid token
+  const apiUrl = `http://localhost:8080/statics/${$scope.selectedFilter}`;
+
+  $http({
+    method: "GET",
+    url: apiUrl,
+    headers: {
+      Authorization: `Bearer ${token}`  // Include token if needed
+    }
+  }).then(function (response) {
+    // Handle successful response
+    if (response.data && response.data.length > 0) {
+      const data = response.data[0];
+      $scope.totalAllMoney = data.totalAllMoney || 0;
+      $scope.totalInstoreMoney = data.totalInstoreMoney || 0;
+      $scope.totalOnlineMoney = data.totalOnlineMoney || 0;
+    } else {
+      // Handle case when there's no data
+      $scope.totalAllMoney = 0;
+      $scope.totalInstoreMoney = 0;
+      $scope.totalOnlineMoney = 0;
+    }
+  }, function (error) {
+    // Handle API error
+    console.error("Error fetching statistics:", error);
+    $scope.totalAllMoney = "Error";
+    $scope.totalInstoreMoney = "Error";
+    $scope.totalOnlineMoney = "Error";
+  });
+};
+
+// Fetch default statistics when the page loads
+$scope.fetchStatistics();
+
+
+///
+
+// Lấy token
+const token = getToken();
+
+// Dữ liệu ban đầu cho biểu đồ
+const data = {
+  labels: ["Orders"], // Tên của cột (1 cột duy nhất)
+  datasets: [
+    {
+      label: "Online Orders",
+      data: [], // Dữ liệu sẽ được cập nhật từ API
+      backgroundColor: "#177dff", // Màu sắc của Online Orders
+      stack: "stack1", // Gắn nhóm với stack1
+    },
+    {
+      label: "In-store Orders",
+      data: [], // Dữ liệu sẽ được cập nhật từ API
+      backgroundColor: "#f3545d", // Màu sắc của In-store Orders
+      stack: "stack1", // Gắn nhóm với stack1
+    }
+  ]
+};
+
+// Cấu hình biểu đồ
+const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    tooltip: {
+      callbacks: {
+        label: (context) => {
+          const total = context.dataset.data.reduce((a, b) => a + b, 0);
+          const percentage = ((context.raw / total) * 100).toFixed(1);
+          return `${context.label}: ${context.raw} (${percentage}%)`;
+        }
+      }
+    }
+  },
+  scales: {
+    x: {
+      stacked: true, // Chồng các phần trên trục X
+      grid: { display: false }
+    },
+    y: {
+      stacked: true, // Chồng các phần trên trục Y
+      ticks: {
+        beginAtZero: true, // Đảm bảo trục Y bắt đầu từ 0
+        max: 100 // Đảm bảo trục Y không vượt quá 100%
+      },
+      grid: { display: false }
+    }
+  }
+};
+
+// Tạo biểu đồ ban đầu
+const ctx = document.getElementById('stackedColumnChart').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'bar', // Biểu đồ cột
+  data: data,
+  options: options
+});
+
+// Gọi API và cập nhật dữ liệu vào biểu đồ
+fetch("http://localhost:8080/statics/statisticsInstoreAndOnline", {
+  method: "GET",
+  headers: {
+    Authorization: "Bearer " + token // Sử dụng token từ sessionStorage
+  }
+})
+.then(response => response.json())
+.then(dataFromAPI => {
+  // Kiểm tra và cập nhật dữ liệu từ API
+  console.log("Dữ liệu từ API:", dataFromAPI); // In dữ liệu để kiểm tra
+
+  // Tìm kiếm giá trị của Online và In-store Orders từ dữ liệu trả về
+  let onlineOrders = 0;
+  let inStoreOrders = 0;
+
+  dataFromAPI.forEach(order => {
+    if (order[0] === "Online") {
+      onlineOrders = order[1]; // Gán số liệu Online Orders
+    } else if (order[0] === "In-Store") {
+      inStoreOrders = order[1]; // Gán số liệu In-store Orders
+    }
+  });
+
+  // Cập nhật dữ liệu vào biểu đồ
+  chart.data.datasets[0].data = [onlineOrders]; // Cập nhật số liệu Online Orders
+  chart.data.datasets[1].data = [inStoreOrders]; // Cập nhật số liệu In-store Orders
+
+  // Cập nhật lại biểu đồ sau khi thay đổi dữ liệu
+  chart.update();
+})
+.catch(error => {
+  console.error("Error fetching data:", error);
+});
+
+///
+    // Hàm xem profile
+    $scope.viewProfile = function () {
+      const token = sessionStorage.getItem("jwtToken");
+
+      if (!token || token.split(".").length !== 3) {
+        console.log("Token không hợp lệ hoặc không tồn tại");
+        return;
+      }
+
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      if (payload && payload["user Code"]) {
+        const userCode = payload["user Code"];
+        sessionStorage.setItem("userCode", userCode);
+        console.log("userCode đã được lưu vào sessionStorage:", userCode);
+      } else {
+        console.log("Không tìm thấy userCode trong payload");
+      }
+
+      $window.location.href = "/assets/staff/Profile.html";
+    };
+//
+    //Lấy thông tin của tài khoản đang đăng nhập
+    $scope.getMyProfile = function () {
+      const token = sessionStorage.getItem("jwtToken");
+      $http({
+        method: "GET",
+        url: `http://localhost:8080/admin/myProfile`, // Đảm bảo URL đúng
+        headers: {
+          Authorization: "Bearer " + token, // Kiểm tra xem token có hợp lệ không
+        },
+      })
+        .then(function (response) {
+          console.log("Response:", response); // Log toàn bộ response để kiểm tra
+
+          if (response.data && response.data.result) {
+            $scope.myProfile = response.data.result;
+            console.log("My Profile:", $scope.myProfile); // Kiểm tra giá trị gán vào myProfile
+          } else {
+            $scope.errorMessage = "Không thể lấy thông tin người dùng.";
+            console.log($scope.errorMessage);
+          }
+        })
+        .catch(function (error) {
+          console.error("Lỗi khi lấy thông tin người dùng:", error);
+          $scope.errorMessage = "Có lỗi xảy ra khi lấy dữ liệu.";
+        })
+        .finally(function () {
+          $scope.loading = false; // Tắt trạng thái loading sau khi nhận được phản hồi
+        });
+    };
+    // Hàm xem profile
+    $scope.goToUpdateProfile = function (userCode) {
+      // Lưu thông tin người dùng vào sessionStorage để chuyển trang
+      sessionStorage.setItem("userCode", userCode);
+
+      // Sử dụng $location để điều hướng trong AngularJS
+      window.location.href = "/assets/staff/Profile.html";
+    };
 
     // Initialize when the DOM is ready
     angular.element(document).ready(function () {
       $scope.loadDataOrderToTable();
       $scope.loadStatisticsData();
       $scope.loadDashboardStatistics(); // Gọi API lấy dữ liệu dashboard
+      $scope.getMyProfile(); // Lấy thông tin của tài khoản đang đăng nhập
   });
   
   

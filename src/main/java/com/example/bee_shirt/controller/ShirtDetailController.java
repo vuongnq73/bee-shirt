@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/shirt-details")
-@CrossOrigin(origins = "http://127.0.0.1:5500")
+@CrossOrigin(origins = "http://127.0.0.1:5501")
 public class ShirtDetailController {
 
     @Autowired
@@ -68,10 +68,11 @@ public class ShirtDetailController {
         return ResponseEntity.ok(shirts);
     }
     // Hiển thị danh sách chi tiết áo thun với phân trang
+    // Hiển thị danh sách chi tiết áo thun với phân trang
     @GetMapping("/api/hienthi")
     public ResponseEntity<List<ShirtDetailDTO>> getShirtDetails(Pageable pageable) {
-        Page<ShirtDetailDTO> results = shirtDetailService.getAllShirtDetails(pageable);
-        return ResponseEntity.ok(results.getContent());
+        List<ShirtDetailDTO> results = shirtDetailService.getAllShirtDetails(pageable);
+        return ResponseEntity.ok(results);
     }
 
 

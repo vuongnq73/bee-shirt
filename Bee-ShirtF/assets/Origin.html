@@ -2,31 +2,19 @@
 <html lang="en" ng-app="OriginApp">
 
 <head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Bee-Shirt Admin Dashboard</title>
-  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
-  <link rel="icon" href="img/kaiadmin/favicon.ico" type="image/x-icon" />
+  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport">
+  <link rel="icon" href="img/kaiadmin/favicon.ico" type="image/x-icon">
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
   <script src="js/origin.js"></script>
   <link rel="stylesheet" href="css/productShirt.css">
    <!-- Bootstrap CSS v5.2.1 -->
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-            crossorigin="anonymous"
-        />
-  <script
-  src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-  integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-  crossorigin="anonymous"
-></script>
-
-<script
-  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
-  integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
-  crossorigin="anonymous"
-></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
   <!-- Fonts and icons -->
   <script src="js/plugin/webfont/webfont.min.js"></script>
   <script>
@@ -48,12 +36,12 @@
   </script>
 
   <!-- CSS Files -->
-  <link rel="stylesheet" href="css/bootstrap.min.css" />
-  <link rel="stylesheet" href="css/plugins.min.css" />
-  <link rel="stylesheet" href="css/kaiadmin.min.css" />
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/plugins.min.css">
+  <link rel="stylesheet" href="css/kaiadmin.min.css">
 
   <!-- CSS Just for demo purpose, don't include it in your project -->
-  <link rel="stylesheet" href="css/demo.css" />
+  <link rel="stylesheet" href="css/demo.css">
 </head>
 
 <body ng-controller="originController">
@@ -64,7 +52,7 @@
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
           <a href="BanHang.html" class="logo">
-            <img src="img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20" />
+            <img src="img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="20" />
           </a>
           <div class="nav-toggle">
             <button class="btn btn-toggle toggle-sidebar">
@@ -100,26 +88,13 @@
                 <p>Quản Lý</p>
               </a>
             </li>
-            <li class="nav-item">
-              <a data-bs-toggle="collapse" href="#sidebarLayouts">
+            <li class="nav-item ">
+              <a  href="/assets/Voucher.html">
                 <i class="fas fa-ticket-alt"></i>
                 <p>Voucher</p>
-                <span class="caret"></span>
+               
               </a>
-              <div class="collapse" id="sidebarLayouts">
-                <ul class="nav nav-collapse">
-                  <li>
-                    <a href="sidebar-style-2.html">
-                      <span class="sub-item">Sidebar Style 2</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="icon-menu.html">
-                      <span class="sub-item">Icon Menu</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
+       
             </li>
             <li class="nav-item">
               <a href="/assets/Bill.html">
@@ -135,57 +110,22 @@
               </a>
               <div class="collapse" id="tables">
                 <ul class="nav nav-collapse">
-                    <li>
-                        <a href="Category.html">
-                          <span class="sub-item">Danh Mục Sản Phẩm</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="Products.html">
-                          <span class="sub-item">Danh sách sản phẩm</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="ProductDetail.html">
-                          <span class="sub-item">Danh Sách Biến Thể Sản Phẩm<span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="Size.html">
-                          <span class="sub-item">Danh Sách Kích Thước<span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="Season.html">
-                          <span class="sub-item">Danh Sách Mùa<span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="Pattern.html">
-                          <span class="sub-item">Danh Sách Mẫu<span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="Origin.html">
-                          <span class="sub-item">Danh Sách Nguồn gốc<span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="Color.html">
-                          <span class="sub-item">Danh Sách Màu Sắc<span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="Gender.html">
-                          <span class="sub-item">Danh Sách Giới tính<span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="Material.html">
-                          <span class="sub-item">Danh Sách Chất Liệu<span>
-                        </a>
-                      </li>
-                 
+                  <li>
+                    <a href="Products.html">
+                      <span class="sub-item">Danh Mục Sản Phẩm</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="ProductDetail.html">
+                      <span class="sub-item">Danh Sách Sản Phẩm Chi Tiết</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="Category.html">
+                      <span class="sub-item">Danh Sách Thuộc Tính<span>
+                    </a>
+                  </li>
+
                 </ul>
               </div>
             </li>
@@ -198,10 +138,10 @@
               <div class="collapse" id="account">
                 <ul class="nav nav-collapse">
                   <li>
-                    <a href="Staff.html">
+                    <a href="staff/Staff.html">
                       <span class="sub-item">Nhân Viên</span>
                     </a>
-                  </li>https://meet.google.com/pfo-mdiq-ufz
+                  </li>
                   <li>
                     <a href="Customer.html">
                       <span class="sub-item">Khách Hàng</span>
@@ -245,7 +185,7 @@
           <!-- Logo Header -->
           <div class="logo-header" data-background-color="dark">
             <a href="BanHang.html" class="logo">
-              <img src="img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20" />
+              <img src="img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="20" />
             </a>
             <div class="nav-toggle">
               <button class="btn btn-toggle toggle-sidebar">
@@ -546,135 +486,181 @@
 <!-- container -->
       <div class="container">
         <div class="page-inner">
-            <h2>Danh sách Xuất Xứ</h2>
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link " href="Category.html">Danh Mục Sản Phẩm</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="Brand.html">Thương Hiệu</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="Color.html">Màu Sắc</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " href="Gender.html">Giới tính</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="Material.html">Chất Liệu</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="Origin.html">Nguồn Gốc</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="Pattern.html">Mẫu Áo</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " href="Season.html">Mùa</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="Size.html">Kích Thước</a>
+            </li>
+            
+          </ul>
+          <h2>Danh sách Xuất Xứ</h2>
 
-        <!-- Bảng hiển thị danh sách xuất xứ -->
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Mã Xuất Xứ</th>
-                    <th>Tên Xuất Xứ</th>
-                    <th>Trạng Thái</th>
-                    <th>Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="origin in origins">
-                    <td>{{ origin.codeOrigin }}</td>
-                    <td>{{ origin.nameOrigin }}</td>
-                    <td>{{ origin.statusOrigin == 1 ? 'Active' : 'Inactive' }}</td>
-                    <td>
-                        <button class="btn btn-warning" ng-click="editOrigin(origin)">Xem Chi Tiết</button>
-                        <button class="btn btn-danger" ng-click="deleteOrigin(origin.codeOrigin)">Xóa</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="d-flex justify-content-center mt-4">
-            <ul class="pagination">
-                <!-- Nút Đầu -->
-                <li class="page-item" ng-class="{'disabled': currentPage === 0}">
-                    <button class="page-link" ng-click="goToPage(0)">Đầu</button>
-                </li>
-                
-                <!-- Nút Previous -->
-                <li class="page-item" ng-class="{'disabled': currentPage === 0}">
-                    <button class="page-link" ng-click="goToPage(currentPage - 1)">Previous</button>
-                </li>
-        
-                <!-- Các trang giữa -->
-                <li class="page-item" ng-repeat="page in pages" ng-class="{'active': currentPage === page}">
-                    <button class="page-link" ng-click="goToPage(page)">{{ page + 1 }}</button>
-                </li>
-        
-                <!-- Nút Next -->
-                <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
-                    <button class="page-link" ng-click="goToPage(currentPage + 1)">Next</button>
-                </li>
-        
-                <!-- Nút Cuối -->
-                <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
-                    <button class="page-link" ng-click="goToPage(totalPages - 1)">Cuối</button>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Nút Mở Modal Thêm Xuất Xứ -->
-        <button class="btn btn-success" ng-click="openAddOriginModal()" data-bs-toggle="modal" data-bs-target="#addOriginModal">Thêm Xuất Xứ</button>
-
-        <!-- Modal Thêm Xuất Xứ -->
-        <div class="modal fade" id="addOriginModal" tabindex="-1" aria-labelledby="addOriginModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addOriginModalLabel">Thêm Xuất Xứ</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form ng-submit="saveNewOrigin()">
-                         
-                            <div class="mb-3">
-                                <label for="nameOrigin" class="form-label">Tên Xuất Xứ:</label>
-                                <input type="text" id="nameOrigin" ng-model="newOrigin.nameOrigin" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="statusOrigin" class="form-label">Trạng Thái:</label>
-                                <div>
-                                    <label>
-                                        <input type="radio" ng-model="newOrigin.statusOrigin" value="1"> Active
-                                    </label>
-                                    <label>
-                                        <input type="radio" ng-model="newOrigin.statusOrigin" value="0"> Inactive
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                <button type="submit" class="btn btn-primary ms-2">Thêm Xuất Xứ</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal Sửa Xuất Xứ -->
-        <div class="modal fade" id="editOriginModal" tabindex="-1" aria-labelledby="editOriginModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editOriginModalLabel">Sửa Xuất Xứ</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form ng-submit="saveEditOrigin()">
-                            <div class="mb-3">
-                                <label for="codeOrigin" class="form-label"disable>Mã Xuất Xứ:</label>
-                                <input type="text" id="codeOrigin" ng-model="origin.codeOrigin" class="form-control" disabled>
-                            </div>
-                            <div class="mb-3">
-                                <label for="nameOrigin" class="form-label">Tên Xuất Xứ:</label>
-                                <input type="text" id="nameOrigin" ng-model="origin.nameOrigin" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="statusOrigin" class="form-label">Trạng Thái:</label>
-                                <div>
-                                    <label>
-                                        <input type="radio" ng-model="origin.statusOrigin" value="1" ng-checked="origin.statusOrigin === 1"> Hoạt Động
-                                    </label>
-                                    <label>
-                                        <input type="radio" ng-model="origin.statusOrigin" value="0" ng-checked="origin.statusOrigin === 0"> Ngừng Hoạt Động
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                <button type="submit" class="btn btn-primary ms-2">Cập nhật Xuất Xứ</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+          <!-- Bảng hiển thị danh sách xuất xứ -->
+             <!-- Bảng hiển thị danh sách xuất xứ -->
+             <table class="table table-bordered">
+              <thead>
+                  <tr>
+                      <th >STT</th>
+                      <th>Mã
+                        
+                      </th>
+                      <th >Xuất Xứ
+                        <button class="btn btn-link" ng-click="sortOrigins('nameOrigin')">
+                          <i class="bi bi-arrow-down-up"></i>
+                      </button>
+                      </th>
+                      <th>Trạng Thái
+                          
+                      </th>
+                      <th>Hành động</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr ng-repeat="origin in origins ">
+                      <td>{{ $index + 1 }}</td> <!-- Số thứ tự tự động -->
+                      <td>{{ origin.codeOrigin }}</td>
+                      <td>{{ origin.nameOrigin }}</td>
+                      <td>{{ origin.statusOrigin == 1 ? 'Active' : 'Inactive' }}</td>
+                      <td>
+                          <button class="btn btn-warning" ng-click="editOrigin(origin)">Xem Chi Tiết</button>
+                          <button class="btn btn-danger" ng-click="deleteOrigin(origin.codeOrigin)">Xóa</button>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+          <div class="d-flex justify-content-center mt-4">
+              <ul class="pagination">
+                  <!-- Nút Đầu -->
+                  <li class="page-item" ng-class="{'disabled': currentPage === 0}">
+                      <button class="page-link" ng-click="goToPage(0)">Đầu</button>
+                  </li>
+                  
+                  <!-- Nút Previous -->
+                  <li class="page-item" ng-class="{'disabled': currentPage === 0}">
+                      <button class="page-link" ng-click="goToPage(currentPage - 1)">Previous</button>
+                  </li>
+          
+                  <!-- Các trang giữa -->
+                  <li class="page-item" ng-repeat="page in pages" ng-class="{'active': currentPage === page}">
+                      <button class="page-link" ng-click="goToPage(page)">{{ page + 1 }}</button>
+                  </li>
+          
+                  <!-- Nút Next -->
+                  <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
+                      <button class="page-link" ng-click="goToPage(currentPage + 1)">Next</button>
+                  </li>
+          
+                  <!-- Nút Cuối -->
+                  <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
+                      <button class="page-link" ng-click="goToPage(totalPages - 1)">Cuối</button>
+                  </li>
+              </ul>
+          </div>
+  
+          <!-- Nút Mở Modal Thêm Xuất Xứ -->
+          <button class="btn btn-success" ng-click="openAddOriginModal()" data-bs-toggle="modal" data-bs-target="#addOriginModal">Thêm Xuất Xứ</button>
+  
+          <!-- Modal Thêm Xuất Xứ -->
+          <div class="modal fade" id="addOriginModal" tabindex="-1" aria-labelledby="addOriginModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="addOriginModalLabel">Thêm Xuất Xứ</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form ng-submit="saveNewOrigin()">
+                              <div class="mb-3">
+                                  <label for="codeOrigin" class="form-label">Mã Xuất Xứ:</label>
+                                  <input type="text" id="codeOrigin" ng-model="newOrigin.codeOrigin" class="form-control" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="nameOrigin" class="form-label">Tên Xuất Xứ:</label>
+                                  <input type="text" id="nameOrigin" ng-model="newOrigin.nameOrigin" class="form-control" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="statusOrigin" class="form-label">Trạng Thái:</label>
+                                  <div>
+                                      <label>
+                                          <input type="radio" ng-model="newOrigin.statusOrigin" value="1"> Active
+                                      </label>
+                                      <label>
+                                          <input type="radio" ng-model="newOrigin.statusOrigin" value="0"> Inactive
+                                      </label>
+                                  </div>
+                              </div>
+                              <div class="d-flex justify-content-end">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                  <button type="submit" class="btn btn-primary ms-2">Thêm Xuất Xứ</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+  
+          <!-- Modal Sửa Xuất Xứ -->
+          <div class="modal fade" id="editOriginModal" tabindex="-1" aria-labelledby="editOriginModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="editOriginModalLabel">Sửa Xuất Xứ</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form ng-submit="saveEditOrigin()">
+                              <div class="mb-3">
+                                  <label for="codeOrigin" class="form-label">Mã Xuất Xứ:</label>
+                                  <input type="text" id="codeOrigin" ng-model="origin.codeOrigin" class="form-control" disabled>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="nameOrigin" class="form-label">Tên Xuất Xứ:</label>
+                                  <input type="text" id="nameOrigin" ng-model="origin.nameOrigin" class="form-control" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="statusOrigin" class="form-label">Trạng Thái:</label>
+                                  <div>
+                                      <label>
+                                          <input type="radio" ng-model="origin.statusOrigin" value="1" ng-checked="origin.statusOrigin === 1"> Hoạt Động
+                                      </label>
+                                      <label>
+                                          <input type="radio" ng-model="origin.statusOrigin" value="0" ng-checked="origin.statusOrigin === 0"> Ngừng Hoạt Động
+                                      </label>
+                                  </div>
+                              </div>
+                              <div class="d-flex justify-content-end">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                  <button type="submit" class="btn btn-primary ms-2">Cập nhật Xuất Xứ</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
         </div>
     </div>
 

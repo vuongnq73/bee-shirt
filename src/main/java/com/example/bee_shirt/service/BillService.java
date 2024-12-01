@@ -35,6 +35,36 @@ public class BillService {
                 (Integer) result[7]                      // statusBill
         )).collect(Collectors.toList());
     }
+    //listBill có trạng thái là 2
+    public List<BillDTO> getAllBillSummaries2() {
+        List<Object[]> results = billRepository.findBillSummaryNative2();
+
+        return results.stream().map(result -> new BillDTO(
+                (String) result[0],                      // codeBill
+                (String) result[1],
+                (String) result[2],                      // codeBill
+                (String) result[3], // customerName
+                result[4] != null ? ((Date) result[4]).toLocalDate() : null,   // desiredDate, convert sql Date to LocalDate
+                (String) result[5],                      // namePaymentMethod
+                (BigDecimal) result[6],                  // totalMoney
+                (Integer) result[7]                      // statusBill
+        )).collect(Collectors.toList());
+    }
+    //ListBill có trạng thái là 3
+    public List<BillDTO> getAllBillSummaries3() {
+        List<Object[]> results = billRepository.findBillSummaryNative3();
+
+        return results.stream().map(result -> new BillDTO(
+                (String) result[0],                      // codeBill
+                (String) result[1],
+                (String) result[2],                      // codeBill
+                (String) result[3], // customerName
+                result[4] != null ? ((Date) result[4]).toLocalDate() : null,   // desiredDate, convert sql Date to LocalDate
+                (String) result[5],                      // namePaymentMethod
+                (BigDecimal) result[6],                  // totalMoney
+                (Integer) result[7]                      // statusBill
+        )).collect(Collectors.toList());
+    }
 
     // New method for Bill statistics
 
@@ -44,9 +74,10 @@ public class BillService {
 
         // Chuyển đổi kết quả query thành danh sách DTO
         return results.stream().map(result -> new RevenueDTO(
-                ((Number) result[0]).intValue(),       // BillCount (số hóa đơn)
-                ((Number) result[1]).intValue(),       // TotalShirtQuantity (tổng số sản phẩm)
-                (BigDecimal) result[2]                  // TotalRevenue (doanh thu)
+                ((Number) result[0]).intValue(),  // BillCount (số hóa đơn)
+                result[1] != null ? ((Number) result[1]).intValue() : 0,  // TotalShirtQuantity (tổng số sản phẩm)
+                result[2] != null ? (BigDecimal) result[2] : BigDecimal.ZERO  // TotalRevenue (doanh thu)
         )).collect(Collectors.toList());
     }
+
 }

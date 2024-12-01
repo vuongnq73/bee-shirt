@@ -2,6 +2,7 @@ package com.example.bee_shirt.controller;
 
 import com.example.bee_shirt.dto.request.BillStaticsDTO;
 import com.example.bee_shirt.dto.request.RevenueDTO;
+import com.example.bee_shirt.dto.request.RevenueStatisticsDTO;
 import com.example.bee_shirt.dto.request.StatisticsResponse;
 import com.example.bee_shirt.dto.response.ApiResponse;
 import com.example.bee_shirt.repository.BillRepository;
@@ -18,10 +19,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("statics") // Đường dẫn theo kiểu RESTful
-@CrossOrigin(origins = "http://127.0.0.1:5500")
+@CrossOrigin(origins = "http://127.0.0.1:5501")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
@@ -150,12 +152,14 @@ public class StaticsController {
 
     // API thống kê theo thời gian (ngày, tuần, tháng, năm)
 
+
     @GetMapping("/filterByTime")
     public ResponseEntity<?> getStatistics(@RequestParam(value = "date", required = false) String dateFilter) {
-        // Nếu `dateFilter` là null hoặc trống, gán giá trị mặc định
         if (dateFilter == null || dateFilter.isEmpty()) {
             dateFilter = "this-month"; // Giá trị mặc định
         }
+
+        System.out.println("Date filter received: " + dateFilter); // Log tham số nhận được
 
         List<Object[]> statistics;
 
@@ -173,39 +177,36 @@ public class StaticsController {
             case "last-month":
                 statistics = statisticsService.getStatisticsForLastMonth();
                 break;
+            case "all": // Dữ liệu của năm hiện tại
+                statistics = statisticsService.getStatisticsForCurrentYear();
+                break;
             default:
-                // Nếu giá trị không hợp lệ, trả về lỗi hoặc mặc định là "this-month"
                 return ResponseEntity.badRequest().body("Invalid date filter value: " + dateFilter);
         }
 
-        // Kiểm tra nếu không có dữ liệu
         if (statistics.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 
-        // Chuyển đổi dữ liệu thành định dạng JSON mà client yêu cầu
         Map<String, Object> response = new HashMap<>();
         List<String> labels = new ArrayList<>();
         List<Integer> shirtData = new ArrayList<>();
         List<Integer> revenueData = new ArrayList<>();
         List<Integer> orderData = new ArrayList<>();
 
-        // Duyệt qua dữ liệu trả về
         for (Object[] row : statistics) {
-            // Giả sử dữ liệu trả về theo dạng [label, shirtQuantity, revenue, orderCount]
-            labels.add(row[0].toString());
-
-            // Lấy giá trị số lượng áo và chuyển đổi từ BigDecimal sang Integer nếu cần
-            shirtData.add(row[1] != null ? ((BigDecimal) row[1]).intValue() : 0); // Kiểm tra null và ép kiểu
-
-            // Lấy giá trị doanh thu và chuyển đổi từ BigDecimal sang Integer
-            revenueData.add(row[2] != null ? ((BigDecimal) row[2]).intValue() : 0);
-
-            // Lấy giá trị số đơn hàng và chuyển đổi từ BigDecimal sang Integer
-            orderData.add(row[3] != null ? ((BigDecimal) row[3]).intValue() : 0);
+            if (row.length >= 3) { // Kiểm tra nếu mảng có ít nhất 3 phần tử
+                labels.add(row[0].toString()); // Thêm label nếu có
+                shirtData.add(row[1] != null ? ((Number) row[1]).intValue() : 0);
+                revenueData.add(row[2] != null ? ((Number) row[2]).intValue() : 0);
+                orderData.add(row.length > 3 && row[3] != null ? ((Number) row[3]).intValue() : 0);
+            } else {
+                // Xử lý trường hợp dữ liệu không đầy đủ (ví dụ log hoặc bỏ qua)
+                System.out.println("Dữ liệu không đầy đủ: " + Arrays.toString(row));
+            }
         }
 
-        // Gửi lại dữ liệu dưới dạng JSON
+
         response.put("labels", labels);
         response.put("shirtData", shirtData);
         response.put("revenueData", revenueData);
@@ -214,4 +215,55 @@ public class StaticsController {
         return ResponseEntity.ok(response);
     }
 
+
+
+    // Thống kê doanh thu tại cửa hàng và online theo ngày hôm nay
+    @GetMapping("/today")
+    public List<RevenueStatisticsDTO> getStatisticsForToday() {
+        List<Object[]> rawData = statisticsService.getStatisticsForToday();
+        return rawData.stream().map(data -> new RevenueStatisticsDTO(
+                data[0] != null ? ((Number) data[0]).doubleValue() : 0.0, // TotalOnlineMoney
+                data[1] != null ? ((Number) data[1]).doubleValue() : 0.0, // TotalInstoreMoney
+                data[2] != null ? ((Number) data[2]).doubleValue() : 0.0  // TotalAllMoney
+        )).collect(Collectors.toList());
+    }
+
+    // Thống kê doanh thu tại cửa hàng và online trong 7 ngày gần nhất
+    @GetMapping("/last7days")
+    public List<RevenueStatisticsDTO> getStatisticsForLast7Days() {
+        List<Object[]> rawData = statisticsService.getStatisticsForLast7Days();
+        return rawData.stream().map(data -> new RevenueStatisticsDTO(
+                data[0] != null ? ((Number) data[0]).doubleValue() : 0.0, // TotalOnlineMoney
+                data[1] != null ? ((Number) data[1]).doubleValue() : 0.0, // TotalInstoreMoney
+                data[2] != null ? ((Number) data[2]).doubleValue() : 0.0  // TotalAllMoney
+        )).collect(Collectors.toList());
+    }
+
+    // Thống kê doanh thu tại cửa hàng và online theo tháng hiện tại
+    @GetMapping("/current-month")
+    public List<RevenueStatisticsDTO> getStatisticsForMonth() {
+        List<Object[]> rawData = statisticsService.findBillStatisticsForMonth();
+        return rawData.stream().map(data -> new RevenueStatisticsDTO(
+                data[0] != null ? ((Number) data[0]).doubleValue() : 0.0, // TotalOnlineMoney
+                data[1] != null ? ((Number) data[1]).doubleValue() : 0.0, // TotalInstoreMoney
+                data[2] != null ? ((Number) data[2]).doubleValue() : 0.0  // TotalAllMoney
+        )).collect(Collectors.toList());
+    }
+
+    // Thống kê doanh thu tại cửa hàng và online theo năm hiện tại
+    @GetMapping("/current-year")
+    public List<RevenueStatisticsDTO> getStatisticsForYear() {
+        List<Object[]> rawData = statisticsService.findBillStatisticsForYear();
+        return rawData.stream().map(data -> new RevenueStatisticsDTO(
+                data[0] != null ? ((Number) data[0]).doubleValue() : 0.0, // TotalOnlineMoney
+                data[1] != null ? ((Number) data[1]).doubleValue() : 0.0, // TotalInstoreMoney
+                data[2] != null ? ((Number) data[2]).doubleValue() : 0.0  // TotalAllMoney
+        )).collect(Collectors.toList());
+    }
+//thống kê tỉ lệ đơn hàng mua online và mua tại quầy
+@GetMapping("/statisticsInstoreAndOnline") // Endpoint để lấy thống kê
+public ResponseEntity<List<Object[]>> getBillStatisticsByType() {
+    List<Object[]> statistics = statisticsService.findTotalBillsByType();
+    return ResponseEntity.ok(statistics); // Trả về kết quả dưới dạng JSON
+}
 }

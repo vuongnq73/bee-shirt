@@ -92,16 +92,51 @@ app.controller('originController', ['$scope', 'originService', function($scope, 
     $scope.newOrigin = {};
     $scope.confirmDelete = false;
     $scope.originToDelete = null;
+    $scope.sortOrder = 'asc';  // Biến lưu trữ thứ tự sắp xếp, 'asc' là tăng dần, 'desc' là giảm dần
 
-    $scope.getBrands = function(page) {
-        brandService.getBrands(page).then(function(response) {
-            console.log(response.data.content);  // Kiểm tra dữ liệu trong console
-            $scope.brands = response.data.content; // Lưu dữ liệu vào $scope.brands
+    // Hàm sắp xếp
+    $scope.sortOrigins = function(field) {
+        if ($scope.sortOrder === 'asc') {
+            // Nếu đang sắp xếp tăng dần, thì sắp xếp giảm dần
+            $scope.origins = $scope.origins.sort(function(a, b) {
+                if (a[field] < b[field]) {
+                    return -1;
+                }
+                if (a[field] > b[field]) {
+                    return 1;
+                }
+                return 0;
+            });
+            $scope.sortOrder = 'desc';  // Sau khi sắp xếp xong, đổi sang giảm dần
+        } else {
+            // Nếu đang sắp xếp giảm dần, thì sắp xếp tăng dần
+            $scope.origins = $scope.origins.sort(function(a, b) {
+                if (a[field] < b[field]) {
+                    return 1;
+                }
+                if (a[field] > b[field]) {
+                    return -1;
+                }
+                return 0;
+            });
+            $scope.sortOrder = 'asc';  // Sau khi sắp xếp xong, đổi sang tăng dần
+        }
+    };
+    
+
+    $scope.getOrigins = function(page) {
+        originService.getOrigins(page).then(function(response) {
+            $scope.origins = response.data.content.map(function(item) {
+                return {
+                    codeOrigin: item[0],
+                    nameOrigin: item[1],
+                    statusOrigin: item[2]
+                };
+            });
             $scope.totalPages = response.data.totalPages;
             $scope.pages = new Array($scope.totalPages);
         });
     };
-    
     
     // Chuyển đến trang mới
     $scope.goToPage = function(page) {

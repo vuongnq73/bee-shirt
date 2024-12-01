@@ -47,7 +47,7 @@
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
           <a href="/assets/BanHang.html" class="logo">
-            <img src="img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20" />
+            <img src="img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="20" />
           </a>
           <div class="nav-toggle">
             <button class="btn btn-toggle toggle-sidebar">
@@ -84,25 +84,10 @@
               </a>
             </li>
             <li class="nav-item">
-              <a data-bs-toggle="collapse" href="#sidebarLayouts">
+              <a href="/assets/Voucher.html">
                 <i class="fas fa-ticket-alt"></i>
                 <p>Voucher</p>
-                <span class="caret"></span>
               </a>
-              <div class="collapse" id="sidebarLayouts">
-                <ul class="nav nav-collapse">
-                  <li>
-                    <a href="sidebar-style-2.html">
-                      <span class="sub-item">Sidebar Style 2</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="icon-menu.html">
-                      <span class="sub-item">Icon Menu</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
             </li>
             <li class="nav-item active submenu">
               <a href="/assets/Bill.html">
@@ -119,15 +104,22 @@
               <div class="collapse" id="tables">
                 <ul class="nav nav-collapse">
                   <li>
-                    <a href="tables/tables.html">
-                      <span class="sub-item">Basic Table</span>
+                    <a href="Products.html">
+                      <span class="sub-item">Danh Sách Sản Phẩm</span>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="ProductDetail.html">
+                      <span class="sub-item">Danh Sách Sản Phẩm Chi Tiết</span>
                     </a>
                   </li>
                   <li>
-
-                    <span class="sub-item">Datatables</span>
+                    <a href="Category.html">
+                      <span class="sub-item">Danh Sách Thuộc Tính<span>
                     </a>
                   </li>
+
                 </ul>
               </div>
             </li>
@@ -187,7 +179,7 @@
           <!-- Logo Header -->
           <div class="logo-header" data-background-color="dark">
             <a href="../statistic.html" class="logo">
-              <img src="../assets/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20" />
+              <img src="../assets/img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="20" />
             </a>
             <div class="nav-toggle">
               <button class="btn btn-toggle toggle-sidebar">
@@ -206,264 +198,41 @@
         <!-- Navbar Header -->
         <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
           <div class="container-fluid">
-            <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <button type="submit" class="btn btn-search pe-1">
-                    <i class="fa fa-search search-icon"></i>
-                  </button>
-                </div>
-                <input type="text" placeholder="Search ..." class="form-control" />
-              </div>
-            </nav>
-
             <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
-              <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
-                  aria-expanded="false" aria-haspopup="true">
-                  <i class="fa fa-search"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-search animated fadeIn">
-                  <form class="navbar-left navbar-form nav-search">
-                    <div class="input-group">
-                      <input type="text" placeholder="Search ..." class="form-control" />
-                    </div>
-                  </form>
-                </ul>
-              </li>
-              <li class="nav-item topbar-icon dropdown hidden-caret">
-                <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button"
-                  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="fa fa-envelope"></i>
-                </a>
-                <ul class="dropdown-menu messages-notif-box animated fadeIn" aria-labelledby="messageDropdown">
-                  <li>
-                    <div class="dropdown-title d-flex justify-content-between align-items-center">
-                      Messages
-                      <a href="#" class="small">Mark all as read</a>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="message-notif-scroll scrollbar-outer">
-                      <div class="notif-center">
-                        <a href="#">
-                          <div class="notif-img">
-                            <img src="../assets/img/jm_denis.jpg" alt="Img Profile" />
-                          </div>
-                          <div class="notif-content">
-                            <span class="subject">Jimmy Denis</span>
-                            <span class="block"> How are you ? </span>
-                            <span class="time">5 minutes ago</span>
-                          </div>
-                        </a>
-                        <a href="#">
-                          <div class="notif-img">
-                            <img src="../assets/img/chadengle.jpg" alt="Img Profile" />
-                          </div>
-                          <div class="notif-content">
-                            <span class="subject">Chad</span>
-                            <span class="block"> Ok, Thanks ! </span>
-                            <span class="time">12 minutes ago</span>
-                          </div>
-                        </a>
-                        <a href="#">
-                          <div class="notif-img">
-                            <img src="../assets/img/mlane.jpg" alt="Img Profile" />
-                          </div>
-                          <div class="notif-content">
-                            <span class="subject">Jhon Doe</span>
-                            <span class="block">
-                              Ready for the meeting today...
-                            </span>
-                            <span class="time">12 minutes ago</span>
-                          </div>
-                        </a>
-                        <a href="#">
-                          <div class="notif-img">
-                            <img src="../assets/img/talha.jpg" alt="Img Profile" />
-                          </div>
-                          <div class="notif-content">
-                            <span class="subject">Talha</span>
-                            <span class="block"> Hi, Apa Kabar ? </span>
-                            <span class="time">17 minutes ago</span>
-                          </div>
-                        </a>
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <a class="see-all" href="javascript:void(0);">See all messages<i class="fa fa-angle-right"></i>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item topbar-icon dropdown hidden-caret">
-                <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false">
-                  <i class="fa fa-bell"></i>
-                  <span class="notification">4</span>
-                </a>
-                <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
-                  <li>
-                    <div class="dropdown-title">
-                      You have 4 new notification
-                    </div>
-                  </li>
-                  <li>
-                    <div class="notif-scroll scrollbar-outer">
-                      <div class="notif-center">
-                        <a href="#">
-                          <div class="notif-icon notif-primary">
-                            <i class="fa fa-user-plus"></i>
-                          </div>
-                          <div class="notif-content">
-                            <span class="block"> New user registered </span>
-                            <span class="time">5 minutes ago</span>
-                          </div>
-                        </a>
-                        <a href="#">
-                          <div class="notif-icon notif-success">
-                            <i class="fa fa-comment"></i>
-                          </div>
-                          <div class="notif-content">
-                            <span class="block">
-                              Rahmad commented on Admin
-                            </span>
-                            <span class="time">12 minutes ago</span>
-                          </div>
-                        </a>
-                        <a href="#">
-                          <div class="notif-img">
-                            <img src="../assets/img/profile2.jpg" alt="Img Profile" />
-                          </div>
-                          <div class="notif-content">
-                            <span class="block">
-                              Reza send messages to you
-                            </span>
-                            <span class="time">12 minutes ago</span>
-                          </div>
-                        </a>
-                        <a href="#">
-                          <div class="notif-icon notif-danger">
-                            <i class="fa fa-heart"></i>
-                          </div>
-                          <div class="notif-content">
-                            <span class="block"> Farrah liked Admin </span>
-                            <span class="time">17 minutes ago</span>
-                          </div>
-                        </a>
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <a class="see-all" href="javascript:void(0);">See all notifications<i class="fa fa-angle-right"></i>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item topbar-icon dropdown hidden-caret">
-                <a class="nav-link" data-bs-toggle="dropdown" href="#" aria-expanded="false">
-                  <i class="fas fa-layer-group"></i>
-                </a>
-                <div class="dropdown-menu quick-actions animated fadeIn">
-                  <div class="quick-actions-header">
-                    <span class="title mb-1">Quick Actions</span>
-                    <span class="subtitle op-7">Shortcuts</span>
-                  </div>
-                  <div class="quick-actions-scroll scrollbar-outer">
-                    <div class="quick-actions-items">
-                      <div class="row m-0">
-                        <a class="col-6 col-md-4 p-0" href="#">
-                          <div class="quick-actions-item">
-                            <div class="avatar-item bg-danger rounded-circle">
-                              <i class="far fa-calendar-alt"></i>
-                            </div>
-                            <span class="text">Calendar</span>
-                          </div>
-                        </a>
-                        <a class="col-6 col-md-4 p-0" href="#">
-                          <div class="quick-actions-item">
-                            <div class="avatar-item bg-warning rounded-circle">
-                              <i class="fas fa-map"></i>
-                            </div>
-                            <span class="text">Maps</span>
-                          </div>
-                        </a>
-                        <a class="col-6 col-md-4 p-0" href="#">
-                          <div class="quick-actions-item">
-                            <div class="avatar-item bg-info rounded-circle">
-                              <i class="fas fa-file-excel"></i>
-                            </div>
-                            <span class="text">Reports</span>
-                          </div>
-                        </a>
-                        <a class="col-6 col-md-4 p-0" href="#">
-                          <div class="quick-actions-item">
-                            <div class="avatar-item bg-success rounded-circle">
-                              <i class="fas fa-envelope"></i>
-                            </div>
-                            <span class="text">Emails</span>
-                          </div>
-                        </a>
-                        <a class="col-6 col-md-4 p-0" href="#">
-                          <div class="quick-actions-item">
-                            <div class="avatar-item bg-primary rounded-circle">
-                              <i class="fas fa-file-invoice-dollar"></i>
-                            </div>
-                            <span class="text">Invoice</span>
-                          </div>
-                        </a>
-                        <a class="col-6 col-md-4 p-0" href="#">
-                          <div class="quick-actions-item">
-                            <div class="avatar-item bg-secondary rounded-circle">
-                              <i class="fas fa-credit-card"></i>
-                            </div>
-                            <span class="text">Payments</span>
-                          </div>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-
-              <li class="nav-item topbar-user dropdown hidden-caret">
+              <li class="nav-item topbar-user dropdown hidden-caret" ng-if="myProfile">
                 <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
                   <div class="avatar-sm">
-                    <img src="../assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle" />
+                    <!-- Hiển thị avatar của người dùng hoặc ảnh mặc định -->
+                    <img ng-src="{{ myProfile.avatar }}" alt="..." class="avatar-img rounded-circle" />
                   </div>
                   <span class="profile-username">
                     <span class="op-7">Hi,</span>
-                    <span class="fw-bold">Đăng Ngố</span>
+                    <span class="fw-bold">{{ myProfile.firstName }}</span> <!-- Hiển thị tên người dùng -->
                   </span>
                 </a>
                 <ul class="dropdown-menu dropdown-user animated fadeIn">
                   <div class="dropdown-user-scroll scrollbar-outer">
-                    <li>
+                    <li ng-if="myProfile"> <!-- Ngăn lỗi nếu myProfile chưa tải xong -->
                       <div class="user-box">
                         <div class="avatar-lg">
-                          <img src="../assets/img/profile.jpg" alt="image profile" class="avatar-img rounded" />
+                          <img ng-src="{{ myProfile.avatar }}" alt="image profile" class="avatar-img rounded" />
                         </div>
                         <div class="u-text">
-                          <h4>Hizrian</h4>
-                          <p class="text-muted">hello@example.com</p>
-                          <a href="profile.html" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+                          <h4>{{ myProfile.firstName }} {{ myProfile.lastName }}</h4>
+                          <p class="text-muted">{{ myProfile.email }}</p>
+                          <a href="/assets/staff/Profile.html" ng-click="viewProfile()"
+                            class="btn btn-xs btn-secondary btn-sm">View Profile</a>
                         </div>
                       </div>
                     </li>
                     <li>
                       <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">My Profile</a>
-                      <a class="dropdown-item" href="#">My Balance</a>
-                      <a class="dropdown-item" href="#">Inbox</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">Account Setting</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">Logout</a>
+                      <a class="dropdown-item" href="/assets/account/login.html" ng-click="logout()">Logout</a>
                     </li>
                   </div>
                 </ul>
               </li>
+
             </ul>
           </div>
         </nav>
@@ -548,18 +317,18 @@
                           </tr>
                         </tbody>
                       </table>
-                    <div class="row">
+                      <div class="row">
 
-                      <div class="col-md-6">
-                        <h5 style=" color: #26007e;">Voucher: {{ nameVoucher }}</h5>
+                        <div class="col-md-6">
+                          <h5 style=" color: #26007e;">Voucher: {{ nameVoucher }}</h5>
+                        </div>
+
+                        <div class="col-md-6">
+                          <h5 style=" color: #e54100;">Số Tiền trước khi giảm: {{ formatCurrency(subtotalBeforeDiscount) }}</h5>
+                          <h5 style=" color: #cb7b0b;">Phí Ship: {{ 0 }}</h5>
+                          <h5 style=" color: #0b1bcb;">Tổng tiền: {{ formatCurrency(totalMoney) }}</h5>
+                        </div>
                       </div>
-                      
-                      <div class="col-md-6">
-                        <h5 style=" color: #e54100;">Số Tiền trước khi giảm: {{ formatCurrency(totalMoney) }}</h5>
-                        <h5 style=" color: #cb7b0b;">Phí Ship: {{ 0 }}</h5>
-                        <h5 style=" color: #0b1bcb;">Tổng tiền: {{ formatCurrency(totalMoney) }}</h5>
-                      </div>
-                    </div>
 
                       <div
                         style="text-align: center; display: flex; justify-content: center; font-size: 12px; color: #666; margin-top: 20px;">
@@ -633,7 +402,7 @@
                         <div class="total-money"
                           style="text-align: left; margin-top: 20px; font-weight: bold; font-size: 16px;">
                           Tổng tiền trước khi giảm: <span style="color:  rgb(214, 18, 18);">{{
-                            formatCurrency(totalMoney) }}</span>
+                            formatCurrency(subtotalBeforeDiscount) }}</span>
                         </div>
                         <div class="total-money"
                           style="text-align: left; margin-top: 20px; font-weight: bold; font-size: 16px;">
@@ -843,6 +612,7 @@
       $scope.address = "";       // Thêm biến cho địa chỉ
       $scope.errorMessage = "";
       $scope.codeBill = "";
+      $scope.subtotalBeforeDiscount = 0;
       $scope.currentDate = new Date();
       $scope.formatCurrency = function (value) {
         return value.toLocaleString("vi-VN", {
@@ -855,7 +625,7 @@
         const token = sessionStorage.getItem("jwtToken");
         if (!token) {
           alert("Bạn chưa đăng nhập. Vui lòng đăng nhập lại.");
-          window.location.href = "http://127.0.0.1:5500/assets/account/login.html#!/login";
+          window.location.href = "http://127.0.0.1:5501/assets/account/login.html#!/login";
           return;
         }
 
@@ -883,7 +653,7 @@
               $scope.nameCustomer = firstDetail.customerName || "N/A";
               $scope.phoneNumber = firstDetail.phoneNumber || "N/A";
               $scope.address = firstDetail.addressCustomer || "N/A";
-
+              $scope.subtotalBeforeDiscount = firstDetail.subtotalBeforeDiscount || "N/A";
               $scope.details = detailsData.map((detail, index) => ({
                 stt: index + 1,
                 nameImage: detail.nameImage || "default_image.png",
@@ -969,10 +739,90 @@
             element.style.display = 'none';
           });
       };
+
+      //
+      // Hàm xem thông tin profile
+      $scope.viewProfile = function () {
+        const token = sessionStorage.getItem("jwtToken");
+
+        if (!token || token.split(".").length !== 3) {
+          console.error("Token không hợp lệ hoặc không tồn tại");
+          return;
+        }
+
+        try {
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          const userCode = payload?.["user Code"];
+          if (userCode) {
+            sessionStorage.setItem("userCode", userCode);
+            console.log("userCode đã được lưu vào sessionStorage:", userCode);
+          } else {
+            console.error("Không tìm thấy userCode trong payload");
+          }
+        } catch (error) {
+          console.error("Lỗi khi giải mã token:", error);
+          return;
+        }
+
+        $window.location.href = "/assets/staff/Profile.html";
+      };
+
+      // Hàm lấy thông tin của tài khoản đang đăng nhập
+      $scope.getMyProfile = function () {
+        const token = sessionStorage.getItem("jwtToken");
+
+        if (!token) {
+          console.error("Token không tồn tại");
+          $scope.errorMessage = "Bạn cần đăng nhập để xem thông tin cá nhân.";
+          return;
+        }
+
+        $scope.loading = true; // Hiển thị trạng thái loading
+
+        $.ajax({
+          type: "GET",
+          url: "http://localhost:8080/admin/myProfile", // Đảm bảo URL đúng
+          headers: {
+            Authorization: "Bearer " + token, // Thêm token vào header
+          },
+        })
+          .done(function (response) {
+            console.log("Response:", response);
+
+            if (response && response.result) {
+              $scope.myProfile = response.result;
+              console.log("My Profile:", $scope.myProfile);
+            } else {
+              $scope.errorMessage = "Không thể lấy thông tin người dùng.";
+              console.error($scope.errorMessage);
+            }
+          })
+          .fail(function (error) {
+            console.error("Lỗi khi lấy thông tin người dùng:", error);
+            $scope.errorMessage = "Có lỗi xảy ra khi lấy dữ liệu.";
+          })
+          .always(function () {
+            $scope.loading = false; // Tắt trạng thái loading
+            $scope.$apply(); // Đồng bộ dữ liệu với AngularJS
+          });
+      };
+
+      // Hàm chuyển hướng đến trang cập nhật profile
+      $scope.goToUpdateProfile = function (userCode) {
+        if (!userCode) {
+          console.error("Không tìm thấy userCode để chuyển hướng");
+          return;
+        }
+
+        sessionStorage.setItem("userCode", userCode);
+        $window.location.href = "/assets/staff/Profile.html";
+      };
       angular.element(document).ready(function () {
+        $scope.getMyProfile();
         $scope.loadBillDetail();
       });
     }]);
+
   </script>
 
 
