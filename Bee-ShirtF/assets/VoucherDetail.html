@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Bee-Shirt Admin Dashboard</title>
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+    <link rel="icon" href="img/kaiadmin/favicon.ico" type="image/x-icon" />
+
+    <!-- Fonts and icons -->
+    <script src="js/plugin/webfont/webfont.min.js"></script>
+    <script>
+        WebFont.load({
+            google: { families: ["Public Sans:300,400,500,600,700"] },
+            custom: {
+                families: [
+                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Regular",
+                    "Font Awesome 5 Brands",
+                    "simple-line-icons",
+                ],
+                urls: ["css/fonts.min.css"],
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            },
+        });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/plugins.min.css" />
+    <link rel="stylesheet" href="css/kaiadmin.min.css" />
+
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="css/demo.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-route/1.8.3/angular-route.min.js"></script>
+
+
+    <script src="/assets/js/voucher.js"></script>
+</head>
+
+<body ng-app="voucherApp" ng-controller="voucherController1">
+
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar" data-background-color="dark">
+            <div class="sidebar-logo">
+                <!-- Logo Header -->
+                <div class="logo-header" data-background-color="dark">
+                    <a href="BanHang.html" class="logo">
+                        <img src="img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="20" />
+                    </a>
+                    <div class="nav-toggle">
+                        <button class="btn btn-toggle toggle-sidebar">
+                            <i class="gg-menu-right"></i>
+                        </button>
+                        <button class="btn btn-toggle sidenav-toggler">
+                            <i class="gg-menu-left"></i>
+                        </button>
+                    </div>
+                    <button class="topbar-toggler more">
+                        <i class="gg-more-vertical-alt"></i>
+                    </button>
+                </div>
+                <!-- End Logo Header -->
+            </div>
+            <div class="sidebar-wrapper scrollbar scrollbar-inner">
+                <div class="sidebar-content">
+                    <ul class="nav nav-secondary">
+                        <li class="nav-item">
+                            <a href="BanHang.html" class="collapsed" aria-expanded="false">
+                                <i class="fas fa-home"></i>
+                                <p>Bán Hàng</p>
+                            </a>
+                        </li>
+                        <li class="nav-section">
+                            <span class="sidebar-mini-icon">
+                                <i class="fa fa-ellipsis-h"></i>
+                            </span>
+                        </li>
+                        <li class="nav-item">
+                            <a data-bs-toggle="collapse" href="#">
+                                <i class="fas fa-layer-group"></i>
+                                <p>Quản Lý</p>
+                            </a>
+                        </li>
+                        <li class="nav-item active submenu">
+                            <a  href="Voucher.html">
+                                <i class="fas fa-ticket-alt"></i>
+                                <p>Voucher</p>
+                                <!-- <span class="caret"></span> -->
+                            </a>
+                            <!-- <div class="collapse" id="sidebarLayouts">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a href="sidebar-style-2.html">
+                      <span class="sub-item">Sidebar Style 2</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="icon-menu.html">
+                      <span class="sub-item">Icon Menu</span>
+                    </a>
+                  </li>
+                </ul>
+              </div> -->
+                        </li>
+                        <li class="nav-item">
+                            <a href="/assets/Bill.html">
+                                <i class="fas fa-pen-square"></i>
+                                <span class="sub-item">Hóa Đơn</span>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a data-bs-toggle="collapse" href="#tables">
+                              <i class="fas fa-table"></i>
+                              <p>Sản Phẩm</p>
+                              <span class="caret"></span>
+                            </a>
+                            <div class="collapse" id="tables">
+                                <ul class="nav nav-collapse">
+                                    <li>
+                                      <a href="Products.html">
+                                        <span class="sub-item">Danh Sách Sản Phẩm</span>
+                                      </a>
+                                    </li>
+                                    
+                                    <li>
+                                      <a href="ProductDetail.html">
+                                        <span class="sub-item">Danh Sách Sản Phẩm Chi Tiết</span>
+                                      </a>
+                                    </li>
+                                    <li>
+                                      <a href="Category.html">
+                                        <span class="sub-item">Danh Sách Thuộc Tính<span>
+                                      </a>
+                                    </li>
+                                   
+                                  </ul>
+                            </div>
+                          </li>
+                        <li class="nav-item">
+                            <a data-bs-toggle="collapse" href="#account">
+                                <i class="fas fa-user"></i>
+                                <p>Account</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse" id="account">
+                                <ul class="nav nav-collapse">
+                                    <li>
+                                        <a href="/assets/staff/Staff.html">
+                                            <span class="sub-item">Nhân Viên</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <span class="sub-item">Khách Hàng</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a href="statistic.html">
+                                <i class="far fa-chart-bar"></i>
+                                <p>Thống Kê</p>
+
+                            </a>
+                            <!-- <div class="collapse" id="charts">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a href="charts/charts.html">
+                      <span class="sub-item">Chart Js</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="charts/sparkline.html">
+                      <span class="sub-item">Sparkline</span>
+                    </a>
+                  </li>
+                </ul>
+              </div> -->
+                        </li>
+
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- End Sidebar -->
+
+        <div class="main-panel">
+            <div class="main-header">
+                <div class="main-header-logo">
+                    <!-- Logo Header -->
+                    <div class="logo-header" data-background-color="dark">
+                        <a href="BanHang.html" class="logo">
+                            <img src="img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand"
+                                height="20" />
+                        </a>
+                        <div class="nav-toggle">
+                            <button class="btn btn-toggle toggle-sidebar">
+                                <i class="gg-menu-right"></i>
+                            </button>
+                            <button class="btn btn-toggle sidenav-toggler">
+                                <i class="gg-menu-left"></i>
+                            </button>
+                        </div>
+                        <button class="topbar-toggler more">
+                            <i class="gg-more-vertical-alt"></i>
+                        </button>
+                    </div>
+                    <!-- End Logo Header -->
+                </div>
+                <!-- Navbar Header -->
+                <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+                    <div class="container-fluid">
+                      <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+                        <li class="nav-item topbar-user dropdown hidden-caret" ng-if="myProfile">
+                          <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
+                            <div class="avatar-sm">
+                              <!-- Hiển thị avatar của người dùng hoặc ảnh mặc định -->
+                              <img ng-src="{{ myProfile.avatar }}" alt="..." class="avatar-img rounded-circle" />
+                            </div>
+                            <span class="profile-username">
+                              <span class="op-7">Hi,</span>
+                              <span class="fw-bold">{{ myProfile.firstName }}</span> <!-- Hiển thị tên người dùng -->
+                            </span>
+                          </a>
+                          <ul class="dropdown-menu dropdown-user animated fadeIn">
+                            <div class="dropdown-user-scroll scrollbar-outer">
+                              <li ng-if="myProfile"> <!-- Ngăn lỗi nếu myProfile chưa tải xong -->
+                                <div class="user-box">
+                                  <div class="avatar-lg">
+                                    <img ng-src="{{ myProfile.avatar }}" alt="image profile" class="avatar-img rounded" />
+                                  </div>
+                                  <div class="u-text">
+                                    <h4>{{ myProfile.firstName }} {{ myProfile.lastName }}</h4>
+                                    <p class="text-muted">{{ myProfile.email }}</p>
+                                    <a href="/assets/staff/Profile.html" ng-click="viewProfile()"
+                                      class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+                                  </div>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/assets/account/login.html" ng-click="logout()">Logout</a>
+                              </li>
+                            </div>
+                          </ul>
+                        </li>
+          
+                      </ul>
+                    </div>
+                  </nav>
+                <!-- End Navbar -->
+            </div>
+            <!-- container -->
+            <div class="container">
+                <div class="page-inner">
+                    <div class="page-header">
+                        <h3 class="fw-bold mb-3">Voucher</h3>
+                        <ul class="breadcrumbs mb-3">
+                            <li class="nav-home">
+                                <a href="/assets/Voucher.html">
+                                    <i class="fas fa-layer-group"></i>
+                                </a>
+                            </li>
+                            <li class="separator">
+                                <i class="icon-arrow-right"></i>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/assets/Bill.html">Voucher Detail</a>
+                            </li>
+
+                        </ul>
+                    
+                    </div>
+                <h1 style="margin-left: 700px;">Voucher Details</h1>
+                <form class="mx-auto" style="width: 700px;">
+                    <!-- Voucher ID -->
+                    <div class="form-group">
+                        <label for="voucherId">ID</label>
+                        <input type="text" id="id" class="form-control" disabled>
+                    </div>
+
+                    <!-- Code Voucher -->
+                    <div class="form-group">
+                        <label for="codeVoucher">Mã Voucher</label>
+                        <input type="text" id="code_voucher" class="form-control">
+                    </div>
+
+                    <!-- Type Voucher -->
+                    <div class="form-group">
+                        <label for="typeVoucher">Hình thức Voucher</label>
+                        <input type="text" id="type_voucher" class="form-control">
+                    </div>
+
+                    <!-- Name Voucher -->
+                    <div class="form-group">
+                        <label for="nameVoucher">Tên Voucher</label>
+                        <input type="text" id="name_voucher" class="form-control">
+                    </div>
+
+                    <!-- Discount Value -->
+                    <div class="form-group">
+                        <label for="discountValue">Giá trị giảm giá </label>
+                        <input type="number" id="discount_value" class="form-control">
+                    </div>
+
+                    <!-- Quantity -->
+                    <div class="form-group">
+                        <label for="quantity">Số lượng</label>
+                        <input type="number" id="quantity" class="form-control">
+                    </div>
+
+                    <!-- Min Bill Value -->
+                    <div class="form-group">
+                        <label for="minBillValue">Giá trị tối thiểu</label>
+                        <input type="number" id="min_bill_value" class="form-control">
+                    </div>
+
+                    <!-- Maximum Discount -->
+                    <div class="form-group">
+                        <label for="maximumDiscount">Giá trị tối đa</label>
+                        <input type="number" id="maximum_discount" class="form-control">
+                    </div>
+
+                    <!-- Start Date -->
+                    <div class="form-group">
+                        <label for="startDate">Ngày bắt đầu</label>
+                        <input type="date" id="startDate" class="form-control">
+                    </div>
+
+                    <!-- End Date -->
+                    <div class="form-group">
+                        <label for="endDate">Ngày kết thúc</label>
+                        <input type="date" id="endDate" class="form-control">
+                    </div>
+
+                    <!-- Status Voucher -->
+                    <div class="form-group">
+                        <label>Trạng thái</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="statusVoucher" id="statusActive"
+                                value="1" ng-model="voucher.status_voucher">
+                            <label class="form-check-label" for="statusActive">Hoạt động</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="statusVoucher" id="statusInactive"
+                                value="0" ng-model="voucher.status_voucher">
+                            <label class="form-check-label" for="statusInactive">Ngưng hoạt động</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="statusVoucher" id="statusPending"
+                                value="2" ng-model="voucher.status_voucher">
+                            <label class="form-check-label" for="statusPending">Sắp hoạt động</label>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+
+                </form>
+                <div style="text-align: center; display: flex; justify-content: center; gap: 10px;">
+                    <button type="submit" class="btn btn-warning mt-4">Sửa</button>
+                    <a class="btn btn-secondary mt-4" href="/assets/Voucher.html">Quay lại</a>
+                </div>
+                <!-- Back Button -->
+
+                <!-- Display success or error message -->
+
+            </div>
+
+            </div>
+
+            <!-- end container -->
+            <footer class="footer">
+                <div class="container-fluid d-flex justify-content-between">
+                    <nav class="pull-left">
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    Home
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"> Help </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"> Licenses </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="copyright">
+                        2024, made with <i class="fa fa-heart heart text-danger"></i> by
+                        <a href="#">5 Anh Em Siêu Nhân</a>
+                    </div>
+                    <div>
+                        Distributed by
+                        <a target="_blank" href="https://themewagon.com/">Bee-Shirt</a>.
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Custom template | don't include it in your project! -->
+        <div class="custom-template">
+            <div class="title">Settings</div>
+            <div class="custom-content">
+                <div class="switcher">
+                    <div class="switch-block">
+                        <h4>Logo Header</h4>
+                        <div class="btnSwitch">
+                            <button type="button" class="selected changeLogoHeaderColor" data-color="dark"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="blue"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="purple"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="light-blue"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="green"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="orange"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="red"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="white"></button>
+                            <br />
+                            <button type="button" class="changeLogoHeaderColor" data-color="dark2"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="blue2"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="purple2"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="light-blue2"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="green2"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="orange2"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="red2"></button>
+                        </div>
+                    </div>
+                    <div class="switch-block">
+                        <h4>Navbar Header</h4>
+                        <div class="btnSwitch">
+                            <button type="button" class="changeTopBarColor" data-color="dark"></button>
+                            <button type="button" class="changeTopBarColor" data-color="blue"></button>
+                            <button type="button" class="changeTopBarColor" data-color="purple"></button>
+                            <button type="button" class="changeTopBarColor" data-color="light-blue"></button>
+                            <button type="button" class="changeTopBarColor" data-color="green"></button>
+                            <button type="button" class="changeTopBarColor" data-color="orange"></button>
+                            <button type="button" class="changeTopBarColor" data-color="red"></button>
+                            <button type="button" class="selected changeTopBarColor" data-color="white"></button>
+                            <br />
+                            <button type="button" class="changeTopBarColor" data-color="dark2"></button>
+                            <button type="button" class="changeTopBarColor" data-color="blue2"></button>
+                            <button type="button" class="changeTopBarColor" data-color="purple2"></button>
+                            <button type="button" class="changeTopBarColor" data-color="light-blue2"></button>
+                            <button type="button" class="changeTopBarColor" data-color="green2"></button>
+                            <button type="button" class="changeTopBarColor" data-color="orange2"></button>
+                            <button type="button" class="changeTopBarColor" data-color="red2"></button>
+                        </div>
+                    </div>
+                    <div class="switch-block">
+                        <h4>Sidebar</h4>
+                        <div class="btnSwitch">
+                            <button type="button" class="changeSideBarColor" data-color="white"></button>
+                            <button type="button" class="selected changeSideBarColor" data-color="dark"></button>
+                            <button type="button" class="changeSideBarColor" data-color="dark2"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="custom-toggle">
+                <i class="icon-settings"></i>
+            </div>
+        </div>
+        <!-- End Custom template -->
+    </div>
+    <!--   Core JS Files   -->
+    <script src="js/core/jquery-3.7.1.min.js"></script>
+    <script src="js/core/popper.min.js"></script>
+    <script src="js/core/bootstrap.min.js"></script>
+
+    <!-- jQuery Scrollbar -->
+    <script src="js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+    <!-- Chart JS -->
+    <script src="js/plugin/chart.js/chart.min.js"></script>
+
+    <!-- jQuery Sparkline -->
+    <script src="/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- Chart Circle -->
+    <script src="js/plugin/chart-circle/circles.min.js"></script>
+
+    <!-- Datatables -->
+    <script src="js/plugin/datatables/datatables.min.js"></script>
+
+    <!-- Bootstrap Notify -->
+    <script src="js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+    <!-- jQuery Vector Maps -->
+    <script src="js/plugin/jsvectormap/jsvectormap.min.js"></script>
+    <script src="js/plugin/jsvectormap/world.js"></script>
+
+    <!-- Sweet Alert -->
+    <script src="js/plugin/sweetalert/sweetalert.min.js"></script>
+
+    <!-- Kaiadmin JS -->
+    <script src="js/kaiadmin.min.js"></script>
+
+    <!-- Kaiadmin DEMO methods, don't include it in your project! -->
+    <script src="js/setting-demo.js"></script>
+    <script src="js/demo.js"></script>
+    <script src="js/oders.js"></script>
+
+    <script>
+        $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
+            type: "line",
+            height: "70",
+            width: "100%",
+            lineWidth: "2",
+            lineColor: "#177dff",
+            fillColor: "rgba(23, 125, 255, 0.14)",
+        });
+
+        $("#lineChart2").sparkline([99, 125, 122, 105, 110, 124, 115], {
+            type: "line",
+            height: "70",
+            width: "100%",
+            lineWidth: "2",
+            lineColor: "#f3545d",
+            fillColor: "rgba(243, 84, 93, .14)",
+        });
+
+        $("#lineChart3").sparkline([105, 103, 123, 100, 95, 105, 115], {
+            type: "line",
+            height: "70",
+            width: "100%",
+            lineWidth: "2",
+            lineColor: "#ffa534",
+            fillColor: "rgba(255, 165, 52, .14)",
+        });
+
+
+
+
+
+    </script>
+
+    <script>
+        // Lấy dữ liệu từ sessionStorage
+        const voucherDetail = JSON.parse(sessionStorage.getItem("voucherDetail"));
+
+        if (voucherDetail) {
+            // Gán dữ liệu vào form
+            document.getElementById("id").value = voucherDetail.id;
+            document.getElementById("code_voucher").value = voucherDetail.code_voucher;
+            document.getElementById("name_voucher").value = voucherDetail.name_voucher;
+            document.getElementById("type_voucher").value = voucherDetail.type_voucher;
+
+            document.getElementById("discount_value").value = voucherDetail.discount_value;
+            document.getElementById("quantity").value = voucherDetail.quantity;
+            document.getElementById("min_bill_value").value = voucherDetail.min_bill_value;
+            document.getElementById("maximum_discount").value = voucherDetail.maximum_discount;
+            // Gán ngày bắt đầu
+            document.getElementById("startDate").value = voucherDetail.startdate || "";
+
+            // Gán ngày kết thúc
+            document.getElementById("endDate").value = voucherDetail.enddate || "";
+            // Gán giá trị cho trạng thái (radio button)
+            if (voucherDetail.status_voucher) {
+                document.getElementById("statusActive").checked = true;
+            } else {
+                document.getElementById("statusInactive").checked = true;
+            }
+        } else {
+            alert("No voucher details found.");
+        }
+    </script>
+
+</body>
+
+
+</html>
