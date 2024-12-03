@@ -63,7 +63,10 @@ public class BillDetailService {
                         (BigDecimal) result[15],                             // subtotalBeforeDiscount
                         (BigDecimal) result[16],                             // totalMoney
                         (String) result[17],                                 // typeBill
-                        (String) result[18]                                  // note
+                        (String) result[18] ,
+                        (Integer) result[19]
+
+                        // note
                 ))
                 .collect(Collectors.toList());
     }

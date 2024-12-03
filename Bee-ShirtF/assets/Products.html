@@ -575,7 +575,6 @@
                           <th>Thương Hiệu</th>
                           <th>Danh Mục</th>
                           <th>Số Lượng</th>
-                          <th>Tình trạng</th>
                           <th>Trạng thái</th>
                           <th>Hành Động</th>
                         </tr>
@@ -589,10 +588,7 @@
                           <td>{{ shirt.nameBrand }}</td>
                           <td>{{ shirt.nameCategory }}</td>
                           <td>{{ shirt.quantity }}</td>
-                          <td>
-                            <span ng-if="shirt.statusshirt === 0">Còn hàng</span>
-                            <span ng-if="shirt.statusshirt === 1">Hết hàng</span>
-                          </td>
+                         
                           <td>
                             <span ng-if="shirt.deleted === false">Đang bán</span>
                             <span ng-if="shirt.deleted === true">Ngừng bán</span>

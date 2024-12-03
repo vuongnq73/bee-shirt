@@ -22,7 +22,7 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE Bill b SET b.statusBill = 2 WHERE b.createAt < CURRENT_DATE AND b.statusBill = 0")
+    @Query("UPDATE Bill b SET b.statusBill = 10 WHERE b.createAt < CURRENT_DATE AND b.statusBill = 0")
     int cancelOldPendingBills();
 
 //    @Query(value = "SELECT bl.code_bill, " +
@@ -205,9 +205,6 @@ List<Object[]> findTotalBillsByType();
 
 
 ///
-@Transactional
-@Modifying
-@Query("UPDATE Bill b SET b.statusBill = 2 WHERE b.createAt < CURRENT_DATE AND b.statusBill = 0")
-int cancelOldPendingBills();
+
 }
 

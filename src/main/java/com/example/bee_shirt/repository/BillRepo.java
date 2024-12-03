@@ -10,8 +10,8 @@ import java.util.List;
 public interface BillRepo extends JpaRepository<Bill, Integer> {
 
     @Query(value = "SELECT bl.code_bill, " +
-            "       cus.username, " +
-            "       cus.phone_number, " +
+            "       bl.customer_name, " +
+            "       bl.phone_number, " +
             "       bl.type_bill, " +
             "       bl.create_at, " +
             "       pm.name_paymentmethod, " +
@@ -20,14 +20,14 @@ public interface BillRepo extends JpaRepository<Bill, Integer> {
             "FROM bill bl " +
             "LEFT JOIN bill_payment bp ON bl.id = bp.bill_id " +
             "LEFT JOIN payment_method pm ON bp.payment_method_id = pm.id " +
-            "LEFT JOIN account cus ON cus.id = bl.customer_id " +
-            "WHERE bl.status_bill = 1",
+            "WHERE bl.status_bill = 1" +
+            "ORDER BY bl.id DESC",
             nativeQuery = true)
     List<Object[]> findBillSummaryNative();
     //listBill có trạngthaisis là 2
     @Query(value = "SELECT bl.code_bill, " +
-            "       cus.username, " +
-            "       cus.phone_number, " +
+            "       bl.customer_name, " +
+            "       bl.phone_number, " +
             "       bl.type_bill, " +
             "       bl.create_at, " +
             "       pm.name_paymentmethod, " +
@@ -36,15 +36,15 @@ public interface BillRepo extends JpaRepository<Bill, Integer> {
             "FROM bill bl " +
             "LEFT JOIN bill_payment bp ON bl.id = bp.bill_id " +
             "LEFT JOIN payment_method pm ON bp.payment_method_id = pm.id " +
-            "LEFT JOIN account cus ON cus.id = bl.customer_id " +
-            "WHERE bl.status_bill = 2",
+            "WHERE bl.status_bill =2  and bl.type_bill='Online'" +
+            "ORDER BY bl.id DESC",
             nativeQuery = true)
     List<Object[]> findBillSummaryNative2();
 
     //listBill có trạngthai status_bill = 3
     @Query(value = "SELECT bl.code_bill, " +
-            "       cus.username, " +
-            "       cus.phone_number, " +
+            "       bl.customer_name, " +
+            "       bl.phone_number, " +
             "       bl.type_bill, " +
             "       bl.create_at, " +
             "       pm.name_paymentmethod, " +
@@ -53,8 +53,8 @@ public interface BillRepo extends JpaRepository<Bill, Integer> {
             "FROM bill bl " +
             "LEFT JOIN bill_payment bp ON bl.id = bp.bill_id " +
             "LEFT JOIN payment_method pm ON bp.payment_method_id = pm.id " +
-            "LEFT JOIN account cus ON cus.id = bl.customer_id " +
-            "WHERE bl.status_bill = 3",
+            "WHERE bl.status_bill = 3" +
+            "ORDER BY bl.id DESC",
             nativeQuery = true)
     List<Object[]> findBillSummaryNative3();
 

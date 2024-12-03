@@ -154,7 +154,7 @@ public class PointOfSaleService {
 
     public String cancelBill(String codeBill) {
         Bill bill = billRepository.findBillByCode(codeBill);
-        bill.setStatusBill(2);
+        bill.setStatusBill(10);
         billRepository.save(bill);
 
         List<BillDetail> oldCart = billDetailRepository.findBillDetailByBillCodeAndStatusBillDetail(codeBill,0);
@@ -176,10 +176,14 @@ public class PointOfSaleService {
     public String checkout(String codeBill, String codeVoucher, String username) {
         Bill bill = billRepository.findBillByCode(codeBill);
         Voucher1 voucher = voucherRepository.findVoucherByCode(codeVoucher).orElse(null);
-        Account account = accountRepository.findByUsername(username).orElse(null);
-        if (account != null) {
+        System.out.println(voucher);
+        Account account = bill.getCustomer();
+        System.out.println(account);
+        if (account == null) {
             voucher=null;
         }
+        System.out.println(voucher);
+
         bill.setVoucher(voucher);
         bill.setCustomer(account);
         bill.setTypeBill("In-Store");
