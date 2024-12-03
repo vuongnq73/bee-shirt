@@ -65,6 +65,28 @@ public class BillController {
                 .result(bills)
                 .build();
     }
+    //List bill có trạng thái là 2
+    @GetMapping("/list2")
+    public ApiResponse<List<BillDTO>> getBillList2() {
+        List<BillDTO> bills = billService.getAllBillSummaries2();
+        log.info("Số lượng hóa đơn list 2: {}", bills.size());
+
+        return ApiResponse.<List<BillDTO>>builder()
+                .code(1000)
+                .result(bills)
+                .build();
+    }
+    //List bill có trạng thái là 3
+    @GetMapping("/list3")
+    public ApiResponse<List<BillDTO>> getBillList3() {
+        List<BillDTO> bills = billService.getAllBillSummaries3();
+        log.info("Số lượng hóa đơn list 3: {}", bills.size());
+
+        return ApiResponse.<List<BillDTO>>builder()
+                .code(1000)
+                .result(bills)
+                .build();
+    }
     //Api Thong ke san pham ban chay
     @GetMapping("/statics/filter")
     public ApiResponse<List<BillStaticsDTO>> getBillStatics(

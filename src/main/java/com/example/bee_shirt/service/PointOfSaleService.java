@@ -91,6 +91,7 @@ public class PointOfSaleService {
         String randomCode = generateRandomCode();
         Bill bill = new Bill();
         bill.setCodeBill("CB" + randomCode);
+
         bill.setCreateAt(LocalDateTime.now());
         bill.setStatusBill(0);
         bill.setDeleted(false);
@@ -117,6 +118,7 @@ public class PointOfSaleService {
             billDetail.setCodeBillDetail("CBD" + randomCode);
             billDetailRepository.save(billDetail);
         }
+
         shirtDetail.setQuantity(shirtDetail.getQuantity()-quantity);
         shirtDetailRepository.save(shirtDetail);
         return "Add to cart successfully";
@@ -127,6 +129,7 @@ public class PointOfSaleService {
         if (billDetail == null) {
             return "No bill detail found";
         }
+
         Integer oldQuantity = billDetail.getQuantity();
         billDetail.setQuantity(quantity);
         billDetailRepository.save(billDetail);
@@ -153,6 +156,7 @@ public class PointOfSaleService {
         Bill bill = billRepository.findBillByCode(codeBill);
         bill.setStatusBill(2);
         billRepository.save(bill);
+
         List<BillDetail> oldCart = billDetailRepository.findBillDetailByBillCodeAndStatusBillDetail(codeBill,0);
         for (BillDetail oc : oldCart){
             oc.getShirtDetail().setQuantity(oc.getShirtDetail().getQuantity() + oc.getQuantity());

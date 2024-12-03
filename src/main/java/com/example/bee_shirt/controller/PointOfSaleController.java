@@ -80,6 +80,7 @@ public class PointOfSaleController {
     @GetMapping("/get-account")
     @ResponseBody
     public Account getAccount(@RequestParam("username") String username) {
+
         return pointOfSaleService.getAccount(username);
     }
 
@@ -121,6 +122,7 @@ public class PointOfSaleController {
 
     @PostMapping("update-customer-info")
     public ResponseEntity<String> updateCustomerInfo(@RequestParam String codeBill, @RequestParam String username) {
+
         return ResponseEntity.ok(pointOfSaleService.updateCustomerInfo(codeBill,username));
     }
 

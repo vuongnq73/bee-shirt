@@ -117,17 +117,17 @@ ShirtApp.controller('ShirtController', ['$scope', 'shirtService', function($scop
     $scope.totalPages = function() {
         return Math.ceil($scope.shirts.length / $scope.itemsPerPage);
     };
-    $scope.viewDetails = function (codeshirt) {
-        // Chuyển hướng đến trang chi tiết sản phẩm với mã sản phẩm (codeShirt) như tham số query
-        window.location.href = `ProductDetail.html?codeShirt=${codeshirt}`;
-    };
+   
     
     $scope.getShirtsForCurrentPage = function() {
         const startIndex = ($scope.currentPage - 1) * $scope.itemsPerPage;
         const endIndex = startIndex + $scope.itemsPerPage;
         return $scope.shirts.slice(startIndex, endIndex);
     };
-
+    $scope.viewDetails = function (codeshirt) {
+        // Chuyển hướng đến trang chi tiết sản phẩm với mã sản phẩm (codeShirt) như tham số query
+        window.location.href = `ProductDetail.html?codeShirt=${codeshirt}`;
+    };
     $scope.getShirts = function() {
         shirtService.getShirts().then(function(response) {
             $scope.shirts = response.data;
