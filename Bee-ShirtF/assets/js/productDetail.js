@@ -254,6 +254,7 @@ app.controller('ShirtDetailController', ['$scope', 'shirtDetailService', functio
         // Nếu người dùng chọn "OK"
         if (confirmation) {
 angular.forEach($scope.variants, function(variant) {
+
                 if (variant.quantity > 0) {
                     var existingVariant = $scope.savedVariants.find(v => v.colorId === variant.colorId && v.sizeId === variant.sizeId);
                     if (existingVariant) {
