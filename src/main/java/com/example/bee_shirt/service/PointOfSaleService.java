@@ -214,6 +214,8 @@ public class PointOfSaleService {
         bill.setStatusBill(1);
         bill.setUpdateAt(LocalDate.now());
         bill.setNote("None");
+        voucher.setQuantity(voucher.getQuantity()-1);
+        voucherRepository.save(voucher);
         billRepository.save(bill);
         return "Checkout successfully";
     }
