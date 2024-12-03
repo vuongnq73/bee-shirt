@@ -183,9 +183,9 @@ public class PointOfSaleService {
         bill.setVoucher(voucher);
         bill.setCustomer(account);
         bill.setTypeBill("In-Store");
-        bill.setCustomerName("1");
-        bill.setPhoneNumber("1");
-        bill.setAddressCustomer("1");
+        bill.setCustomerName(account.getFirstName()+account.getLastName());
+        bill.setPhoneNumber(account.getPhone());
+        bill.setAddressCustomer(account.getAddress());
         bill.setMoneyShip(BigDecimal.ZERO);
         double subtotalBeforeDiscount = 0.0;
         double moneyReduce = 0.0;
