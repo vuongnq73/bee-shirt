@@ -793,7 +793,16 @@
                 }));
 
                 $scope.subtotalBeforeDiscount = $scope.details.reduce((sum, item) => sum + item.total, 0);
-                $scope.totalMoney = $scope.subtotalBeforeDiscount + $scope.billInfo.moneyShip;
+                $scope.moneyShip=  $scope.billInfo.moneyShip;
+                $scope.nameVoucher = $scope.billInfo.nameVoucher;
+                $scope.note = $scope.billInfo.note;
+                // Chỉ cộng tiền ship nếu có
+                if ($scope.billInfo.moneyShip > 0) {
+                  $scope.totalMoney = $scope.subtotalBeforeDiscount + $scope.billInfo.moneyShip;
+                } else {
+                  $scope.totalMoney = $scope.subtotalBeforeDiscount;
+                }
+
 
                 $scope.updateTimeline($scope.billInfo.statusBill);
               } else {
