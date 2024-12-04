@@ -210,6 +210,13 @@ function applyFilter(filterValue) {
     .then(data => {
         // Kiểm tra nếu dữ liệu trả về hợp lệ
         if (data && data.labels && data.shirtData && data.revenueData && data.orderData) {
+			if (filterValue === "this-week") {
+                // Lọc theo tuần: Hiển thị 7 ngày gần nhất
+                statisticsChart.data.labels = data.labels; // Labels là 7 ngày gần nhất
+                statisticsChart.data.datasets[0].data = data.orderData; // Số Đơn Hàng
+                statisticsChart.data.datasets[1].data = data.shirtData; // Số Sản Phẩm
+                statisticsChart.data.datasets[2].data = data.revenueData; // Doanh Thu
+            } else {
             // Mảng tháng đầy đủ (12 tháng)
             const allMonths = [
                 "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -237,7 +244,7 @@ function applyFilter(filterValue) {
             statisticsChart.data.datasets[0].data = fullShirtData; // Cập nhật dữ liệu Sản Phẩm
             statisticsChart.data.datasets[1].data = fullRevenueData; // Cập nhật dữ liệu Doanh Thu
             statisticsChart.data.datasets[2].data = fullOrderData; // Cập nhật dữ liệu Đơn Hàng
-
+		}
             // Vẽ lại biểu đồ
             statisticsChart.update();
         } else {

@@ -104,6 +104,9 @@
       display: inline-block;
       margin-right: 5px;
     }
+    #statistics-table_filter input{
+      width: auto !important;
+    }
   </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -185,58 +188,22 @@
               <div class="collapse" id="tables">
                 <ul class="nav nav-collapse">
                   <li>
-                    <a href="Category.html">
-                      <span class="sub-item">Danh Mục Sản Phẩm</span>
-                    </a>
-                  </li>
-                  <li>
                     <a href="Products.html">
-                      <span class="sub-item">Danh sách sản phẩm</span>
+                      <span class="sub-item">Danh Sách Sản Phẩm</span>
                     </a>
                   </li>
+                  
                   <li>
                     <a href="ProductDetail.html">
-                      <span class="sub-item">Danh Sách Biến Thể Sản Phẩm<span>
+                      <span class="sub-item">Danh Sách Sản Phẩm Chi Tiết</span>
                     </a>
                   </li>
                   <li>
-                    <a href="Size.html">
-                      <span class="sub-item">Danh Sách Kích Thước<span>
+                    <a href="Category.html">
+                      <span class="sub-item">Danh Sách Thuộc Tính<span>
                     </a>
                   </li>
-                  <li>
-                    <a href="Season.html">
-                      <span class="sub-item">Danh Sách Mùa<span>
-                    </a>
-                  </li>
-                  <li>
-
-                    <a href="Pattern.html">
-                      <span class="sub-item">Danh Sách Mẫu<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Origin.html">
-                      <span class="sub-item">Danh Sách Nguồn gốc<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Color.html">
-                      <span class="sub-item">Danh Sách Màu Sắc<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Gender.html">
-                      <span class="sub-item">Danh Sách Giới tính<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Material.html">
-                      <span class="sub-item">Danh Sách Chất Liệu<span>
-                    </a>
-                  </li>
-
-
+                 
                 </ul>
               </div>
             </li>
@@ -436,12 +403,11 @@
                           <span class="btn-label">
                             <i class="fa fa-filter"></i>
                           </span>
-                          Lọc
+                          Lọcc
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                           <select id="filterOptions" class="form-select" onchange="applyFilter(this.value)">
                             <option value="all">Tất cả</option>
-                            <option value="today">Hôm nay</option>
                             <option value="this-week">Tuần này</option>
                             <option value="this-month">Tháng này</option>
                             <option value="last-month">Tháng trước</option>
@@ -497,20 +463,12 @@
                 </div>
                 <div class="card-body pb-0">
                   <p>Tổng Doanh Thu</p>
-                  <div class="mb-4 mt-2">
                     <h6>{{ formatCurrency(totalAllMoney) }}</h6>
-                  </div>
                   <p>Doanh Thu Bán Hàng Tại Quầy</p>
-                  <div class="mb-4 mt-2">
                     <h6>{{ formatCurrency(totalInstoreMoney) }}</h6>
-                  </div>
                   <p>Doanh Thu Bán Hàng Online</p>
-                  <div class="mb-4 mt-2">
                     <h6>{{ formatCurrency(totalOnlineMoney) }}</h6>
-
-                  </div>
                 </div>
-                
               </div>
 
 
@@ -531,87 +489,52 @@
           <div class="row">
             <div class="col-md-8">
               <div class="card card-round">
-                <div class="card-header">
-                  <div class="card-head-row card-tools-still-right">
-                    <div class="card-title">Sản Phẩm Bán Chạy Nhất Trong Tháng </div>
-                    <div class="card-tools">
-                      <div class="dropdown">
-                        <label>Lọc</label>
-                        <button class="btn btn-icon btn-clean me-0" type="button" id="dropdownMenuButton"
-                          data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-funnel" viewBox="0 0 16 16">
-                            <path
-                              d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2z" />
-                          </svg>
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <!-- Combobox cho Brand -->
-                          <label for="brandSelect" style="margin-left: 10px; margin-right: 5px;">Chọn Thương
-                            Hiệu</label>
-                          <select class="dropdown-item" id="brandSelect" ng-model="selectedBrand"
-                            ng-change="applyFilter()" style="width: 150px; padding: 2px 5px;">
-                            <option value="">Tất Cả</option>
-                            <option value="Brand A">Brand A</option>
-                            <option value="Brand B">Brand B</option>
-                            <option value="Brand C">Brand C</option>
-                          </select>
-
-                          <!-- Combobox cho Shirt Name
-                          <label for="shirtNameSelect" style="margin-left: 10px; margin-right: 5px;">Chọn Sản Phẩm</label>
-                          <select class="dropdown-item" id="shirtNameSelect" ng-model="selectedShirtName" ng-change="applyFilter()" style="width: 150px; padding: 2px 5px;">
-                            <option value="">Tất Cả</option>
-                            <option value="Shirt A">Shirt A</option>
-                            <option value="Shirt B">Shirt B</option>
-                          </select>
-               -->
-                          <!-- Combobox cho Size -->
-                          <label for="sizeSelect" style="margin-left: 10px; margin-right: 5px;">Chọn Size</label>
-                          <select class="dropdown-item" id="sizeSelect" ng-model="selectedSize"
-                            ng-change="applyFilter()" style="width: 150px; padding: 2px 5px;">
-                            <option value="">Tất Cả</option>
-                            <option value="S">Size S</option>
-                            <option value="M">Size M</option>
-                            <option value="L">Size L</option>
-                          </select>
-
-                          <!-- Lọc theo Thời gian
-                          <label for="startDateInput" style="margin-left: 10px; margin-right: 5px;">Thời gian</label>
-                          <input type="date" id="startDateInput" ng-model="startDate" class="dropdown-item" style="width: 150px; padding: 2px 5px;" />
-              
-                          Lọc theo Ngày Kết Thúc -->
-                          <!-- <label for="endDateInput" style="margin-left: 10px; margin-right: 5px;">Đến Ngày</label>
-                          <input type="date" id="endDateInput" ng-model="endDate" class="dropdown-item" style="width: 150px; padding: 2px 5px;" />
-               -->
-                          <!-- Nút áp dụng lọc -->
-                          <!-- <button class="dropdown-item" id="applyFilterButton" ng-click="applyFilter()">Áp dụng lọc</button> -->
-                        </div>
+                  <div class="card-header">
+                      <div class="card-head-row card-tools-still-right">
+                          <div class="card-title">Sản Phẩm Bán Chạy Nhất</div>
+                          <div class="card-tools">
+                              <div class="dropdown">
+                                  <label>Lọc</label>
+                                  <button class="btn btn-icon btn-clean me-0" type="button" id="dropdownMenuButton"
+                                      data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                          class="bi bi-funnel" viewBox="0 0 16 16">
+                                          <path
+                                              d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2z" />
+                                      </svg>
+                                  </button>
+                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                      <!-- Lọc theo Thời gian -->
+                                      <label for="timeFilter" style="margin-left: 10px; margin-right: 5px;">Lọc theo Thời gian</label>
+                                      <select class="dropdown-item" id="timeFilter" ng-model="selectedTimeFilter"
+                                          ng-change="applyFilter()" style="width: 150px; padding: 2px 5px;">
+                                          <option value="30">Trong 30 Ngày</option>
+                                          <option value="365">Trong 1 Năm</option>
+                                      </select>
+                                  </div>
+                              </div>
+                          </div>
                       </div>
-                    </div>
                   </div>
-                </div>
-
-                <div class="card-body">
-                  <table class="table align-items-center mb-0" id="statistics-table">
-                    <thead class="thead-light">
-                      <tr>
-                        <th scope="col">STT</th>
-                        <th scope="col">Sản phẩm</th>
-                        <th scope="col">Số Lượng</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <!-- Do not use ng-repeat for DataTable, it's handled by DataTable -->
-                    </tbody>
-                  </table>
-
-
-                </div>
+          
+                  <div class="card-body">
+                      <table class="table align-items-center mb-0" id="statistics-table">
+                          <thead class="thead-light">
+                              <tr>
+                                  <th scope="col">STT</th>
+                                  <th scope="col">Sản phẩm</th>
+                                  <th scope="col">Số Lượng</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <!-- Dữ liệu sẽ được cập nhật thông qua API -->
+                          </tbody>
+                      </table>
+                  </div>
               </div>
-
-
-
-            </div>
+          </div>
+          
+          
             <div class="col-md-4">
               <div class="card card-round">
                 <div class="card-body pb-0">
@@ -695,33 +618,7 @@
           </div>
         </div>
       </div>
-        <footer class="footer">
-          <div class="container-fluid d-flex justify-content-between">
-            <nav class="pull-left">
-              <ul class="nav">
-                <li class="nav-item">
-                  <a class="nav-link" href="#">
-                    Home
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#"> Help </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#"> Licenses </a>
-                </li>
-              </ul>
-            </nav>
-            <div class="copyright">
-              2024, made with <i class="fa fa-heart heart text-danger"></i> by
-              <a href="#">5 Anh Em Siêu Nhân</a>
-            </div>
-            <div>
-              Distributed by
-              <a target="_blank" href="https://themewagon.com/">Bee-Shirt</a>.
-            </div>
-          </div>
-        </footer>
+      
       </div>
 
       <!-- Custom template | don't include it in your project! -->

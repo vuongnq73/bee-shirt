@@ -1,10 +1,7 @@
 package com.example.bee_shirt.controller;
 
 
-import com.example.bee_shirt.dto.request.BillDTO;
-import com.example.bee_shirt.dto.request.BillHistoryDTO;
-import com.example.bee_shirt.dto.request.BillStaticsDTO;
-import com.example.bee_shirt.dto.request.RevenueDTO;
+import com.example.bee_shirt.dto.request.*;
 import com.example.bee_shirt.dto.response.ApiResponse;
 import com.example.bee_shirt.entity.Bill;
 import com.example.bee_shirt.entity.BillDetail;
@@ -88,26 +85,9 @@ public class BillController {
                 .build();
     }
     //Api Thong ke san pham ban chay
-    @GetMapping("/statics/filter")
-    public ApiResponse<List<BillStaticsDTO>> getBillStatics(
-            @RequestParam(required = false) Integer month,
-            @RequestParam(required = false) Integer year,
-            @RequestParam(required = false) String brand,
-            @RequestParam(required = false) String shirtName,
-            @RequestParam(required = false) String size
-    ) {
-        log.info("Fetching bill statistics for month: {}, year: {}, brand: {}, shirtName: {}, size: {}",
-                month, year, brand, shirtName, size);
 
-        List<BillStaticsDTO> statistics = billStaticsService.getBillStatics(brand, shirtName, size, month, year);
 
-        log.info("Number of statistics records found: {}", statistics.size());
 
-        return ApiResponse.<List<BillStaticsDTO>>builder()
-                .code(1000)
-                .result(statistics)
-                .build();
-    }
 
 
 

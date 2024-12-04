@@ -7,8 +7,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RevenueStatisticsDTO {
-    private double totalOnlineMoney;
     private double totalInstoreMoney;
+    private double totalOnlineMoney;
     private double totalAllMoney;
 
     // Constructors, Getters, and Setters

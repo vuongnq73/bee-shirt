@@ -1,9 +1,6 @@
 package com.example.bee_shirt.controller;
 
-import com.example.bee_shirt.dto.request.BillStaticsDTO;
-import com.example.bee_shirt.dto.request.RevenueDTO;
-import com.example.bee_shirt.dto.request.RevenueStatisticsDTO;
-import com.example.bee_shirt.dto.request.StatisticsResponse;
+import com.example.bee_shirt.dto.request.*;
 import com.example.bee_shirt.dto.response.ApiResponse;
 import com.example.bee_shirt.repository.BillRepository;
 import com.example.bee_shirt.service.BillService;
@@ -41,27 +38,14 @@ public class StaticsController {
     private BillStaticsService billStaticsService;
     // API thống kê sản phẩm bán chạy
 //Api Thong ke san pham ban chay
-    @GetMapping("/filterBestSaler")
-    public ApiResponse<List<BillStaticsDTO>> getBillStatics(
-            @RequestParam(required = false) Integer month,
-            @RequestParam(required = false) Integer year,
-            @RequestParam(required = false) String brand,
-            @RequestParam(required = false) String shirtName,
-            @RequestParam(required = false) String size
-    ) {
-        log.info("Fetching bill statistics for month: {}, year: {}, brand: {}, shirtName: {}, size: {}",
-                month, year, brand, shirtName, size);
 
-        List<BillStaticsDTO> statistics = billStaticsService.getBillStatics(brand, shirtName, size, month, year);
 
-        log.info("Number of statistics records found: {}", statistics.size());
-
-        return ApiResponse.<List<BillStaticsDTO>>builder()
-                .code(1000)
-                .result(statistics)
-                .build();
+    @GetMapping("/filter")
+    public List<BestSalerDTO> getTopSellingProducts(@RequestParam("timeFilter") String timeFilter) {
+        // Chuyển thời gian lọc từ chuỗi thành số nguyên (ngày)
+        int days = Integer.parseInt(timeFilter);
+        return billStaticsService.getTopSellingProducts(days);
     }
-
 
 
     // Lấy tất cả thống kê hóa đơn
@@ -171,7 +155,7 @@ public class StaticsController {
             case "this-month":
                 statistics = statisticsService.getStatisticsForCurrentMonth();
                 break;
-            case "this-week":
+            case "this-week": // Lọc theo tuần
                 statistics = statisticsService.getStatisticsForCurrentWeek();
                 break;
             case "last-month":
@@ -188,39 +172,49 @@ public class StaticsController {
             return ResponseEntity.noContent().build();
         }
 
+        // Chuẩn bị dữ liệu trả về
         Map<String, Object> response = new HashMap<>();
         List<String> labels = new ArrayList<>();
-        List<Integer> shirtData = new ArrayList<>();
-        List<Integer> revenueData = new ArrayList<>();
         List<Integer> orderData = new ArrayList<>();
+        List<Integer> shirtData = new ArrayList<>();
+        List<Double> revenueData = new ArrayList<>();
 
         for (Object[] row : statistics) {
-            if (row.length >= 3) { // Kiểm tra nếu mảng có ít nhất 3 phần tử
-                labels.add(row[0].toString()); // Thêm label nếu có
-                shirtData.add(row[1] != null ? ((Number) row[1]).intValue() : 0);
-                revenueData.add(row[2] != null ? ((Number) row[2]).intValue() : 0);
-                orderData.add(row.length > 3 && row[3] != null ? ((Number) row[3]).intValue() : 0);
+            // Kiểm tra dữ liệu trong mỗi hàng
+            if (row.length >= 4) {
+                labels.add(row[0].toString()); // Ngày (label)
+                orderData.add(row[1] != null ? ((Number) row[1]).intValue() : 0); // Tổng số đơn hàng
+                shirtData.add(row[2] != null ? ((Number) row[2]).intValue() : 0); // Tổng số sản phẩm
+                revenueData.add(row[3] != null ? ((Number) row[3]).doubleValue() : 0.0); // Tổng doanh thu
             } else {
-                // Xử lý trường hợp dữ liệu không đầy đủ (ví dụ log hoặc bỏ qua)
+                // Log nếu có dữ liệu lỗi hoặc thiếu
                 System.out.println("Dữ liệu không đầy đủ: " + Arrays.toString(row));
             }
         }
 
-
         response.put("labels", labels);
+        response.put("orderData", orderData);
         response.put("shirtData", shirtData);
         response.put("revenueData", revenueData);
-        response.put("orderData", orderData);
 
         return ResponseEntity.ok(response);
     }
 
+    // Thống kê tỉ lệ đơn hàng tại quầy và online
+    @GetMapping("/InStoreAndOnline")
+    public List<StatisticOrderIntoreAndOnline> getOrderForToDayInStoreAndOnline() {
+        List<Object[]> rawData = statisticsService.getOrderForToDayInStoreAndOnline();
+        return rawData.stream().map(data -> new StatisticOrderIntoreAndOnline(
+                data[0] != null ? ((Number) data[0]).doubleValue() : 0.0, // TotalOnlineMoney
+                data[1] != null ? ((Number) data[1]).doubleValue() : 0.0 // TotalInstoreMoney
+        )).collect(Collectors.toList());
+    }
 
 
     // Thống kê doanh thu tại cửa hàng và online theo ngày hôm nay
-    @GetMapping("/today")
+    @GetMapping("/Revenuetoday")
     public List<RevenueStatisticsDTO> getStatisticsForToday() {
-        List<Object[]> rawData = statisticsService.getStatisticsForToday();
+        List<Object[]> rawData = statisticsService.getStatisticsForToDayInStoreAndOnline();
         return rawData.stream().map(data -> new RevenueStatisticsDTO(
                 data[0] != null ? ((Number) data[0]).doubleValue() : 0.0, // TotalOnlineMoney
                 data[1] != null ? ((Number) data[1]).doubleValue() : 0.0, // TotalInstoreMoney

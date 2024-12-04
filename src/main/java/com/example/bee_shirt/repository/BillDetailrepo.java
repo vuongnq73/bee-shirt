@@ -20,9 +20,10 @@ public interface BillDetailrepo extends JpaRepository<BillDetail, Integer> {
             "v.name_voucher AS nameVoucher, " +
             "bl.subtotal_before_discount AS subtotalBeforeDiscount, " +
             "bl.total_money AS totalMoney, " +
-            "cus.username AS customerName, " +
-            "cus.address_account AS addressCustomer, " +
-            "cus.phone_number AS phoneNumber " +
+            "bl.customer_name AS customerName, " +
+            "bl.address_customer AS addressCustomer, " +
+            "bl.phone_number AS phoneNumber, " +
+            "bl.money_reduce AS moneyReduce " +
             "FROM bill_detail bd " +
             "JOIN bill bl ON bd.bill_id = bl.id " +
             "JOIN shirt_detail sd ON bd.shirt_detail_id = sd.id " +

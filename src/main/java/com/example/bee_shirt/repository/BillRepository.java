@@ -80,14 +80,14 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
 //
 // Truy vấn thống kê tổng hợp các hóa đơn (native query)
 // Thống kê số hóa đơn, sản phẩm và doanh thu trong ngày
-    @Query(value = "SELECT "
-            + "COUNT(DISTINCT b.id) AS totalOrders, "
-            + "SUM(bd.quantity) AS totalShirtQuantity, "
-            + "SUM(b.total_money) AS totalRevenue "
-            + "FROM bill b "
-            + "JOIN bill_detail bd ON bd.bill_id = b.id "
-            + "WHERE b.create_at >= CAST(GETDATE() AS DATE) "
-            + "AND b.create_at < DATEADD(DAY, 1, CAST(GETDATE() AS DATE))",
+    @Query(value = "SELECT " +
+            "COUNT(DISTINCT b.id) AS totalOrders, " +
+            "SUM(bd.quantity) AS totalShirtQuantity, " +
+            "SUM(DISTINCT b.total_money) AS totalRevenue " +
+            "FROM bill b " +
+            "JOIN bill_detail bd ON bd.bill_id = b.id " +
+            "WHERE b.create_at >= CAST(GETDATE() AS DATE) " +
+            "AND b.create_at < DATEADD(DAY, 1, CAST(GETDATE() AS DATE))",
             nativeQuery = true)
     List<Object[]> findBillStatisticsForToday();
 
@@ -123,16 +123,19 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
     List<Object[]> findBillStatisticsForCurrentMonth();
 
 
-    @Query(value = "SELECT "
-            + "COUNT(DISTINCT b.id) AS totalOrders, "
-            + "SUM(bd.quantity) AS totalShirtQuantity, "
-            + "SUM(b.total_money) AS totalRevenue "
-            + "FROM bill b "
-            + "JOIN bill_detail bd ON bd.bill_id = b.id "
-            + "WHERE b.create_at >= DATEADD(DAY, -1, DATEADD(WEEK, DATEDIFF(WEEK, 0, GETDATE()), 0)) "
-            + "AND b.create_at < DATEADD(WEEK, DATEDIFF(WEEK, 0, GETDATE()) + 1, 0)",
+    @Query(value = "SELECT " +
+            "CONVERT(DATE, b.create_at) AS day, " +
+            "COUNT(DISTINCT b.id) AS totalOrders, " +
+            "SUM(bd.quantity) AS totalShirtQuantity, " +
+            "SUM(b.total_money) AS totalRevenue " +
+            "FROM bill b " +
+            "JOIN bill_detail bd ON bd.bill_id = b.id " +
+            "WHERE b.create_at >= DATEADD(DAY, -6, CAST(GETDATE() AS DATE)) " +
+            "GROUP BY CONVERT(DATE, b.create_at) " +
+            "ORDER BY day",
             nativeQuery = true)
     List<Object[]> findBillStatisticsForCurrentWeek();
+
 
 
     // Thống kê cho năm hiện tại
@@ -196,12 +199,26 @@ List<Object[]> findBillStatisticsForLast7Days();
     List<Object[]> findBillStatisticsForCurrentYearr();
 
 //ống kê tỉ lệ đơn hàngtaijij quầy và online
-@Query(value = "SELECT type_bill AS BillType, COUNT(*) AS TotalBills " +
-        "FROM bill " +
-        "WHERE type_bill IN ('Online', 'In-store') " +
-        "GROUP BY type_bill",
-        nativeQuery = true)
+@Query(value = """
+    SELECT 
+        SUM(CASE WHEN b.type_bill = 'In-Store' THEN b.total_money ELSE 0 END) AS TotalOnlineMoney,
+        SUM(CASE WHEN b.type_bill = 'Online' THEN b.total_money ELSE 0 END) AS TotalInstoreMoney,
+        SUM(b.total_money) AS TotalAllMoney
+    FROM bill b
+    JOIN bill_detail bd ON bd.bill_id = b.id
+    WHERE b.create_at >= CAST(GETDATE() AS DATE)
+""", nativeQuery = true)
 List<Object[]> findTotalBillsByType();
+//
+@Query(value = """
+    SELECT 
+        COUNT(CASE WHEN b.type_bill = 'In-Store' THEN 1 END) AS totalOrderInStore,
+        COUNT(CASE WHEN b.type_bill = 'Online' THEN 1 END) AS totalOrderOnline
+    FROM bill b
+    JOIN bill_detail bd ON bd.bill_id = b.id
+    WHERE b.create_at >= CAST(GETDATE() AS DATE)
+""", nativeQuery = true)
+List<Object[]> getOrderCounts();
 
 
 ///
