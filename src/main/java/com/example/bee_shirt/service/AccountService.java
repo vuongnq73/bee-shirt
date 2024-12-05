@@ -194,7 +194,7 @@ public class AccountService {
             }
         }
         log.warn("No avatar file provided, using default avatar URL.");
-        return "https://drive.google.com/file/d/1vGatwMMr89lX1l1_FkkhvyWZbCa40mD3/view?usp=drive_link"; // Cần thay thế bằng URL hợp lệ
+        return "https://asset.cloudinary.com/dbshkldsj/d178b36973b41db7beffc0beed20ebf7"; // Cần thay thế bằng URL hợp lệ
     }
 
     private void validateUsername(String username) {

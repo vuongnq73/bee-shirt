@@ -382,6 +382,7 @@ angular
         $scope.errorMessage = "";
         return true;
       }
+      
       $scope.cancelCreateAccount = function () {
         $scope.showCreateAccountForm = false; // Đặt lại trạng thái form về không hiển thị
         resetForm(); // Gọi hàm resetForm để làm sạch dữ liệu

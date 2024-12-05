@@ -1,6 +1,7 @@
 package com.example.bee_shirt.repository;
 
 import com.example.bee_shirt.dto.ShirtDetailDTO;
+import com.example.bee_shirt.dto.response.HomePageResponse;
 import com.example.bee_shirt.entity.ShirtDetail;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -73,6 +74,55 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
             "WHERE ss.codeshirt = :codeshirt " +
             "ORDER BY sdt.id DESC")
     List<ShirtDetailDTO> findAllShirtDetailByCodeShirt(@Param("codeshirt") String codeshirt);
+
+
+    @Query(value = """
+                                    SELECT Top 5
+                                      sd.image AS image,
+                                      s.name_shirt AS nameShirt,
+                                      b.name_brand AS nameBrand,
+                                      sz.name_size AS nameSize,
+                          			cl.name_color AS nameColor,
+                          			sd.price,
+                          			SUM(ISNULL(bd.quantity, 0)) AS TotalQuantitySold
+                                      FROM shirt_detail sd
+                                      LEFT JOIN shirt s ON sd.shirt_id = s.id AND s.status_shirt = 1
+                          			LEFT JOIN bill_detail bd ON bd.shirt_detail_id = sd.id
+                          			LEFT JOIN bill bl ON bd.bill_id = bl.id AND bl.create_at BETWEEN DATEADD(MONTH, -1, GETDATE()) AND GETDATE()
+                                      LEFT JOIN brand b ON s.brand_id = b.id
+                                      LEFT JOIN size sz ON sd.size_id = sz.id
+                          			LEFT JOIN color cl ON sd.color_id = cl.id
+                          			WHERE sd.status_shirt_detail = 1
+                          			GROUP BY
+                          			sd.image,
+                                      s.name_shirt,
+                                      b.name_brand ,
+                                      sz.name_size,
+                          			cl.name_color,
+                          			sd.price
+                          			ORDER BY
+                          				TotalQuantitySold DESC
+    """, nativeQuery = true)
+    List<Object[]> getTop5ShirtDetail();
+
+    @Query(value = """
+                                    SELECT
+                                      sd.image AS image,
+                                      s.name_shirt AS nameShirt,
+                                      b.name_brand AS nameBrand,
+                                      sz.name_size AS nameSize,
+                          			cl.name_color AS nameColor,
+                          			sd.price
+                                      FROM shirt_detail sd
+                                      LEFT JOIN shirt s ON sd.shirt_id = s.id AND s.status_shirt = 1
+                          			LEFT JOIN bill_detail bd ON bd.shirt_detail_id = sd.id
+                          			LEFT JOIN bill bl ON bd.bill_id = bl.id
+                                      LEFT JOIN brand b ON s.brand_id = b.id
+                                      LEFT JOIN size sz ON sd.size_id = sz.id
+                          			LEFT JOIN color cl ON sd.color_id = cl.id
+                          			WHERE sd.status_shirt_detail = 1    """, nativeQuery = true)
+    List<Object[]> getAllShirt();
+
 
 
 }

@@ -2,13 +2,16 @@ package com.example.bee_shirt.service.lmp;
 
 import com.example.bee_shirt.EntityThuocTinh.*;
 import com.example.bee_shirt.dto.ShirtDetailDTO;
-import com.example.bee_shirt.entity.*;
+import com.example.bee_shirt.dto.request.BillStaticsDTO;
+import com.example.bee_shirt.dto.response.HomePageResponse;
+import com.example.bee_shirt.entity.Shirt;
+import com.example.bee_shirt.entity.ShirtDetail;
 import com.example.bee_shirt.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -26,6 +29,7 @@ public class ShirtDetailService {
     @Autowired private MaterialRepository materialRepository;
     @Autowired private ColorRepository colorRepository;
     @Autowired private ShirtRepository shirtRepository;
+    @Autowired private CategoryRepository categoryRepository;
 
     // Lấy tất cả chi tiết áo
     public List<ShirtDetailDTO> getAllShirtDetails(Pageable pageable) {
@@ -239,6 +243,11 @@ public class ShirtDetailService {
         return colorRepository.findAll();
     }
 
+    // Lấy tất cả các category
+    public Iterable<Category> getAllCategorys() {
+        return categoryRepository.findAll();
+    }
+
     // Lấy tất cả các giới tính
     public Iterable<Gender> getAllGenders() {
         return genderRepository.findAll();
@@ -263,11 +272,41 @@ public class ShirtDetailService {
     public Iterable<Season> getAllSeasons() {
         return seasonRepository.findAll();
     }
+
     public Iterable<Origin> getAllOrigins() {
         return originRepository.findAll();
     }
+
     public Iterable<Shirt> getAllShirts() {
         return shirtRepository.findAll();
+    }
+
+    public List<HomePageResponse> getTop5ShirtDetail() {
+        List<Object[]> results = shirtDetailRepository.getTop5ShirtDetail();
+
+        // Chuyển đổi kết quả query thành danh sách DTO
+        return results.stream().map(result -> new HomePageResponse(
+                (String) result[0],
+                (String) result[1],
+                (String) result[2],
+                (String) result[3],
+                (String) result[4],
+                (BigDecimal) result[5]
+                )).collect(Collectors.toList());
+    }
+
+    public List<HomePageResponse> getAllShirtDetail() {
+        List<Object[]> results = shirtDetailRepository.getAllShirt();
+
+        // Chuyển đổi kết quả query thành danh sách DTO
+        return results.stream().map(result -> new HomePageResponse(
+                (String) result[0],
+                (String) result[1],
+                (String) result[2],
+                (String) result[3],
+                (String) result[4],
+                (BigDecimal) result[5]
+        )).collect(Collectors.toList());
     }
 }
 

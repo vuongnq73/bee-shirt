@@ -6,9 +6,9 @@ angular
         templateUrl: "staff/staff.html",
         controller: "StaffController",
       })
-      .when("/user/home", {
-        templateUrl: "user/home.html",
-        controller: "UserController",
+      .when("/cozastore-master/index", {
+        templateUrl: "/cozastore-master/index.html",
+        controller: "HomePageController",
       })
       .otherwise({
         redirectTo: "/login", // Redirect về trang đăng nhập nếu không khớp
@@ -95,7 +95,7 @@ angular
       } else if (highestRole === "ROLE_STAFF") {
         window.location.href = "/assets/BanHang.html";
       } else {
-        window.location.href = "/assets/page/user/home.html";
+        window.location.href = "/cozastore-master/index.html";
       }
     }
 
