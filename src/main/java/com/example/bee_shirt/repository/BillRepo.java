@@ -6,9 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BillRepo extends JpaRepository<Bill, Integer> {
-
+//trạng thasi đã hoàn tất
     @Query(value = "SELECT bl.code_bill, " +
             "       bl.customer_name, " +
             "       bl.phone_number, " +
@@ -20,11 +21,11 @@ public interface BillRepo extends JpaRepository<Bill, Integer> {
             "FROM bill bl " +
             "LEFT JOIN bill_payment bp ON bl.id = bp.bill_id " +
             "LEFT JOIN payment_method pm ON bp.payment_method_id = pm.id " +
-            "WHERE bl.status_bill = 1" +
+            "WHERE bl.status_bill = 6" +
             "ORDER BY bl.id DESC",
             nativeQuery = true)
     List<Object[]> findBillSummaryNative();
-    //listBill có trạngthaisis là 2
+    //listBill có trạngthaisis là chờ xử lý
     @Query(value = "SELECT bl.code_bill, " +
             "       bl.customer_name, " +
             "       bl.phone_number, " +
@@ -36,12 +37,12 @@ public interface BillRepo extends JpaRepository<Bill, Integer> {
             "FROM bill bl " +
             "LEFT JOIN bill_payment bp ON bl.id = bp.bill_id " +
             "LEFT JOIN payment_method pm ON bp.payment_method_id = pm.id " +
-            "WHERE bl.status_bill =2  and bl.type_bill='Online'" +
+            "WHERE bl.status_bill =1  and bl.type_bill='Online'" +
             "ORDER BY bl.id DESC",
             nativeQuery = true)
     List<Object[]> findBillSummaryNative2();
 
-    //listBill có trạngthai status_bill = 3
+    //listBill có trạngthai status_bill = đã hủy
     @Query(value = "SELECT bl.code_bill, " +
             "       bl.customer_name, " +
             "       bl.phone_number, " +
@@ -53,7 +54,7 @@ public interface BillRepo extends JpaRepository<Bill, Integer> {
             "FROM bill bl " +
             "LEFT JOIN bill_payment bp ON bl.id = bp.bill_id " +
             "LEFT JOIN payment_method pm ON bp.payment_method_id = pm.id " +
-            "WHERE bl.status_bill = 3" +
+            "WHERE bl.status_bill = 7" +
             "ORDER BY bl.id DESC",
             nativeQuery = true)
     List<Object[]> findBillSummaryNative3();
@@ -72,4 +73,6 @@ public interface BillRepo extends JpaRepository<Bill, Integer> {
             nativeQuery = true)
     List<Object[]> findBillStatisticsNative();
 
+    //
+    Optional<Bill> findByCodeBill(String codeBill);
 }

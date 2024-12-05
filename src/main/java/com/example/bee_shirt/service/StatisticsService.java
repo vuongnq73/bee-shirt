@@ -13,6 +13,15 @@ public class StatisticsService {
     @Autowired
     private BillRepository billRepository;
 
+    public List<Object[]> getStatisticsForToDayInStoreAndOnline() {
+        List<Object[]> result = billRepository.findTotalBillsByType();
+        return result.isEmpty() ? Collections.emptyList() : result;
+    }
+    public List<Object[]> getOrderForToDayInStoreAndOnline() {
+        List<Object[]> result = billRepository.getOrderCounts();
+        return result.isEmpty() ? Collections.emptyList() : result;
+    }
+
     // Thống kê theo ngày hôm nay
     public List<Object[]> getStatisticsForToday() {
         List<Object[]> result = billRepository.findBillStatisticsForToday();
@@ -27,9 +36,9 @@ public class StatisticsService {
 
     // Thống kê theo tuần hiện tại
     public List<Object[]> getStatisticsForCurrentWeek() {
-        List<Object[]> result = billRepository.findBillStatisticsForCurrentWeek();
-        return result.isEmpty() ? Collections.emptyList() : result;
+        return billRepository.findBillStatisticsForCurrentWeek();
     }
+
 
     // Thống kê theo tháng trước
     public List<Object[]> getStatisticsForLastMonth() {

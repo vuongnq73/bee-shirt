@@ -75,6 +75,8 @@
   </script>
   <!-- xuất hóa đơn -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <!-- Thêm SweetAlert2 từ CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <!-- CSS Files -->
   <link rel="stylesheet" href="../assets/css/bootstrap.min.css" />
@@ -428,7 +430,17 @@
                       </div>
 
                     </div>
+                    <div class="btn btn-danger d-inline-flex align-items-center container-btn-file"
+                      ng-click="confirmCancelOrder()">
+                      Hủy đơn
+                    </div>
 
+
+                    <!-- Nút Điều Khiển -->
+                    <div class="btn btn-warning d-inline-flex align-items-center container-btn-file" id="nextStepButton"
+                      ng-click="updateStatus()">
+                      {{ currentStatusLabel }}
+                    </div>
 
                     <!-- Nút xuất hóa đơn PDF -->
                     <button ng-click="exportInvoiceToPDF()"
@@ -583,10 +595,7 @@
                           <div>
                             <label for="">Tổng Tiền Thanh Toán: {{ formatCurrency(totalMoney) }}</label>
                           </div>
-                          <!-- Nút Điều Khiển -->
-                          <div class="button-container">
-                            <button id="nextStepButton" ng-click="updateStatus()">{{ currentStatusLabel }}</button>
-                          </div>
+
 
                         </div>
                       </div>
@@ -602,33 +611,7 @@
           </div>
         </div>
 
-        <footer class="footer">
-          <div class="container-fluid d-flex justify-content-between">
-            <nav class="pull-left">
-              <ul class="nav">
-                <li class="nav-item">
-                  <a class="nav-link" href="http://www.themekita.com">
-                    ThemeKita
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#"> Help </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#"> Licenses </a>
-                </li>
-              </ul>
-            </nav>
-            <div class="copyright">
-              2024, made with <i class="fa fa-heart heart text-danger"></i> by
-              <a href="http://www.themekita.com">ThemeKita</a>
-            </div>
-            <div>
-              Distributed by
-              <a target="_blank" href="https://themewagon.com/">ThemeWagon</a>.
-            </div>
-          </div>
-        </footer>
+
       </div>
 
       <!-- Custom template | don't include it in your project! -->
@@ -756,6 +739,7 @@
             alert("Không tìm thấy mã hóa đơn.");
             return;
           }
+          //
 
           $scope.loading = true; // Bật trạng thái loading
           $http({
@@ -793,7 +777,7 @@
                 }));
 
                 $scope.subtotalBeforeDiscount = $scope.details.reduce((sum, item) => sum + item.total, 0);
-                $scope.moneyShip=  $scope.billInfo.moneyShip;
+                $scope.moneyShip = $scope.billInfo.moneyShip;
                 $scope.nameVoucher = $scope.billInfo.nameVoucher;
                 $scope.note = $scope.billInfo.note;
                 // Chỉ cộng tiền ship nếu có
@@ -817,21 +801,130 @@
               $scope.loading = false; // Tắt trạng thái loading
             });
         };
-
+        //
         // Cập nhật tiến trình
+
+        // Cập nhật trạng thái và tiến trình
+        $scope.updateStatus = function () {
+          if ($scope.billInfo.statusBill < 6) {
+            $scope.billInfo.statusBill++;
+
+            const payload = {
+              codeBill: $scope.billInfo.codeBill,
+              statusBill: $scope.billInfo.statusBill
+            };
+
+            console.log("Payload gửi API:", JSON.stringify(payload));
+            const token = sessionStorage.getItem("jwtToken");
+
+            $http({
+              method: 'PUT',
+              url: 'http://localhost:8080/bills/updateStatus',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + token, // Thêm token nếu cần
+              },
+              data: JSON.stringify(payload)
+            })
+              .then(function (response) {
+                if (response.status === 200 || response.status === 204) {
+                  $scope.updateTimeline($scope.billInfo.statusBill);
+                  $scope.currentStatusLabel = $scope.statusLabels[$scope.billInfo.statusBill - 1];
+                } else {
+                  console.warn("API trả về trạng thái không mong đợi:", response.status);
+                }
+              })
+              .catch(function (error) {
+                console.error("Lỗi khi gọi API:", error);
+                if (error.data) {
+                  console.error("Chi tiết lỗi từ API:", error.data);
+                  alert("Lỗi: " + error.data.message);
+                } else {
+                  alert("Đã xảy ra lỗi khi cập nhật trạng thái.");
+                }
+              });
+          }
+        };
+
+        $scope.confirmCancelOrder = function () {
+          // Hiển thị hộp thoại xác nhận bằng SweetAlert2
+          Swal.fire({
+            title: 'Bạn có chắc chắn muốn hủy đơn này?',
+            text: 'Hành động này không thể hoàn tác!',
+            icon: 'warning',
+            showCancelButton: true,  // Hiển thị nút Cancel
+            confirmButtonColor: '#d33',  // Màu của nút Xác nhận
+            cancelButtonColor: '#3085d6',  // Màu của nút Hủy
+            confirmButtonText: 'Hủy đơn',
+            cancelButtonText: 'Quay lại'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Nếu người dùng xác nhận, gọi hàm cancelOrder
+              $scope.cancelOrder();
+            } else {
+              console.log("Đơn hàng không bị hủy.");
+            }
+          });
+        };
+        $scope.cancelOrder = function () {
+          // Cập nhật trạng thái thành 7 khi nhấn nút Hủy đơn
+          $scope.billInfo.statusBill = 7;
+
+          const payload = {
+            codeBill: $scope.billInfo.codeBill,
+            statusBill: $scope.billInfo.statusBill
+          };
+
+          console.log("Payload gửi API khi hủy đơn:", JSON.stringify(payload));
+          const token = sessionStorage.getItem("jwtToken");
+
+          $http({
+            method: 'PUT',
+            url: 'http://localhost:8080/bills/updateStatus',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': "Bearer " + token, // Thêm token nếu cần
+            },
+            data: JSON.stringify(payload)
+          })
+            .then(function (response) {
+              if (response.status === 200 || response.status === 204) {
+                console.log("Đơn hàng đã được hủy.");
+                $scope.updateTimeline($scope.billInfo.statusBill);  // Cập nhật tiến trình
+                $scope.currentStatusLabel = $scope.statusLabels[$scope.billInfo.statusBill - 1];  // Cập nhật nhãn trạng thái
+              } else {
+                console.warn("API trả về trạng thái không mong đợi:", response.status);
+              }
+            })
+            .catch(function (error) {
+              console.error("Lỗi khi gọi API:", error);
+              if (error.data) {
+                console.error("Chi tiết lỗi từ API:", error.data);
+                alert("Lỗi: " + error.data.message);
+              } else {
+                alert("Đã xảy ra lỗi khi cập nhật trạng thái.");
+              }
+            });
+        };
+
         $scope.updateTimeline = function (statusBill) {
           console.log("Cập nhật tiến trình với trạng thái:", statusBill);
 
           const steps = document.querySelectorAll('.step');
-          steps.forEach(step => step.classList.remove('active')); // Reset tất cả
+          if (!steps || steps.length === 0) {
+            console.error("Không tìm thấy các bước (.step) trên giao diện.");
+            return;
+          }
+
+          steps.forEach(step => step.classList.remove('active'));
 
           const statusMap = {
-            0: 1, // Chờ Xử lý
-            1: 5, // Đã Xác Nhận
-            2: 0, // Chờ Giao Hàng
-            3: 3, // Đang Giao Hàng
-            4: 4, // Đã Thanh Toán
-            5: 2, // Hoàn Tất
+            1: 0,  // Chờ Xử lý
+            2: 1,  // Đã Xác Nhận
+            3: 2,  // Chờ Giao Hàng
+            4: 3,  // Đang Giao Hàng
+            5: 4,  // Đã Thanh Toán
+            6: 5,  // Hoàn Tất
           };
 
           const currentStep = statusMap[parseInt(statusBill)] || 0;
@@ -845,43 +938,12 @@
             "Chờ Giao Hàng",
             "Đang Giao Hàng",
             "Đã Thanh Toán",
-            "Hoàn Tất"
+            "Hoàn Tất",
+            "Hủy Đơn"  // Thêm trạng thái Hủy Đơn
           ];
 
-          // Đồng bộ trạng thái hiện tại
           $scope.currentStep = currentStep;
           $scope.currentStatusLabel = $scope.statusLabels[$scope.currentStep];
-          const step = document.querySelectorAll('.step');
-          const stepLabels = [
-            "Chờ Xử lý",
-            "Xác Nhận",
-            "Giao Hàng",
-            "Đã Giao Cho DVVC",
-            "Thanh Toán",
-            "Hoàn Tất"
-          ];
-          const nextStepButton = document.getElementById('nextStepButton');
-
-          // Gắn sự kiện click cho nút
-          nextStepButton.addEventListener('click', () => {
-            if (currentStep < step.length) {
-              // Làm sáng bước hiện tại
-              step[currentStep].classList.add('active');
-              currentStep++; // Tăng bước lên 1
-            }
-
-            // Cập nhật nội dung nút
-            if (currentStep < stepLabels.length) {
-              nextStepButton.textContent = stepLabels[currentStep];
-            }
-
-            // Khi hoàn thành tất cả các bước, vô hiệu hóa nút
-            if (currentStep === step.length) {
-              nextStepButton.disabled = true;
-              nextStepButton.style.backgroundColor = '#ddd'; // Đổi màu nút thành xám
-              nextStepButton.style.cursor = 'not-allowed';
-            }
-          });
         };
 
         // Lấy thông tin người dùng hiện tại
@@ -910,6 +972,19 @@
           sessionStorage.setItem("userCode", userCode);
           window.location.href = "/assets/staff/Profile.html";
         };
+        $scope.exportInvoiceToPDF = function () {
+          const element = document.getElementById("invoice");
+          const options = {
+            margin: 1,
+            filename: "HoaDon.pdf",
+            image: { type: "jpeg", quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+          };
+
+          html2pdf().from(element).set(options).save();
+        };
+
 
         // Xử lý khi tài liệu sẵn sàng
         angular.element(document).ready(function () {
