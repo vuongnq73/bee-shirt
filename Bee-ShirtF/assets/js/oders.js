@@ -485,6 +485,7 @@ const chart = new Chart(ctx, {
 });
 
 // Gọi API và cập nhật dữ liệu vào biểu đồ
+// Gọi API và cập nhật dữ liệu vào biểu đồ tròn
 fetch("http://localhost:8080/statics/InStoreAndOnline", {
   method: "GET",
   headers: {
@@ -497,19 +498,56 @@ fetch("http://localhost:8080/statics/InStoreAndOnline", {
     console.log("Dữ liệu từ API:", dataFromAPI);
 
     // Lấy giá trị từ API
-    const totalOrderInStore = dataFromAPI[0]?.totalOrderInStore || 0; // Giá trị In-Store Orders
-    const totalOrderOnline = dataFromAPI[0]?.totalOrderOnline || 0;  // Giá trị Online Orders
+    const totalOrderInStore = dataFromAPI[0]?.totalOrderInStore || 0;
+    const totalOrderOnline = dataFromAPI[0]?.totalOrderOnline || 0;
 
-    // Cập nhật dữ liệu vào biểu đồ
-    chart.data.datasets[0].data = [totalOrderOnline]; // Cập nhật số liệu Online Orders
-    chart.data.datasets[1].data = [totalOrderInStore]; // Cập nhật số liệu In-store Orders
+    // Tổng số đơn hàng
+    const totalOrders = totalOrderInStore + totalOrderOnline;
 
-    // Cập nhật lại biểu đồ sau khi thay đổi dữ liệu
-    chart.update();
+    // Dữ liệu phần trăm cho biểu đồ
+    const seriesData = [
+      ((totalOrderInStore / totalOrders) * 100).toFixed(2),
+      ((totalOrderOnline / totalOrders) * 100).toFixed(2)
+    ];
+
+    // Tạo biểu đồ tròn
+    var pieChart = new Chartist.Pie('#monthlyChart', {
+      series: seriesData
+    }, {
+      plugins: [
+        Chartist.plugins.tooltip({
+          transformTooltipTextFnc: function(value, labelIndex) {
+            return seriesData[labelIndex] + '%'; // Hiển thị % khi hover
+          }
+        })
+      ]
+    });
+
+    // Tạo phần chú thích bên ngoài biểu đồ
+    pieChart.on('created', function() {
+      // Lấy phần tử chứa legend
+      var myLegendContainer = document.getElementById("pieChartLegend");
+
+      // Tạo HTML cho legend (chú thích) thủ công
+      var legendHTML = '';
+      var labels = ['Đơn tại quầy', 'Đơn Online']; // Nhãn tương ứng
+      var colors = ['#f3545d', '#fdaf4b']; // Màu sắc tương ứng
+      var orderCounts = [totalOrderInStore, totalOrderOnline]; // Số đơn hàng tương ứng
+
+      // Tạo các mục legend cho từng nhãn
+      for (var i = 0; i < labels.length; i++) {
+        legendHTML += '<li><span style="background-color: ' + colors[i] + '"></span>'
+                    + labels[i] + ': ' + orderCounts[i] + ' đơn</li>';
+      }
+
+      // Chèn legend vào trang
+      myLegendContainer.innerHTML = legendHTML;
+    });
   })
   .catch(error => {
     console.error("Error fetching data:", error);
   });
+
 
 
 ///

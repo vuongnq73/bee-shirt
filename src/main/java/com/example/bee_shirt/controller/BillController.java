@@ -115,5 +115,25 @@ public class BillController {
                 .build();
     }
 
+//
+@PutMapping("/updateStatus")
+public ResponseEntity<Void> updateStatus(@RequestBody BillStatusUpdateRequest request) {
+    System.out.println("Received request: " + request);
+    String codeBill = request.getCodeBill();
+    int statusBill = request.getStatusBill();
+    // Kiểm tra xem các trường này có hợp lệ không
+    if (codeBill == null || codeBill.isEmpty() || statusBill < 0) {
+        return ResponseEntity.badRequest().build(); // Trả về lỗi 400 nếu dữ liệu không hợp lệ
+    }
+
+    if (billService.updateStatus(codeBill, statusBill)) {
+        return ResponseEntity.noContent().build(); // Thành công
+    } else {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Không tìm thấy hóa đơn
+    }
+}
+
+
+
 
 }

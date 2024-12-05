@@ -264,33 +264,62 @@ applyFilter("all");
 
 ////
 // Biểu đồ tròn
-// Biểu đồ tròn
-var pieChart = new Chartist.Pie('#monthlyChart', {
-	// Chỉ định series, không cần đưa labels vào chart nữa
-	series: [50, 20, 30]
-  }, {
-	plugins: [
-	  Chartist.plugins.tooltip() // Hiển thị thông tin chi tiết khi hover
-	]
-  });
-  
-  // Tạo phần chú thích bên ngoài biểu đồ
-  pieChart.on('created', function() {
-	// Lấy phần tử chứa legend
-	var myLegendContainer = document.getElementById("pieChartLegend");
-  
-	// Tạo HTML cho legend (chú thích) thủ công
-	var legendHTML = '';
-	var labels = ['Tiền Mặt', 'Chuyển Khoản', 'Cả hai']; // Nhãn tương ứng
-	var colors = ['#f3545d', '#fdaf4b', '#177dff']; // Màu sắc tương ứng
-  
-	// Tạo các mục legend cho từng nhãn
-	for (var i = 0; i < labels.length; i++) {
-	  legendHTML += '<li><span style="background-color: ' + colors[i] + '"></span>'
-				  + labels[i] + ': ' + [50, 20, 30][i] + '%</li>';
+// Gọi API và cập nhật dữ liệu vào biểu đồ tròn
+fetch("http://localhost:8080/statics/InStoreAndOnline", {
+	method: "GET",
+	headers: {
+	  Authorization: "Bearer " + token // Sử dụng token từ sessionStorage
 	}
+  })
+	.then(response => response.json())
+	.then(dataFromAPI => {
+	  // Kiểm tra dữ liệu trả về
+	  console.log("Dữ liệu từ API:", dataFromAPI);
   
-	// Chèn legend vào trang
-	myLegendContainer.innerHTML = legendHTML;
-  });
+	  // Lấy giá trị từ API
+	  const totalOrderInStore = dataFromAPI[0]?.totalOrderInStore || 0;
+	  const totalOrderOnline = dataFromAPI[0]?.totalOrderOnline || 0;
+  
+	  // Tổng số đơn hàng
+	  const totalOrders = totalOrderInStore + totalOrderOnline;
+  
+	  // Chuyển đổi dữ liệu thành phần trăm
+	  const seriesData = [
+		((totalOrderInStore / totalOrders) * 100).toFixed(2),
+		((totalOrderOnline / totalOrders) * 100).toFixed(2)
+	  ];
+  
+	  // Tạo biểu đồ tròn
+	  var pieChart = new Chartist.Pie('#monthlyChart', {
+		series: seriesData
+	  }, {
+		plugins: [
+		  Chartist.plugins.tooltip() // Hiển thị thông tin chi tiết khi hover
+		]
+	  });
+  
+	  // Tạo phần chú thích bên ngoài biểu đồ
+	  pieChart.on('created', function() {
+		// Lấy phần tử chứa legend
+		var myLegendContainer = document.getElementById("pieChartLegend");
+  
+		// Tạo HTML cho legend (chú thích) thủ công
+		var legendHTML = '';
+		var labels = ['Đơn tại quầy', 'Đơn Online']; // Nhãn tương ứng
+		var colors = ['#f3545d', '#fdaf4b']; // Màu sắc tương ứng
+  
+		// Tạo các mục legend cho từng nhãn
+		for (var i = 0; i < labels.length; i++) {
+		  legendHTML += '<li><span style="background-color: ' + colors[i] + '"></span>'
+					  + labels[i] + ': ' + seriesData[i] + '%</li>';
+		}
+  
+		// Chèn legend vào trang
+		myLegendContainer.innerHTML = legendHTML;
+	  });
+	})
+	.catch(error => {
+	  console.error("Error fetching data:", error);
+	});
+  
   

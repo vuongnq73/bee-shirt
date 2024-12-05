@@ -587,11 +587,11 @@
                   e.stopPropagation(); // Ngăn không kích hoạt sự kiện click của hàng
                   const codeBill = $(this).data("code");
                   const status = $(this).data("status");
-                  const statusText = status === 1
+                  const statusText = status === 6
                     ? "Đã Hoàn Tất"
-                    : status === 2
+                    : status === 1
                     ? "Chờ Xử Lý"
-                    : status === 3
+                    : status === 7
                     ? "Đã Hủy"
                     : "Không Xác Định";
     
@@ -659,23 +659,21 @@
                     style: "currency",
                     currency: "VND",
                   }), // Nếu totalMoney là null, hiển thị 0
-                  statusBill: `<button class="btn btn-${order.statusBill === 1 ? "success"
-                    : order.statusBill === 2 ? "primary"
-                      : order.statusBill === 3 ? "info"
+                  statusBill: `<button class="btn btn-${order.statusBill === 5 ? "success"
+                    : order.statusBill === 1 ? "primary"
+                      : order.statusBill === 7 ? "info"
                         : "secondary"} btn-sm status-btn" 
                       data-code="${order.codeBill}" 
                       data-status="${order.statusBill}">
-                      ${order.statusBill === 1 ? "Đã Hoàn Tất"
-                        : order.statusBill === 2 ? "Chờ Xử Lý"
-                          : order.statusBill === 3 ? "Đã Hủy"
+                      ${order.statusBill === 6 ? "Đã Hoàn Tất"
+                        : order.statusBill === 1 ? "Chờ Xử Lý"
+                          : order.statusBill === 7 ? "Đã Hủy"
                             : "Không Xác Định" }
                     </button>`,
                 }));
     
                 $timeout(() => $scope.initializeDataTable(tableId, orders), 0);
-              } else {
-                alert("Không có dữ liệu để hiển thị.");
-              }
+              } 
             },
             error: function () {
               alert("Không thể tải dữ liệu hóa đơn. Vui lòng thử lại sau.");
