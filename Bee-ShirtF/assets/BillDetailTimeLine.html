@@ -11,36 +11,26 @@
   <link rel="stylesheet" href="/assets/css/timeline.css">
   <!-- Fonts and icons -->
   <script src="../assets/js/plugin/webfont/webfont.min.js"></script>
-  <style>
-    /* Đặt kích thước cho các cột */
-    #basic-datatables th:nth-child(1),
-    /* STT */
-    #basic-datatables td:nth-child(1) {
-      width: 5%;
-      /* Cột STT hẹp hơn */
-      text-align: center;
-    }
 
-    #basic-datatables th:nth-child(2),
+  <style>
+    #basic-datatables th:nth-child(3),
     /* Sản Phẩm */
-    #basic-datatables td:nth-child(2) {
+    #basic-datatables td:nth-child(3) {
       width: 50%;
       /* Cột Sản Phẩm rộng nhất */
       text-align: left;
     }
 
-    #basic-datatables th:nth-child(3),
-    /* Số Lượng */
-    #basic-datatables td:nth-child(3),
-    #basic-datatables th:nth-child(4),
-    /* Giá */
-    #basic-datatables td:nth-child(4),
-    #basic-datatables th:nth-child(5),
-    /* Tổng Tiền */
-    #basic-datatables td:nth-child(5) {
-      width: 15%;
-      /* Các cột còn lại cân đối */
-      text-align: center;
+    #basic-datatables td img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover;
+      /* Hoặc 'contain' tùy vào yêu cầu */
+    }
+
+    #basic-datatables tr {
+      height: 100px;
+      /* Đặt chiều cao cho tất cả các hàng trong bảng */
     }
 
     /* Tổng quan bảng */
@@ -161,56 +151,21 @@
               <div class="collapse" id="tables">
                 <ul class="nav nav-collapse">
                   <li>
-                    <a href="Category.html">
-                      <span class="sub-item">Danh Mục Sản Phẩm</span>
-                    </a>
-                  </li>
-                  <li>
                     <a href="Products.html">
-                      <span class="sub-item">Danh sách sản phẩm</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="ProductDetail.html">
-                      <span class="sub-item">Danh Sách Biến Thể Sản Phẩm<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Size.html">
-                      <span class="sub-item">Danh Sách Kích Thước<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Season.html">
-                      <span class="sub-item">Danh Sách Mùa<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Pattern.html">
-                      <span class="sub-item">Danh Sách Mẫu<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Origin.html">
-                      <span class="sub-item">Danh Sách Nguồn gốc<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Color.html">
-                      <span class="sub-item">Danh Sách Màu Sắc<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Gender.html">
-                      <span class="sub-item">Danh Sách Giới tính<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Material.html">
-                      <span class="sub-item">Danh Sách Chất Liệu<span>
+                      <span class="sub-item">Danh Sách Sản Phẩm</span>
                     </a>
                   </li>
 
+                  <li>
+                    <a href="ProductDetail.html">
+                      <span class="sub-item">Danh Sách Sản Phẩm Chi Tiết</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="Category.html">
+                      <span class="sub-item">Danh Sách Thuộc Tính<span>
+                    </a>
+                  </li>
 
                 </ul>
               </div>
@@ -531,6 +486,7 @@
                         <thead>
                           <tr>
                             <th>STT</th>
+                            <th></th>
                             <th>Sản Phẩm</th>
                             <th>Số Lượng</th>
                             <th>Giá</th>
@@ -540,11 +496,12 @@
                         <tbody>
                           <tr ng-repeat="item in details">
                             <td>{{ $index + 1 }}</td>
-                            <td>
-                              <!-- Hiển thị ảnh sản phẩm nếu nameImage là URL hợp lệ -->
+                            <td> <!-- Hiển thị ảnh sản phẩm nếu nameImage là URL hợp lệ -->
                               <img ng-if="item.nameImage && item.nameImage !== 'N/A'" ng-src="{{ item.nameImage }}"
                                 alt="{{ item.nameShirt }}" style="width: 50px; height: 50px; object-fit: cover;">
                               <span ng-if="!item.nameImage || item.nameImage === 'N/A'">No Image</span>
+                            </td>
+                            <td>
 
                               <!-- Hiển thị thông tin sản phẩm nếu có -->
                               {{ item.nameShirt }} / {{ item.nameBrand }} / {{ item.nameSize }}
@@ -583,7 +540,8 @@
                           </div>
                           <div class="total-money"
                             style="text-align: left; margin-top: 20px; font-weight: bold; font-size: 16px;">
-                            Tổng tiền hóa đơn: <span style="color: rgb(214, 18, 18);">{{ formatCurrency(totalMoney) }}</span>
+                            Tổng tiền hóa đơn: <span style="color: rgb(214, 18, 18);">{{ formatCurrency(totalMoney)
+                              }}</span>
                           </div>
                         </div>
                       </div>
@@ -616,8 +574,8 @@
                           </div>
                           <div>
                             <label for="">Tổng Giảm Giá:
-                               <!-- {{ formatCurrency(totalMoney - subtotalBeforeDiscount) }} -->
-                              </label>
+                              <!-- {{ formatCurrency(totalMoney - subtotalBeforeDiscount) }} -->
+                            </label>
                           </div>
                           <div>
                             <label for="">Tổng Phí Vận Chuyển: {{ formatCurrency(moneyShip) }}</label>
@@ -627,8 +585,9 @@
                           </div>
                           <!-- Nút Điều Khiển -->
                           <div class="button-container">
-                            <button id="nextStepButton">Xác Nhận</button>
+                            <button id="nextStepButton" ng-click="updateStatus()">{{ currentStatusLabel }}</button>
                           </div>
+
                         </div>
                       </div>
                     </div>
@@ -759,41 +718,28 @@
     <!-- Thêm vào phần <head> của file HTML -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script>
-      angular.module("billDetailApp", []).controller("BillDetailController", ["$scope", "$http", "$timeout", function ($scope, $http, $timeout) {
+      angular.module("billDetailApp", []).controller("BillDetailController", ["$scope", "$http", "$timeout", "$window", function ($scope, $http, $timeout, $window) {
         // Khởi tạo biến
         $scope.details = [];
         $scope.totalMoney = 0;
-        $scope.nameVoucher = "";
-        $scope.nameCustomer = "";
-        $scope.phoneNumber = "";
-        $scope.address = "";
-        $scope.errorMessage = "";
-        $scope.codeBill = "";
-        $scope.currentDate = new Date();
-        $scope.moneyShip = 0;
-        $scope.note = "";
-        $scope.createAt = "";
-        $scope.desiredDate = "";
         $scope.subtotalBeforeDiscount = 0;
-        $scope.createBy = "";
-        $scope.typeBill = "";
-        $scope.nameShirt = "";
-        $scope.nameBrand = "";
-        $scope.nameSize = "";
-        $scope.nameImage = "";
-        $scope.quantity = 0;
-        $scope.price = 0;
-        $scope.totalMoneyAll = 0;
+        $scope.moneyShip = 0;
+        $scope.errorMessage = "";
+        $scope.successMessage = "";
+        $scope.loading = false;
+        $scope.currentDate = new Date();
+        $scope.billInfo = {};
 
         // Định dạng tiền tệ
         $scope.formatCurrency = function (value) {
+          if (typeof value !== "number" || isNaN(value)) return "N/A";
           return value.toLocaleString("vi-VN", {
             style: "currency",
             currency: "VND",
           });
         };
 
-        // Hàm load chi tiết hóa đơn
+        // Load chi tiết hóa đơn
         $scope.loadBillDetail = function () {
           const token = sessionStorage.getItem("jwtToken");
           if (!token) {
@@ -811,231 +757,166 @@
             return;
           }
 
-          // Gọi API để lấy thông tin chi tiết hóa đơn
+          $scope.loading = true; // Bật trạng thái loading
           $http({
             method: "GET",
             url: `http://localhost:8080/bills/detailsOnline/${$scope.codeBill}`,
-            headers: {
-              Authorization: "Bearer " + token,
-            },
-          }).then(
-            function success(response) {
+            headers: { Authorization: "Bearer " + token },
+          })
+            .then(function success(response) {
               const data = response.data;
               if (data.code === 1000 && Array.isArray(data.result) && data.result.length > 0) {
                 const billDetail = data.result[0];
+                $scope.billInfo = {
+                  codeBill: billDetail.codeBill || "N/A",
+                  createAt: billDetail.createAt || "N/A",
+                  createBy: billDetail.createBy || "N/A",
+                  customerName: billDetail.customerName || "N/A",
+                  address: billDetail.addressCustomer || "N/A",
+                  phoneNumber: billDetail.phoneNumber || "N/A",
+                  nameVoucher: billDetail.nameVoucher || "N/A",
+                  moneyShip: billDetail.moneyShip || 0,
+                  desiredDate: billDetail.desiredDate || "N/A",
+                  typeBill: billDetail.typeBill || "N/A",
+                  note: billDetail.note || "N/A",
+                  statusBill: billDetail.statusBill || 0,
+                };
 
-                // Cập nhật thông tin chi tiết hóa đơn
-                $scope.codeBill = billDetail.codeBill || "N/A";
-                $scope.createAt = billDetail.createAt || "N/A";
-                $scope.createBy = billDetail.createBy || "N/A";
-                $scope.customerName = billDetail.customerName || "N/A";
-                $scope.address = billDetail.addressCustomer || "N/A";
-                $scope.phoneNumber = billDetail.phoneNumber || "N/A";
-                $scope.nameVoucher = billDetail.nameVoucher || "N/A";
-                $scope.moneyShip = billDetail.moneyShip || 0;
-                $scope.desiredDate = billDetail.desiredDate || "N/A";
-                $scope.subtotalBeforeDiscount = billDetail.price * billDetail.quantity || 0;
-                $scope.totalMoney = (billDetail.price * billDetail.quantity)+ billDetail.moneyShip || 0;
-                $scope.typeBill = billDetail.typeBill || "N/A";
-                $scope.note = billDetail.note || "N/A";
-                $scope.nameShirt = billDetail.nameShirt || "N/A";
-                $scope.nameBrand = billDetail.nameBrand || "N/A";
-                $scope.nameSize = billDetail.nameSize || "N/A";
-                $scope.nameImage = billDetail.nameImage || "N/A";
-                $scope.quantity = billDetail.quantity || 0;
-                $scope.price = billDetail.price || 0;
-                $scope.totalMoneyAll = (billDetail.price * billDetail.quantity)+ billDetail.moneyShip || 0;
+                $scope.details = data.result.map(item => ({
+                  nameImage: item.nameImage || "N/A",
+                  nameShirt: item.nameShirt || "N/A",
+                  nameBrand: item.nameBrand || "N/A",
+                  nameSize: item.nameSize || "N/A",
+                  quantity: item.quantity || 0,
+                  price: item.price || 0,
+                  total: (item.price || 0) * (item.quantity || 0),
+                }));
 
-                // Cập nhật danh sách sản phẩm
-                $scope.details = [
-                  {
-                    nameImage: billDetail.nameImage,
-                    nameShirt: billDetail.nameShirt,
-                    nameBrand: billDetail.nameBrand,
-                    nameSize: billDetail.nameSize,
-                    quantity: billDetail.quantity,
-                    price: billDetail.price,
-                    total: billDetail.quantity * billDetail.price,
-                  },
-                ];
+                $scope.subtotalBeforeDiscount = $scope.details.reduce((sum, item) => sum + item.total, 0);
+                $scope.moneyShip=  $scope.billInfo.moneyShip;
+                $scope.nameVoucher = $scope.billInfo.nameVoucher;
+                $scope.note = $scope.billInfo.note;
+                // Chỉ cộng tiền ship nếu có
+                if ($scope.billInfo.moneyShip > 0) {
+                  $scope.totalMoney = $scope.subtotalBeforeDiscount + $scope.billInfo.moneyShip;
+                } else {
+                  $scope.totalMoney = $scope.subtotalBeforeDiscount;
+                }
 
-                // Cập nhật giao diện
-                $scope.$applyAsync();
+
+                $scope.updateTimeline($scope.billInfo.statusBill);
               } else {
                 $scope.errorMessage = "Không tìm thấy thông tin hóa đơn.";
               }
-            },
-            function error(error) {
-              console.error("Lỗi khi gọi API:", error);
+            })
+            .catch(function error(err) {
+              console.error("Lỗi khi tải hóa đơn:", err);
               $scope.errorMessage = "Không thể tải thông tin hóa đơn.";
-            }
-          );
+            })
+            .finally(function () {
+              $scope.loading = false; // Tắt trạng thái loading
+            });
         };
-        // Lấy tất cả các bước trong thanh tiến trình
-        const steps = document.querySelectorAll('.step');
-        const stepLabels = [
-          "Chờ Xử lý",
-          "Xác Nhận",
-          "Giao Hàng",
-          "Giao Hàng",
-          "Thanh Toán",
-          "Hoàn Tất"
-        ];
-        let currentStep = 0; // Bắt đầu từ bước 0
 
-        // Lấy nút điều khiển
-        const nextStepButton = document.getElementById('nextStepButton');
+        // Cập nhật tiến trình
+        $scope.updateTimeline = function (statusBill) {
+          console.log("Cập nhật tiến trình với trạng thái:", statusBill);
 
-        // Gắn sự kiện click cho nút
-        nextStepButton.addEventListener('click', () => {
-          if (currentStep < steps.length) {
-            // Làm sáng bước hiện tại
-            steps[currentStep].classList.add('active');
-            currentStep++; // Tăng bước lên 1
+          const steps = document.querySelectorAll('.step');
+          steps.forEach(step => step.classList.remove('active')); // Reset tất cả
+
+          const statusMap = {
+            0: 1, // Chờ Xử lý
+            1: 5, // Đã Xác Nhận
+            2: 0, // Chờ Giao Hàng
+            3: 3, // Đang Giao Hàng
+            4: 4, // Đã Thanh Toán
+            5: 2, // Hoàn Tất
+          };
+
+          const currentStep = statusMap[parseInt(statusBill)] || 0;
+          for (let i = 0; i <= currentStep; i++) {
+            steps[i].classList.add('active');
           }
 
-          // Cập nhật nội dung nút
-          if (currentStep < stepLabels.length) {
-            nextStepButton.textContent = stepLabels[currentStep];
-          }
+          $scope.statusLabels = [
+            "Chờ Xử lý",
+            "Đã Xác Nhận",
+            "Chờ Giao Hàng",
+            "Đang Giao Hàng",
+            "Đã Thanh Toán",
+            "Hoàn Tất"
+          ];
 
-          // Khi hoàn thành tất cả các bước, vô hiệu hóa nút
-          if (currentStep === steps.length) {
-            nextStepButton.disabled = true;
-            nextStepButton.style.backgroundColor = '#ddd'; // Đổi màu nút thành xám
-            nextStepButton.style.cursor = 'not-allowed';
-          }
-        });
+          // Đồng bộ trạng thái hiện tại
+          $scope.currentStep = currentStep;
+          $scope.currentStatusLabel = $scope.statusLabels[$scope.currentStep];
+          const step = document.querySelectorAll('.step');
+          const stepLabels = [
+            "Chờ Xử lý",
+            "Xác Nhận",
+            "Giao Hàng",
+            "Đã Giao Cho DVVC",
+            "Thanh Toán",
+            "Hoàn Tất"
+          ];
+          const nextStepButton = document.getElementById('nextStepButton');
 
-        // Tải chi tiết hóa đơn khi sẵn sàng
-        //
-        // Hàm xem profile
-    $scope.viewProfile = function () {
-      const token = sessionStorage.getItem("jwtToken");
+          // Gắn sự kiện click cho nút
+          nextStepButton.addEventListener('click', () => {
+            if (currentStep < step.length) {
+              // Làm sáng bước hiện tại
+              step[currentStep].classList.add('active');
+              currentStep++; // Tăng bước lên 1
+            }
 
-      if (!token || token.split(".").length !== 3) {
-        console.log("Token không hợp lệ hoặc không tồn tại");
-        return;
-      }
+            // Cập nhật nội dung nút
+            if (currentStep < stepLabels.length) {
+              nextStepButton.textContent = stepLabels[currentStep];
+            }
 
-      const payload = JSON.parse(atob(token.split(".")[1]));
-      if (payload && payload["user Code"]) {
-        const userCode = payload["user Code"];
-        sessionStorage.setItem("userCode", userCode);
-        console.log("userCode đã được lưu vào sessionStorage:", userCode);
-      } else {
-        console.log("Không tìm thấy userCode trong payload");
-      }
-
-      $window.location.href = "/assets/staff/Profile.html";
-    };
-
-    $scope.deleteAccount = function (code) {
-      if (confirm("Are you sure you want to delete this account?")) {
-        const token = sessionStorage.getItem("jwtToken");
-
-        // Khởi tạo biến trạng thái để tắt nút khi đang xóa
-        $scope.isDeleting = true;
-
-        $http({
-          method: "DELETE",
-          url: `http://localhost:8080/admin/delete/${code}`, // URL API cho chức năng xóa
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        })
-          .then(function (response) {
-            $scope.successMessage = "Account deleted successfully!";
-            $scope.errorMessage = ""; // Xóa thông báo lỗi (nếu có)
-            $scope.getCustomers(); // Cập nhật lại danh sách nhân viên sau khi xóa
-            $scope.isDeleting = false; // Kích hoạt lại nút sau khi hoàn tất
-
-            // Tự động ẩn thông báo sau 3 giây
-            setTimeout(function () {
-              $scope.successMessage = "";
-              $scope.$apply();
-            }, 3000);
-          })
-          .catch(function (error) {
-            console.error("Error deleting account:", error);
-            $scope.errorMessage = "Failed to delete account.";
-            $scope.successMessage = ""; // Xóa thông báo thành công (nếu có)
-            $scope.isDeleting = false; // Kích hoạt lại nút sau khi gặp lỗi
+            // Khi hoàn thành tất cả các bước, vô hiệu hóa nút
+            if (currentStep === step.length) {
+              nextStepButton.disabled = true;
+              nextStepButton.style.backgroundColor = '#ddd'; // Đổi màu nút thành xám
+              nextStepButton.style.cursor = 'not-allowed';
+            }
           });
-      }
-    };
+        };
 
-    // Hàm tìm kiếm
-    $scope.searchCustomer = function () {
-      if (!$scope.searchQuery) {
-        $scope.filteredCustomerList = $scope.customerList;
-      } else {
-        $scope.filteredCustomerList = $scope.customerList.filter(function (
-          customer
-        ) {
-          return (
-            customer.code
-              .toLowerCase()
-              .includes($scope.searchQuery.toLowerCase()) ||
-            customer.username
-              .toLowerCase()
-              .includes($scope.searchQuery.toLowerCase()) ||
-            customer.email
-              .toLowerCase()
-              .includes($scope.searchQuery.toLowerCase()) ||
-            customer.phone.includes($scope.searchQuery) ||
-            customer.address
-              .toLowerCase()
-              .includes($scope.searchQuery.toLowerCase())
-          );
-        });
-      }
-    };
+        // Lấy thông tin người dùng hiện tại
+        $scope.getMyProfile = function () {
+          const token = sessionStorage.getItem("jwtToken");
+          $http({
+            method: "GET",
+            url: `http://localhost:8080/admin/myProfile`,
+            headers: { Authorization: "Bearer " + token },
+          })
+            .then(function (response) {
+              if (response.data && response.data.result) {
+                $scope.myProfile = response.data.result;
+              } else {
+                $scope.errorMessage = "Không thể lấy thông tin người dùng.";
+              }
+            })
+            .catch(function (error) {
+              console.error("Lỗi khi lấy thông tin người dùng:", error);
+              $scope.errorMessage = "Có lỗi xảy ra khi lấy dữ liệu.";
+            });
+        };
 
-    //Lấy thông tin của tài khoản đang đăng nhập
-    $scope.getMyProfile = function () {
-      const token = sessionStorage.getItem("jwtToken");
-      $http({
-        method: "GET",
-        url: `http://localhost:8080/admin/myProfile`, // Đảm bảo URL đúng
-        headers: {
-          Authorization: "Bearer " + token, // Kiểm tra xem token có hợp lệ không
-        },
-      })
-        .then(function (response) {
-          console.log("Response:", response); // Log toàn bộ response để kiểm tra
+        // Điều hướng đến trang cập nhật profile
+        $scope.goToUpdateProfile = function (userCode) {
+          sessionStorage.setItem("userCode", userCode);
+          window.location.href = "/assets/staff/Profile.html";
+        };
 
-          if (response.data && response.data.result) {
-            $scope.myProfile = response.data.result;
-            console.log("My Profile:", $scope.myProfile); // Kiểm tra giá trị gán vào myProfile
-          } else {
-            $scope.errorMessage = "Không thể lấy thông tin người dùng.";
-            console.log($scope.errorMessage);
-          }
-        })
-        .catch(function (error) {
-          console.error("Lỗi khi lấy thông tin người dùng:", error);
-          $scope.errorMessage = "Có lỗi xảy ra khi lấy dữ liệu.";
-        })
-        .finally(function () {
-          $scope.loading = false; // Tắt trạng thái loading sau khi nhận được phản hồi
-        });
-    };
-    // Hàm xem profile
-    $scope.goToUpdateProfile = function (userCode) {
-      // Lưu thông tin người dùng vào sessionStorage để chuyển trang
-      sessionStorage.setItem("userCode", userCode);
-
-      // Sử dụng $location để điều hướng trong AngularJS
-      window.location.href = "/assets/staff/Profile.html";
-    };
-
+        // Xử lý khi tài liệu sẵn sàng
         angular.element(document).ready(function () {
           $scope.getMyProfile();
           $scope.loadBillDetail();
         });
       }]);
-
     </script>
 
 

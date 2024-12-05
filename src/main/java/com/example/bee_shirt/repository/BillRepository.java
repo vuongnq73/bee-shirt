@@ -22,7 +22,7 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE Bill b SET b.statusBill = 2 WHERE b.createAt < CURRENT_DATE AND b.statusBill = 0")
+    @Query("UPDATE Bill b SET b.statusBill = 10 WHERE b.createAt < CURRENT_DATE AND b.statusBill = 0")
     int cancelOldPendingBills();
 
 //    @Query(value = "SELECT bl.code_bill, " +
@@ -195,12 +195,17 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
             nativeQuery = true)
     List<Object[]> findBillStatisticsForCurrentYearr();
 
-    //ống kê tỉ lệ đơn hàngtaijij quầy và online
-    @Query(value = "SELECT type_bill AS BillType, COUNT(*) AS TotalBills " +
-            "FROM bill " +
-            "WHERE type_bill IN ('Online', 'In-store') " +
-            "GROUP BY type_bill",
-            nativeQuery = true)
-    List<Object[]> findTotalBillsByType();
+
+//ống kê tỉ lệ đơn hàngtaijij quầy và online
+@Query(value = "SELECT type_bill AS BillType, COUNT(*) AS TotalBills " +
+        "FROM bill " +
+        "WHERE type_bill IN ('Online', 'In-store') " +
+        "GROUP BY type_bill",
+        nativeQuery = true)
+List<Object[]> findTotalBillsByType();
+
+
+///
+
 }
 
