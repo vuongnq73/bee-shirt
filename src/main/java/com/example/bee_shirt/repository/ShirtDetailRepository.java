@@ -11,14 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Integer> {
-    @Query("SELECT sd FROM ShirtDetail sd WHERE sd.codeShirtDetail LIKE %:query%")
-    ShirtDetail findShirtDetailByCode(@Param("query") String query);
-    //
-
-    @Query("SELECT sd FROM ShirtDetail sd WHERE sd.codeShirtDetail LIKE %:query% OR sd.shirt.nameshirt LIKE %:query%")
-    Page<ShirtDetail> findListShirtDetailByCodeOrName(@Param("query") String query, Pageable pageable);
-
-    // Truy vấn tất cả chi tiết áo không bị xóa và có trạng thái 1
+       // Truy vấn tất cả chi tiết áo không bị xóa và có trạng thái 1
     @Query("SELECT new com.example.bee_shirt.dto.ShirtDetailDTO(" +
             "sdt.id, sdt.codeShirtDetail,ss.codeshirt, CONCAT(ss.nameshirt, '[ ', c.nameColor, '+ ', si.namesize,']'), sdt.price, sdt.quantity, p.namePattern, " +
             "g.nameGender, o.nameOrigin, s.nameSeason, si.namesize, m.nameMaterial, c.nameColor, sdt.statusshirtdetail, " +

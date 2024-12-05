@@ -207,6 +207,152 @@
         <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
           <div class="container-fluid">
             <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+              <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                  aria-expanded="false" aria-haspopup="true">
+                  <i class="fa fa-search"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-search animated fadeIn">
+                  <form class="navbar-left navbar-form nav-search">
+                    <div class="input-group">
+                      <input type="text" placeholder="Search ..." class="form-control" />
+                    </div>
+                  </form>
+                </ul>
+              </li>
+              <li class="nav-item topbar-icon dropdown hidden-caret">
+                <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button"
+                  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-envelope"></i>
+                </a>
+                <ul class="dropdown-menu messages-notif-box animated fadeIn" aria-labelledby="messageDropdown">
+                  <li>
+                    <div class="dropdown-title d-flex justify-content-between align-items-center">
+                      Tin Nhắn
+                      <a href="#" class="small">Đánh dấu tất cả các tin nhắn đã đọc</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="message-notif-scroll scrollbar-outer">
+                      <div class="notif-center">
+                        <a href="#">
+                          <div class="notif-img">
+                            <img src="img/jm_denis.jpg" alt="Img Profile" />
+                          </div>
+                          <div class="notif-content">
+                            <span class="subject">Jimmy Denis</span>
+                            <span class="block"> How are you ? </span>
+                            <span class="time">5 phút trước</span>
+                          </div>
+                        </a>
+                        <a href="#">
+                          <div class="notif-img">
+                            <img src="img/chadengle.jpg" alt="Img Profile" />
+                          </div>
+                          <div class="notif-content">
+                            <span class="subject">Nguyễn Quốc Vượng</span>
+                            <span class="block"> Ok,Cảm ơn Shop nhé ! </span>
+                            <span class="time">12 phút trước</span>
+                          </div>
+                        </a>
+                        <a href="#">
+                          <div class="notif-img">
+                            <img src="img/mlane.jpg" alt="Img Profile" />
+                          </div>
+                          <div class="notif-content">
+                            <span class="subject">Đỗ Trung Đăng</span>
+                            <span class="block">
+                              Xin chào !
+                            </span>
+                            <span class="time">12 phút trước</span>
+                          </div>
+                        </a>
+                        <a href="#">
+                          <div class="notif-img">
+                            <img src="img/talha.jpg" alt="Img Profile" />
+                          </div>
+                          <div class="notif-content">
+                            <span class="subject">Đỗ Trường Giang</span>
+                            <span class="block"> Shop còn mẫu áo này không ? </span>
+                            <span class="time">17 phút trước</span>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <a class="see-all" href="javascript:void(0);">Xem tất cả các tin nhắn<i
+                        class="fa fa-angle-right"></i>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item topbar-icon dropdown hidden-caret">
+                <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-bell"></i>
+                  <span class="notification">4</span>
+                </a>
+                <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
+                  <li>
+                    <div class="dropdown-title">
+                      Bạn có 4 thông báo mới
+                    </div>
+                  </li>
+                  <li>
+                    <div class="notif-scroll scrollbar-outer">
+                      <div class="notif-center">
+                        <a href="#">
+                          <div class="notif-icon notif-primary">
+                            <i class="fa fa-user-plus"></i>
+                          </div>
+                          <div class="notif-content">
+                            <span class="block"> Người dùng mới đăng ký </span>
+                            <span class="time">5 phút trước</span>
+                          </div>
+                        </a>
+                        <a href="#">
+                          <div class="notif-icon notif-success">
+                            <i class="fa fa-comment"></i>
+                          </div>
+                          <div class="notif-content">
+                            <span class="block">
+                              Đỗ Trường Giang đã bình luận
+                            </span>
+                            <span class="time">12 phút trước</span>
+                          </div>
+                        </a>
+                        <a href="#">
+                          <div class="notif-img">
+                            <img src="img/profile2.jpg" alt="Img Profile" />
+                          </div>
+                          <div class="notif-content">
+                            <span class="block">
+                              Đỗ Trung Đăng đã gửi tin nhắn
+                            </span>
+                            <span class="time">12 phút trước</span>
+                          </div>
+                        </a>
+                        <a href="#">
+                          <div class="notif-icon notif-danger">
+                            <i class="fa fa-heart"></i>
+                          </div>
+                          <div class="notif-content">
+                            <span class="block"> Nguyễn Quốc Vượng đã like </span>
+                            <span class="time">17 phút trước</span>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <a class="see-all" href="javascript:void(0);">Xem tất cả các thông báo<i
+                        class="fa fa-angle-right"></i>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
               <li class="nav-item topbar-user dropdown hidden-caret" ng-if="myProfile">
                 <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
                   <div class="avatar-sm">
@@ -295,7 +441,6 @@
 
                   </div>
                 </form>
-
                 <div class="d-flex align-items-center" ng-app="staffApp" ng-controller="StaffController">
                   <!-- Nút kích hoạt Modal -->
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
@@ -515,6 +660,9 @@
                   <i class="fas fa-times"></i>
                   Hủy đơn
                 </button>
+                <ul class="list-group mb-3" id="product-list">
+                  <!-- Sản phẩm sẽ được thêm vào đây -->
+                </ul>
 
 
                 <div class="card">
@@ -522,10 +670,16 @@
                     <h5 class="card-title">Payment Summary</h5>
 
                     <div class="mb-3">
-                      <label for="codeVoucher" class="form-label">Mã voucher</label>
-                      <input type="text" id="codeVoucher" class="form-control" placeholder="Nhập mã voucher"
+                      <label hidden for="codeVoucher" class="form-label">Mã voucher</label>
+                      <input hidden type="text" id="codeVoucher" class="form-control" placeholder="Nhập mã voucher"
                         oninput="applyVoucherOnChange()" />
                       <div id="voucherFeedback" style="display: none; color: red;"></div>
+                    </div>
+                    <div>
+                      <label for="voucherSelect"  class="form-label">Voucher khả dụng:</label>
+                      <select id="voucherSelect"  class="form-select">
+                        <!-- Các option sẽ được thêm động -->
+                      </select>
                     </div>
                     <div class="mb-3">
                       <label for="codeCustomer" class="form-label">Khách hàng</label>
@@ -552,7 +706,8 @@
                       <label for="changeMoney" class="form-label">Tiền thừa</label>
                       <input type="text" id="changeMoney" class="form-control" readonly>
                     </div>
-                    <button type="button" class="btn btn-primary" id="confirmButton" onclick="confirmCheckout()"
+                    <button type="button" class="btn btn-primary" id="confirmButton" onclick="checkoutConfirm()"
+
                       disabled>Xác
                       nhận</button>
                     <!-- <button class="btn btn-primary w-100" onclick="openModal3()">Place An Order</button> -->
@@ -690,6 +845,11 @@
   <script src="js/plugin/jsvectormap/world.js"></script>
 
   <!-- Sweet Alert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <!-- JavaScript -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <!-- Thêm CSS của Toastr -->
@@ -1199,7 +1359,8 @@
         currentCodeShirtDetail = 'none';
         fetchBills()
         document.getElementById('closeModal3').click()
-        toastr.success('Thanh toán thành công', 'Thành công');
+        toastr.success('Đã hoàn tất thanh toán!', 'Thành công');
+
       }
       ).catch(error => console.error("Error with checkout", error));
     }
@@ -1408,19 +1569,20 @@
       const codeBillDetail = currentCodeBillDetail;
       const quantity = document.getElementById("quantityInput2").value;
 
-      const r = await fetch(`http://localhost:8080/point-of-sale/get-shirt-detail?codeShirtDetail=${codeShirtDetail}`, {
+      const response = await fetch(`http://localhost:8080/point-of-sale/get-shirt-detail?codeShirtDetail=${codeShirtDetail}`, {
         method: 'GET',
         headers: headers
       });
-      const s = await r.json();
+      const sd = await response.json();
+
       if (0 >= quantity) {
         toastr.error('Số lượng không hợp lệ', 'Lỗi');
         document.getElementById("quantityInput2").value = 1
         return;
       }
-      if (s.quantity < quantity) {
+      if (sd.quantity < quantity) {
         toastr.error('Vượt quá số lượng tối đa', 'Lỗi');
-        document.getElementById("quantityInput2").value = s.quantity
+        document.getElementById("quantityInput2").value = sd.quantity
         return;
       }
 
@@ -1463,6 +1625,7 @@
           subtotal += item.price * item.quantity;
         });
 
+        updateVoucherOptions(subtotal)
 
         // Hiển thị tổng tiền vào ô input
         document.getElementById('totalMoney').value = subtotal.toFixed(2);
@@ -1607,20 +1770,20 @@
 
       try {
         // Gửi yêu cầu kiểm tra mã khách hàng
-        const customerResponse = await fetch(`http://localhost:8080/point-of-sale/get-account?username=${codeCustomer}`, {
-          method: "GET",
-          headers: headers,
-        });
+        // const customerResponse = await fetch(`http://localhost:8080/point-of-sale/get-account?username=${codeCustomer}`, {
+        //   method: "GET",
+        //   headers: headers,
+        // });
 
-        // Kiểm tra phản hồi từ API
-        if (!customerResponse.ok) {
-          throw new Error("Mã khách hàng không hợp lệ hoặc không tồn tại!");
-        }
+        // // Kiểm tra phản hồi từ API
+        // if (!customerResponse.ok) {
+        //   throw new Error("Mã khách hàng không hợp lệ hoặc không tồn tại!");
+        // }
 
-        const customerData = await customerResponse.text();
-        if (customerData == '') {
-          return;
-        }
+        // const customerData = await customerResponse.text();
+        // if (customerData == '') {
+        //   return;
+        // }
 
         const response = await fetch(`http://localhost:8080/point-of-sale/get-bill-detail?codeBill=${activeBillCode}`, {
           method: 'GET',
@@ -1966,6 +2129,7 @@
               customerInput.value = customer.username;
               document.getElementById("codeCustomer").value = customer.username
               applyVoucherOnChange()
+
               customerList.innerHTML = ""; // Ẩn danh sách khi chọn xong
               customerList.style.display = 'none'; // Ẩn danh sách khi chọn xong
               // Gửi yêu cầu kiểm tra mã khách hàng
@@ -2083,6 +2247,82 @@
 
     setupCustomerSearch();
 
+
+
+    async function updateVoucherOptions(money) {
+      const voucherSelect = document.getElementById("voucherSelect");
+
+      try {
+        // Gọi API để lấy danh sách voucher khả dụng
+        const response = await fetch(`http://localhost:8080/point-of-sale/find-avaiable-voucher?money=${money}`, {
+          method: "GET",
+          headers: headers,
+        });
+        if (!response.ok) throw new Error("Không thể lấy danh sách voucher");
+
+        const vouchers = await response.json();
+
+        // Xóa các tùy chọn cũ
+        voucherSelect.innerHTML = "";
+
+        // Kiểm tra nếu không có voucher
+        if (vouchers.length === 0) {
+          voucherSelect.innerHTML = "<option value=''>Không có voucher khả dụng</option>";
+          return;
+        }
+
+        // Thêm các voucher vào danh sách
+        let maxDiscount = 0;
+        let bestVoucher = null;
+
+        vouchers.forEach((voucher) => {
+          const discountValue = voucher.typeVoucher === "Percent"
+            ? Math.min(voucher.maximumDiscount, money * (voucher.discountValue / 100))
+            : Math.min(voucher.discountValue, voucher.maximumDiscount);
+
+          if (discountValue > maxDiscount) {
+            maxDiscount = discountValue;
+            bestVoucher = voucher;
+          }
+
+          const option = document.createElement("option");
+          option.value = voucher.codeVoucher;
+          option.textContent = `${voucher.codeVoucher} - Giảm: ${discountValue.toFixed(2)} VNĐ`;
+          voucherSelect.appendChild(option);
+        });
+
+        // Tự động chọn voucher giảm nhiều nhất
+        if (bestVoucher) {
+          voucherSelect.value = bestVoucher.codeVoucher;
+          document.getElementById("codeVoucher").value = voucherSelect.value;
+          applyVoucherOnChange()
+        }
+      } catch (error) {
+        console.error("Lỗi khi cập nhật voucher:", error);
+      }
+    }
+
+    function checkoutConfirm() {
+      Swal.fire({
+        title: 'Xác nhận thanh toán?',
+        text: 'Bạn có chắc chắn muốn thực hiện thanh toán không?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Thanh toán',
+        cancelButtonText: 'Hủy',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Gọi hàm checkout nếu người dùng xác nhận
+          checkout();
+        } else {
+          // Có thể thêm thông báo hủy nếu cần
+          toastr.info('Bạn đã hủy thanh toán.', 'Thông báo');
+        }
+      });
+
+    }
 
 
     toastr.options = {

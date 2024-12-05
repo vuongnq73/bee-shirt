@@ -266,4 +266,7 @@ public class PointOfSaleService {
     public List<Account> getAllCustomer() {
         return accountRepository.getAllCustomer();
     }
+
+    public List<Voucher1> findAvailableVoucher(Integer money){return voucherRepository.findAvailableVoucher(money);}
 }
+
