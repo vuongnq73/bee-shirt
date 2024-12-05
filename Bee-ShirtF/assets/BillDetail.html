@@ -104,57 +104,22 @@
               <div class="collapse" id="tables">
                 <ul class="nav nav-collapse">
                   <li>
-                    <a href="Category.html">
-                      <span class="sub-item">Danh Mục Sản Phẩm</span>
-                    </a>
-                  </li>
-                  <li>
                     <a href="Products.html">
-                      <span class="sub-item">Danh sách sản phẩm</span>
+                      <span class="sub-item">Danh Sách Sản Phẩm</span>
                     </a>
                   </li>
+
                   <li>
                     <a href="ProductDetail.html">
-                      <span class="sub-item">Danh Sách Biến Thể Sản Phẩm<span>
+                      <span class="sub-item">Danh Sách Sản Phẩm Chi Tiết</span>
                     </a>
                   </li>
                   <li>
-                    <a href="Size.html">
-                      <span class="sub-item">Danh Sách Kích Thước<span>
+                    <a href="Category.html">
+                      <span class="sub-item">Danh Sách Thuộc Tính<span>
                     </a>
                   </li>
-                  <li>
-                    <a href="Season.html">
-                      <span class="sub-item">Danh Sách Mùa<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Pattern.html">
-                      <span class="sub-item">Danh Sách Mẫu<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Origin.html">
-                      <span class="sub-item">Danh Sách Nguồn gốc<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Color.html">
-                      <span class="sub-item">Danh Sách Màu Sắc<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Gender.html">
-                      <span class="sub-item">Danh Sách Giới tính<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Material.html">
-                      <span class="sub-item">Danh Sách Chất Liệu<span>
-                    </a>
-                  </li>
-                  
-                 
+
                 </ul>
               </div>
             </li>
@@ -325,15 +290,13 @@
                       <p><strong>Tên Khách hàng:</strong>{{ nameCustomer }} </p>
                       <p><strong>Địa chỉ:</strong> {{ address }}</p>
                       <p><strong>Điện thoại:</strong> {{ phoneNumber }}</p>
-                      <p><strong>Người tạo hóa đơn</strong> </p>
+                      <p><strong>Người tạo hóa đơn</strong> System</p>
                       <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
                         <thead>
                           <tr style="background-color: #f9f3e7; text-align: center;">
                             <th style="border: 1px solid #ddd; padding: 8px;">STT</th>
                             <th style="border: 1px solid #ddd; padding: 8px;">Tên Sản Phẩm</th>
                             <th style="border: 1px solid #ddd; padding: 8px;">Số Lượng</th>
-                            <th style="border: 1px solid #ddd; padding: 8px;">Thương Hiệu</th>
-                            <th style="border: 1px solid #ddd; padding: 8px;">Size</th>
                             <th style="border: 1px solid #ddd; padding: 8px;">Giá</th>
                             <th style="border: 1px solid #ddd; padding: 8px;">Tổng Tiền</th>
                           </tr>
@@ -342,28 +305,27 @@
 
                           <tr ng-repeat="detail in details" style="text-align: center;">
                             <td style="border: 1px solid #ddd; padding: 8px;">{{ detail.stt }}</td>
-                            <td style="border: 1px solid #ddd; padding: 8px;">{{ detail.nameShirt }}</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">{{ detail.productInfo }}</td>
                             <td style="border: 1px solid #ddd; padding: 8px;">{{ detail.quantity }}</td>
-                            <td style="border: 1px solid #ddd; padding: 8px;">{{ detail.nameBrand }}</td>
-                            <td style="border: 1px solid #ddd; padding: 8px;">{{ detail.nameSize}}</td>
                             <td style="border: 1px solid #ddd; padding: 8px;">{{ formatCurrency(detail.price) }}</td>
                             <td style="border: 1px solid #ddd; padding: 8px;">{{ formatCurrency(detail.totalMoney) }}
                             </td>
                           </tr>
                         </tbody>
                       </table>
-                    <div class="row">
+                      <div class="row">
 
-                      <div class="col-md-6">
-                        <h5 style=" color: #26007e;">Voucher: {{ nameVoucher }}</h5>
+                        <div class="col-md-6">
+                          <h5 style=" color: #26007e;">Voucher: {{ nameVoucher }}</h5>
+                        </div>
+
+                        <div class="col-md-6">
+                          <h5 style=" color: #e54100;">Tổng tiền hàng: {{ formatCurrency(subtotalBeforeDiscount) }}</h5>
+                          <h5 style=" color: #cb7b0b;">Số tiền được giảm: {{ 0 }}</h5>
+                          <h5 style=" color: #cb7b0b;">Phí Ship: {{ 0 }}</h5>
+                          <h5 style=" color: #0b1bcb;">Tổng tiền thanh toán: {{ formatCurrency(totalMoney) }}</h5>
+                        </div>
                       </div>
-                      
-                      <div class="col-md-6">
-                        <h5 style=" color: #e54100;">Số Tiền trước khi giảm: {{ formatCurrency(totalMoney) }}</h5>
-                        <h5 style=" color: #cb7b0b;">Phí Ship: {{ 0 }}</h5>
-                        <h5 style=" color: #0b1bcb;">Tổng tiền: {{ formatCurrency(totalMoney) }}</h5>
-                      </div>
-                    </div>
 
                       <div
                         style="text-align: center; display: flex; justify-content: center; font-size: 12px; color: #666; margin-top: 20px;">
@@ -436,16 +398,20 @@
                       <div class="col-md-4">
                         <div class="total-money"
                           style="text-align: left; margin-top: 20px; font-weight: bold; font-size: 16px;">
-                          Tổng tiền trước khi giảm: <span style="color:  rgb(214, 18, 18);">{{
+                          Tổng tiền hàng: <span style="color:  rgb(214, 18, 18);">{{
                             formatCurrency(totalMoney) }}</span>
                         </div>
                         <div class="total-money"
-                          style="text-align: left; margin-top: 20px; font-weight: bold; font-size: 16px;">
+                          style="text-align: left; margin-top: 20px; font-weight: bold; font-size: 13px;">
                           Phí Ship: <span style="color:  rgb(214, 18, 18);">{{ 0 }}</span>
                         </div>
                         <div class="total-money"
+                        style="text-align: left; margin-top: 20px; font-weight: bold; font-size: 13px;">
+                        Số tiền giảm giá: <span style="color:  rgb(214, 18, 18);">{{ 0 }}</span>
+                      </div>
+                        <div class="total-money"
                           style="text-align: left; margin-top: 20px; font-weight: bold; font-size: 16px;">
-                          Tổng tiền hóa đơn: <span style="color:  rgb(214, 18, 18);">{{ formatCurrency(totalMoney)
+                          Tổng tiền thanh toán: <span style="color:  rgb(214, 18, 18);">{{ formatCurrency(totalMoney)
                             }}</span>
                         </div>
                       </div>
@@ -463,33 +429,7 @@
         </div>
       </div>
 
-      <footer class="footer">
-        <div class="container-fluid d-flex justify-content-between">
-          <nav class="pull-left">
-            <ul class="nav">
-              <li class="nav-item">
-                <a class="nav-link" href="http://www.themekita.com">
-                  ThemeKita
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#"> Help </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#"> Licenses </a>
-              </li>
-            </ul>
-          </nav>
-          <div class="copyright">
-            2024, made with <i class="fa fa-heart heart text-danger"></i> by
-            <a href="http://www.themekita.com">ThemeKita</a>
-          </div>
-          <div>
-            Distributed by
-            <a target="_blank" href="https://themewagon.com/">ThemeWagon</a>.
-          </div>
-        </div>
-      </footer>
+    
     </div>
 
     <!-- Custom template | don't include it in your project! -->
@@ -638,224 +578,121 @@
 
 
   <script>
-    angular.module("billDetailApp", []).controller("BillDetailController", ["$scope", "$timeout", function ($scope, $timeout) {
-      $scope.details = [];
-      $scope.totalMoney = 0;
-      $scope.nameVoucher = "";
-      $scope.nameCustomer = ""; // Thêm biến cho tên khách hàng
-      $scope.phoneNumber = "";   // Thêm biến cho số điện thoại
-      $scope.address = "";       // Thêm biến cho địa chỉ
-      $scope.errorMessage = "";
-      $scope.codeBill = "";
-      $scope.currentDate = new Date();
-      $scope.formatCurrency = function (value) {
-        return value.toLocaleString("vi-VN", {
-          style: "currency",
-          currency: "VND",
-        });
-      };
+ angular.module("billDetailApp", []).controller("BillDetailController", ["$scope", "$http", "$timeout", function ($scope, $http, $timeout) {
+  $scope.details = [];
+  $scope.totalMoney = 0;
+  $scope.nameVoucher = "";
+  $scope.nameCustomer = "";
+  $scope.phoneNumber = "";
+  $scope.address = "";
+  $scope.errorMessage = "";
+  $scope.codeBill = "";
+  $scope.subtotalBeforeDiscount = 0;
+  $scope.currentDate = new Date();
 
-      $scope.loadBillDetail = function () {
-        const token = sessionStorage.getItem("jwtToken");
-        if (!token) {
-          alert("Bạn chưa đăng nhập. Vui lòng đăng nhập lại.");
-          window.location.href = "http://127.0.0.1:5501/assets/account/login.html#!/login";
-          return;
-        }
+  $scope.formatCurrency = function (value) {
+    return value.toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+  };
 
-        const urlParams = new URLSearchParams(window.location.search);
-        $scope.codeBill = urlParams.get("codeBill");
-
-        if (!$scope.codeBill) {
-          alert("Không tìm thấy mã hóa đơn.");
-          return;
-        }
-
-        $.ajax({
-          type: "GET",
-          url: `http://localhost:8080/bills/details/${$scope.codeBill}`,
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-          success: function (response) {
-            console.log("Phản hồi từ server:", response);
-            const detailsData = Array.isArray(response.result) ? response.result : [];
-
-            if (detailsData.length > 0) {
-              const firstDetail = detailsData[0];
-              $scope.nameVoucher = firstDetail.nameVoucher || "Không có voucher";
-              $scope.nameCustomer = firstDetail.customerName || "N/A";
-              $scope.phoneNumber = firstDetail.phoneNumber || "N/A";
-              $scope.address = firstDetail.addressCustomer || "N/A";
-
-              $scope.details = detailsData.map((detail, index) => ({
-                stt: index + 1,
-                nameImage: detail.nameImage || "default_image.png",
-                productInfo: `${detail.nameShirt} - ${detail.nameBrand} - ${detail.nameSize}`,
-                quantity: detail.quantity,
-                price: detail.price,
-                totalMoney: detail.totalMoney,
-              }));
-
-              $scope.totalMoney = detailsData.reduce((acc, detail) => acc + detail.totalMoney, 0);
-              $timeout($scope.initializeDataTable, 0);
-            } else {
-              $scope.errorMessage = "Không có dữ liệu chi tiết hóa đơn nào để hiển thị.";
-              $scope.details = [];
-              $scope.totalMoney = 0;
-            }
-          },
-          error: function (error) {
-            console.error("Lỗi khi lấy chi tiết hóa đơn:", error);
-            $scope.errorMessage = "Không thể tải thông tin chi tiết.";
-            $scope.details = [];
-            $scope.totalMoney = 0;
-          },
-        });
-      };
-
-      $scope.initializeDataTable = function () {
-        if ($.fn.DataTable.isDataTable("#basic-datatables")) {
-          $("#basic-datatables").DataTable().destroy();
-        }
-
-        $("#basic-datatables").DataTable({
-          paging: false,
-          searching: false,
-          ordering: false,
-          info: false,
-          data: $scope.details.map((detail) => [
-            detail.stt,
-            `<img src="${detail.nameImage}" alt="Ảnh sản phẩm" style="width: 80px; height: auto; border-radius: 5px;">`,
-            detail.productInfo,
-            detail.quantity,
-            $scope.formatCurrency(detail.price),
-            $scope.formatCurrency(detail.totalMoney),
-          ]),
-          columns: [
-            { title: "STT" },
-            { title: "Ảnh Sản Phẩm" },
-            { title: "Sản Phẩm" },
-            { title: "Số Lượng" },
-            { title: "Giá" },
-            { title: "Tổng Tiền" },
-          ],
-          language: {
-            search: "Tìm kiếm:",
-            lengthMenu: "Hiện _MENU_ mục",
-            info: "Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ mục",
-            paginate: {
-              first: "Đầu",
-              last: "Cuối",
-              next: "Tiếp",
-              previous: "Trước",
-            },
-          },
-        });
-      };
-      $scope.exportInvoiceToPDF = function () {
-        const element = document.getElementById('invoice');
-        const options = {
-          margin: 1,
-          filename: 'HoaDon.pdf',
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2 },
-          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-        };
-
-        element.style.display = 'block';
-
-        html2pdf()
-          .from(element)
-          .set(options)
-          .save()
-          .then(() => {
-            element.style.display = 'none';
-          });
-      };
-
-      //
-             // Hàm xem thông tin profile
-$scope.viewProfile = function () {
+  $scope.loadBillDetail = function () {
     const token = sessionStorage.getItem("jwtToken");
-
-    if (!token || token.split(".").length !== 3) {
-        console.error("Token không hợp lệ hoặc không tồn tại");
-        return;
-    }
-
-    try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        const userCode = payload?.["user Code"];
-        if (userCode) {
-            sessionStorage.setItem("userCode", userCode);
-            console.log("userCode đã được lưu vào sessionStorage:", userCode);
-        } else {
-            console.error("Không tìm thấy userCode trong payload");
-        }
-    } catch (error) {
-        console.error("Lỗi khi giải mã token:", error);
-        return;
-    }
-
-    $window.location.href = "/assets/staff/Profile.html";
-};
-
-// Hàm lấy thông tin của tài khoản đang đăng nhập
-$scope.getMyProfile = function () {
-    const token = sessionStorage.getItem("jwtToken");
-
     if (!token) {
-        console.error("Token không tồn tại");
-        $scope.errorMessage = "Bạn cần đăng nhập để xem thông tin cá nhân.";
-        return;
+      alert("Bạn chưa đăng nhập. Vui lòng đăng nhập lại.");
+      window.location.href = "/assets/account/login.html#!/login";
+      return;
     }
 
-    $scope.loading = true; // Hiển thị trạng thái loading
+    const urlParams = new URLSearchParams(window.location.search);
+    $scope.codeBill = urlParams.get("codeBill");
 
-    $.ajax({
-        type: "GET",
-        url: "http://localhost:8080/admin/myProfile", // Đảm bảo URL đúng
-        headers: {
-            Authorization: "Bearer " + token, // Thêm token vào header
-        },
+    if (!$scope.codeBill) {
+      alert("Không tìm thấy mã hóa đơn.");
+      return;
+    }
+
+    $http({
+      method: "GET",
+      url: `http://localhost:8080/bills/details/${$scope.codeBill}`,
+      headers: { Authorization: "Bearer " + token },
     })
-        .done(function (response) {
-            console.log("Response:", response);
+      .then((response) => {
+        const detailsData = response.data.result || [];
+        if (detailsData.length > 0) {
+          const firstDetail = detailsData[0];
+          $scope.nameVoucher = firstDetail.nameVoucher || "Không có voucher";
+          $scope.nameCustomer = firstDetail.customerName || "N/A";
+          $scope.phoneNumber = firstDetail.phoneNumber || "N/A";
+          $scope.address = firstDetail.addressCustomer || "N/A";
+          $scope.subtotalBeforeDiscount = firstDetail.subtotalBeforeDiscount || 0;
+          $scope.details = detailsData.map((detail, index) => ({
+            stt: index + 1,
+            nameImage: detail.nameImage || "default_image.png",
+            productInfo: `${detail.nameShirt} - ${detail.nameBrand} - ${detail.nameSize}`,
+            quantity: detail.quantity || 0,
+            price: detail.price || 0,
+            totalMoney: detail.subtotalBeforeDiscount|| 0,
+          }));
+          $scope.totalMoney = $scope.details.reduce((acc, detail) => acc + detail.totalMoney, 0);
+          $timeout($scope.initializeDataTable, 0);
+        } else {
+          $scope.errorMessage = "Không có dữ liệu chi tiết hóa đơn.";
+        }
+      })
+      .catch((error) => {
+        console.error("Lỗi khi tải chi tiết hóa đơn:", error);
+        $scope.errorMessage = "Không thể tải thông tin chi tiết.";
+      });
+  };
 
-            if (response && response.result) {
-                $scope.myProfile = response.result;
-                console.log("My Profile:", $scope.myProfile);
-            } else {
-                $scope.errorMessage = "Không thể lấy thông tin người dùng.";
-                console.error($scope.errorMessage);
-            }
-        })
-        .fail(function (error) {
-            console.error("Lỗi khi lấy thông tin người dùng:", error);
-            $scope.errorMessage = "Có lỗi xảy ra khi lấy dữ liệu.";
-        })
-        .always(function () {
-            $scope.loading = false; // Tắt trạng thái loading
-            $scope.$apply(); // Đồng bộ dữ liệu với AngularJS
-        });
-};
-
-// Hàm chuyển hướng đến trang cập nhật profile
-$scope.goToUpdateProfile = function (userCode) {
-    if (!userCode) {
-        console.error("Không tìm thấy userCode để chuyển hướng");
-        return;
+  $scope.initializeDataTable = function () {
+    if ($.fn.DataTable.isDataTable("#basic-datatables")) {
+      $("#basic-datatables").DataTable().destroy();
     }
 
-    sessionStorage.setItem("userCode", userCode);
-    $window.location.href = "/assets/staff/Profile.html";
-};
-      angular.element(document).ready(function () {
-        $scope.getMyProfile();
-        $scope.loadBillDetail();
-      });
-    }]);
+    $("#basic-datatables").DataTable({
+      paging: false,
+      searching: false,
+      ordering: false,
+      info: false,
+      data: $scope.details.map((detail) => [
+        detail.stt,
+        `<img src="${detail.nameImage}" alt="Ảnh sản phẩm" style="width: 80px;">`,
+        detail.productInfo,
+        detail.quantity,
+        $scope.formatCurrency(detail.price),
+        $scope.formatCurrency(detail.totalMoney),
+      ]),
+      columns: [
+        { title: "STT" },
+        { title: "Ảnh Sản Phẩm" },
+        { title: "Sản Phẩm" },
+        { title: "Số Lượng" },
+        { title: "Giá" },
+        { title: "Tổng Tiền" },
+      ],
+    });
+  };
+
+  $scope.exportInvoiceToPDF = function () {
+    const element = document.getElementById("invoice");
+    const options = {
+      margin: 1,
+      filename: "HoaDon.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    };
+
+    html2pdf().from(element).set(options).save();
+  };
+
+  angular.element(document).ready(function () {
+    $scope.loadBillDetail();
+  });
+}]);
 
   </script>
 

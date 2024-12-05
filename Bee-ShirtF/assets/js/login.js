@@ -91,7 +91,7 @@ angular
     // Điều hướng đến trang tương ứng với quyền cao nhất
     function redirectToPage(highestRole) {
       if (highestRole === "ROLE_ADMIN") {
-        window.location.href = "/assets/Products.html";
+        window.location.href = "/assets/BanHang.html";
       } else if (highestRole === "ROLE_STAFF") {
         window.location.href = "/assets/BanHang.html";
       } else {

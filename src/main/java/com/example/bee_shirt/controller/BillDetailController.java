@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("bills") // Đường dẫn cho chi tiết hóa đơn
-@CrossOrigin(origins = "http://127.0.0.1:5501")
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j

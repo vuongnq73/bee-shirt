@@ -61,7 +61,7 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
             FROM account a
             INNER JOIN account_role ar ON a.id = ar.account_id
             INNER JOIN role_A r ON ar.role_id = r.id
-            WHERE a.deleted = 0 AND r.code_role = 'USER'
+            WHERE a.deleted = 0 AND r.code_role = 'USER' 
             ORDER BY a.id DESC; 
              """, nativeQuery = true)
     Page<Account> getAllPagingClient(Pageable pageable);
@@ -72,7 +72,7 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
              FROM account a
              INNER JOIN account_role ar ON a.id = ar.account_id
              INNER JOIN role_A r ON ar.role_id = r.id
-             WHERE a.deleted = 0 AND (r.code_role LIKE 'USER')
+             WHERE a.deleted = 0 AND (r.code_role LIKE 'USER') 
             """, nativeQuery = true)
     long getAllTotalPageClient();  // Trả về số lượng bản ghi tổng cộng
 
