@@ -90,6 +90,12 @@ public class PointOfSaleController {
         return pointOfSaleService.getAllCustomer();
     }
 
+    @GetMapping("/find-avaiable-voucher")
+    @ResponseBody
+    public List<Voucher1> findAvailableVoucher(@RequestParam("money") Integer money) {
+        return pointOfSaleService.findAvailableVoucher(money);
+    }
+
 
     @GetMapping("create-blank-bill")
     @ResponseBody

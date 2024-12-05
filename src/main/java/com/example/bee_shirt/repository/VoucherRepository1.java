@@ -11,10 +11,6 @@ import java.util.Optional;
 
 public interface VoucherRepository1 extends JpaRepository<Voucher1, Long> {
 //
-
-    @Query("SELECT v FROM Voucher1 v WHERE v.code_voucher LIKE :query")
-    Optional<Voucher1> findVoucherByCode(String query);
-//
     @Query("SELECT v FROM  Voucher1 v WHERE v.code_voucher = :code")
     Optional<Voucher1> findByCode_voucher(@Param("code") String code);
 
@@ -39,5 +35,8 @@ public interface VoucherRepository1 extends JpaRepository<Voucher1, Long> {
 
     @Query("SELECT v FROM Voucher1 v WHERE v.code_voucher LIKE :query")
     Optional<Voucher1> findVoucherByCode(String query);
+
+    @Query("SELECT v FROM Voucher1 v WHERE v.min_bill_value < :money")
+    List<Voucher1> findAvailableVoucher(Integer money);
 
 }

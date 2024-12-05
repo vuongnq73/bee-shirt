@@ -67,6 +67,7 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
             "GROUP BY MONTH(b.create_at) " +
             "ORDER BY MONTH(b.create_at)", nativeQuery = true)
     List<Object[]> getTotalRevenueByMonth();
+
     //thống kê số hóa đơn
     @Query(value = "SELECT MONTH(b.create_at) AS month, COUNT(DISTINCT b.id) AS totalOrders " +
             "FROM bill b " +
@@ -105,7 +106,6 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
             + "ORDER BY MONTH(b.create_at)",
             nativeQuery = true)
     List<Object[]> findBillStatisticsForLastMonth();
-
 
 
     @Query(value = "SELECT "
@@ -149,28 +149,28 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
             nativeQuery = true)
     List<Object[]> findBillStatisticsForCurrentYear();
 
-//thống kê doanh thu tại cửa hàng và online theo ngày
-@Query(value = "SELECT " +
-        "COALESCE(SUM(CASE WHEN type_bill = 'Online' THEN total_money ELSE 0 END), 0) AS TotalOnlineMoney, " +
-        "COALESCE(SUM(CASE WHEN type_bill = 'In-Store' THEN total_money ELSE 0 END), 0) AS TotalInstoreMoney, " +
-        "COALESCE(SUM(total_money), 0) AS TotalAllMoney " +
-        "FROM bill " +
-        "WHERE FORMAT(create_at, 'yyyy-MM-dd') = FORMAT(GETDATE(), 'yyyy-MM-dd') " + // Theo ngày hiện tại
-        "AND deleted = 0",
-        nativeQuery = true)
-List<Object[]> findBillStatisticsForTodayy();
+    //thống kê doanh thu tại cửa hàng và online theo ngày
+    @Query(value = "SELECT " +
+            "COALESCE(SUM(CASE WHEN type_bill = 'Online' THEN total_money ELSE 0 END), 0) AS TotalOnlineMoney, " +
+            "COALESCE(SUM(CASE WHEN type_bill = 'In-Store' THEN total_money ELSE 0 END), 0) AS TotalInstoreMoney, " +
+            "COALESCE(SUM(total_money), 0) AS TotalAllMoney " +
+            "FROM bill " +
+            "WHERE FORMAT(create_at, 'yyyy-MM-dd') = FORMAT(GETDATE(), 'yyyy-MM-dd') " + // Theo ngày hiện tại
+            "AND deleted = 0",
+            nativeQuery = true)
+    List<Object[]> findBillStatisticsForTodayy();
 
-//thống kê doanh thu tại cửa hàng và online theo 7 ngày gần nhất
-@Query(value = "SELECT " +
-        "SUM(CASE WHEN type_bill = 'Online' THEN total_money ELSE 0 END) AS TotalOnlineMoney, " +
-        "SUM(CASE WHEN type_bill = 'In-Store' THEN total_money ELSE 0 END) AS TotalInstoreMoney, " +
-        "SUM(total_money) AS TotalAllMoney " +
-        "FROM bill " +
-        "WHERE create_at >= DATEADD(DAY, -7, CAST(GETDATE() AS DATE)) " +
-        "AND create_at <= CAST(GETDATE() AS DATE) " +
-        "AND deleted = 0",
-        nativeQuery = true)
-List<Object[]> findBillStatisticsForLast7Days();
+    //thống kê doanh thu tại cửa hàng và online theo 7 ngày gần nhất
+    @Query(value = "SELECT " +
+            "SUM(CASE WHEN type_bill = 'Online' THEN total_money ELSE 0 END) AS TotalOnlineMoney, " +
+            "SUM(CASE WHEN type_bill = 'In-Store' THEN total_money ELSE 0 END) AS TotalInstoreMoney, " +
+            "SUM(total_money) AS TotalAllMoney " +
+            "FROM bill " +
+            "WHERE create_at >= DATEADD(DAY, -7, CAST(GETDATE() AS DATE)) " +
+            "AND create_at <= CAST(GETDATE() AS DATE) " +
+            "AND deleted = 0",
+            nativeQuery = true)
+    List<Object[]> findBillStatisticsForLast7Days();
 
     //thống kê doanh thu tại cửa hàng và online theo 30 ngày
     @Query(value = "SELECT " +
@@ -195,19 +195,12 @@ List<Object[]> findBillStatisticsForLast7Days();
             nativeQuery = true)
     List<Object[]> findBillStatisticsForCurrentYearr();
 
-//ống kê tỉ lệ đơn hàngtaijij quầy và online
-@Query(value = "SELECT type_bill AS BillType, COUNT(*) AS TotalBills " +
-        "FROM bill " +
-        "WHERE type_bill IN ('Online', 'In-store') " +
-        "GROUP BY type_bill",
-        nativeQuery = true)
-List<Object[]> findTotalBillsByType();
-
-
-///
-@Transactional
-@Modifying
-@Query("UPDATE Bill b SET b.statusBill = 2 WHERE b.createAt < CURRENT_DATE AND b.statusBill = 0")
-int cancelOldPendingBills();
+    //ống kê tỉ lệ đơn hàngtaijij quầy và online
+    @Query(value = "SELECT type_bill AS BillType, COUNT(*) AS TotalBills " +
+            "FROM bill " +
+            "WHERE type_bill IN ('Online', 'In-store') " +
+            "GROUP BY type_bill",
+            nativeQuery = true)
+    List<Object[]> findTotalBillsByType();
 }
 
