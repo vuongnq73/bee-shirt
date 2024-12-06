@@ -84,8 +84,9 @@
     <script src="/cozastore-master/js/homepage.js"></script>
 
     <style>
-      .wrap-slick1.slick1.item-slick1{
-        width: 200px!important ;
+      .active {
+        text-decoration: underline !important; /* Gạch chân phần được chọn */
+        font-weight: bold !important; /* Bôi đậm phần được chọn */
       }
     </style>
   </head>
@@ -101,23 +102,35 @@
               Free shipping for standard order over $100
             </div>
 
-			<div class="right-top-bar flex-w h-full">
-				<!-- Nếu người dùng chưa đăng nhập -->
-				<a href="/assets/account/login.html" class="flex-c-m trans-04 p-lr-25" ng-if="!myProfile">
-				  Tài Khoản
-				</a>
-			  
-				<!-- Nếu người dùng đã đăng nhập -->
-				<a href="/assets/staff/Profile.html" class="flex-c-m trans-04 p-lr-25" ng-if="myProfile">
-				  Tài Khoản
-				</a>
-			  
-				<!-- Nếu người dùng đã đăng nhập, hiển thị nút Đăng Xuất -->
-				<a href="#" class="flex-c-m trans-04 p-lr-25" ng-if="myProfile" ng-click="logout()">
-				  Đăng Xuất
-				</a>
-			  </div>
-			  
+            <div class="right-top-bar flex-w h-full">
+              <!-- Nếu người dùng chưa đăng nhập -->
+              <a
+                href="/assets/account/login.html"
+                class="flex-c-m trans-04 p-lr-25"
+                ng-if="!myProfile"
+              >
+                Tài Khoản
+              </a>
+
+              <!-- Nếu người dùng đã đăng nhập -->
+              <a
+                href="/assets/staff/Profile.html"
+                class="flex-c-m trans-04 p-lr-25"
+                ng-if="myProfile"
+              >
+                Tài Khoản
+              </a>
+
+              <!-- Nếu người dùng đã đăng nhập, hiển thị nút Đăng Xuất -->
+              <a
+                href="#"
+                class="flex-c-m trans-04 p-lr-25"
+                ng-if="myProfile"
+                ng-click="logout()"
+              >
+                Đăng Xuất
+              </a>
+            </div>
           </div>
         </div>
 
@@ -133,11 +146,6 @@
               <ul class="main-menu">
                 <li class="active-menu">
                   <a href="index.html">Home</a>
-                  <ul class="sub-menu">
-                    <li><a href="index.html">Homepage 1</a></li>
-                    <li><a href="home-02.html">Homepage 2</a></li>
-                    <li><a href="home-03.html">Homepage 3</a></li>
-                  </ul>
                 </li>
 
                 <li>
@@ -536,8 +544,8 @@
       </div>
     </section>
 
-     <!-- Banner -->
-     <div class="sec-banner bg0 p-t-80 p-b-50">
+    <!-- Banner -->
+    <div class="sec-banner bg0 p-t-80 p-b-50">
       <div class="container">
         <div class="row">
           <div class="col-md-6 col-xl-4 p-b-30 m-lr-auto">
@@ -550,9 +558,7 @@
                 class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3"
               >
                 <div class="block1-txt-child1 flex-col-l">
-                  <span class="block1-name ltext-102 trans-04 p-b-8">
-                    Nữ
-                  </span>
+                  <span class="block1-name ltext-102 trans-04 p-b-8"> Nữ </span>
 
                   <span class="block1-info stext-102 trans-04">
                     Xuân 2024
@@ -606,9 +612,7 @@
                     Thể Thao
                   </span>
 
-                  <span class="block1-info stext-102 trans-04">
-                    Xu Hướng
-                  </span>
+                  <span class="block1-info stext-102 trans-04"> Xu Hướng </span>
                 </div>
 
                 <div class="block1-txt-child2 p-b-4 trans-05">
@@ -628,13 +632,26 @@
           <h3 class="ltext-103 cl5">Sản Phẩm</h3>
         </div>
 
-        <div class="flex-w  ">
-          <div class="flex-w flex-l-m filter-tope-group m-tb-10" ng-repeat="category in categories ">
-            <button
+        <div class="flex-w">
+          <button
+            class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5"
+            ng-click="clearFilters()"
+          >
+            Tất Cả
+          </button>
+
+          <div
+            class="flex-w flex-l-m filter-tope-group m-tb-10"
+            ng-repeat="category in categories"
+          >
+            <a
+              href="#"
               class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5"
+              ng-class="{'active': isBrandSelected(category.id)}"
+              ng-click="fetchShirtsByFilter(null, null, null, null, null, category.id)"
             >
               {{category.nameCategory}}
-            </button>
+            </a>
           </div>
 
           <div class="flex-w flex-c-m m-tb-10">
@@ -664,232 +681,174 @@
           </div>
 
           <!-- Search product -->
-		  <div class="dis-none panel-search w-full p-t-10 p-b-15">
-			<div class="bor8 dis-flex p-l-15">
-			  <!-- Nút tìm kiếm -->
-			  <button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04" ng-click="searchShirt()">
-				<i class="zmdi zmdi-search"></i>
-			  </button>
-		  
-			  <!-- Ô input tìm kiếm -->
-			  <input
-				class="mtext-107 cl2 size-114 plh2 p-r-15"
-				type="text"
-				placeholder="Tìm kiếm"
-				ng-model="searchQuery"
-				ng-change="searchShirt()"
-			  />
-			</div>
-		  </div>
-		  
+          <div class="dis-none panel-search w-full p-t-10 p-b-15">
+            <div class="bor8 dis-flex p-l-15">
+              <!-- Nút tìm kiếm -->
+              <button
+                class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04"
+                ng-click="searchShirt()"
+              >
+                <i class="zmdi zmdi-search"></i>
+              </button>
+
+              <!-- Ô input tìm kiếm -->
+              <input
+                class="mtext-107 cl2 size-114 plh2 p-r-15"
+                type="text"
+                placeholder="Tìm kiếm"
+                ng-model="searchQuery"
+                ng-change="searchShirt()"
+              />
+            </div>
+          </div>
 
           <!-- Filter -->
           <div class="dis-none panel-filter w-full p-t-10">
             <div
               class="wrap-filter flex-w bg6 w-full p-lr-40 p-t-27 p-lr-15-sm"
             >
-              <div class="filter-col1 p-r-15 p-b-27">
-                <div class="mtext-102 cl2 p-b-15">Sort By</div>
+              <!-- Lọc theo hãng -->
+              <div class="filter-col4 p-b-27">
+                <div class="mtext-102 cl2 p-b-15">Branchs</div>
 
                 <ul>
-                  <li class="p-b-6">
-                    <a href="#" class="filter-link stext-106 trans-04">
-                      Default
-                    </a>
-                  </li>
-
-                  <li class="p-b-6">
-                    <a href="#" class="filter-link stext-106 trans-04">
-                      Popularity
-                    </a>
-                  </li>
-
-                  <li class="p-b-6">
-                    <a href="#" class="filter-link stext-106 trans-04">
-                      Average rating
-                    </a>
-                  </li>
-
-                  <li class="p-b-6">
+                  <li
+                    class="p-b-6"
+                    ng-repeat="brand in brands"
+                    ng-class="{'active': isBrandSelected(brand.codeBrand)}"
+                  >
                     <a
                       href="#"
-                      class="filter-link stext-106 trans-04 filter-link-active"
+                      class="filter-link stext-106 trans-04"
+                      ng-click="fetchShirtsByFilter(null, null, null, brand.codeBrand)"
                     >
-                      Newness
-                    </a>
-                  </li>
-
-                  <li class="p-b-6">
-                    <a href="#" class="filter-link stext-106 trans-04">
-                      Price: Low to High
-                    </a>
-                  </li>
-
-                  <li class="p-b-6">
-                    <a href="#" class="filter-link stext-106 trans-04">
-                      Price: High to Low
+                      {{brand.nameBrand}}
                     </a>
                   </li>
                 </ul>
               </div>
 
-              <div class="filter-col2 p-r-15 p-b-27">
+              <!-- Thêm các input để lưu min và max price -->
+              <!-- Lọc theo giá -->
+              <div class="filter-col4 p-r-15 p-b-27">
                 <div class="mtext-102 cl2 p-b-15">Price</div>
-
                 <ul>
-                  <li class="p-b-6">
+                  <li
+                    class="p-b-6"
+                    ng-class="{'active': isPriceSelected('0', '50')}"
+                  >
                     <a
                       href="#"
-                      class="filter-link stext-106 trans-04 filter-link-active"
+                      class="filter-link stext-106 trans-04"
+                      ng-click="fetchShirtsByFilter('0', '50')"
                     >
-                      All
-                    </a>
-                  </li>
-
-                  <li class="p-b-6">
-                    <a href="#" class="filter-link stext-106 trans-04">
                       $0.00 - $50.00
                     </a>
                   </li>
-
-                  <li class="p-b-6">
-                    <a href="#" class="filter-link stext-106 trans-04">
+                  <li
+                    class="p-b-6"
+                    ng-class="{'active': isPriceSelected('50', '100')}"
+                  >
+                    <a
+                      href="#"
+                      class="filter-link stext-106 trans-04"
+                      ng-click="fetchShirtsByFilter('50', '100')"
+                    >
                       $50.00 - $100.00
                     </a>
                   </li>
-
-                  <li class="p-b-6">
-                    <a href="#" class="filter-link stext-106 trans-04">
+                  <li
+                    class="p-b-6"
+                    ng-class="{'active': isPriceSelected('100', '150')}"
+                  >
+                    <a
+                      href="#"
+                      class="filter-link stext-106 trans-04"
+                      ng-click="fetchShirtsByFilter('100', '150')"
+                    >
                       $100.00 - $150.00
                     </a>
                   </li>
-
-                  <li class="p-b-6">
-                    <a href="#" class="filter-link stext-106 trans-04">
+                  <li
+                    class="p-b-6"
+                    ng-class="{'active': isPriceSelected('150', '200')}"
+                  >
+                    <a
+                      href="#"
+                      class="filter-link stext-106 trans-04"
+                      ng-click="fetchShirtsByFilter('150', '200')"
+                    >
                       $150.00 - $200.00
                     </a>
                   </li>
-
-                  <li class="p-b-6">
-                    <a href="#" class="filter-link stext-106 trans-04">
+                  <li
+                    class="p-b-6"
+                    ng-class="{'active': isPriceSelected('200', 'max')}"
+                  >
+                    <a
+                      href="#"
+                      class="filter-link stext-106 trans-04"
+                      ng-click="fetchShirtsByFilter('200', 'max')"
+                    >
                       $200.00+
                     </a>
                   </li>
                 </ul>
               </div>
 
-              <div class="filter-col3 p-r-15 p-b-27">
+              <!-- Lọc theo màu -->
+              <div class="filter-col4 p-r-15 p-b-27">
                 <div class="mtext-102 cl2 p-b-15">Color</div>
-
                 <ul>
-                  <li class="p-b-6">
-                    <span class="fs-15 lh-12 m-r-6" style="color: #222">
-                      <i class="zmdi zmdi-circle"></i>
-                    </span>
-
-                    <a href="#" class="filter-link stext-106 trans-04">
-                      Black
-                    </a>
-                  </li>
-
-                  <li class="p-b-6">
-                    <span class="fs-15 lh-12 m-r-6" style="color: #4272d7">
-                      <i class="zmdi zmdi-circle"></i>
-                    </span>
-
+                  <li
+                    class="p-b-6"
+                    ng-repeat="color in colors"
+                    ng-class="{'active': isColorSelected(color.codeColor)}"
+                  >
                     <a
                       href="#"
-                      class="filter-link stext-106 trans-04 filter-link-active"
+                      class="filter-link stext-106 trans-04"
+                      ng-click="fetchShirtsByFilter(null, null, color.codeColor)"
                     >
-                      Blue
-                    </a>
-                  </li>
-
-                  <li class="p-b-6">
-                    <span class="fs-15 lh-12 m-r-6" style="color: #b3b3b3">
-                      <i class="zmdi zmdi-circle"></i>
-                    </span>
-
-                    <a href="#" class="filter-link stext-106 trans-04">
-                      Grey
-                    </a>
-                  </li>
-
-                  <li class="p-b-6">
-                    <span class="fs-15 lh-12 m-r-6" style="color: #00ad5f">
-                      <i class="zmdi zmdi-circle"></i>
-                    </span>
-
-                    <a href="#" class="filter-link stext-106 trans-04">
-                      Green
-                    </a>
-                  </li>
-
-                  <li class="p-b-6">
-                    <span class="fs-15 lh-12 m-r-6" style="color: #fa4251">
-                      <i class="zmdi zmdi-circle"></i>
-                    </span>
-
-                    <a href="#" class="filter-link stext-106 trans-04"> Red </a>
-                  </li>
-
-                  <li class="p-b-6">
-                    <span class="fs-15 lh-12 m-r-6" style="color: #aaa">
-                      <i class="zmdi zmdi-circle-o"></i>
-                    </span>
-
-                    <a href="#" class="filter-link stext-106 trans-04">
-                      White
+                      <span
+                        class="fs-15 lh-12 m-r-6"
+                        ng-style="{'color': color.codeColor}"
+                      >
+                        <i
+                          class="zmdi zmdi-circle"
+                          ng-style="{'color': color.codeColor}"
+                        ></i>
+                      </span>
+                      {{color.nameColor}}
                     </a>
                   </li>
                 </ul>
               </div>
 
-              <div class="filter-col4 p-b-27">
-                <div class="mtext-102 cl2 p-b-15">Tags</div>
-
-                <div class="flex-w p-t-4 m-r--5">
-                  <a
-                    href="#"
-                    class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5"
+              <!-- Lọc theo size -->
+              <div class="filter-col1 p-r-15 p-b-27">
+                <div class="mtext-102 cl2 p-b-15">Size</div>
+                <ul>
+                  <li
+                    class="p-b-6"
+                    ng-repeat="size in sizes"
+                    ng-class="{'active': isSizeSelected(size.codeSize)}"
                   >
-                    Fashion
-                  </a>
-
-                  <a
-                    href="#"
-                    class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5"
-                  >
-                    Lifestyle
-                  </a>
-
-                  <a
-                    href="#"
-                    class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5"
-                  >
-                    Denim
-                  </a>
-
-                  <a
-                    href="#"
-                    class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5"
-                  >
-                    Streetstyle
-                  </a>
-
-                  <a
-                    href="#"
-                    class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5"
-                  >
-                    Crafts
-                  </a>
-                </div>
+                    <a
+                      href="#"
+                      class="filter-link stext-106 trans-04"
+                      ng-click="fetchShirtsByFilter(null, null, null, null, size.codeSize)"
+                    >
+                      {{size.namesize}}
+                    </a>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="row">
+        <div class="row" id="shirtsList">
           <div
             class="col-sm-6 col-md-4 col-lg-3 p-b-35"
             ng-repeat="shirt in filteredShirtList"
@@ -898,7 +857,6 @@
             <div class="block2">
               <div class="block2-pic hov-img0">
                 <img src="images/product-02.jpg" alt="{{ shirt.nameShirt }}" />
-
                 <a
                   href="/cozastore-master/product-detail.html"
                   class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"
@@ -915,7 +873,6 @@
                   >
                     {{ shirt.nameShirt }}
                   </a>
-
                   <span class="stext-105 cl3">
                     {{ shirt.price | currency }}
                   </span>
@@ -946,7 +903,7 @@
         <!-- Load more -->
         <div class="flex-c-m flex-w w-full p-t-45">
           <a
-            href="#"
+            href="/cozastore-master/product.html"
             class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04"
           >
             Xem Thêm
@@ -1086,8 +1043,8 @@
       </div>
     </section>
 
-     <!-- Product -->
-     <section class="bg0 p-t-23 p-b-140">
+    <!-- Product -->
+    <section class="bg0 p-t-23 p-b-140">
       <div class="container">
         <div class="p-b-10">
           <h3 class="ltext-103 cl5">Sản Phẩm Bán Chạy</h3>
@@ -1146,12 +1103,9 @@
             </div>
           </div>
         </div>
-
       </div>
     </section>
 
-
-   
     <!-- Footer -->
     <footer class="bg3 p-t-75 p-b-32">
       <div class="container">
@@ -1161,19 +1115,39 @@
 
             <ul>
               <li class="p-b-10">
-                <a href="/cozastore-master/product.html" class="stext-107 cl7 hov-cl1 trans-04"> Nữ </a>
+                <a
+                  href="/cozastore-master/product.html"
+                  class="stext-107 cl7 hov-cl1 trans-04"
+                >
+                  Nữ
+                </a>
               </li>
 
               <li class="p-b-10">
-                <a href="/cozastore-master/product.html" class="stext-107 cl7 hov-cl1 trans-04"> Nam </a>
+                <a
+                  href="/cozastore-master/product.html"
+                  class="stext-107 cl7 hov-cl1 trans-04"
+                >
+                  Nam
+                </a>
               </li>
 
               <li class="p-b-10">
-                <a href="/cozastore-master/product.html" class="stext-107 cl7 hov-cl1 trans-04"> Trẻ Em </a>
+                <a
+                  href="/cozastore-master/product.html"
+                  class="stext-107 cl7 hov-cl1 trans-04"
+                >
+                  Trẻ Em
+                </a>
               </li>
 
               <li class="p-b-10">
-                <a href="/cozastore-master/product.html" class="stext-107 cl7 hov-cl1 trans-04"> Thể Thao </a>
+                <a
+                  href="/cozastore-master/product.html"
+                  class="stext-107 cl7 hov-cl1 trans-04"
+                >
+                  Thể Thao
+                </a>
               </li>
             </ul>
           </div>
@@ -1614,6 +1588,5 @@
     </script>
     <!--===============================================================================================-->
     <script src="js/main.js"></script>
-   
   </body>
 </html>

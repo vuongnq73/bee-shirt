@@ -1,17 +1,17 @@
 package com.example.bee_shirt.controller;
 
-import com.example.bee_shirt.EntityThuocTinh.Category;
-import com.example.bee_shirt.EntityThuocTinh.Gender;
-import com.example.bee_shirt.EntityThuocTinh.Material;
+import com.example.bee_shirt.EntityThuocTinh.*;
 import com.example.bee_shirt.dto.response.ApiResponse;
 import com.example.bee_shirt.dto.response.HomePageResponse;
 import com.example.bee_shirt.service.lmp.ShirtDetailService;
+import com.example.bee_shirt.service.lmp.ShirtService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.repository.query.Param;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -20,6 +20,9 @@ import java.util.List;
 public class HomePageController {
     @Autowired
     private ShirtDetailService shirtDetailService;
+
+    @Autowired
+    private ShirtService shirtService;
 
     @GetMapping("/bestsaler")
     public ApiResponse<List<HomePageResponse>> getHomePage(){
@@ -37,11 +40,76 @@ public class HomePageController {
                 .build();
     }
 
+    @GetMapping("/filler")
+    public ApiResponse<List<HomePageResponse>> getAllShirtByPrice( @RequestParam(required = false) BigDecimal min,
+                                                                   @RequestParam(required = false) BigDecimal max,
+                                                                   @RequestParam(required = false) String color,
+                                                                   @RequestParam(required = false) String brand,
+                                                                   @RequestParam(required = false) String size,
+                                                                   @RequestParam(required = false) Integer category){
+        return ApiResponse.<List<HomePageResponse>>builder()
+                .code(1000)
+                .result(shirtDetailService.getAllShirtDetailByFiller(min,max,color,brand,size,category))
+                .build();
+    }
+
+
+    @GetMapping("/getbycolor/{code}")
+    public ApiResponse<List<HomePageResponse>> getAllShirtByColor(@PathVariable("code") String code){
+        return ApiResponse.<List<HomePageResponse>>builder()
+                .code(1000)
+                .result(shirtDetailService.getAllShirtDetailByColor(code))
+                .build();
+    }
+
+    @GetMapping("/getcolors")
+    public ApiResponse<Iterable<Color>> getAllShirtByPrice(){
+        return ApiResponse.<Iterable<Color>>builder()
+                .code(1000)
+                .result(shirtDetailService.getAllColors())
+                .build();
+    }
+
+
+    @GetMapping("/getbranchs")
+    public ApiResponse<Iterable<Brand>> getAllBranch(){
+        return ApiResponse.<Iterable<Brand>>builder()
+                .code(1000)
+                .result(shirtService.getAllBrands())
+                .build();
+    }
+
+    @GetMapping("/getsizes")
+    public ApiResponse<Iterable<Size>> getAllSize(){
+        return ApiResponse.<Iterable<Size>>builder()
+                .code(1000)
+                .result(shirtDetailService.getAllSizes())
+                .build();
+    }
+
     @GetMapping("/category")
     public ApiResponse<Iterable<Category>> getGenders(){
         return ApiResponse.<Iterable<Category>>builder()
                 .code(1000)
-                .result(shirtDetailService.getAllCategorys())
+                .result(shirtDetailService.getAllCategories())
                 .build();
     }
+
+    @GetMapping("/getallshirt/{code}")
+    public ApiResponse<List<HomePageResponse>> getShirtByCategoryCode(@PathVariable("code") String code){
+        return ApiResponse.<List<HomePageResponse>>builder()
+                .code(1000)
+                .result(shirtDetailService.getAllShirtDetailByCategoryCode(code))
+                .build();
+    }
+
+    @GetMapping("/countAll")
+    public ResponseEntity<?> countAllShirts() {
+        int totalCount = shirtDetailService.countAll();
+        return ResponseEntity.ok(new ApiResponse(1000, "Success", totalCount));
+    }
+
+
+
+
 }

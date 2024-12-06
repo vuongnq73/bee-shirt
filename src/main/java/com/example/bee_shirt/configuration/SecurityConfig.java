@@ -21,7 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS_POST = {"/auth/login", "/user/register"};
 
-    private final String[] PUBLIC_ENDPOINTS_GET = {"/homepage/bestsaler", "/homepage/category", "/homepage/getallshirt"};
+    private final String[] PUBLIC_ENDPOINTS_GET = {"/homepage/bestsaler", "/homepage/category", "/homepage/getallshirt/{code}", "/homepage/getallshirt", "/homepage/getbyprice", "/homepage/getcolors"};
 
     private final String[] ADMIN_GET_ENDPOINTS = {"/admin/accounts", "/admin/roles"};
 
@@ -37,7 +37,7 @@ public class SecurityConfig {
 
         httpSecurity.authorizeHttpRequests(request ->
                 request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS_POST).permitAll()
-                        .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS_GET).permitAll()
+                        .requestMatchers("/homepage/**").permitAll()
                         .requestMatchers(HttpMethod.GET, ADMIN_GET_ENDPOINTS).hasAuthority(Constant.ROLE_ADMIN)
                         .requestMatchers(HttpMethod.POST, ADMIN_POST_ENDPOINTS).hasAuthority(Constant.ROLE_ADMIN)
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()

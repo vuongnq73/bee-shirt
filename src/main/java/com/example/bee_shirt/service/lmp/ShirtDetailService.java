@@ -9,6 +9,7 @@ import com.example.bee_shirt.entity.ShirtDetail;
 import com.example.bee_shirt.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -244,7 +245,7 @@ public class ShirtDetailService {
     }
 
     // Lấy tất cả các category
-    public Iterable<Category> getAllCategorys() {
+    public Iterable<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
@@ -281,6 +282,7 @@ public class ShirtDetailService {
         return shirtRepository.findAll();
     }
 
+
     public List<HomePageResponse> getTop5ShirtDetail() {
         List<Object[]> results = shirtDetailRepository.getTop5ShirtDetail();
 
@@ -307,6 +309,58 @@ public class ShirtDetailService {
                 (String) result[4],
                 (BigDecimal) result[5]
         )).collect(Collectors.toList());
+    }
+
+    public List<HomePageResponse> getAllShirtDetailByCategoryCode(String code){
+
+        List<Object[]> results = shirtDetailRepository.getAllShirtByCategoryCode(code);
+
+        return results.stream().map(result -> new HomePageResponse(
+                (String) result[0],
+                (String) result[1],
+                (String) result[2],
+                (String) result[3],
+                (String) result[4],
+                (BigDecimal) result[5]
+        )).collect(Collectors.toList());
+    }
+
+    public List<HomePageResponse> getAllShirtDetailByFiller(BigDecimal min, BigDecimal max, String color, String brand, String size, Integer category){
+
+        List<Object[]> results = shirtDetailRepository.getAllShirtByFiller(min,max,color,brand,size,category);
+
+        return results.stream().map(result -> new HomePageResponse(
+                (String) result[0],
+                (String) result[1],
+                (String) result[2],
+                (String) result[3],
+                (String) result[4],
+                (BigDecimal) result[5]
+        )).collect(Collectors.toList());
+    }
+
+    public List<HomePageResponse> getAllShirtDetailByColor(String code){
+
+        List<Object[]> results = shirtDetailRepository.getAllShirtByColor(code);
+
+        return results.stream().map(result -> new HomePageResponse(
+                (String) result[0],
+                (String) result[1],
+                (String) result[2],
+                (String) result[3],
+                (String) result[4],
+                (BigDecimal) result[5]
+        )).collect(Collectors.toList());
+    }
+
+    public Integer countAllByCategoryCode(String code){
+        Integer total = shirtDetailRepository.countAllByCategoryCode(code);
+        return total;
+    }
+
+    public Integer countAll(){
+        Integer total = shirtDetailRepository.countAll();
+        return total;
     }
 }
 

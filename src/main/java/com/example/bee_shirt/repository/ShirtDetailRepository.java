@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Integer> {
@@ -106,7 +107,7 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
     List<Object[]> getTop5ShirtDetail();
 
     @Query(value = """
-                                    SELECT
+                                    SELECT 
                                       sd.image AS image,
                                       s.name_shirt AS nameShirt,
                                       b.name_brand AS nameBrand,
@@ -115,14 +116,100 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
                           			sd.price
                                       FROM shirt_detail sd
                                       LEFT JOIN shirt s ON sd.shirt_id = s.id AND s.status_shirt = 1
-                          			LEFT JOIN bill_detail bd ON bd.shirt_detail_id = sd.id
-                          			LEFT JOIN bill bl ON bd.bill_id = bl.id
                                       LEFT JOIN brand b ON s.brand_id = b.id
                                       LEFT JOIN size sz ON sd.size_id = sz.id
                           			LEFT JOIN color cl ON sd.color_id = cl.id
                           			WHERE sd.status_shirt_detail = 1    """, nativeQuery = true)
     List<Object[]> getAllShirt();
 
+    @Query(value = """
+                SELECT 
+                sd.image AS image,
+                s.name_shirt AS nameShirt,
+                b.name_brand AS nameBrand,
+                sz.name_size AS nameSize,
+                cl.name_color AS nameColor,
+                sd.price
+                FROM shirt_detail sd
+                LEFT JOIN shirt s ON sd.shirt_id = s.id AND s.status_shirt = 1
+                LEFT JOIN category c ON s.category_id = c.id AND c.status_category = 1
+                LEFT JOIN brand b ON s.brand_id = b.id
+                LEFT JOIN size sz ON sd.size_id = sz.id
+                LEFT JOIN color cl ON sd.color_id = cl.id
+                WHERE sd.status_shirt_detail = 1 AND c.code_category like :code                                                                                                                                                                         
+""", nativeQuery = true)
+    List<Object[]> getAllShirtByCategoryCode(@Param("code") String code);
 
+    @Query(value = """
+                SELECT 
+                sd.image AS image,
+                s.name_shirt AS nameShirt,
+                b.name_brand AS nameBrand,
+                sz.name_size AS nameSize,
+                cl.name_color AS nameColor,
+                sd.price
+                FROM shirt_detail sd
+                LEFT JOIN shirt s ON sd.shirt_id = s.id AND s.status_shirt = 1
+                LEFT JOIN category c ON s.category_id = c.id AND c.status_category = 1
+                LEFT JOIN brand b ON s.brand_id = b.id
+                LEFT JOIN size sz ON sd.size_id = sz.id
+                LEFT JOIN color cl ON sd.color_id = cl.id
+                WHERE sd.status_shirt_detail = 1 AND cl.code_color like :code                                                                                                                                                                         
+""", nativeQuery = true)
+    List<Object[]> getAllShirtByColor(@Param("code") String code);
+
+    @Query(value = """
+                SELECT 
+                COUNT(*)
+                FROM shirt_detail sd
+                LEFT JOIN shirt s ON sd.shirt_id = s.id AND s.status_shirt = 1
+                LEFT JOIN brand b ON s.brand_id = b.id
+                LEFT JOIN size sz ON sd.size_id = sz.id
+                LEFT JOIN color cl ON sd.color_id = cl.id
+                WHERE sd.status_shirt_detail = 1                                                                                                                                                                         
+""", nativeQuery = true)
+    Integer countAll();
+
+    @Query(value = """
+                SELECT 
+                COUNT(*)
+                FROM shirt_detail sd
+                LEFT JOIN shirt s ON sd.shirt_id = s.id AND s.status_shirt = 1
+                LEFT JOIN category c ON s.category_id = c.id AND c.status_category = 1
+                LEFT JOIN brand b ON s.brand_id = b.id
+                LEFT JOIN size sz ON sd.size_id = sz.id
+                LEFT JOIN color cl ON sd.color_id = cl.id
+                WHERE sd.status_shirt_detail = 1 AND c.code_category like :code                                                                                                                                                                         
+""", nativeQuery = true)
+    Integer countAllByCategoryCode(@Param("code") String code);
+
+
+    @Query(value = """
+                SELECT 
+                sd.image AS image,
+                s.name_shirt AS nameShirt,
+                b.name_brand AS nameBrand,
+                sz.name_size AS nameSize,
+                cl.name_color AS nameColor,
+                sd.price
+                FROM shirt_detail sd
+                LEFT JOIN shirt s ON sd.shirt_id = s.id AND s.status_shirt = 1
+                LEFT JOIN category c ON s.category_id = c.id AND c.status_category = 1
+                LEFT JOIN brand b ON s.brand_id = b.id
+                LEFT JOIN size sz ON sd.size_id = sz.id
+                LEFT JOIN color cl ON sd.color_id = cl.id
+                WHERE sd.status_shirt_detail = 1 AND (
+            (:min IS NULL AND :max IS NULL OR sd.price BETWEEN :min AND :max)
+            AND (:codeColor IS NULL OR cl.code_color LIKE :codeColor)
+            AND (:codeBrand IS NULL OR b.code_brand LIKE :codeBrand)
+            AND (:codeSize IS NULL OR sz.code_size LIKE :codeSize)
+            AND (:category IS NULL OR s.category_id LIKE :category)
+            )""", nativeQuery = true)
+    List<Object[]> getAllShirtByFiller(@Param("min") BigDecimal min,
+                                      @Param("max") BigDecimal max,
+                                      @Param("codeColor") String color,
+                                      @Param("codeBrand") String brand,
+                                      @Param("codeSize") String size,
+                                      @Param("category") Integer category );
 
 }
