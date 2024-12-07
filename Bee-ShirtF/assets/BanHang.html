@@ -419,7 +419,7 @@
             </ul>
             <div class="ms-md-auto py-2 py-md-0">
               <!-- <a href="#" class="btn btn-label-info btn-round me-2">Quản Lý</a> -->
-              <a class="btn btn-primary btn-round" onclick="creatBill()">Thêm Hóa Đơn</a>
+              <a class="btn btn-primary" onclick="creatBill()">Thêm Hóa Đơn</a>
             </div>
           </div>
           <!-- endheader bán hàng -->
@@ -510,6 +510,23 @@
                   </div>
                 </div>
 
+                <h2>Giỏ hàng</h2>
+                <div class="table-container">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Mã hóa đơn</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Số lượng</th>
+                        <th>Giá</th>
+                        <th>Tổng</th>
+                        <th>Hành động</th>
+                      </tr>
+                    </thead>
+                    <tbody id="billDetailsTableBody"></tbody>
+                  </table>
+                </div>
 
                 <div class="row">
                   <div class="container">
@@ -535,21 +552,6 @@
                 </div>
                 <!-- Repeat for other menu items -->
 
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Mã hóa đơn</th>
-                      <th>Tên sản phẩm</th>
-                      <th>Số lượng</th>
-                      <th>Giá</th>
-                      <th>Tổng</th>
-
-                      <th>Hành động</th>
-                    </tr>
-                  </thead>
-                  <tbody id="billDetailsTableBody"></tbody>
-                </table>
 
               </div>
               <div class="modal" id="myModal">
@@ -659,10 +661,6 @@
               <!-- Invoice Section -->
               <div class="col-lg-12">
                 <h3>Hóa Đơn</h3>
-                <button type="button" class="btn btn-danger btn-sm" onclick="cancel()">
-                  <i class="fas fa-times"></i>
-                  Hủy đơn
-                </button>
                 <ul class="list-group mb-3" id="product-list">
                   <!-- Sản phẩm sẽ được thêm vào đây -->
                 </ul>
@@ -712,6 +710,10 @@
                     <button type="button" class="btn btn-primary" id="confirmButton" onclick="checkoutConfirm()"
                       disabled>Xác
                       nhận</button>
+                    <button type="button" class="btn btn-danger" onclick="cancel()">
+                      <i class="fas fa-times"></i>
+                      Hủy đơn
+                    </button>
                     <!-- <button class="btn btn-primary w-100" onclick="openModal3()">Place An Order</button> -->
                   </div>
                 </div>
@@ -920,6 +922,41 @@
       opacity: 1;
       transform: translateY(0);
     }
+
+    .table-container {
+      max-height: 400px;
+      /* Chiều cao cố định của bảng */
+      overflow-y: auto;
+      /* Hiển thị thanh cuộn dọc khi cần */
+    }
+
+    .table-container table {
+      width: 100%;
+      /* Đảm bảo bảng chiếm đủ chiều rộng */
+      border-collapse: collapse;
+    }
+
+    .table-container thead {
+      position: sticky;
+      /* Giữ cố định phần header */
+      top: 0;
+      /* Cố định ở đầu */
+      background-color: #f8f9fa;
+      /* Màu nền để phần header dễ nhìn */
+      z-index: 1;
+      /* Đảm bảo header luôn nổi trên nội dung */
+    }
+
+    .table-container th,
+    .table-container td {
+      padding: 8px;
+      text-align: left;
+      border: 1px solid #dee2e6;
+    }
+
+    .table-container th {
+      font-weight: bold;
+    }
   </style>
 
   <style>
@@ -1027,10 +1064,10 @@
     async function fetchBillDetails(codeBill) {
 
       try {
-          const response = await fetch(`http://localhost:8080/point-of-sale/get-bill-detail?codeBill=${codeBill}`, {
-            method: 'GET',
-            headers: headers // Thêm headers vào yêu cầu
-          });
+        const response = await fetch(`http://localhost:8080/point-of-sale/get-bill-detail?codeBill=${codeBill}`, {
+          method: 'GET',
+          headers: headers // Thêm headers vào yêu cầu
+        });
 
         const responseBill = await fetch(`http://localhost:8080/point-of-sale/get-bill?codeBill=${codeBill}`, {
           method: 'GET',
