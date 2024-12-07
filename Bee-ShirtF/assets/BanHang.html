@@ -20,7 +20,7 @@
   <!-- Application Script -->
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
-  
+
 
   <script src="/assets/js/staff.js"></script>
 
@@ -443,55 +443,58 @@
                 </form>
                 <div class="d-flex align-items-center" ng-app="staffApp" ng-controller="StaffController">
                   <!-- Nút kích hoạt Modal -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
-                      Đăng ký nhanh
-                    </button>
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
+                    Đăng ký nhanh
+                  </button>
 
-                    <!-- Modal -->
-                    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="registerModalLabel">Đăng ký nhanh</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body">
-                            <form ng-submit="register()">
-                              <div class="mb-3">
-                                <label for="firstName" class="form-label">Họ:</label>
-                                <input type="text" class="form-control" id="firstName" ng-model="user.firstName" required />
-                              </div>
-                              <div class="mb-3">
-                                <label for="lastName" class="form-label">Tên:</label>
-                                <input type="text" class="form-control" id="lastName" ng-model="user.lastName" required />
-                              </div>
-                              <div class="mb-3">
-                                <label for="address" class="form-label">Địa chỉ:</label>
-                                <input type="text" class="form-control" id="address" ng-model="user.address" required />
-                              </div>
-                              <div class="mb-3">
-                                <label for="email" class="form-label">Email:</label>
-                                <input type="email" class="form-control" id="email" ng-model="user.email" required />
-                              </div>
-                              <div class="mb-3">
-                                <label for="phone" class="form-label">Số điện thoại:</label>
-                                <input type="tel" class="form-control" id="phone" ng-model="user.phone" required />
-                              </div>
-                              <button type="submit" class="btn btn-success w-100" ng-disabled="isLoading">
-                                {{ isLoading ? "Đang xử lý..." : "Đăng ký" }}
-                              </button>
-                            </form>
-                          </div>
-                          <div class="modal-footer">
-                            <p class="text-success" ng-if="successMessage">{{ successMessage }}</p>
-                            <p class="text-danger" ng-if="errorMessage">{{ errorMessage }}</p>
-                            <button type="button" ng-click="cancelCreateAccount()" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                          </div>
+                  <!-- Modal -->
+                  <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="registerModalLabel">Đăng ký nhanh</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <form ng-submit="register()">
+                            <div class="mb-3">
+                              <label for="firstName" class="form-label">Họ:</label>
+                              <input type="text" class="form-control" id="firstName" ng-model="user.firstName"
+                                required />
+                            </div>
+                            <div class="mb-3">
+                              <label for="lastName" class="form-label">Tên:</label>
+                              <input type="text" class="form-control" id="lastName" ng-model="user.lastName" required />
+                            </div>
+                            <div class="mb-3">
+                              <label for="address" class="form-label">Địa chỉ:</label>
+                              <input type="text" class="form-control" id="address" ng-model="user.address" required />
+                            </div>
+                            <div class="mb-3">
+                              <label for="email" class="form-label">Email:</label>
+                              <input type="email" class="form-control" id="email" ng-model="user.email" required />
+                            </div>
+                            <div class="mb-3">
+                              <label for="phone" class="form-label">Số điện thoại:</label>
+                              <input type="tel" class="form-control" id="phone" ng-model="user.phone" required />
+                            </div>
+                            <button type="submit" class="btn btn-success w-100" ng-disabled="isLoading">
+                              {{ isLoading ? "Đang xử lý..." : "Đăng ký" }}
+                            </button>
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                          <p class="text-success" ng-if="successMessage">{{ successMessage }}</p>
+                          <p class="text-danger" ng-if="errorMessage">{{ errorMessage }}</p>
+                          <button type="button" ng-click="cancelCreateAccount()" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Đóng</button>
                         </div>
                       </div>
                     </div>
+                  </div>
 
-                                    
+
                 </div>
 
 
@@ -676,8 +679,8 @@
                       <div id="voucherFeedback" style="display: none; color: red;"></div>
                     </div>
                     <div>
-                      <label for="voucherSelect"  class="form-label">Voucher khả dụng:</label>
-                      <select id="voucherSelect"  class="form-select" disabled>
+                      <label for="voucherSelect" class="form-label">Voucher khả dụng:</label>
+                      <select id="voucherSelect" class="form-select" disabled>
                         <!-- Các option sẽ được thêm động -->
                       </select>
                     </div>
@@ -707,7 +710,6 @@
                       <input type="text" id="changeMoney" class="form-control" readonly>
                     </div>
                     <button type="button" class="btn btn-primary" id="confirmButton" onclick="checkoutConfirm()"
-
                       disabled>Xác
                       nhận</button>
                     <!-- <button class="btn btn-primary w-100" onclick="openModal3()">Place An Order</button> -->
@@ -1025,10 +1027,10 @@
     async function fetchBillDetails(codeBill) {
 
       try {
-        const response = await fetch(`http://localhost:8080/point-of-sale/get-bill-detail?codeBill=${codeBill}`, {
-          method: 'GET',
-          headers: headers // Thêm headers vào yêu cầu
-        });
+          const response = await fetch(`http://localhost:8080/point-of-sale/get-bill-detail?codeBill=${codeBill}`, {
+            method: 'GET',
+            headers: headers // Thêm headers vào yêu cầu
+          });
 
         const responseBill = await fetch(`http://localhost:8080/point-of-sale/get-bill?codeBill=${codeBill}`, {
           method: 'GET',
@@ -1788,7 +1790,6 @@
         if (!voucherResponse.ok) {
           throw new Error("Mã voucher không hợp lệ hoặc không tồn tại!");
         }
-
         const voucherResponseClone = voucherResponse.clone();
 
         const voucherData = await voucherResponse.text();
@@ -1829,10 +1830,16 @@
         noVoucher = false;
         // Tính toán giảm giá
         let discount = 0;
-        if (voucher.type_voucher === "Percent") {
-          discount = Math.min(totalMoney * (voucher.discount_value / 100), voucher.maximum_discount);
-        } else if (voucher.type_voucher === "Amount") {
-          discount = Math.min(voucher.discount_value, voucher.maximum_discount);
+        // if (voucher.type_voucher === "Percent") {
+        //   discount = Math.min(totalMoney * (voucher.discount_value / 100), voucher.maximum_discount);
+        // } else if (voucher.type_voucher === "Amount") {
+        //   discount = Math.min(voucher.discount_value, voucher.maximum_discount);
+        // }
+
+        if (voucher.typeVoucher === "Percent") {
+          discount = Math.min(totalMoney * (voucher.discountValue / 100), voucher.maximumDiscount);
+        } else if (voucher.typeVoucher === "Amount") {
+          discount = Math.min(voucher.discountValue, voucher.maximumDiscount);
         }
 
         // Cập nhật tổng tiền
@@ -2168,6 +2175,7 @@
         .then((data) => {
           if (data && data.result) {
             const profile = data.result;
+            console.log(profile)
 
             // Cập nhật avatar và tên trên thanh điều hướng
             const avatarImg = document.querySelector(".avatar-sm img");
