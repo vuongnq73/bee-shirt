@@ -19,7 +19,6 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
     @Query("SELECT b FROM Bill b WHERE b.statusBill = 0")
     List<Bill> findPendingBill();
 
-
     @Transactional
     @Modifying
     @Query("UPDATE Bill b SET b.statusBill = 10 WHERE b.createAt < CURRENT_DATE AND b.statusBill = 0")
