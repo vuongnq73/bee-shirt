@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="homePageApp">
+<html lang="en" ng-app="productApp">
   <head>
     <title>Product</title>
     <meta charset="UTF-8" />
@@ -81,7 +81,7 @@
     <!-- Tải Angular Route -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
 
-    <script src="/cozastore-master/js/homepage.js"></script>
+    <script src="/cozastore-master/js/product.js"></script>
 
     <style>
       .active {
@@ -90,7 +90,7 @@
       }
     </style>
   </head>
-  <body class="animsition" ng-controller="HomePageController">
+  <body class="animsition" ng-controller="ProductController">
     <!-- Header -->
     <header class="header-v4">
       <!-- Header desktop -->
@@ -102,35 +102,35 @@
               Free shipping for standard order over $100
             </div>
 
-			<div class="right-top-bar flex-w h-full">
-				<!-- Nếu người dùng chưa đăng nhập -->
-				<a
-				  href="/assets/account/login.html"
-				  class="flex-c-m trans-04 p-lr-25"
-				  ng-if="!myProfile"
-				>
-				  Tài Khoản
-				</a>
-  
-				<!-- Nếu người dùng đã đăng nhập -->
-				<a
-				  href="/assets/staff/Profile.html"
-				  class="flex-c-m trans-04 p-lr-25"
-				  ng-if="myProfile"
-				>
-				  Tài Khoản
-				</a>
-  
-				<!-- Nếu người dùng đã đăng nhập, hiển thị nút Đăng Xuất -->
-				<a
-				  href="#"
-				  class="flex-c-m trans-04 p-lr-25"
-				  ng-if="myProfile"
-				  ng-click="logout()"
-				>
-				  Đăng Xuất
-				</a>
-			  </div>
+            <div class="right-top-bar flex-w h-full">
+              <!-- Nếu người dùng chưa đăng nhập -->
+              <a
+                href="/assets/account/login.html"
+                class="flex-c-m trans-04 p-lr-25"
+                ng-if="!myProfile"
+              >
+                Tài Khoản
+              </a>
+
+              <!-- Nếu người dùng đã đăng nhập -->
+              <a
+                href="/assets/staff/Profile.html"
+                class="flex-c-m trans-04 p-lr-25"
+                ng-if="myProfile"
+              >
+                Tài Khoản
+              </a>
+
+              <!-- Nếu người dùng đã đăng nhập, hiển thị nút Đăng Xuất -->
+              <a
+                href="#"
+                class="flex-c-m trans-04 p-lr-25"
+                ng-if="myProfile"
+                ng-click="logout()"
+              >
+                Đăng Xuất
+              </a>
+            </div>
           </div>
         </div>
 
@@ -641,7 +641,7 @@
             <!-- Block2 -->
             <div class="block2">
               <div class="block2-pic hov-img0">
-                <img src="images/product-02.jpg" alt="{{ shirt.nameShirt }}" />
+                <img src="{{ shirt.nameImage }}" alt="{{ shirt.nameShirt }}" />
                 <a
                   href="/cozastore-master/product-detail.html"
                   class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"
@@ -685,14 +685,20 @@
           </div>
         </div>
 
-        <!-- Load more -->
-        <div class="flex-c-m flex-w w-full p-t-45">
+        <!-- Load More -->
+        <div class="flex-c-m flex-w w-full p-t-45" ng-if="canLoadMore">
           <a
-            href="/cozastore-master/product.html"
+            href="#"
+            ng-click="loadMore()"
             class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04"
           >
             Xem Thêm
           </a>
+        </div>
+
+        <!-- Hiển thị tổng số sản phẩm -->
+        <div class="text-center">
+          <p>{{shirtDetails.length}} / {{totalProducts}} sản phẩm</p>
         </div>
       </div>
     </section>

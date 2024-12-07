@@ -46,10 +46,26 @@ public class HomePageController {
                                                                    @RequestParam(required = false) String color,
                                                                    @RequestParam(required = false) String brand,
                                                                    @RequestParam(required = false) String size,
-                                                                   @RequestParam(required = false) Integer category){
+                                                                   @RequestParam(required = false) Integer category,
+                                                                   @RequestParam(required = false) int offset,
+                                                                   @RequestParam(required = false) int limit){
+
         return ApiResponse.<List<HomePageResponse>>builder()
                 .code(1000)
-                .result(shirtDetailService.getAllShirtDetailByFiller(min,max,color,brand,size,category))
+                .result(shirtDetailService.getAllShirtDetailByFiller(min,max,color,brand,size,category,offset,limit))
+                .build();
+    }
+
+    @GetMapping("/countall")
+    public ApiResponse<Integer> getAllShirtByColor(@RequestParam(required = false) BigDecimal min,
+                                                   @RequestParam(required = false) BigDecimal max,
+                                                   @RequestParam(required = false) String color,
+                                                   @RequestParam(required = false) String brand,
+                                                   @RequestParam(required = false) String size,
+                                                   @RequestParam(required = false) Integer category){
+        return ApiResponse.<Integer>builder()
+                .code(1000)
+                .result(shirtDetailService.countAll(min,max,color,brand,size,category))
                 .build();
     }
 
@@ -102,14 +118,6 @@ public class HomePageController {
                 .result(shirtDetailService.getAllShirtDetailByCategoryCode(code))
                 .build();
     }
-
-    @GetMapping("/countAll")
-    public ResponseEntity<?> countAllShirts() {
-        int totalCount = shirtDetailService.countAll();
-        return ResponseEntity.ok(new ApiResponse(1000, "Success", totalCount));
-    }
-
-
 
 
 }

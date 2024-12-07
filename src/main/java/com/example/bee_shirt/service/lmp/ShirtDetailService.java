@@ -325,9 +325,9 @@ public class ShirtDetailService {
         )).collect(Collectors.toList());
     }
 
-    public List<HomePageResponse> getAllShirtDetailByFiller(BigDecimal min, BigDecimal max, String color, String brand, String size, Integer category){
+    public List<HomePageResponse> getAllShirtDetailByFiller(BigDecimal min, BigDecimal max, String color, String brand, String size, Integer category, int offset, int limit){
 
-        List<Object[]> results = shirtDetailRepository.getAllShirtByFiller(min,max,color,brand,size,category);
+        List<Object[]> results = shirtDetailRepository.getAllShirtByFiller(min,max,color,brand,size,category, offset, limit);
 
         return results.stream().map(result -> new HomePageResponse(
                 (String) result[0],
@@ -353,13 +353,8 @@ public class ShirtDetailService {
         )).collect(Collectors.toList());
     }
 
-    public Integer countAllByCategoryCode(String code){
-        Integer total = shirtDetailRepository.countAllByCategoryCode(code);
-        return total;
-    }
-
-    public Integer countAll(){
-        Integer total = shirtDetailRepository.countAll();
+    public Integer countAll(BigDecimal min, BigDecimal max, String color, String brand, String size, Integer category){
+        Integer total = shirtDetailRepository.getTotalShirtCount(min, max, color, brand, size, category);
         return total;
     }
 }
