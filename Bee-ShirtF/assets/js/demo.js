@@ -283,7 +283,7 @@ fetch("http://localhost:8080/statics/InStoreAndOnline", {
 	  // Tổng số đơn hàng
 	  const totalOrders = totalOrderInStore + totalOrderOnline;
   
-	  // Chuyển đổi dữ liệu thành phần trăm
+	  // Dữ liệu phần trăm cho biểu đồ
 	  const seriesData = [
 		((totalOrderInStore / totalOrders) * 100).toFixed(2),
 		((totalOrderOnline / totalOrders) * 100).toFixed(2)
@@ -294,8 +294,8 @@ fetch("http://localhost:8080/statics/InStoreAndOnline", {
 		series: seriesData
 	  }, {
 		plugins: [
-		  Chartist.plugins.tooltip() // Hiển thị thông tin chi tiết khi hover
-		]
+					Chartist.plugins.tooltip() // Hiển thị thông tin chi tiết khi hover
+				  ]
 	  });
   
 	  // Tạo phần chú thích bên ngoài biểu đồ
@@ -307,11 +307,12 @@ fetch("http://localhost:8080/statics/InStoreAndOnline", {
 		var legendHTML = '';
 		var labels = ['Đơn tại quầy', 'Đơn Online']; // Nhãn tương ứng
 		var colors = ['#f3545d', '#fdaf4b']; // Màu sắc tương ứng
+		var orderCounts = [totalOrderInStore, totalOrderOnline]; // Số đơn hàng tương ứng
   
 		// Tạo các mục legend cho từng nhãn
 		for (var i = 0; i < labels.length; i++) {
 		  legendHTML += '<li><span style="background-color: ' + colors[i] + '"></span>'
-					  + labels[i] + ': ' + seriesData[i] + '%</li>';
+					  + labels[i] + ': ' + orderCounts[i] + ' đơn</li>';
 		}
   
 		// Chèn legend vào trang
@@ -321,5 +322,4 @@ fetch("http://localhost:8080/statics/InStoreAndOnline", {
 	.catch(error => {
 	  console.error("Error fetching data:", error);
 	});
-  
   

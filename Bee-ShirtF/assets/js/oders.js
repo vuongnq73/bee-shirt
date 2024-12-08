@@ -476,82 +476,8 @@ const options = {
   }
 };
 
-// Tạo biểu đồ ban đầu
-const ctx = document.getElementById('stackedColumnChart').getContext('2d');
-const chart = new Chart(ctx, {
-  type: 'bar', // Biểu đồ cột
-  data: data,
-  options: options
-});
-
-// Gọi API và cập nhật dữ liệu vào biểu đồ
-// Gọi API và cập nhật dữ liệu vào biểu đồ tròn
-fetch("http://localhost:8080/statics/InStoreAndOnline", {
-  method: "GET",
-  headers: {
-    Authorization: "Bearer " + token // Sử dụng token từ sessionStorage
-  }
-})
-  .then(response => response.json())
-  .then(dataFromAPI => {
-    // Kiểm tra dữ liệu trả về
-    console.log("Dữ liệu từ API:", dataFromAPI);
-
-    // Lấy giá trị từ API
-    const totalOrderInStore = dataFromAPI[0]?.totalOrderInStore || 0;
-    const totalOrderOnline = dataFromAPI[0]?.totalOrderOnline || 0;
-
-    // Tổng số đơn hàng
-    const totalOrders = totalOrderInStore + totalOrderOnline;
-
-    // Dữ liệu phần trăm cho biểu đồ
-    const seriesData = [
-      ((totalOrderInStore / totalOrders) * 100).toFixed(2),
-      ((totalOrderOnline / totalOrders) * 100).toFixed(2)
-    ];
-
-    // Tạo biểu đồ tròn
-    var pieChart = new Chartist.Pie('#monthlyChart', {
-      series: seriesData
-    }, {
-      plugins: [
-        Chartist.plugins.tooltip({
-          transformTooltipTextFnc: function(value, labelIndex) {
-            return seriesData[labelIndex] + '%'; // Hiển thị % khi hover
-          }
-        })
-      ]
-    });
-
-    // Tạo phần chú thích bên ngoài biểu đồ
-    pieChart.on('created', function() {
-      // Lấy phần tử chứa legend
-      var myLegendContainer = document.getElementById("pieChartLegend");
-
-      // Tạo HTML cho legend (chú thích) thủ công
-      var legendHTML = '';
-      var labels = ['Đơn tại quầy', 'Đơn Online']; // Nhãn tương ứng
-      var colors = ['#f3545d', '#fdaf4b']; // Màu sắc tương ứng
-      var orderCounts = [totalOrderInStore, totalOrderOnline]; // Số đơn hàng tương ứng
-
-      // Tạo các mục legend cho từng nhãn
-      for (var i = 0; i < labels.length; i++) {
-        legendHTML += '<li><span style="background-color: ' + colors[i] + '"></span>'
-                    + labels[i] + ': ' + orderCounts[i] + ' đơn</li>';
-      }
-
-      // Chèn legend vào trang
-      myLegendContainer.innerHTML = legendHTML;
-    });
-  })
-  .catch(error => {
-    console.error("Error fetching data:", error);
-  });
-
-
-
-///
-    // Hàm xem profile
+  //  Hàm xem profile
+   
     $scope.viewProfile = function () {
       const token = sessionStorage.getItem("jwtToken");
 
