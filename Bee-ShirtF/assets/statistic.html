@@ -55,7 +55,7 @@
     #monthlyChart {
       width: 100%;
       /* Chiếm toàn bộ chiều rộng của phần tử chứa */
-      height: 395px;
+      height: 150px;
       /* Bạn có thể điều chỉnh chiều cao tùy ý */
       margin: 0 auto;
       /* Căn giữa biểu đồ */
@@ -381,10 +381,10 @@
           </div>
 
 
-          <div class="row">
-            <div class="col-md-8">
-              <div class="card card-round">
-                <div class="card-header">
+          <div class="row" >
+            <div class="col-md-8" >
+              <div class="card card-round" >
+                <div class="card-header" >
                   <div class="card-head-row">
                     <div class="card-title">Thống kê</div>
                     <div class="card-tools d-flex justify-content-between">
@@ -429,18 +429,18 @@
               </div>
             </div>
             <div class="col-md-4">
-              <div class="card  card-round" style="height: 320px;background-color: lightblue; border-color: lightblue;">
+              <div class="card card-linght card-round" style="height: 525px;">
                 <div class="card-header">
                   <div class="card-head-row">
                     <div class="card-title">Doanh thu theo ngày</div>
-                    <div class="card-tools">
-                      <button class="btn btn-sm btn-label-light" type="button">
+                    <div class="" style="margin-right: 5px;margin-left: 5px;">
+                      <button class="btn btn-sm btn-label-info" type="button">
                         Export
                       </button>
                     </div>
-                    <div class="card-tools">
+                    <div class="">
                       <div class="dropdown">
-                        <button class="btn btn-sm btn-label-light dropdown-toggle" type="button" id="dropdownMenuButton"
+                        <button class="btn btn-sm btn-label-info dropdown-toggle" type="button" id="dropdownMenuButton"
                           data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           <span class="btn-label">
                             <i class="fa fa-filter"></i>
@@ -462,22 +462,30 @@
                   </div>
                 </div>
                 <div class="card-body pb-0">
-                  <p>Tổng Doanh Thu</p>
-                    <h6>{{ formatCurrency(totalAllMoney) }}</h6>
-                  <p>Doanh Thu Bán Hàng Tại Quầy</p>
-                    <h6>{{ formatCurrency(totalInstoreMoney) }}</h6>
-                  <p>Doanh Thu Bán Hàng Online</p>
-                    <h6>{{ formatCurrency(totalOnlineMoney) }}</h6>
+                  <p>Tổng Doanh Thu : {{ formatCurrency(totalAllMoney) }}</p>
+                  <hr>
+                  <p>Doanh Thu Bán Hàng Tại Quầy : {{ formatCurrency(totalInstoreMoney) }}</p>
+                  <hr>
+                  <p>Doanh Thu Bán Hàng Online : {{ formatCurrency(totalOnlineMoney) }}</p>
+                  <hr>
+                 
+                  <h4 class="card-title">Biểu đồ hóa đơn</h4>
+                  <p class="card-category">
+                    Tỉ lệ các đơn mua hàng </p>
+
+
+                  <div id="monthlyChart" class="Chartist chart-pie"></div>
+                  <br>
+                  <ul id="pieChartLegend" class="chart-legend"></ul>
+
                 </div>
               </div>
-
-
 
             </div>
           </div>
 
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
               <div class="card card-round">
                   <div class="card-header">
                       <div class="card-head-row card-tools-still-right">
@@ -527,16 +535,7 @@
           
             <div class="col-md-4">
               <div class="card card-round">
-                <div class="card-body pb-0">
-                  <h4 class="card-title">Biểu đồ thanh toán</h4>
-                  <p class="card-category">
-                    Tỉ lệ các hình thức thanh toán trong tháng</p>
-
-
-                  <div id="monthlyChart" class="Chartist chart-pie"></div>
-                  <ul id="pieChartLegend" class="chart-legend"></ul>
-
-                </div>
+                
               </div>
             </div>
 
