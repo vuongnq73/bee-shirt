@@ -58,7 +58,8 @@ public interface BillDetailrepo extends JpaRepository<BillDetail, Integer> {
         bl.total_money AS totalMoney,
         bl.type_bill AS TypeBill,
         bl.note AS note,
-        bl.status_bill as StatusBill
+        bl.status_bill as StatusBill,
+        bl.money_reduce AS moneyReduce 
     FROM bill_detail bd 
     JOIN bill bl ON bd.bill_id = bl.id 
     JOIN shirt_detail sd ON bd.shirt_detail_id = sd.id 

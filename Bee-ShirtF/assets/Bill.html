@@ -14,7 +14,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 
   <style>
-       #basic-datatables {
+    #basic-datatables {
       width: 100% !important;
       /* Ghi đè bất kỳ giá trị nào từ thư viện */
     }
@@ -28,7 +28,6 @@
       width: 100% !important;
       /* Ghi đè bất kỳ giá trị nào từ thư viện */
     }
-
   </style>
 
   <!-- Fonts and icons -->
@@ -67,7 +66,7 @@
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
           <a href="/assets/BanHang.html" class="logo">
-            <img src="img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="40" />
+            <img src="/assets/img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="40" />
           </a>
           <div class="nav-toggle">
             <button class="btn btn-toggle toggle-sidebar">
@@ -129,7 +128,7 @@
                       <span class="sub-item">Danh Sách Sản Phẩm</span>
                     </a>
                   </li>
-                  
+
                   <li>
                     <a href="ProductDetail.html">
                       <span class="sub-item">Danh Sách Sản Phẩm Chi Tiết</span>
@@ -140,7 +139,7 @@
                       <span class="sub-item">Danh Sách Thuộc Tính<span>
                     </a>
                   </li>
-                 
+
                 </ul>
               </div>
             </li>
@@ -448,7 +447,7 @@
         </div>
       </div>
 
-   
+
     </div>
 
     <!-- Custom template | don't include it in your project! -->
@@ -546,13 +545,13 @@
           const options = { year: "numeric", month: "2-digit", day: "2-digit" };
           return new Date(date).toLocaleDateString("vi-VN", options);
         };
-    
+
         // Hàm khởi tạo DataTable
         $scope.initializeDataTable = function (tableId, orders) {
           if ($.fn.DataTable.isDataTable(tableId)) {
             $(tableId).DataTable().destroy();
           }
-    
+
           $(tableId).DataTable({
             paging: true,
             searching: true,
@@ -590,11 +589,11 @@
                   const statusText = status === 6
                     ? "Đã Hoàn Tất"
                     : status === 1
-                    ? "Chờ Xử Lý"
-                    : status === 7
-                    ? "Đã Hủy"
-                    : "Không Xác Định";
-    
+                      ? "Chờ Xử Lý"
+                      : status === 7
+                        ? "Đã Hủy"
+                        : "Không Xác Định";
+
                   alert(`Bạn đã nhấn vào hóa đơn ${codeBill} với trạng thái ${statusText}`);
                 });
             },
@@ -611,12 +610,12 @@
               },
             },
           });
-    
+
           $(tableId + " tbody").on("click", "tr", function () {
             const rowData = $(tableId).DataTable().row(this).data();
             const codeBill = rowData[1];
             const typeBill = rowData[4];
-    
+
             if (typeBill === "Online") {
               window.location.href = `/assets/BillDetailTimeLine.html?codeBill=${encodeURIComponent(codeBill)}`;
             } else if (typeBill === "In-Store") {
@@ -626,16 +625,16 @@
             }
           });
         };
-    
+
         // Hàm tải dữ liệu cho từng tab
         $scope.loadDataOrder = function (url, tableId) {
           const token = sessionStorage.getItem("jwtToken");
-    
+
           if (!token) {
             alert("Bạn cần đăng nhập để tải dữ liệu.");
             return;
           }
-    
+
           $.ajax({
             type: "GET",
             url: url,
@@ -644,7 +643,7 @@
             },
             success: function (response) {
               console.log(`Phản hồi từ server (${url}):`, response);
-    
+
               const ordersData = Array.isArray(response.result) ? response.result : [];
               if (ordersData.length > 0) {
                 const orders = ordersData.map((order, index) => ({
@@ -659,37 +658,38 @@
                     style: "currency",
                     currency: "VND",
                   }), // Nếu totalMoney là null, hiển thị 0
-                  statusBill: `<button class="btn btn-${order.statusBill === 5 ? "success"
-                    : order.statusBill === 1 ? "primary"
-                      : order.statusBill === 7 ? "info"
-                        : "secondary"} btn-sm status-btn" 
-                      data-code="${order.codeBill}" 
-                      data-status="${order.statusBill}">
-                      ${order.statusBill === 6 ? "Đã Hoàn Tất"
-                        : order.statusBill === 1 ? "Chờ Xử Lý"
-                          : order.statusBill === 7 ? "Đã Hủy"
-                            : "Không Xác Định" }
-                    </button>`,
+                  statusBill: `
+  <span class="status-text text-${order.statusBill === 5 ? "success"
+                      : order.statusBill === 1 ? "primary"
+                        : order.statusBill === 7 ? "danger"
+                          : "primary"}">
+    ${order.statusBill === 6 ? "Hoàn Tất"
+                      : order.statusBill === 1 ? "Chờ Xử Lý"
+                        : order.statusBill === 7 ? "Đã Hủy"
+                          : "Không Xác Định"}
+  </span>
+`,
+
                 }));
-    
+
                 $timeout(() => $scope.initializeDataTable(tableId, orders), 0);
-              } 
+              }
             },
             error: function () {
               alert("Không thể tải dữ liệu hóa đơn. Vui lòng thử lại sau.");
             },
           });
         };
-    
+
         // Hàm lấy thông tin tài khoản
         $scope.getMyProfile = function () {
           const token = sessionStorage.getItem("jwtToken");
-    
+
           if (!token) {
             alert("Bạn cần đăng nhập để xem thông tin cá nhân.");
             return;
           }
-    
+
           $.ajax({
             type: "GET",
             url: "http://localhost:8080/admin/myProfile",
@@ -709,7 +709,7 @@
             },
           });
         };
-    
+
         // Khi tài liệu sẵn sàng
         angular.element(document).ready(function () {
           $scope.getMyProfile();
@@ -718,8 +718,8 @@
           $scope.loadDataOrder("http://localhost:8080/bills/list3", "#basic-datatables3");
         });
       });
-    </script>
-    
+  </script>
+
 </body>
 
 </html>

@@ -65,7 +65,8 @@ public class BillDetailService {
                         (BigDecimal) result[16],                             // totalMoney
                         (String) result[17],                                 // typeBill
                         (String) result[18] ,
-                        (Integer) result[19]
+                        (Integer) result[19],
+                        (BigDecimal) result[20]
 
                         // note
                 ))

@@ -213,7 +213,7 @@ public class PointOfSaleService {
         bill.setTotalMoney(BigDecimal.valueOf(subtotalBeforeDiscount - moneyReduce));
         bill.setCreateDate(LocalDate.now());
         bill.setDesiredDate(LocalDate.now());
-        bill.setStatusBill(1);
+        bill.setStatusBill(6);
         bill.setUpdateAt(LocalDate.now());
         bill.setNote("None");
         if (voucher!=null){

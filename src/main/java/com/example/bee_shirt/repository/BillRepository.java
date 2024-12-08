@@ -212,11 +212,10 @@ List<Object[]> findTotalBillsByType();
 //
 @Query(value = """
     SELECT 
-        COUNT(CASE WHEN b.type_bill = 'In-Store' THEN 1 END) AS totalOrderInStore,
-        COUNT(CASE WHEN b.type_bill = 'Online' THEN 1 END) AS totalOrderOnline
+        SUM(CASE WHEN b.type_bill = 'In-Store' THEN 1 ELSE 0 END) AS totalOrderInStore,
+        SUM(CASE WHEN b.type_bill = 'Online' THEN 1 ELSE 0 END) AS totalOrderOnline
     FROM bill b
-    JOIN bill_detail bd ON bd.bill_id = b.id
-    WHERE b.create_at >= CAST(GETDATE() AS DATE)
+    WHERE CAST(b.create_at AS DATE) = CAST(GETDATE() AS DATE)
 """, nativeQuery = true)
 List<Object[]> getOrderCounts();
 
