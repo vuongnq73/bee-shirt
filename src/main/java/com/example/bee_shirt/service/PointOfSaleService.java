@@ -42,6 +42,11 @@ public class PointOfSaleService {
     }
 
     public List<Bill> getPendingBills() {
+        List<BillDetail> oldBillDetails = billDetailRepository.findOldPendingBillDetails();
+        for (BillDetail obd : oldBillDetails){
+            obd.getShirtDetail().setQuantity(obd.getShirtDetail().getQuantity() + obd.getQuantity());
+            shirtDetailRepository.save(obd.getShirtDetail());
+        }
         billRepository.cancelOldPendingBills();
         return billRepository.findPendingBill();
     }
@@ -176,14 +181,7 @@ public class PointOfSaleService {
     public String checkout(String codeBill, String codeVoucher, String username) {
         Bill bill = billRepository.findBillByCode(codeBill);
         Voucher1 voucher = voucherRepository.findVoucherByCode(codeVoucher).orElse(null);
-        System.out.println(voucher);
         Account account = bill.getCustomer();
-        System.out.println(account);
-        if (account == null) {
-            voucher=null;
-        }
-        System.out.println(voucher);
-
         bill.setVoucher(voucher);
         bill.setCustomer(account);
         bill.setTypeBill("In-Store");
@@ -218,8 +216,10 @@ public class PointOfSaleService {
         bill.setStatusBill(6);
         bill.setUpdateAt(LocalDate.now());
         bill.setNote("None");
-        voucher.setQuantity(voucher.getQuantity()-1);
-        voucherRepository.save(voucher);
+        if (voucher!=null){
+            voucher.setQuantity(voucher.getQuantity()-1);
+            voucherRepository.save(voucher);
+        }
         billRepository.save(bill);
         return "Checkout successfully";
     }
