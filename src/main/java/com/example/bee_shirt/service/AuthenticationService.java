@@ -115,6 +115,7 @@ public class AuthenticationService {
                 //có thể tạo thêm claim custom
                 .claim("user ID", account.getId())
                 .claim("user Code", account.getCode())
+                .claim("Email", account.getEmail())
 //                role của user
                 .claim("scope", buildScope(account))
                 .build();

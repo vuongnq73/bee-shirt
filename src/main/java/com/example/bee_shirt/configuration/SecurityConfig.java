@@ -19,9 +19,9 @@ import org.springframework.security.web.SecurityFilterChain;
 //phân quyền bằng method -> AccountService
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final String[] PUBLIC_ENDPOINTS_POST = {"/auth/login", "/user/register"};
+    private final String[] PUBLIC_ENDPOINTS_POST = {"/auth/login", "/user/register", "/auth/forgot-password", "/auth/reset-password","/auth/reset-password"};
 
-    private final String[] PUBLIC_ENDPOINTS_GET = {"/homepage/bestsaler", "/homepage/category", "/homepage/getallshirt/{code}", "/homepage/getallshirt", "/homepage/getbyprice", "/homepage/getcolors"};
+    private final String[] PUBLIC_ENDPOINTS_PUT = {};
 
     private final String[] ADMIN_GET_ENDPOINTS = {"/admin/accounts", "/admin/roles"};
 

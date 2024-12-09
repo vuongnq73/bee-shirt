@@ -22,6 +22,8 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 
     Optional<Account> findByUsername(String username);
 
+    Optional<Account> findByEmail(String email);
+
     @Query(value = """
             SELECT a FROM Account a WHERE a.deleted = false ORDER BY a.id DESC
             """)
