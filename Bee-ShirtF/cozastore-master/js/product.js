@@ -14,7 +14,7 @@ angular.module("productApp", []).controller("ProductController", [
     $scope.errorMessage = null;
     $scope.loading = true;
     $scope.shirtsPerPage = 8; // Số lượng sản phẩm mỗi lần tải
-    $scope.currentPage = 1; // Trang hiện tại
+    $scope.currentPage = 0; // Trang hiện tại
     $scope.canLoadMore = true; // Điều kiện để hiển thị nút Load More
     $scope.selectedPrice = { min: null, max: null };
     $scope.selectedColor = null;
@@ -31,7 +31,7 @@ angular.module("productApp", []).controller("ProductController", [
             $scope.shirtDetails = response.data.result;
             // Giới hạn chỉ hiển thị 8 sản phẩm
             $scope.filteredShirtList = $scope.shirtDetails.slice(0, 8);
-            
+
             // Gọi API để lấy tổng số sản phẩm
             $http
               .get("http://localhost:8080/homepage/countall")
@@ -44,7 +44,8 @@ angular.module("productApp", []).controller("ProductController", [
               })
               .catch(function (error) {
                 console.error("Error fetching product count:", error);
-                $scope.errorMessage = "An error occurred while fetching product count.";
+                $scope.errorMessage =
+                  "An error occurred while fetching product count.";
               });
           } else {
             $scope.errorMessage = "Failed to load data. Please try again.";
@@ -59,11 +60,17 @@ angular.module("productApp", []).controller("ProductController", [
           $scope.loading = false;
         });
     };
-    
 
-    $scope.fetchShirtsByFilter = function (min, max, color, brand, size, category) {
+    $scope.fetchShirtsByFilter = function (
+      min,
+      max,
+      color,
+      brand,
+      size,
+      category
+    ) {
       event.preventDefault();
-    
+
       // Cập nhật bộ lọc giá hoặc màu
       if (min && max) {
         $scope.selectedPrice = { min: min, max: max };
@@ -80,9 +87,9 @@ angular.module("productApp", []).controller("ProductController", [
       if (category) {
         $scope.selectedCategory = category;
       }
-    
+
       let url = "http://localhost:8080/homepage/filler?";
-    
+
       // Thêm bộ lọc giá vào URL
       if (
         $scope.selectedPrice.min !== null &&
@@ -90,30 +97,33 @@ angular.module("productApp", []).controller("ProductController", [
       ) {
         url += `min=${$scope.selectedPrice.min}&max=${$scope.selectedPrice.max}&`;
       }
-    
+
       // Thêm bộ lọc màu sắc vào URL
       if ($scope.selectedColor) {
         url += `color=${$scope.selectedColor}&`;
       }
-    
+
       // Thêm bộ lọc hãng vào URL
       if ($scope.selectedBrand) {
         url += `brand=${$scope.selectedBrand}&`;
       }
-    
+
       // Thêm bộ lọc size vào URL
       if ($scope.selectedSize) {
         url += `size=${$scope.selectedSize}&`;
       }
-    
+
       // Thêm bộ lọc category vào URL
       if ($scope.selectedCategory) {
         url += `category=${$scope.selectedCategory}&`;
       }
-    
+
+      // Thêm phân trang vào URL
+      url += `&offset=${$scope.shirtsPerPage}&limit=${$scope.currentPage}&`;
+
       // Loại bỏ dấu & thừa nếu không có bộ lọc nào được chọn
       url = url.endsWith("&") ? url.slice(0, -1) : url;
-    
+
       // Gọi API với URL đã chỉnh sửa
       $http
         .get(url)
@@ -125,7 +135,7 @@ angular.module("productApp", []).controller("ProductController", [
               0,
               $scope.shirtsPerPage
             );
-    
+
             // Gọi API đếm số lượng sản phẩm với các bộ lọc
             $http
               .get("http://localhost:8080/homepage/countall", {
@@ -147,7 +157,8 @@ angular.module("productApp", []).controller("ProductController", [
               })
               .catch(function (error) {
                 console.error("Error fetching product count:", error);
-                $scope.errorMessage = "An error occurred while fetching product count.";
+                $scope.errorMessage =
+                  "An error occurred while fetching product count.";
               });
           } else {
             $scope.errorMessage = "No shirts found for the specified filters.";
@@ -158,80 +169,83 @@ angular.module("productApp", []).controller("ProductController", [
           $scope.errorMessage = "An error occurred while fetching the shirts.";
         });
     };
-    
 
     // Hàm Load More
     $scope.loadMore = function () {
       $scope.loading = true;
       event.preventDefault();
       let offset = $scope.shirtDetails.length;
-    
+
       // Gọi API để lấy tổng số sản phẩm
-      $http.get("http://localhost:8080/homepage/countall", {
-        params: {
-          min: $scope.selectedPrice.min,
-          max: $scope.selectedPrice.max,
-          color: $scope.selectedColor,
-          brand: $scope.selectedBrand,
-          size: $scope.selectedSize,
-          category: $scope.selectedCategory
-        },
-      })
-      .then(function (response) {
-        if (response.data && response.data.code === 1000) {
-          $scope.totalProducts = response.data.result; // Cập nhật tổng số sản phẩm
-    
-          // Nếu số sản phẩm hiện tại đã bằng tổng số sản phẩm, ẩn nút Load More
-          if ($scope.shirtDetails.length >= $scope.totalProducts) {
-            $scope.canLoadMore = false;
-          }
-        }
-      })
-      .catch(function (error) {
-        console.error("Error fetching total count:", error);
-      });
-    
-      // Gọi API để tải thêm sản phẩm
-      $http.get("http://localhost:8080/homepage/filler", {
-        params: {
-          min: $scope.selectedPrice.min,
-          max: $scope.selectedPrice.max,
-          color: $scope.selectedColor,
-          brand: $scope.selectedBrand,
-          size: $scope.selectedSize,
-          category: $scope.selectedCategory,
-          offset: offset,
-          limit: $scope.shirtsPerPage,
-        },
-      })
-      .then(function (response) {
-        if (response.data && response.data.code === 1000) {
-          let newShirts = response.data.result;
-          if (newShirts && newShirts.length > 0) {
-            $scope.shirtDetails = $scope.shirtDetails.concat(newShirts);
-            $scope.filteredShirtList = $scope.shirtDetails.slice(0, $scope.shirtsPerPage * $scope.currentPage);
-    
-            // Nếu số sản phẩm tải thêm ít hơn limit, ẩn nút Load More
-            if (newShirts.length < $scope.shirtsPerPage) {
+      $http
+        .get("http://localhost:8080/homepage/countall", {
+          params: {
+            min: $scope.selectedPrice.min,
+            max: $scope.selectedPrice.max,
+            color: $scope.selectedColor,
+            brand: $scope.selectedBrand,
+            size: $scope.selectedSize,
+            category: $scope.selectedCategory,
+          },
+        })
+        .then(function (response) {
+          if (response.data && response.data.code === 1000) {
+            $scope.totalProducts = response.data.result; // Cập nhật tổng số sản phẩm
+
+            // Nếu số sản phẩm hiện tại đã bằng tổng số sản phẩm, ẩn nút Load More
+            if ($scope.shirtDetails.length >= $scope.totalProducts) {
               $scope.canLoadMore = false;
+            }
+          }
+        })
+        .catch(function (error) {
+          console.error("Error fetching total count:", error);
+        });
+
+      // Gọi API để tải thêm sản phẩm
+      $http
+        .get("http://localhost:8080/homepage/filler", {
+          params: {
+            min: $scope.selectedPrice.min,
+            max: $scope.selectedPrice.max,
+            color: $scope.selectedColor,
+            brand: $scope.selectedBrand,
+            size: $scope.selectedSize,
+            category: $scope.selectedCategory,
+            offset: offset,
+            limit: $scope.shirtsPerPage,
+          },
+        })
+        .then(function (response) {
+          if (response.data && response.data.code === 1000) {
+            let newShirts = response.data.result;
+            if (newShirts && newShirts.length > 0) {
+              $scope.shirtDetails = $scope.shirtDetails.concat(newShirts);
+              $scope.filteredShirtList = $scope.shirtDetails.slice(
+                0,
+                $scope.shirtsPerPage * $scope.currentPage
+              );
+
+              // Nếu số sản phẩm tải thêm ít hơn limit, ẩn nút Load More
+              if (newShirts.length < $scope.shirtsPerPage) {
+                $scope.canLoadMore = false;
+              } else {
+                $scope.currentPage++;
+              }
             } else {
-              $scope.currentPage++;
+              $scope.canLoadMore = false; // Ẩn nút Load More nếu không có thêm sản phẩm
             }
           } else {
-            $scope.canLoadMore = false; // Ẩn nút Load More nếu không có thêm sản phẩm
+            $scope.errorMessage = "Không tìm thấy sản phẩm với bộ lọc đã chọn.";
           }
-        } else {
-          $scope.errorMessage = "Không tìm thấy sản phẩm với bộ lọc đã chọn.";
-        }
-        $scope.loading = false;
-      })
-      .catch(function (error) {
-        console.error("Error loading more products:", error);
-        $scope.errorMessage = "Đã xảy ra lỗi trong quá trình tải sản phẩm.";
-        $scope.loading = false;
-      });
+          $scope.loading = false;
+        })
+        .catch(function (error) {
+          console.error("Error loading more products:", error);
+          $scope.errorMessage = "Đã xảy ra lỗi trong quá trình tải sản phẩm.";
+          $scope.loading = false;
+        });
     };
-    
 
     $scope.clearFilters = function () {
       $scope.selectedPrice = { min: null, max: null };
@@ -317,41 +331,6 @@ angular.module("productApp", []).controller("ProductController", [
           console.error("Error while fetching gender data:", error);
           $scope.errorMessage =
             "An error occurred. Please check the console for more details.";
-        });
-    };
-
-    $scope.getAllProductByCategory = function (codeCategory) {
-      if (!codeCategory) {
-        console.error("Category code is undefined!");
-        $scope.errorMessage = "Please select a category.";
-        return;
-      }
-
-      const apiUrl = `http://localhost:8080/homepage/getallshirt/${codeCategory}`;
-
-      // Gọi API
-      $http
-        .get(apiUrl)
-        .then(function (response) {
-          if (response.data && response.data.code === 1000) {
-            // Lưu tất cả sản phẩm vào $scope.shirtDetails
-            $scope.shirtDetails = response.data.result;
-
-            // Hiển thị 8 sản phẩm đầu tiên
-            $scope.filteredShirtList = $scope.shirtDetails.slice(0, 8);
-
-            // Kiểm tra xem có nhiều sản phẩm hơn không để hiển thị nút "Load More"
-          } else {
-            $scope.errorMessage = "Failed to load data. Please try again.";
-          }
-        })
-        .catch(function (error) {
-          console.error("Error while fetching products by category:", error);
-          $scope.errorMessage =
-            "An error occurred. Please check the console for more details.";
-        })
-        .finally(function () {
-          $scope.loading = false;
         });
     };
 

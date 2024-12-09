@@ -65,7 +65,7 @@ angular.module("homePageApp", []).controller("HomePageController", [
         $scope.selectedCategory = category;
       }
 
-      let url = "http://localhost:8080/homepage/filler?";
+      let url = "http://localhost:8080/homepage/all?";
 
       // Thêm bộ lọc giá vào URL
       if (

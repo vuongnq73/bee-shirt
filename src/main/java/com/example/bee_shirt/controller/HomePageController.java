@@ -56,6 +56,20 @@ public class HomePageController {
                 .build();
     }
 
+    @GetMapping("/all")
+    public ApiResponse<List<HomePageResponse>> getAllShirt( @RequestParam(required = false) BigDecimal min,
+                                                                   @RequestParam(required = false) BigDecimal max,
+                                                                   @RequestParam(required = false) String color,
+                                                                   @RequestParam(required = false) String brand,
+                                                                   @RequestParam(required = false) String size,
+                                                                   @RequestParam(required = false) Integer category){
+
+        return ApiResponse.<List<HomePageResponse>>builder()
+                .code(1000)
+                .result(shirtDetailService.getAllByFiller(min,max,color,brand,size,category))
+                .build();
+    }
+
     @GetMapping("/countall")
     public ApiResponse<Integer> getAllShirtByColor(@RequestParam(required = false) BigDecimal min,
                                                    @RequestParam(required = false) BigDecimal max,
