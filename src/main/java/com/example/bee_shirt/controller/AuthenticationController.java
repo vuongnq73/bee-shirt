@@ -37,11 +37,4 @@ public class AuthenticationController {
                 .build();
     }
 
-    @PostMapping("/reset-password")
-    public ApiResponse<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
-        return ApiResponse.<String>builder()
-                .result(sendEmailService.resetPassword(token,newPassword))
-                .build();
-    }
-
 }

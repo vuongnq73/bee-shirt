@@ -6,6 +6,7 @@ import com.example.bee_shirt.exception.AppException;
 import com.example.bee_shirt.exception.ErrorCode;
 import com.example.bee_shirt.repository.AccountRepository;
 import com.example.bee_shirt.repository.PasswordResetRepository;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -102,4 +104,9 @@ public class SendEmailService {
         return password.toString();
     }
 
+    @Scheduled(cron = "0 0 2 * * ?")  // Cron expression: 2 AM every day
+    @Transactional
+    public void deleteExpiredTokens() {
+        passwordResetRepository.deleteExpiredTokens();
+    }
 }
