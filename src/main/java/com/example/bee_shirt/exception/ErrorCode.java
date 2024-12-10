@@ -44,6 +44,8 @@ public enum ErrorCode {
 
     EMAIL_SENDING_FAILED(1018,"Email sending failed", HttpStatus.BAD_REQUEST),
 
+    ACCOUNT_BANED(1019,"Account has been baned", HttpStatus.BAD_REQUEST),
+
     ;
     private int code;
 

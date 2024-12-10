@@ -99,7 +99,7 @@
             ng-model="user.status"
             ng-options="status.value as status.name for status in statuses"
             class="form-control"
-            ng-disabled="!isAdmin(user.role)"
+            ng-disabled="!isAdmin()"
           ></select>
         </div>
         

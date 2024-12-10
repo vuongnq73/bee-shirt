@@ -20,7 +20,7 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 
     Optional<Account> findByCode(String code);
 
-    Optional<Account> findByUsername(String username);
+    Optional<Account> findByUsername(@Param("username") String username);
 
     Optional<Account> findByEmail(String email);
 

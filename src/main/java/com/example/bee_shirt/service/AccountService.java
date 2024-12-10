@@ -156,7 +156,7 @@ public class AccountService {
         }
         if (request.getEmail() != null) {
             Optional<Account> existingAccount = accountRepository.findByEmail(request.getEmail());
-            if (existingAccount.isPresent() && !existingAccount.get().getCode().equals(this.getMyInfo().getCode())) {
+            if (existingAccount.isPresent() && !existingAccount.get().getCode().equals(account.getCode())) {
                 throw new AppException(ErrorCode.EMAIL_EXISTED);
             }
             account.setEmail(request.getEmail());

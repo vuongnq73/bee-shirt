@@ -59,6 +59,10 @@ public class AuthenticationService {
         var user = accountRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
+        if(user.getStatus() == 1){
+            throw new AppException(ErrorCode.ACCOUNT_BANED);
+        }
+
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPass());
         if (!authenticated) {

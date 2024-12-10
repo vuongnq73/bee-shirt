@@ -117,6 +117,12 @@ angular
         $window.location.href = "/assets/staff/Profile.html";
       };
 
+      $scope.logout = function () {
+        $scope.myProfile = null;
+        window.location.href = "/assets/account/login.html";
+      };
+  
+
       $scope.getMyProfile = function () {
         //Lấy thông tin của tài khoản đang đăng nhập
         const token = sessionStorage.getItem("jwtToken");
