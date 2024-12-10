@@ -70,6 +70,14 @@ angular
         return true;
       }
 
+      $scope.isAdmin = function (roles) {
+        if (Array.isArray(roles)) {
+          return roles.some((role) => role.name === "Admin");
+        }
+        return false;
+      };
+      
+
       // Gửi dữ liệu cập nhật thông tin người dùng
       function submitUpdate() {
         const formData = new FormData();

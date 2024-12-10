@@ -155,7 +155,10 @@ public class AccountService {
             account.setPhone(request.getPhone());
         }
         if (request.getEmail() != null) {
-            validateEmail(request.getEmail());
+            Optional<Account> existingAccount = accountRepository.findByEmail(request.getEmail());
+            if (existingAccount.isPresent() && !existingAccount.get().getCode().equals(this.getMyInfo().getCode())) {
+                throw new AppException(ErrorCode.EMAIL_EXISTED);
+            }
             account.setEmail(request.getEmail());
         }
         if (request.getAddress() != null) {

@@ -176,7 +176,6 @@ public class AdminController {
 
     //thêm @Valid để update chạy validate
     @PutMapping(value = "/update/{code}", consumes = "multipart/form-data")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ApiResponse<AccountResponse> updateUser(
             @Valid
             @PathVariable("code") String code,
