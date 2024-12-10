@@ -88,6 +88,35 @@
         text-decoration: underline !important; /* Gạch chân phần được chọn */
         font-weight: bold !important; /* Bôi đậm phần được chọn */
       }
+      .row {
+        position: relative; /* Để chứa các nút điều hướng nằm trong cùng 1 vùng */
+      }
+
+      .navigation-buttons {
+        position: absolute;
+        top: 50%; /* Căn giữa theo chiều dọc */
+        width: 100%;
+        display: flex;
+        justify-content: space-between; /* Căn trái phải cho các nút */
+        transform: translateY(-50%); /* Căn giữa hoàn toàn */
+        z-index: 10; /* Đảm bảo các nút điều hướng nằm trên các sản phẩm */
+      }
+
+      .navigation-buttons .btn {
+        font-size: 24px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        padding: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        border: none;
+        color: white;
+        z-index: 999; /* Đảm bảo các nút mũi tên nằm trên các sản phẩm */
+      }
+
+      .navigation-buttons .btn:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+      }
     </style>
   </head>
   <body class="animsition" ng-controller="HomePageController">
@@ -878,23 +907,6 @@
                   </span>
                 </div>
 
-                <div class="block2-txt-child2 flex-r p-t-3">
-                  <a
-                    href="#"
-                    class="btn-addwish-b2 dis-block pos-relative js-addwish-b2"
-                  >
-                    <img
-                      class="icon-heart1 dis-block trans-04"
-                      src="images/icons/icon-heart-01.png"
-                      alt="ICON"
-                    />
-                    <img
-                      class="icon-heart2 dis-block trans-04 ab-t-l"
-                      src="images/icons/icon-heart-02.png"
-                      alt="ICON"
-                    />
-                  </a>
-                </div>
               </div>
             </div>
           </div>
@@ -1053,13 +1065,11 @@
         <div class="row">
           <div
             class="col-sm-6 col-md-4 col-lg-3 p-b-35"
-            ng-repeat="shirt in bestSaler"
+            ng-repeat="(index, shirt) in visibleShirts"
           >
-            <!-- Block2 -->
             <div class="block2">
               <div class="block2-pic hov-img0">
-                <img src="{{ shirt.nameImage }}" alt="{{ shirt.nameShirt }}" />
-
+                <img src="images/product-01.jpg" alt="{{ shirt.nameShirt }}" />
                 <a
                   href="/cozastore-master/product-detail.html"
                   class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"
@@ -1076,13 +1086,27 @@
                   >
                     {{ shirt.nameShirt }}
                   </a>
-
                   <span class="stext-105 cl3">
                     {{ shirt.price | currency }}
                   </span>
                 </div>
               </div>
             </div>
+          </div>
+
+          <!-- Nút điều hướng: Prev ở đầu, Next ở cuối -->
+          <div
+            class="navigation-buttons d-flex justify-content-between"
+            style="width: 100%; margin-top: 10px"
+          >
+            <!-- Nút Prev (trái) -->
+            <button ng-click="prevProduct()" class="btn btn-primary">
+              &#60;
+            </button>
+            <!-- Nút Next (phải) -->
+            <button ng-click="nextProduct()" class="btn btn-primary">
+              &#62;
+            </button>
           </div>
         </div>
       </div>

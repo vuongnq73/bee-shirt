@@ -2,7 +2,8 @@ angular.module("homePageApp", []).controller("HomePageController", [
   "$scope",
   "$http",
   "$window",
-  function ($scope, $http, $window) {
+  "$interval",
+  function ($scope, $http, $window, $interval) {
     $scope.shirtDetails = [];
     $scope.bestSaler = [];
     $scope.categories = [];
@@ -242,18 +243,19 @@ angular.module("homePageApp", []).controller("HomePageController", [
         });
     };
 
-    $scope.bestSaler = function () {
+    $scope.loadBestSaler = function () {
       $http
         .get("http://localhost:8080/homepage/bestsaler")
         .then(function (response) {
           if (response.data && response.data.code === 1000) {
             $scope.bestSaler = response.data.result;
+            $scope.updateVisibleShirts();
           } else {
             $scope.errorMessage = "Failed to load data. Please try again.";
           }
         })
         .catch(function (error) {
-          console.error("Error while fetching homepage data:", error);
+          console.error("Error while fetching best-seller data:", error);
           $scope.errorMessage =
             "An error occurred. Please check the console for more details.";
         })
@@ -261,6 +263,45 @@ angular.module("homePageApp", []).controller("HomePageController", [
           $scope.loading = false;
         });
     };
+    
+    
+ // Chỉ số sản phẩm hiện tại
+$scope.currentIndex = 0;
+
+// Cập nhật danh sách các sản phẩm đang hiển thị
+$scope.updateVisibleShirts = function() {
+  const totalShirts = $scope.bestSaler.length;
+  const nextIndex = $scope.currentIndex % totalShirts;
+  $scope.visibleShirts = [];
+
+  // Lấy 4 sản phẩm tiếp theo từ currentIndex
+  for (let i = 0; i < 4; i++) {
+    $scope.visibleShirts.push($scope.bestSaler[(nextIndex + i) % totalShirts]);
+  }
+};
+
+// Hàm để di chuyển đến sản phẩm tiếp theo
+$scope.nextProduct = function() {
+  const totalShirts = $scope.bestSaler.length;
+  $scope.currentIndex = ($scope.currentIndex + 1) % totalShirts;
+  $scope.updateVisibleShirts();
+};
+
+// Hàm để quay lại sản phẩm trước đó
+$scope.prevProduct = function() {
+  const totalShirts = $scope.bestSaler.length;
+  $scope.currentIndex = ($scope.currentIndex - 1 + totalShirts) % totalShirts;
+  $scope.updateVisibleShirts();
+};
+
+// Tự động di chuyển sản phẩm mỗi 3 giây
+$interval(function() {
+  $scope.nextProduct();
+}, 5000);
+
+// Gọi hàm cập nhật sản phẩm ban đầu khi trang được tải
+
+
 
     $scope.getCategories = function () {
       $http
@@ -369,7 +410,7 @@ angular.module("homePageApp", []).controller("HomePageController", [
     $scope.fetchHomePageData();
     $scope.getMyProfile();
     $scope.getCategories();
-    $scope.bestSaler();
+    $scope.loadBestSaler();
     $scope.getColors();
     $scope.getBrands();
     $scope.getSizes();
