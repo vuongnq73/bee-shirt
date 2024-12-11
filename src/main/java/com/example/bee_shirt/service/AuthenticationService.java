@@ -2,12 +2,15 @@ package com.example.bee_shirt.service;
 
 import com.example.bee_shirt.dto.request.AuthenticationRequest;
 import com.example.bee_shirt.dto.request.IntrospectRequest;
+import com.example.bee_shirt.dto.request.LogoutRequest;
 import com.example.bee_shirt.dto.response.AuthenticationResponse;
 import com.example.bee_shirt.dto.response.IntrospectResponse;
 import com.example.bee_shirt.entity.Account;
+import com.example.bee_shirt.entity.InvalidatedToken;
 import com.example.bee_shirt.exception.AppException;
 import com.example.bee_shirt.exception.ErrorCode;
 import com.example.bee_shirt.repository.AccountRepository;
+import com.example.bee_shirt.repository.InvalidatedTokenRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -17,6 +20,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +28,8 @@ import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.StringJoiner;
@@ -34,25 +40,35 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Service
+@Slf4j
 public class AuthenticationService {
     AccountRepository accountRepository;
+
+    InvalidatedTokenRepository invalidatedTokenRepository;
 
     //@NonFinal để ko tiêm cái này vào contructor
     @NonFinal
     protected static final String SIGNER_KEY =
             "jyl4q4MPE5mpdiRnlDFpjWb3Vowfj52sYT9YHRSOsQlLIhznImeyGZZFUnz8ghEl";
 
+    @NonFinal
+    protected static final long VALID_DURATION = 10800; // IN SECOND
+
+    @NonFinal
+    protected static final long REFRESHABLE_DURATION = 108000 ; // IN SECONDS
+
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
         boolean isvalid = true;
         try {
             verifyToken(token);
-        }catch (AppException e){
+        } catch (AppException e) {
             isvalid = false;
         }
         return IntrospectResponse.builder()
                 .valid(isvalid)
                 .build();
+
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -75,6 +91,24 @@ public class AuthenticationService {
                 .token(token)
                 .authenticated(true)
                 .build();
+    }
+
+    public void logout(LogoutRequest request) throws ParseException, JOSEException {
+        try {
+            var signToken = verifyToken(request.getToken());
+
+            String jit = signToken.getJWTClaimsSet().getJWTID();
+            Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
+
+            InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                    .id(jit)
+                    .expiryTime(expiryTime)
+                    .build();
+            invalidatedTokenRepository.save(invalidatedToken);
+        } catch (AppException e) {
+            log.info("Token already expired");
+        }
+
     }
 
     private SignedJWT verifyToken(String token) throws JOSEException, ParseException {
@@ -112,7 +146,7 @@ public class AuthenticationService {
                 .issuer("giangdtph40542")
                 .expirationTime(new Date(
                         //token hết hạn sau 3 giờ
-                        Instant.now().plus(24, ChronoUnit.HOURS).toEpochMilli()
+                        Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()
                 ))
                 //ID của token
                 .jwtID(UUID.randomUUID().toString())
