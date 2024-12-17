@@ -74,7 +74,7 @@ public class SendEmailService {
         newAccount.setPass(passwordEncoder.encode(newPass)); // Sử dụng PasswordEncoder
         accountRepository.save(newAccount);
 
-        this.sendEmail(email, "Mật khẩu ngẫu nhiên",
+        this.sendEmail(email, "Beeshirt cấp lại mật khẩu",
                 "Dùng mật khẩu này để đăng nhập(Hãy thay đổi mật khẩu sau khi đăng nhập): " + newPass);
 
         return "Password reset email sent.";

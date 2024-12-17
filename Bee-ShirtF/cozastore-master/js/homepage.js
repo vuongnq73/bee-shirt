@@ -297,7 +297,7 @@ $scope.prevProduct = function() {
 // Tự động di chuyển sản phẩm mỗi 3 giây
 $interval(function() {
   $scope.nextProduct();
-}, 5000);
+}, 4000);
 
 // Gọi hàm cập nhật sản phẩm ban đầu khi trang được tải
 

@@ -90,7 +90,7 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
             LEFT JOIN shirt s ON sd.shirt_id = s.id AND s.status_shirt = 1
             LEFT JOIN bill_detail bd ON bd.shirt_detail_id = sd.id
             LEFT JOIN bill bl ON bd.bill_id = bl.id
-              AND bl.create_at BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()) - 1, 0)
+            AND bl.create_at BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()) - 1, 0)
                                     AND DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0)
             LEFT JOIN brand b ON s.brand_id = b.id
             LEFT JOIN size sz ON sd.size_id = sz.id
