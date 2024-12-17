@@ -190,7 +190,7 @@ app.controller('ShirtDetailController', ['$scope', 'shirtDetailService', functio
     $scope.currentPage = 1;
     $scope.itemsPerPage = 10;
 
-    
+
     // Hàm gọi API lấy danh sách chi tiết áo thun (tùy theo có codeShirt hay không)
     $scope.getShirtDetails = function() {
         
@@ -214,7 +214,7 @@ app.controller('ShirtDetailController', ['$scope', 'shirtDetailService', functio
     $scope.getShirtIndex = function(index) {
         return ($scope.currentPage - 1) * $scope.itemsPerPage + (index + 1);
     };
-   
+
     $scope.toggleColorSelection = function(colorId) {
         var index = $scope.selectedColors.indexOf(colorId);
         if (index > -1) {
@@ -237,29 +237,59 @@ app.controller('ShirtDetailController', ['$scope', 'shirtDetailService', functio
         $scope.variants = [];
         angular.forEach($scope.selectedColors, function(colorId) {
             angular.forEach($scope.selectedSizes, function(sizeId) {
-                $scope.variants.push({ 
-                    colorId: colorId, 
+                $scope.variants.push({
+                    colorId: colorId,
                     sizeId: sizeId,
                     quantity: 0 ,
-                    price: 0
+                    price: 0,
+                    image:null,
+                    image2:null,
+                    image3:null,
+
                 });
             });
         });
-        
+
     };
+
+
+    // Hàm preview ảnh, nhận tham số là `input` và một `imageIndex` để xác định ô nào đang được chọn
+    $scope.previewImage = function (input, imageIndex) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $scope.$apply(function () {
+                    var fileName = input.files[0].name; // Lấy tên ảnh
+                    // Lưu ảnh vào biến tương ứng dựa trên `imageIndex`
+                    if (imageIndex === 1) {
+                        $scope.image = { src: e.target.result, nameImage: fileName };
+                    } else if (imageIndex === 2) {
+                        $scope.image2 = { src: e.target.result, nameImage: fileName };
+                    } else if (imageIndex === 3) {
+                        $scope.image3 = { src: e.target.result, nameImage: fileName };
+                    }
+                });
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    };
+
+
+    // Lưu tất cả biến thể (variants), bao gồm tên ảnh
     $scope.saveAllVariants = function() {
         // Hiển thị hộp thoại xác nhận trước khi thêm
         var confirmation = confirm("Bạn có muốn thêm các biến thể này không?");
-        
+
         // Nếu người dùng chọn "OK"
         if (confirmation) {
 angular.forEach($scope.variants, function(variant) {
+
                 if (variant.quantity > 0) {
                     var existingVariant = $scope.savedVariants.find(v => v.colorId === variant.colorId && v.sizeId === variant.sizeId);
                     if (existingVariant) {
                         existingVariant.quantity = variant.quantity;
                     } else {
-                        // Đảm bảo materialId được lưu đúng
+                        // Lưu tên ảnh vào trường 'image' trong ShirtDetail
                         $scope.savedVariants.push({
                             shirtId: $scope.newShirtDetail.shirt.id,  // Lưu tên sản phẩm
                             colorId: variant.colorId,
@@ -271,21 +301,24 @@ angular.forEach($scope.variants, function(variant) {
                             patternId: $scope.newShirtDetail.pattern.id,
                             seasonId: $scope.newShirtDetail.season.id,
                             price: variant.price,
+                            image: $scope.image ? $scope.image.nameImage : '',  // Lưu tên ảnh của sản phẩm
+                            image2: $scope.image2 ? $scope.image2.nameImage : '' , // Lưu tên ảnh của sản phẩm
+                            image3: $scope.image3 ? $scope.image3.nameImage : ''  // Lưu tên ảnh của sản phẩm
                         });
                     }
                 }
             });
-    
             $scope.submitVariants(); // Gửi dữ liệu lên backend
         } else {
             // Nếu người dùng chọn "Cancel", không làm gì cả
             console.log("Người dùng đã hủy hành động.");
         }
     };
-    
+
+    // Submit dữ liệu lên backend
     $scope.submitVariants = function() {
         console.log("Dữ liệu sẽ được gửi lên backend:", $scope.savedVariants); // Kiểm tra dữ liệu trước khi gửi
-    
+
         shirtDetailService.saveVariants($scope.savedVariants).then(function(response) {
             // Xử lý sau khi gửi thành công
             alert("Biến thể đã được lưu vào danh sách thành công.");
@@ -298,7 +331,7 @@ angular.forEach($scope.variants, function(variant) {
             console.error("Có lỗi khi lưu biến thể:", error);
         });
     };
-    
+
 
 
     $scope.editShirtDetail = function(shirtDetail) {
@@ -357,8 +390,8 @@ angular.forEach($scope.variants, function(variant) {
             $scope.shirts = response.data;
         });
     };
-        $scope.editShirtDetail = function(shirtdetail) {
-    // Sao chép đối tượng chi tiết áo thun để tránh thay đổi trực tiếp
+    $scope.editShirtDetail = function(shirtdetail) {
+        // Sao chép đối tượng chi tiết áo thun để tránh thay đổi trực tiếp
         $scope.editingShirtDetail = angular.copy(shirtdetail);
 
         //chuyển dữ liệu các dropdown thuộc tính
@@ -378,7 +411,7 @@ angular.forEach($scope.variants, function(variant) {
 
 
     $scope.updateShirtDetail = function() {
-    // Sao chép dữ liệu từ đối tượng editShirtDetail
+        // Sao chép dữ liệu từ đối tượng editShirtDetail
         let updateShirtDetailed = angular.copy($scope.editingShirtDetail);
 
         // Chuyển các ID thuộc tính thành đối tượng
@@ -396,12 +429,12 @@ updateShirtDetailed.size = { id: updateShirtDetailed.sizeId };
         // Gửi yêu cầu cập nhật chi tiết áo thun
         shirtDetailService.updateShirtDetail(updateShirtDetailed.codeShirtDetail, updateShirtDetailed).then(function() {
 
-        $scope.editingShirtDetail = null;
-        $scope.getShirtDetails();
+            $scope.editingShirtDetail = null;
+            $scope.getShirtDetails();
 
         }, function(error) {
-        console.error("Error updating shirt", error);
-    });
+            console.error("Error updating shirt", error);
+        });
     };
 
 
@@ -415,8 +448,8 @@ updateShirtDetailed.size = { id: updateShirtDetailed.sizeId };
             });
         }
     };
-     // Hàm để lấy tên màu sắc theo ID
-     $scope.getColorName = function(colorId) {
+    // Hàm để lấy tên màu sắc theo ID
+    $scope.getColorName = function(colorId) {
         var color = $scope.colors.find(c => c.id === colorId);
         return color ? color.nameColor : '';
     };
