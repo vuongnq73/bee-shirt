@@ -36,6 +36,16 @@ public enum ErrorCode {
 
     INVALID_OLD_PASSWORD(1014,"Old password invalid", HttpStatus.BAD_REQUEST),
 
+    EMAIL_EXISTED(1015,"Email existed", HttpStatus.BAD_REQUEST),
+
+    TOKEN_NOT_FOUND(1016,"Token not found", HttpStatus.NOT_FOUND),
+
+    TOKEN_EXPIRED(1017,"Token expired", HttpStatus.BAD_REQUEST),
+
+    EMAIL_SENDING_FAILED(1018,"Email sending failed", HttpStatus.BAD_REQUEST),
+
+    ACCOUNT_BANED(1019,"Account has been baned", HttpStatus.BAD_REQUEST),
+
     ;
     private int code;
 

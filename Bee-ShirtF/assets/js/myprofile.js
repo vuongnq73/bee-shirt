@@ -33,8 +33,8 @@ angular
       $scope.successMessage = "";
       $scope.isSubmitting = false;
       $scope.statuses = [
-        { value: 0, name: "Active" },
-        { value: 1, name: "Inactive" },
+        { value: 0, name: "Hoạt Động" },
+        { value: 1, name: "Ngưng Hoạt Động" },
       ];
 
       // Biến cho chức năng đổi mật khẩu
@@ -69,6 +69,36 @@ angular
         $scope.errorMessage = "";
         return true;
       }
+
+          // Hàm lấy quyền cao nhất
+    function getHighestRole(scopes) {
+      const roles = scopes ? scopes.split(" ") : [];
+      const rolePriority = {
+        ROLE_ADMIN: 1,
+        ROLE_STAFF: 2,
+        ROLE_USER: 3,
+      };
+  
+      const validRoles = roles.filter((role) => rolePriority[role]);
+      validRoles.sort((a, b) => rolePriority[a] - rolePriority[b]);
+  
+      return validRoles[0] || null;
+    }
+    
+    $scope.isAdmin = function () {
+      const token = sessionStorage.getItem("jwtToken");
+      if (!token) {
+        alert("Bạn chưa đăng nhập!");
+        window.location.href = "/assets/account/login.html";
+        return false;
+      }
+    
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const highestRole = getHighestRole(payload.scope);
+    
+      return highestRole === "ROLE_ADMIN";
+    };
+    
 
       // Gửi dữ liệu cập nhật thông tin người dùng
       function submitUpdate() {

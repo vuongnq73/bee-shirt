@@ -19,7 +19,9 @@ import org.springframework.security.web.SecurityFilterChain;
 //phân quyền bằng method -> AccountService
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final String[] PUBLIC_ENDPOINTS = {"/auth/login", "/user/register"};
+    private final String[] PUBLIC_ENDPOINTS_POST = {"/auth/login","/auth/logout", "/user/register", "/auth/forgot-password", "/auth/reset-password","/auth/reset-password"};
+
+    private final String[] PUBLIC_ENDPOINTS_PUT = {};
 
     private final String[] ADMIN_GET_ENDPOINTS = {"/admin/accounts", "/admin/roles"};
 
@@ -34,7 +36,8 @@ public class SecurityConfig {
         httpSecurity.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
 
         httpSecurity.authorizeHttpRequests(request ->
-                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS_POST).permitAll()
+                        .requestMatchers("/homepage/**").permitAll()
                         .requestMatchers(HttpMethod.GET, ADMIN_GET_ENDPOINTS).hasAuthority(Constant.ROLE_ADMIN)
                         .requestMatchers(HttpMethod.POST, ADMIN_POST_ENDPOINTS).hasAuthority(Constant.ROLE_ADMIN)
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()

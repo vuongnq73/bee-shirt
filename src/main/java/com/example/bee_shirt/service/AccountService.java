@@ -113,6 +113,8 @@ public class AccountService {
     public AccountResponse createAccount(AccountCreationRequest request, boolean isAdmin) {
         validateUsername(request.getUsername());
 
+        validateEmail(request.getEmail());
+
         // Tạo mã tài khoản tự động
         String generatedCode = generateAccountCode();
         request.setCode(generatedCode);
@@ -138,6 +140,7 @@ public class AccountService {
     }
 
     public AccountResponse updateAccount(AccountUpdateRequest request, String code) {
+
         Account account = accountRepository.findByCode(code)
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
 
@@ -152,6 +155,10 @@ public class AccountService {
             account.setPhone(request.getPhone());
         }
         if (request.getEmail() != null) {
+            Optional<Account> existingAccount = accountRepository.findByEmail(request.getEmail());
+            if (existingAccount.isPresent() && !existingAccount.get().getCode().equals(account.getCode())) {
+                throw new AppException(ErrorCode.EMAIL_EXISTED);
+            }
             account.setEmail(request.getEmail());
         }
         if (request.getAddress() != null) {
@@ -194,12 +201,17 @@ public class AccountService {
             }
         }
         log.warn("No avatar file provided, using default avatar URL.");
-        return "https://drive.google.com/file/d/1vGatwMMr89lX1l1_FkkhvyWZbCa40mD3/view?usp=drive_link"; // Cần thay thế bằng URL hợp lệ
+        return "https://asset.cloudinary.com/dbshkldsj/d178b36973b41db7beffc0beed20ebf7";
     }
 
     private void validateUsername(String username) {
         if (accountRepository.findByUsername(username).isPresent()) {
             throw new AppException(ErrorCode.USER_EXISTED);
+        }
+    }
+    private void validateEmail(String email) {
+        if (accountRepository.findByEmail(email).isPresent()) {
+            throw new AppException(ErrorCode.EMAIL_EXISTED);
         }
     }
 
