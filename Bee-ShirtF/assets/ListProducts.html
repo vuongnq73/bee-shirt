@@ -414,7 +414,7 @@
                 <i class="icon-arrow-right"></i>
               </li>
               <li class="nav-item">
-                <a href="/assets/BanHang.html">Tạo Hóa Đơn</a>
+                <a href="/assets/ListProducts.html">Danh Sách Phẩm</a>
               </li>
             </ul>
             <div class="ms-md-auto py-2 py-md-0">
@@ -424,141 +424,163 @@
           </div>
           <!-- endheader bán hàng -->
 
-          <div class="row">
-            <nav class="navbar navbar-light bg-light p-3">
-              <div class="container-fluid">
-                <form id="searchForm">
-                  <div class="input-group">
-                    <div class="position-relative">
-                      <input type="text" class="form-control" id="searchInput" placeholder="Search..."
-                        onkeyup="performSearch()" autocomplete="off">
-                      <ul id="suggestions" class="suggestions-list list-group position-absolute w-100"> </ul>
-                    </div>
-                    <button class="btn btn-outline-secondary" type="button" onclick="scanBarcode()" style="margin-left: 5px;">
-                      QR Code <i class="bi bi-upc-scan"></i>
-                    </button>
-                    <button class="btn btn-outline-secondary" type="button"  style="margin-left: 5px;">
-                      <a href="/assets/ListProducts.html">
-                      <i class="bi bi-plus-square-fill"></i>
-
-                      </a>
-          
-                    </button>
+          <nav class="navbar navbar-light bg-light p-3">
+            <div class="container-fluid">
+              <form id="searchForm">
+                <div class="input-group">
+                  <div class="position-relative">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Search..."
+                      onkeyup="performSearch()" autocomplete="off">
+                    <ul id="suggestions" class="suggestions-list list-group position-absolute w-100"> </ul>
                   </div>
-                </form>
-                <div class="d-flex align-items-center" ng-app="staffApp" ng-controller="StaffController">
-                  <!-- Nút kích hoạt Modal -->
-                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
-                    Đăng ký nhanh
+                  <button class="btn btn-outline-secondary" type="button" onclick="scanBarcode()"
+                    style="margin-left: 5px;">
+                    QR Code <i class="bi bi-upc-scan"></i>
                   </button>
+                  <button class="btn btn-outline-secondary" type="button" onclick="" style="margin-left: 5px;">
+                    Thêm Sản Phẩm <i class="bi bi-plus-square-fill"></i>
+                  </button>
+                </div>
+              </form>
 
-                  <!-- Modal -->
-                  <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="registerModalLabel">Đăng ký nhanh</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          <form ng-submit="register()">
-                            <div class="mb-3">
-                              <label for="firstName" class="form-label">Họ:</label>
-                              <input type="text" class="form-control" id="firstName" ng-model="user.firstName"
-                                required />
-                            </div>
-                            <div class="mb-3">
-                              <label for="lastName" class="form-label">Tên:</label>
-                              <input type="text" class="form-control" id="lastName" ng-model="user.lastName" required />
-                            </div>
-                            <div class="mb-3">
-                              <label for="address" class="form-label">Địa chỉ:</label>
-                              <input type="text" class="form-control" id="address" ng-model="user.address" required />
-                            </div>
-                            <div class="mb-3">
-                              <label for="email" class="form-label">Email:</label>
-                              <input type="email" class="form-control" id="email" ng-model="user.email" required />
-                            </div>
-                            <div class="mb-3">
-                              <label for="phone" class="form-label">Số điện thoại:</label>
-                              <input type="tel" class="form-control" id="phone" ng-model="user.phone" required />
-                            </div>
-                            <button type="submit" class="btn btn-success w-100" ng-disabled="isLoading">
-                              {{ isLoading ? "Đang xử lý..." : "Đăng ký" }}
-                            </button>
-                          </form>
-                        </div>
-                        <div class="modal-footer">
-                          <p class="text-success" ng-if="successMessage">{{ successMessage }}</p>
-                          <p class="text-danger" ng-if="errorMessage">{{ errorMessage }}</p>
-                          <button type="button" ng-click="cancelCreateAccount()" class="btn btn-secondary"
-                            data-bs-dismiss="modal">Đóng</button>
-                        </div>
+              <div class="d-flex align-items-center" ng-app="staffApp" ng-controller="StaffController">
+                <!-- Nút kích hoạt Modal -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
+                  Đăng ký nhanh
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel"
+                  aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="registerModalLabel">Đăng ký nhanh</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form ng-submit="register()">
+                          <div class="mb-3">
+                            <label for="firstName" class="form-label">Họ:</label>
+                            <input type="text" class="form-control" id="firstName" ng-model="user.firstName" required />
+                          </div>
+                          <div class="mb-3">
+                            <label for="lastName" class="form-label">Tên:</label>
+                            <input type="text" class="form-control" id="lastName" ng-model="user.lastName" required />
+                          </div>
+                          <div class="mb-3">
+                            <label for="address" class="form-label">Địa chỉ:</label>
+                            <input type="text" class="form-control" id="address" ng-model="user.address" required />
+                          </div>
+                          <div class="mb-3">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email" class="form-control" id="email" ng-model="user.email" required />
+                          </div>
+                          <div class="mb-3">
+                            <label for="phone" class="form-label">Số điện thoại:</label>
+                            <input type="tel" class="form-control" id="phone" ng-model="user.phone" required />
+                          </div>
+                          <button type="submit" class="btn btn-success w-100" ng-disabled="isLoading">
+                            {{ isLoading ? "Đang xử lý..." : "Đăng ký" }}
+                          </button>
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <p class="text-success" ng-if="successMessage">{{ successMessage }}</p>
+                        <p class="text-danger" ng-if="errorMessage">{{ errorMessage }}</p>
+                        <button type="button" ng-click="cancelCreateAccount()" class="btn btn-secondary"
+                          data-bs-dismiss="modal">Đóng</button>
                       </div>
                     </div>
                   </div>
-
-
                 </div>
 
 
               </div>
-            </nav>
-            <div class="col-md-8">
-              <!-- Bill -->
-              <div class="container mt-3">
-                <div class="row justify-content-center">
-                  <div class="col text-center" id="bill-buttons">
-                    <!-- Nơi chứa các nút sau khi lấy dữ liệu từ API -->
-                    <!-- Đây sẽ là phần có thanh cuộn khi nội dung vượt quá chiều cao -->
-                  </div>
+
+
+            </div>
+          </nav>
+          <div class="row">
+            <div class="col-md-12" style="margin: 10px;">
+              <div class="row justify-content-center">
+                <div class="col text-center" id="bill-buttons">
+                  <!-- Nơi chứa các nút sau khi lấy dữ liệu từ API -->
+                  <!-- Đây sẽ là phần có thanh cuộn khi nội dung vượt quá chiều cao -->
                 </div>
-
-                <h2>Giỏ hàng</h2>
-                <div class="table-container">
-                  <table class="table table-bordered">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Mã hóa đơn</th>
-                        <th>Tên sản phẩm</th>
-                        <th>Số lượng</th>
-                        <th>Giá</th>
-                        <th>Tổng</th>
-                        <th>Hành động</th>
-                      </tr>
-                    </thead>
-                    <tbody id="billDetailsTableBody"></tbody>
-                  </table>
-                </div>
-
-                <div class="row">
-                  <div class="container">
-                    <h2>Danh sách sản phẩm</h2>
-                    <table class="table table-bordered">
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th>Tên sản phẩm</th>
-                          <th>Giá</th>
-                          <th>Số lượng</th>
-                          <th>Thao tác</th>
-                        </tr>
-                      </thead>
-                      <tbody id="productTableBody"></tbody>
-                    </table>
-
-                    <nav>
-                      <ul class="pagination" id="pagination"></ul>
-                    </nav>
-                  </div>
-
-                </div>
-                <!-- Repeat for other menu items -->
-
-
               </div>
+            </div>
+
+            <div class="col-md-5">
+              <!-- list sqản phẩm -->
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Danh sách sản phẩm</h5>
+
+                  <!-- tab -->
+                  <ul class="nav nav-tabs" id="group1" role="tablist">
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link active" id="tab1-1" data-bs-toggle="tab" data-bs-target="#content1-1"
+                        type="button" role="tab" aria-controls="content1-1" aria-selected="true">Áo Nam</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="tab1-2" data-bs-toggle="tab" data-bs-target="#content1-2"
+                        type="button" role="tab" aria-controls="content1-2" aria-selected="false">Áo Nữ </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="tab2-3" data-bs-toggle="tab" data-bs-target="#content2-3"
+                        type="button" role="tab" aria-controls="content2-3" aria-selected="false">Áo Thể Thao
+                      </button>
+                    </li>
+                  </ul>
+                  <div class="tab-content" id="group1Content">
+                    <div class="tab-pane fade show active" id="content1-1" role="tabpanel" aria-labelledby="tab1-1">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <table class="table table-responsive">
+                            <thead>
+                              <tr>
+                                <th>#</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Giá</th>
+                                <th>Số lượng</th>
+                                <th>Thao tác</th>
+                              </tr>
+                            </thead>
+                            <tbody id="productTableBody"></tbody>
+                          </table>
+
+                          <nav>
+                            <ul class="pagination" id="pagination"></ul>
+                          </nav>
+
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- trang hai  -->
+                    <div class="tab-pane fade" id="content1-2" role="tabpanel" aria-labelledby="tab1-2">
+                      <div class="row">
+                        <div class="col-md-12">
+                          hello2
+                        </div>
+                      </div>
+                    </div>
+                    <!-- trang 3 -->
+                    <div class="tab-pane fade" id="content2-3" role="tabpanel" aria-labelledby="tab2-3">
+                      <div class="row">
+                        <div class="col-md-12">
+                          hello 3
+                        </div>
+                      </div>
+                    </div>
+
+
+                  </div>
+                  <!-- end Tab -->
+                </div>
+              </div>
+              <!-- Repeat for other menu items -->
               <div class="modal" id="myModal">
                 <div class="modal-dialog">
                   <div class="modal-content">
@@ -662,77 +684,107 @@
             </div>
 
 
-            <div class="col-md-4">
+            <div class="col-md-7">
+
               <!-- Invoice Section -->
               <div class="col-lg-12">
-                <h3>Hóa Đơn</h3>
                 <ul class="list-group mb-3" id="product-list">
                   <!-- Sản phẩm sẽ được thêm vào đây -->
                 </ul>
 
-
+                <!-- start giỏ hàng -->
                 <div class="card">
                   <div class="card-body">
-                    <h5 class="card-title">Payment Summary</h5>
-
-                    <div class="mb-3">
-                      <label hidden for="codeVoucher" class="form-label">Mã voucher</label>
-                      <input hidden type="text" id="codeVoucher" class="form-control" placeholder="Nhập mã voucher"
-                        oninput="applyVoucherOnChange()" />
-                      <div id="voucherFeedback" style="display: none; color: red;"></div>
-                    </div>
-                    <div>
-                      <label for="voucherSelect" class="form-label">Voucher khả dụng:</label>
-                      <select id="voucherSelect" class="form-select" disabled>
-                        <!-- Các option sẽ được thêm động -->
-                      </select>
-                    </div>
-                    <div class="mb-3">
-                      <label for="codeCustomer" class="form-label">Khách hàng</label>
-
-                      <input hidden type="text" id="codeCustomer" class="form-control" placeholder="Nhập mã khách hàng"
-                        oninput="applyAccountOnChange()">
-                      <div id="accountFeedback" class="feedback" style="display:none;"></div>
-                      <div class="dropdown">
-                        <input type="text" id="customerSearch" class="form-control"
-                          placeholder="Nhập số điện thoại hoặc tên khách hàng">
-                        <ul id="customerList" class="suggestions-list list-group position-absolute w-100"></ul>
-                      </div>
-                    </div>
-                    <div class="mb-3">
-                      <label for="paymentInput" class="form-label">Tiền phải trả</label>
-                      <input type="number" id="totalMoney" class="form-control" readonly>
-                    </div>
-                    <div class="mb-3">
-                      <label for="paymentInput" class="form-label">Tiền khách đưa</label>
-                      <input type="number" id="paymentInput" class="form-control" placeholder="Nhập số lượng" min="1"
-                        value="1">
-                    </div>
-                    <div class="mb-3">
-                      <label for="changeMoney" class="form-label">Tiền thừa</label>
-                      <input type="text" id="changeMoney" class="form-control" readonly>
-                    </div>
-                    <button type="button" class="btn btn-primary" id="confirmButton" onclick="checkoutConfirm()"
-                      disabled>Xác
-                      nhận</button>
-                    <button type="button" class="btn btn-danger" onclick="cancel()">
-                      <i class="fas fa-times"></i>
-                      Hủy đơn
-                    </button>
-                    <!-- <button class="btn btn-primary w-100" onclick="openModal3()">Place An Order</button> -->
+                    <h5 class="card-title">Hóa Đơn</h5>
+                    <strong>
+                      <h7>Giỏ hàng</h7>
+                    </strong>
+                      <table class="table table-responsive">
+                        <thead>
+                          <tr>
+                            <th>#</th>
+                            <th>Bỏ cột này </th>
+                            <th>Tên sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th>Giá</th>
+                            <th>Tổng</th>
+                            <th>Hành động</th>
+                          </tr>
+                        </thead>
+                        <tbody id="billDetailsTableBody"></tbody>
+                      </table>
                   </div>
                 </div>
+                <!-- end giỏ hàng -->
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="codeCustomer" class="form-label">Khách hàng</label>
+                    <input hidden type="text" id="codeCustomer" class="form-control" placeholder="Nhập mã khách hàng"
+                      oninput="applyAccountOnChange()">
+                    <div id="accountFeedback" class="feedback" style="display:none;"></div>
+                    <div class="dropdown">
+                      <input type="text" id="customerSearch" class="form-control"
+                        placeholder="Nhập số điện thoại hoặc tên khách hàng">
+                      <ul id="customerList" class="suggestions-list list-group position-absolute w-100"></ul>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label hidden for="codeVoucher" class="form-label">Mã voucher</label>
+                    <input hidden type="text" id="codeVoucher" class="form-control" placeholder="Nhập mã voucher"
+                      oninput="applyVoucherOnChange()" />
+                    <div id="voucherFeedback" style="display: none; color: red;"></div>
+                    <label for="voucherSelect" class="form-label">Voucher khả dụng:</label>
+                    <select id="voucherSelect" class="form-select" disabled>
+                      <!-- Các option sẽ được thêm động -->
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="totalMoney" class="form-label">Tiền phải trả</label>
+                    <input type="number" id="totalMoney" class="form-control" readonly>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="paymentInput" class="form-label">Tiền khách đưa</label>
+                    <input type="number" id="paymentInput" class="form-control" placeholder="Nhập số lượng" min="1"
+                      value="1">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-md-12">
+                    <label for="changeMoney" class="form-label">Tiền thừa</label>
+                    <input type="text" id="changeMoney" class="form-control" readonly>
+                  </div>
+
+                </div>
+
+                <button type="button" class="btn btn-primary" id="confirmButton" onclick="checkoutConfirm()"
+                  disabled>Xác
+                  nhận</button>
+                <button type="button" class="btn btn-danger" onclick="cancel()">
+                  <i class="fas fa-times"></i>
+                  Hủy đơn
+                </button>
+                <!-- <button class="btn btn-primary w-100" onclick="openModal3()">Place An Order</button> -->
               </div>
             </div>
           </div>
-
-
-
         </div>
       </div>
+
+
+
     </div>
-    <!-- end container -->
- 
+  </div>
+  </div>
+  <!-- end container -->
+
   </div>
 
   <!-- Custom template | don't include it in your project! -->
@@ -1102,18 +1154,20 @@
       <td>${detail.quantity}</td>
       <td>${detail.price.toFixed(2)}</td>
       <td>${total.toFixed(2)}</td>
-      <td>
+<td class="text-center">
+  <div class="d-flex justify-content-center align-items-center">
     <!-- Nút "Sửa" -->
-
-    <button type="button" class="btn btn-primary btn-sm" onclick="openModal2('${detail.codeBillDetail}','${detail.shirtDetail.codeShirtDetail}')">
-        <i class="fas fa-pen"></i> Sửa
+    <button type="button" class="btn btn-primary btn-sm me-2" 
+            onclick="openModal2('${detail.codeBillDetail}', '${detail.shirtDetail.codeShirtDetail}')">
+      <i class="bi bi-pencil-square"></i>
     </button>
     <!-- Nút "Xóa" -->
-
     <button type="button" class="btn btn-danger btn-sm" onclick="remove('${detail.codeBillDetail}')">
-        <i class="fas fa-trash"></i> Xóa
+      <i class="fas fa-trash"></i>
     </button>
+  </div>
 </td>
+
     `;
           tableBody.appendChild(row);
         });

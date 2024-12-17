@@ -32,5 +32,8 @@ public class BillDetailOnlineDTO {
     private BigDecimal totalMoney;
     private String typeBill;
     private String note;
+    private Integer statusBill;
+    private BigDecimal moneyReduce;
+
 
 }

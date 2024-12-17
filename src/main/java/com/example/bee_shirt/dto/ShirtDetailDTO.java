@@ -13,7 +13,9 @@ import java.sql.Date;
 public class ShirtDetailDTO {
     private int id;
     private String codeShirtDetail;
+    private String codeShirt;
     private String nameShirt;
+
     private BigDecimal price;
     private int quantity;
     private String namePattern;

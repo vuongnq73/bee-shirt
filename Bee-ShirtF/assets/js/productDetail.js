@@ -64,8 +64,8 @@ this.getShirtDetails = function() {
 };
 
 // Hàm gọi API lấy chi tiết áo thun theo mã
-this.getShirtDetailsByCode = function(codeShirt) {
-    return $http.get(baseUrl + '/byCode/' + codeShirt, {
+this.getShirtDetailsByCode = function() {
+    return $http.get('http://localhost:8080/shirt-details/byCode/' + codeShirt, {
         headers: {
             Authorization: "Bearer " + token,
         }
@@ -73,7 +73,7 @@ this.getShirtDetailsByCode = function(codeShirt) {
 };
 
 // Hàm kiểm tra và gọi API tương ứng
-this.getShirtDetailsBasedOnCode = function(codeShirt) {
+this.getShirtDetailsBasedOnCode = function() {
     // Kiểm tra nếu codeShirt có giá trị, gọi API theo mã
     if (codeShirt) {
         return this.getShirtDetailsByCode(codeShirt);
@@ -193,8 +193,10 @@ app.controller('ShirtDetailController', ['$scope', 'shirtDetailService', functio
 
     // Hàm gọi API lấy danh sách chi tiết áo thun (tùy theo có codeShirt hay không)
     $scope.getShirtDetails = function() {
+        
         shirtDetailService.getShirtDetailsBasedOnCode().then(function(response) {
             $scope.shirtDetails = response.data;
+            console.log( response.data);
             $scope.currentPage = 1;  // Đặt lại trang về trang đầu tiên mỗi khi gọi API
         }).catch(function(error) {
             console.error('Có lỗi xảy ra:', error);
@@ -280,7 +282,8 @@ app.controller('ShirtDetailController', ['$scope', 'shirtDetailService', functio
 
         // Nếu người dùng chọn "OK"
         if (confirmation) {
-            angular.forEach($scope.variants, function(variant) {
+angular.forEach($scope.variants, function(variant) {
+
                 if (variant.quantity > 0) {
                     var existingVariant = $scope.savedVariants.find(v => v.colorId === variant.colorId && v.sizeId === variant.sizeId);
                     if (existingVariant) {
@@ -350,7 +353,7 @@ app.controller('ShirtDetailController', ['$scope', 'shirtDetailService', functio
     $scope.getGenders = function() {
         shirtDetailService.getGenders().then(function(response) {
             $scope.genders = response.data;
-        });
+});
     };
 
     $scope.getMaterials = function() {
@@ -419,7 +422,7 @@ app.controller('ShirtDetailController', ['$scope', 'shirtDetailService', functio
         updateShirtDetailed.shirt = { id: updateShirtDetailed.shirtId };
         updateShirtDetailed.pattern = { id: updateShirtDetailed.patternId };
         updateShirtDetailed.season = { id: updateShirtDetailed.seasonId };
-        updateShirtDetailed.size = { id: updateShirtDetailed.sizeId };
+updateShirtDetailed.size = { id: updateShirtDetailed.sizeId };
 
         // Cập nhật trạng thái và đã xóa
 

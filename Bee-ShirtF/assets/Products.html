@@ -56,7 +56,7 @@
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
           <a href="BanHang.html" class="logo">
-            <img src="img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="20" />
+            <img src="img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="40" />
           </a>
           <div class="nav-toggle">
             <button class="btn btn-toggle toggle-sidebar">
@@ -575,7 +575,6 @@
                           <th>Thương Hiệu</th>
                           <th>Danh Mục</th>
                           <th>Số Lượng</th>
-                          <th>Tình trạng</th>
                           <th>Trạng thái</th>
                           <th>Hành Động</th>
                         </tr>
@@ -589,10 +588,7 @@
                           <td>{{ shirt.nameBrand }}</td>
                           <td>{{ shirt.nameCategory }}</td>
                           <td>{{ shirt.quantity }}</td>
-                          <td>
-                            <span ng-if="shirt.statusshirt === 0">Còn hàng</span>
-                            <span ng-if="shirt.statusshirt === 1">Hết hàng</span>
-                          </td>
+                         
                           <td>
                             <span ng-if="shirt.deleted === false">Đang bán</span>
                             <span ng-if="shirt.deleted === true">Ngừng bán</span>
@@ -789,7 +785,7 @@
   <script src="js/plugin/datatables/datatables.min.js"></script>
 
   <!-- Bootstrap Notify -->
-  <script src="js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+  <!-- <script src="js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script> -->
 
   <!-- jQuery Vector Maps -->
   <script src="js/plugin/jsvectormap/jsvectormap.min.js"></script>

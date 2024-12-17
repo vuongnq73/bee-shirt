@@ -9,13 +9,15 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("bills") // Đường dẫn cho chi tiết hóa đơn
-@CrossOrigin(origins = "http://127.0.0.1:5501")
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
@@ -58,4 +60,6 @@ public class BillDetailController {
                 .result(billDetailsOnline)
                 .build();
     }
+    //
+
 }

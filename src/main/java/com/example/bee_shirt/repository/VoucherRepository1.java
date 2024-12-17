@@ -11,11 +11,8 @@ import java.util.Optional;
 
 public interface VoucherRepository1 extends JpaRepository<Voucher1, Long> {
 //
-
-    @Query("SELECT v FROM Voucher1 v WHERE v.code_voucher LIKE :query")
-    Optional<Voucher1> findVoucherByCode(String query);
-//
     @Query("SELECT v FROM  Voucher1 v WHERE v.code_voucher = :code")
+
     Optional<Voucher1> findByCode_voucher(@Param("code") String code);
 
     // Tìm tất cả voucher có enddate nhỏ hơn ngày hiện tại
@@ -39,5 +36,9 @@ public interface VoucherRepository1 extends JpaRepository<Voucher1, Long> {
 
     @Query("SELECT v FROM Voucher1 v WHERE v.code_voucher LIKE :query")
     Optional<Voucher1> findVoucherByCode(String query);
+
+
+    @Query("SELECT v FROM Voucher1 v WHERE v.min_bill_value < :money AND v.quantity > 0 AND v.status_voucher = 1 AND CURRENT_DATE >= v.startdate AND CURRENT_DATE <=v.enddate")
+    List<Voucher1> findAvailableVoucher(Integer money);
 
 }

@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-
 
 @Service
 public class ShirtDetailService {
@@ -28,8 +28,8 @@ public class ShirtDetailService {
     @Autowired private ShirtRepository shirtRepository;
 
     // Lấy tất cả chi tiết áo
-    public Page<ShirtDetailDTO> getAllShirtDetails(Pageable pageable) {
-        return shirtDetailRepository.findAllShirtDetails(pageable);
+    public List<ShirtDetailDTO> getAllShirtDetails(Pageable pageable) {
+        return shirtDetailRepository.findAllShirtDetails();
     }
     public List<ShirtDetail> addShirtDetails(List<ShirtDetailDTO> shirtDetailDTOs) {
         // Chuyển đổi từ DTO sang entity và xử lý liên kết
@@ -105,12 +105,7 @@ public class ShirtDetailService {
             // Cập nhật các trường, chỉ cập nhật nếu giá trị không phải là null
             shirtDetail.setCodeShirtDetail(updatedShirtDetail.getCodeShirtDetail());
             shirtDetail.setQuantity(updatedShirtDetail.getQuantity());
-<<<<<<< Updated upstream
-           shirtDetail.setPrice(updatedShirtDetail.getPrice());
-           shirtDetail.setStatusshirtdetail(updatedShirtDetail.getStatusshirtdetail());
-           shirtDetail.setDeleted(updatedShirtDetail.isDeleted());
-           // Cập nhật các thuộc tính
-=======
+
             shirtDetail.setPrice(updatedShirtDetail.getPrice());
             shirtDetail.setStatusshirtdetail(updatedShirtDetail.getStatusshirtdetail());
             shirtDetail.setDeleted(updatedShirtDetail.isDeleted());
@@ -119,7 +114,6 @@ public class ShirtDetailService {
             shirtDetail.setImage3(updatedShirtDetail.getImage3());
 
             // Cập nhật các thuộc tính
->>>>>>> Stashed changes
             if (updatedShirtDetail.getShirt() != null && updatedShirtDetail.getShirt().getId() != 0) {
                 Shirt shirt = shirtRepository.findById(updatedShirtDetail.getShirt().getId()).orElse(null);
                 if (shirt != null) {
@@ -198,11 +192,13 @@ public class ShirtDetailService {
     public ShirtDetailDTO getShirtDetail(String codeShirtDetail) {
         // Tìm kiếm ShirtDetail theo mã codeShirtDetail
         ShirtDetail shirtDetail = shirtDetailRepository.findByCodeShirtDetail(codeShirtDetail);
+
         if (shirtDetail != null) {
             // Chuyển đổi ShirtDetail thành ShirtDetailDTO và trả về
             ShirtDetailDTO shirtDetailDTO = new ShirtDetailDTO(
                     shirtDetail.getId(),
                     shirtDetail.getCodeShirtDetail(),
+                    shirtDetail.getShirt().getCodeshirt(),
                     shirtDetail.getShirt().getNameshirt(),
                     shirtDetail.getPrice(),
                     shirtDetail.getQuantity(),
@@ -239,7 +235,6 @@ public class ShirtDetailService {
         return null;
     }
 
-
     public List<ShirtDetailDTO> getShirtDetailsByCodeShirt(String codeshirt) {
         // Gọi phương thức repository để lấy danh sách ShirtDetailDTO
         List<ShirtDetailDTO> shirtDetailDTOList = shirtDetailRepository.findAllShirtDetailByCodeShirt(codeshirt);
@@ -247,6 +242,7 @@ public class ShirtDetailService {
         // Trả về danh sách các ShirtDetailDTO, nếu không có dữ liệu trả về danh sách rỗng
         return shirtDetailDTOList != null ? shirtDetailDTOList : new ArrayList<>();
     }
+
 
     // Lấy tất cả các màu sắc
     public Iterable<Color> getAllColors() {
@@ -283,8 +279,6 @@ public class ShirtDetailService {
     public Iterable<Shirt> getAllShirts() {
         return shirtRepository.findAll();
     }
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 }
+

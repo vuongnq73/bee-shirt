@@ -42,6 +42,11 @@ public class PointOfSaleService {
     }
 
     public List<Bill> getPendingBills() {
+        List<BillDetail> oldBillDetails = billDetailRepository.findOldPendingBillDetails();
+        for (BillDetail obd : oldBillDetails){
+            obd.getShirtDetail().setQuantity(obd.getShirtDetail().getQuantity() + obd.getQuantity());
+            shirtDetailRepository.save(obd.getShirtDetail());
+        }
         billRepository.cancelOldPendingBills();
         return billRepository.findPendingBill();
     }
@@ -154,7 +159,7 @@ public class PointOfSaleService {
 
     public String cancelBill(String codeBill) {
         Bill bill = billRepository.findBillByCode(codeBill);
-        bill.setStatusBill(2);
+        bill.setStatusBill(10);
         billRepository.save(bill);
 
         List<BillDetail> oldCart = billDetailRepository.findBillDetailByBillCodeAndStatusBillDetail(codeBill,0);
@@ -176,16 +181,13 @@ public class PointOfSaleService {
     public String checkout(String codeBill, String codeVoucher, String username) {
         Bill bill = billRepository.findBillByCode(codeBill);
         Voucher1 voucher = voucherRepository.findVoucherByCode(codeVoucher).orElse(null);
-        Account account = accountRepository.findByUsername(username).orElse(null);
-        if (account != null) {
-            voucher=null;
-        }
+        Account account = bill.getCustomer();
         bill.setVoucher(voucher);
         bill.setCustomer(account);
-        bill.setTypeBill("POS");
-        bill.setCustomerName("1");
-        bill.setPhoneNumber("1");
-        bill.setAddressCustomer("1");
+        bill.setTypeBill("In-Store");
+        bill.setCustomerName(account.getFirstName()+account.getLastName());
+        bill.setPhoneNumber(account.getPhone());
+        bill.setAddressCustomer(account.getAddress());
         bill.setMoneyShip(BigDecimal.ZERO);
         double subtotalBeforeDiscount = 0.0;
         double moneyReduce = 0.0;
@@ -211,9 +213,13 @@ public class PointOfSaleService {
         bill.setTotalMoney(BigDecimal.valueOf(subtotalBeforeDiscount - moneyReduce));
         bill.setCreateDate(LocalDate.now());
         bill.setDesiredDate(LocalDate.now());
-        bill.setStatusBill(1);
+        bill.setStatusBill(6);
         bill.setUpdateAt(LocalDate.now());
         bill.setNote("None");
+        if (voucher!=null){
+            voucher.setQuantity(voucher.getQuantity()-1);
+            voucherRepository.save(voucher);
+        }
         billRepository.save(bill);
         return "Checkout successfully";
     }
@@ -260,4 +266,7 @@ public class PointOfSaleService {
     public List<Account> getAllCustomer() {
         return accountRepository.getAllCustomer();
     }
+
+    public List<Voucher1> findAvailableVoucher(Integer money){return voucherRepository.findAvailableVoucher(money);}
 }
+

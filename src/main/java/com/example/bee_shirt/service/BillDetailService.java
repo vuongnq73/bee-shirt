@@ -35,7 +35,8 @@ public class BillDetailService {
                 ((BigDecimal) result[8]).doubleValue(), // Total_Amount
                 (String) result[9],      // Customer_Name
                 (String) result[10],     // Address_Customer
-                (String) result[11]      // Phone_Number
+                (String) result[11],     // Phone_Number
+        ((BigDecimal) result[12]).doubleValue()
         )).collect(Collectors.toList());
     }
     public List<BillDetailOnlineDTO> getBillDetailsOnline(String codeBill) {
@@ -63,7 +64,11 @@ public class BillDetailService {
                         (BigDecimal) result[15],                             // subtotalBeforeDiscount
                         (BigDecimal) result[16],                             // totalMoney
                         (String) result[17],                                 // typeBill
-                        (String) result[18]                                  // note
+                        (String) result[18] ,
+                        (Integer) result[19],
+                        (BigDecimal) result[20]
+
+                        // note
                 ))
                 .collect(Collectors.toList());
     }
