@@ -1,10 +1,14 @@
 package com.example.bee_shirt.repository;
 
+import com.example.bee_shirt.dto.request.BillSummaryDTO;
 import com.example.bee_shirt.entity.Bill;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,7 +76,45 @@ public interface BillRepo extends JpaRepository<Bill, Integer> {
             + "WHERE CONVERT(DATE, b.create_at) = CONVERT(DATE, GETDATE())",
             nativeQuery = true)
     List<Object[]> findBillStatisticsNative();
-
     //
     Optional<Bill> findByCodeBill(String codeBill);
+    //
+    @Query(value = """
+    SELECT 
+        -- Tổng số bill loại In-Store
+        (SELECT COUNT(DISTINCT b.id)
+         FROM bill b
+         WHERE b.type_bill = 'In-Store' 
+           AND b.create_at BETWEEN :startDate AND :endDate
+           AND b.status_bill = 6) AS totalOrderInStore,
+
+        -- Tổng số bill loại Online
+        (SELECT COUNT(DISTINCT b.id)
+         FROM bill b
+         WHERE b.type_bill = 'Online' 
+           AND b.create_at BETWEEN :startDate AND :endDate
+           AND b.status_bill = 6) AS totalOrderOnline,
+
+        -- Tổng số bill (duy nhất)
+        COUNT(DISTINCT b.id) AS BillCount,
+
+        -- Tổng số lượng áo bán được
+        SUM(bd.quantity) AS TotalShirtQuantity,
+
+        -- Tổng doanh thu
+        SUM(b.total_money) AS TotalRevenue,
+
+        -- Tổng doanh thu loại In-Store
+        SUM(CASE WHEN b.type_bill = 'In-Store' THEN b.total_money ELSE 0 END) AS TotalInstoreMoney,
+
+        -- Tổng doanh thu loại Online
+        SUM(CASE WHEN b.type_bill = 'Online' THEN b.total_money ELSE 0 END) AS TotalOnlineMoney
+
+    FROM bill b
+    LEFT JOIN bill_detail bd ON b.id = bd.bill_id
+    WHERE b.create_at BETWEEN :startDate AND :endDate
+      AND b.status_bill = 6
+""", nativeQuery = true)
+    List<Object[]> getBillSummaryRaw(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
 }

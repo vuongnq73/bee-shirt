@@ -86,12 +86,6 @@ public class BillController {
     }
     //Api Thong ke san pham ban chay
 
-
-
-
-
-
-
     @GetMapping("/statics")
     public ApiResponse<List<BillStaticsDTO>> getAllBillStatics() {
         // Truyền các tham số động nhận từ API vào service

@@ -4,8 +4,7 @@ import com.example.bee_shirt.repository.BillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class StatisticsService {
@@ -77,4 +76,31 @@ public List<Object[]> getStatisticsForLast7Days(){
         List<Object[]> result = billRepository.findTotalBillsByType();
         return result.isEmpty()? Collections.emptyList() : result;
     }
-}
+    //
+
+    public Map<String, Object> getStatisticsByCustomTime(String startDate, String endDate, int statusBill) {
+        List<Object[]> rawResults = billRepository.findBillStatisticsByCustomTime(startDate, endDate, statusBill);
+
+        // Tạo Map chứa kết quả
+        Map<String, Object> result = new HashMap<>();
+        List<String> labels = new ArrayList<>();
+        List<Integer> orderData = new ArrayList<>();
+        List<Integer> shirtData = new ArrayList<>();
+        List<Double> revenueData = new ArrayList<>();
+
+        // Duyệt qua rawResults và thêm vào danh sách
+        for (Object[] row : rawResults) {
+            labels.add((String) row[0]); // labels
+            orderData.add(((Number) row[1]).intValue()); // totalOrders
+            shirtData.add(((Number) row[2]).intValue()); // totalShirtQuantity
+            revenueData.add(((Number) row[3]).doubleValue()); // totalRevenue
+        }
+
+        // Đưa các danh sách vào Map
+        result.put("labels", labels);
+        result.put("orderData", orderData);
+        result.put("shirtData", shirtData);
+        result.put("revenueData", revenueData);
+
+        return result;
+    }}

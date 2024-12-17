@@ -890,26 +890,7 @@
           });
         };
         // confirm nút in hóa đơn
-        $scope.confirmCancelOrder2 = function () {
-          // Hiển thị hộp thoại xác nhận bằng SweetAlert2
-          Swal.fire({
-            title: 'Bạn muốn in hóa đơn  này?',
-            text: 'Hành động này không thể hoàn tác!',
-            icon: 'warning',
-            showCancelButton: true,  // Hiển thị nút Cancel
-            confirmButtonColor: '#d33',  // Màu của nút Xác nhận
-            cancelButtonColor: '#3085d6',  // Màu của nút Hủy
-            confirmButtonText: 'Tiếp tục in',
-            cancelButtonText: 'Quay lại'
-          }).then((result) => {
-            if (result.isConfirmed) {
 
-
-            } else {
-              console.log("Đơn hàng không bị hủy.");
-            }
-          });
-        };
         $scope.cancelOrder = function () {
           // Cập nhật trạng thái thành 7 khi nhấn nút Hủy đơn
           $scope.billInfo.statusBill = 7;

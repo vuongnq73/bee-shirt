@@ -66,5 +66,6 @@ public class BillStaticsService {
                 result[3] != null ? ((Number) result[3]).longValue() : 0L // totalQuantitySold
         )).collect(Collectors.toList());
     }
+
 }
 

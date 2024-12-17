@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -260,4 +262,29 @@ public ResponseEntity<List<Object[]>> getBillStatisticsByType() {
     List<Object[]> statistics = statisticsService.findTotalBillsByType();
     return ResponseEntity.ok(statistics); // Trả về kết quả dưới dạng JSON
 }
+    @GetMapping("/summary")
+    public BillSummaryDTO getBillSummary(
+            @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+            @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
+        java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
+        java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
+        return billService.getBillSummary(sqlStartDate, sqlEndDate);
+    }
+
+//
+@GetMapping("/test")
+public ResponseEntity<Map<String, Object>> getBillStatistics(
+        @RequestParam String startDate,
+        @RequestParam String endDate,
+        @RequestParam(defaultValue = "6") int statusBill) {
+
+    try {
+        Map<String, Object> statistics = statisticsService.getStatisticsByCustomTime(startDate, endDate, statusBill);
+        return ResponseEntity.ok(statistics);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Collections.singletonMap("error", e.getMessage()));
+    }
+}
+
 }

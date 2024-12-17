@@ -1,5 +1,6 @@
 package com.example.bee_shirt.repository;
 
+import com.example.bee_shirt.dto.request.BillSummaryDTO;
 import com.example.bee_shirt.entity.Bill;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public interface BillRepository extends JpaRepository<Bill, Integer> {
@@ -221,6 +223,24 @@ List<Object[]> getOrderCounts();
 
 
 ///
+@Query(value = "SELECT " +
+        "CONVERT(VARCHAR, b.create_at, 120) AS labels, " +
+        "COUNT(DISTINCT b.id) AS orderData, " +
+        "SUM(bd.quantity) AS shirtData, " +
+        "SUM(DISTINCT b.total_money) AS revenueData " +
+        "FROM bill b " +
+        "JOIN bill_detail bd ON bd.bill_id = b.id " +
+        "WHERE b.create_at >= CONVERT(DATETIME, :startDate, 120) " +
+        "AND b.create_at <= CONVERT(DATETIME, :endDate, 120) " +
+        "AND b.status_bill = :statusBill " +
+        "GROUP BY CONVERT(VARCHAR, b.create_at, 120) " +
+        "ORDER BY labels ASC",
+        nativeQuery = true)
+List<Object[]> findBillStatisticsByCustomTime(
+        @Param("startDate") String startDate,
+        @Param("endDate") String endDate,
+        @Param("statusBill") int statusBill);
+
 
 }
 
