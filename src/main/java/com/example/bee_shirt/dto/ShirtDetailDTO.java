@@ -37,4 +37,8 @@ public class ShirtDetailDTO {
     private int sizeId;
     private int materialId;
     private int colorId;
+    private String image;
+    private String image2;
+    private String image3;
+
 }

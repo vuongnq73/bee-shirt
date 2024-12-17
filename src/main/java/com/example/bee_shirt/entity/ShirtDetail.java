@@ -63,6 +63,15 @@ public class ShirtDetail {
     @Column(name = "status_shirt_detail")
     private int statusshirtdetail;
 
+    @Column(name ="image")
+    private String image;
+
+    @Column(name ="image2")
+    private String image2;
+
+    @Column(name ="image3")
+    private String image3;
+
     @Column(name = "create_by")
     private String createBy;
 
