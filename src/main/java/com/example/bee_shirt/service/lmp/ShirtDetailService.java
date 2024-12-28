@@ -103,7 +103,9 @@ public class ShirtDetailService {
             Color color = colorRepository.findById(dto.getColorId())
                     .orElseThrow(() -> new RuntimeException("Color not found"));
             shirtDetail.setColor(color);
-
+            shirtDetail.setImage("/assets/img/" + dto.getImage());
+            shirtDetail.setImage2("/assets/img/" +dto.getImage2());
+            shirtDetail.setImage3("/assets/img/" +dto.getImage3());
             return shirtDetail;
         }).collect(Collectors.toList());
 
@@ -123,9 +125,14 @@ public class ShirtDetailService {
             // Cập nhật các trường, chỉ cập nhật nếu giá trị không phải là null
             shirtDetail.setCodeShirtDetail(updatedShirtDetail.getCodeShirtDetail());
             shirtDetail.setQuantity(updatedShirtDetail.getQuantity());
+
             shirtDetail.setPrice(updatedShirtDetail.getPrice());
             shirtDetail.setStatusshirtdetail(updatedShirtDetail.getStatusshirtdetail());
             shirtDetail.setDeleted(updatedShirtDetail.isDeleted());
+            shirtDetail.setImage(updatedShirtDetail.getImage());
+            shirtDetail.setImage2(updatedShirtDetail.getImage2());
+            shirtDetail.setImage3(updatedShirtDetail.getImage3());
+
             // Cập nhật các thuộc tính
             if (updatedShirtDetail.getShirt() != null && updatedShirtDetail.getShirt().getId() != 0) {
                 Shirt shirt = shirtRepository.findById(updatedShirtDetail.getShirt().getId()).orElse(null);
@@ -235,7 +242,10 @@ public class ShirtDetailService {
                     shirtDetail.getSeason() != null ? shirtDetail.getSeason().getId() : 0,
                     shirtDetail.getSize() != null ? shirtDetail.getSize().getId() : 0,
                     shirtDetail.getMaterial() != null ? shirtDetail.getMaterial().getId() : 0,
-                    shirtDetail.getColor() != null ? shirtDetail.getColor().getId() : 0
+                    shirtDetail.getColor() != null ? shirtDetail.getColor().getId() : 0,
+                    shirtDetail.getImage(),
+                    shirtDetail.getImage2(),
+                    shirtDetail.getImage3()
             );
 
             return shirtDetailDTO;
@@ -296,6 +306,7 @@ public class ShirtDetailService {
     public Iterable<Shirt> getAllShirts() {
         return shirtRepository.findAll();
     }
+
 
 
     public List<HomePageResponse> getTop5ShirtDetail() {

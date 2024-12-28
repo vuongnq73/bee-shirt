@@ -1,16 +1,5 @@
 "use strict";
-
-
-
-// window.addEventListener('load', function(event) {
-//   $("body").append(modalShowcase);
-
-//   const myModal = new bootstrap.Modal("#modalShowcase");
-//   myModal.show();
-// });
-
-
-// Cicle Chart
+// Biểu đồ tròn
 Circles.create({
 	id:           'task-complete',
 	radius:       50,
@@ -26,7 +15,7 @@ Circles.create({
 	styleText:    true
 })
 
-//Notify
+//thông báo khi đăng nhập thành công
 $.notify({
 	icon: 'icon-bell',
 	title: 'Bee-Shirt Admin',
@@ -41,13 +30,9 @@ $.notify({
 });
 
 // Jsvectormap
-
-
 //Chart
-
-//biểu đồ 
+//khởi tạo biểu đồ 
 var ctx = document.getElementById('statisticsChart').getContext('2d');
-        
 var statisticsChart = new Chart(ctx, {
 	type: 'bar', // Đổi từ 'line' sang 'bar' để tạo biểu đồ cột
 	data: {
@@ -139,11 +124,7 @@ var statisticsChart = new Chart(ctx, {
 	}
 });
 
-
-
-
 var myLegendContainer = document.getElementById("myChartLegend");
-
 // generate HTML legend
 myLegendContainer.innerHTML = statisticsChart.generateLegend();
 
@@ -156,43 +137,13 @@ function getToken() {
     const token = sessionStorage.getItem("jwtToken");
     if (!token) {
         alert("Bạn chưa đăng nhập. Vui lòng đăng nhập lại.");
-        window.location.href = "http://127.0.0.1:5501/assets/account/login.html#!/login";
+        window.location.href = "http://127.0.0.1:5500/assets/account/login.html#!/login";
     }
     return token;
 }
-
 // // Lấy dữ liệu từ API và cập nhật biểu đồ
 const token = getToken(); // Đảm bảo token được lấy trước khi gọi API
-
-// fetch("http://localhost:8080/statics/filterStatics", {
-//     method: "GET", // Đảm bảo dùng method đúng
-//     headers: { 
-//         Authorization: "Bearer " + token // Thêm token vào header
-//     }
-// })
-// .then(response => response.json())
-// .then(data => {
-//     // Xử lý dữ liệu trả về
-//     statisticsChart.data.labels = data.labels;
-//     statisticsChart.data.datasets[0].data = data.datasets[0].data;
-//     statisticsChart.data.datasets[1].data = data.datasets[1].data;
-//     statisticsChart.data.datasets[2].data = data.datasets[2].data;
-//     statisticsChart.update();
-// })
-// .catch(error => {
-//     console.error("Error fetching data:", error);
-// }); 
-
-$("#activeUsersChart").sparkline([112,109,120,107,110,85,87,90,102,109,120,99,110,85,87,94], {
-	type: 'bar',
-	height: '100',
-	barWidth: 9,
-	barSpacing: 10,
-	barColor: 'rgba(255,255,255,.3)'
-});
-
 /////
-
 function applyFilter(filterValue) {
     // Gửi yêu cầu đến API với bộ lọc thời gian
     fetch(`http://localhost:8080/statics/filterByTime?date=${filterValue}`, {
@@ -210,6 +161,13 @@ function applyFilter(filterValue) {
     .then(data => {
         // Kiểm tra nếu dữ liệu trả về hợp lệ
         if (data && data.labels && data.shirtData && data.revenueData && data.orderData) {
+			if (filterValue === "this-week") {
+                // Lọc theo tuần: Hiển thị 7 ngày gần nhất
+                statisticsChart.data.labels = data.labels; // Labels là 7 ngày gần nhất
+                statisticsChart.data.datasets[0].data = data.orderData; // Số Đơn Hàng
+                statisticsChart.data.datasets[1].data = data.shirtData; // Số Sản Phẩm
+                statisticsChart.data.datasets[2].data = data.revenueData; // Doanh Thu
+            } else {
             // Mảng tháng đầy đủ (12 tháng)
             const allMonths = [
                 "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -234,10 +192,10 @@ function applyFilter(filterValue) {
 
             // Cập nhật dữ liệu biểu đồ từ API
             statisticsChart.data.labels = fullLabels; // Cập nhật labels
-            statisticsChart.data.datasets[0].data = fullShirtData; // Cập nhật dữ liệu Sản Phẩm
-            statisticsChart.data.datasets[1].data = fullRevenueData; // Cập nhật dữ liệu Doanh Thu
-            statisticsChart.data.datasets[2].data = fullOrderData; // Cập nhật dữ liệu Đơn Hàng
-
+            statisticsChart.data.datasets[0].data = fullOrderData ; // Cập nhật dữ liệu Sản Phẩm
+            statisticsChart.data.datasets[1].data = fullShirtData; // Cập nhật dữ liệu Doanh Thu
+            statisticsChart.data.datasets[2].data = fullRevenueData; // Cập nhật dữ liệu Đơn Hàng
+		}
             // Vẽ lại biểu đồ
             statisticsChart.update();
         } else {
@@ -253,37 +211,202 @@ function applyFilter(filterValue) {
 
 // Gọi API lần đầu để hiển thị dữ liệu mặc định (tất cả)
 applyFilter("all");
+//
+// Hàm lọc dữ liệu theo ngày
+function applyCustomFilter() {
+    const startDate = document.getElementById("startDate").value;
+    const endDate = document.getElementById("endDate").value;
+
+    // Kiểm tra giá trị ngày
+    if (!startDate || !endDate) {
+        alert("Vui lòng chọn cả ngày bắt đầu và ngày kết thúc.");
+        return;
+    }
+
+    // Gửi request đến API
+    fetch(` http://localhost:8080/statics/test?startDate=${startDate}&endDate=${endDate}&statusBill=6`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Kiểm tra dữ liệu trả về
+        if (data && data.labels && data.orderData && data.shirtData && data.revenueData) {
+            // Cập nhật biểu đồ
+            statisticsChart.data.labels = data.labels;
+            statisticsChart.data.datasets[0].data = data.orderData;
+            statisticsChart.data.datasets[1].data = data.shirtData;
+            statisticsChart.data.datasets[2].data = data.revenueData;
+
+            statisticsChart.update(); // Vẽ lại biểu đồ
+        } else {
+            alert("Dữ liệu trả về không đúng định dạng.");
+            console.error("API response error:", data);
+        }
+    })
+    .catch(error => {
+        console.error("Lỗi khi tải dữ liệu:", error);
+        alert("Có lỗi xảy ra khi lấy dữ liệu. Vui lòng thử lại!");
+    });
+}
+//
+function resetChartData() {
+    // Hiển thị hộp thoại xác nhận
+    Swal.fire({
+        title: 'Bạn có chắc chắn muốn reset dữ liệu biểu đồ?',
+        text: 'Hành động này sẽ làm mới dữ liệu và áp dụng bộ lọc mặc định.',
+        icon: 'warning',
+        showCancelButton: true, // Hiển thị nút Hủy
+        confirmButtonColor: '#3085d6', // Màu nút Xác nhận
+        cancelButtonColor: '#d33', // Màu nút Hủy
+        confirmButtonText: 'Xác nhận reset',
+        cancelButtonText: 'Hủy',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Nếu người dùng xác nhận, tiến hành reset biểu đồ
+            applyFilter("all");
+            Swal.fire('Đã reset dữ liệu!', '', 'success'); // Thông báo sau khi reset thành công
+        } else {
+            console.log('Người dùng đã hủy reset dữ liệu.');
+        }
+    });
+}
 
 
-////
-// Biểu đồ tròn
-// Biểu đồ tròn
-var pieChart = new Chartist.Pie('#monthlyChart', {
-	// Chỉ định series, không cần đưa labels vào chart nữa
-	series: [50, 20, 30]
-  }, {
-	plugins: [
-	  Chartist.plugins.tooltip() // Hiển thị thông tin chi tiết khi hover
-	]
-  });
-  
-  // Tạo phần chú thích bên ngoài biểu đồ
-  pieChart.on('created', function() {
-	// Lấy phần tử chứa legend
-	var myLegendContainer = document.getElementById("pieChartLegend");
-  
-	// Tạo HTML cho legend (chú thích) thủ công
-	var legendHTML = '';
-	var labels = ['Tiền Mặt', 'Chuyển Khoản', 'Cả hai']; // Nhãn tương ứng
-	var colors = ['#f3545d', '#fdaf4b', '#177dff']; // Màu sắc tương ứng
-  
-	// Tạo các mục legend cho từng nhãn
-	for (var i = 0; i < labels.length; i++) {
-	  legendHTML += '<li><span style="background-color: ' + colors[i] + '"></span>'
-				  + labels[i] + ': ' + [50, 20, 30][i] + '%</li>';
-	}
-  
-	// Chèn legend vào trang
-	myLegendContainer.innerHTML = legendHTML;
-  });
-  
+// xuất excel
+function exportChartToExcel() {
+    // Hiển thị hộp thoại xác nhận
+    Swal.fire({
+        title: 'Bạn có chắc chắn muốn xuất dữ liệu này ra Excel?',
+        text: 'Hành động này sẽ tải xuống file Excel chứa dữ liệu biểu đồ.',
+        icon: 'question',
+        showCancelButton: true, // Hiển thị nút Hủy
+        confirmButtonColor: '#3085d6', // Màu nút Xác nhận
+        cancelButtonColor: '#d33', // Màu nút Hủy
+        confirmButtonText: 'Xuất Excel',
+        cancelButtonText: 'Hủy',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Nếu người dùng xác nhận, tiến hành xuất Excel
+
+            // Lấy dữ liệu từ biểu đồ
+            const labels = statisticsChart.data.labels;
+            const datasets = statisticsChart.data.datasets;
+
+            // Tạo mảng dữ liệu để xuất ra Excel
+            const excelData = [];
+
+            // Thêm tiêu đề vào Excel
+            const headers = ['Label'];
+            datasets.forEach(function(dataset) {
+                headers.push(dataset.label);
+            });
+            excelData.push(headers);
+
+            // Thêm dữ liệu vào Excel
+            for (let i = 0; i < labels.length; i++) {
+                const row = [labels[i]];
+                datasets.forEach(function(dataset) {
+                    row.push(dataset.data[i]);
+                });
+                excelData.push(row);
+            }
+
+            // Tạo workbook và sheet từ dữ liệu
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(excelData);
+
+            // Thêm sheet vào workbook
+            XLSX.utils.book_append_sheet(wb, ws, 'Chart Data');
+
+            // Tải file Excel
+            XLSX.writeFile(wb, 'chart-data.xlsx');
+            Swal.fire('Đã xuất dữ liệu!', '', 'success'); // Thông báo sau khi reset thành công
+        } else {
+            console.log('Người dùng đã hủy xuất Excel.');
+        }
+    });
+}
+
+
+// 
+    // Load order data lịch sửa mua hàng
+    // $scope.loadDataOrderToTable = function () {
+    //   const token = getToken();
+    //   $http({
+    //     method: "GET",
+    //     url: "http://localhost:8080/bills/history",
+    //     headers: { Authorization: "Bearer " + token }
+    //   }).then(function (response) {
+    //     if (Array.isArray(response.data.result)) {
+    //       $scope.orders = response.data.result.map((order, index) => ({
+    //         stt: index + 1,
+    //         codeBill: order.codeBill,
+    //         desiredDate: $scope.formatDate(order.desiredDate),
+    //         totalMoney: order.totalMoney
+    //           ? order.totalMoney.toLocaleString("vi-VN", { style: "currency", currency: "VND" })
+    //           : "",
+    //         statusBill: order.statusBill === 1 ? "Đã thanh toán" : "Chưa thanh toán",
+    //       }));
+    //       $scope.successMessage = "Tải dữ liệu thành công!";
+    //       $timeout($scope.initializeDataTable, 0);
+    //     } else {
+    //       $scope.errorMessage = "Dữ liệu không đúng định dạng.";
+    //     }
+    //   }).catch(function (error) {
+    //     handleError(error, "Không thể lấy dữ liệu hóa đơn.");
+    //   });
+    // };
+//test
+// $scope.applyDateFilter = function () {
+//   // Kiểm tra nếu không có giá trị cho startDate hoặc endDate
+//   if (!$scope.startDate && !$scope.endDate) {
+//     // Nếu không có ngày bắt đầu và ngày kết thúc, lấy toàn bộ dữ liệu
+//     $scope.filteredOrders = $scope.orders;
+//   } else {
+//     // Sử dụng moment.js để đảm bảo tính chính xác trong việc định dạng và so sánh ngày
+//     const formattedStartDate = moment($scope.startDate, "DD/MM/YYYY").startOf('day'); // Đặt thời gian bắt đầu là 00:00
+//     const formattedEndDate = moment($scope.endDate, "DD/MM/YYYY").endOf('day'); // Đặt thời gian kết thúc là 23:59
+
+//     // Kiểm tra xem ngày bắt đầu có lớn hơn ngày kết thúc hay không
+//     if (formattedStartDate.isAfter(formattedEndDate)) {
+//       alert("'Từ ngày' không được lớn hơn 'Đến ngày'.");
+//       return;
+//     }
+//     if (!$scope.startDate ) {
+//       alert("Chưa Chọn Ngày Bắt Đầu.");
+//       return;
+//     }
+//     if (!$scope.endDate) {
+//       alert("Chưa Chọn Ngày Kết Kết Thúc.");
+//       return;
+//     }
+//     // Lọc dữ liệu từ mảng orders
+//     $scope.filteredOrders = $scope.orders.filter(function (order) {
+//       // Chuyển đổi ngày thanh toán trong order sang định dạng chuẩn sử dụng moment.js
+//       const orderDate = moment(order.desiredDate, "DD/MM/YYYY");
+
+//       return orderDate.isBetween(formattedStartDate, formattedEndDate, null, '[]'); // '[]' bao gồm cả start và end date
+//     });
+    
+//     // Nếu không có dữ liệu sau khi lọc, hiển thị thông báo
+//     if ($scope.filteredOrders.length === 0) {
+//       alert("Không có dữ liệu trong khoảng thời gian này.");
+//     }
+//   }
+
+//   // Cập nhật lại bảng dữ liệu
+//   $timeout($scope.initializeOrderTable, 0); // Khởi tạo lại bảng với dữ liệu đã lọc
+// };
+
+//end test
+
+    

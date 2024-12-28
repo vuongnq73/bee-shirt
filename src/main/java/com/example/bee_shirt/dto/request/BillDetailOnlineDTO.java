@@ -33,6 +33,7 @@ public class BillDetailOnlineDTO {
     private String typeBill;
     private String note;
     private Integer statusBill;
+    private BigDecimal moneyReduce;
 
 
 }
