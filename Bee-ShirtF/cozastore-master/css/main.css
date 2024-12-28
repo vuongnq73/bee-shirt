@@ -2344,57 +2344,58 @@ input.num-product::-webkit-inner-spin-button {
 /*//////////////////////////////////////////////////////////////////
 [ L-Text >= 26 ]*/
 .ltext-101 {
-  font-family: Poppins-Regular;
+  font-family: 'Times New Roman', Times, serif;
   font-size: 28px;
   line-height: 1.2857;
 }
 
 .ltext-102 {
-  font-family: roboto;
+  font-family: 'Times New Roman', Times, serif;
   font-size: 28px;
   line-height: 1.1;
 }
 
 .ltext-103 {
-  font-family: roboto;
+
+  font-family: 'Times New Roman', Times, serif;
   font-size: 36px;
   line-height: 1.1;
   text-transform: uppercase;
 }
 
 .ltext-104 {
-  font-family:roboto;
+  font-family: 'Times New Roman', Times, serif;
   font-size: 60px;
   line-height: 1.1;
   text-transform: uppercase;
 }
 
 .ltext-105 {
-  font-family:roboto;
+  font-family:'Times New Roman', Times, serif;
   font-size: 50px;
   line-height: 1.1;
 }
 
 .ltext-106 {
-  font-family:roboto;
+  font-family:'Times New Roman', Times, serif;
   font-size: 36px;
   line-height: 1.2;
 }
 
 .ltext-107 {
-  font-family: roboto;
+  font-family: 'Times New Roman', Times, serif;
   font-size: 30px;
   line-height: 1.1;
 }
 
 .ltext-108 {
-  font-family:roboto;
+  font-family:'Times New Roman', Times, serif;
   font-size: 26px;
   line-height: 1.3846;
 }
 
 .ltext-109 {
-  font-family: roboto;
+  font-family: 'Times New Roman', Times, serif;
   font-size: 36px;
   line-height: 1.2;
 }
@@ -3332,6 +3333,4 @@ input.num-product::-webkit-inner-spin-button {
   .respon3 {
     padding: 20px;
   }
-
-}
 

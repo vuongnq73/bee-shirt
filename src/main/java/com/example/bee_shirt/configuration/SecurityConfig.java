@@ -20,6 +20,7 @@ public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS_POST = {"/auth/login", "/auth/logout", "/user/register", "/auth/forgot-password", "/auth/reset-password", "/auth/send-verification-code"};
     private final String[] PUBLIC_ENDPOINTS_GET = {"/homepage/**", "/auth/send-verification-code"};
 
+
     private final String[] ADMIN_GET_ENDPOINTS = {"/admin/accounts", "/admin/roles"};
     private final String[] ADMIN_POST_ENDPOINTS = {"/admin/create"};
 
@@ -38,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/myOderByEmail/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/bills/detailsOnline/**").permitAll()
                         .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS_GET).permitAll()  // Cho phép GET không cần xác thực
+
                         .requestMatchers(HttpMethod.GET, ADMIN_GET_ENDPOINTS).hasAuthority(Constant.ROLE_ADMIN)
                         .requestMatchers(HttpMethod.POST, ADMIN_POST_ENDPOINTS).hasAuthority(Constant.ROLE_ADMIN)
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()

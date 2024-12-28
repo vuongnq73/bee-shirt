@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
 import java.util.Map;
 
+
 @RestController
 @RequestMapping("/auth")
 // Địa chỉ frontend
@@ -70,11 +71,6 @@ public class AuthenticationController {
         }
         return response;
     }
-
-
-
-
-
 
 
 }

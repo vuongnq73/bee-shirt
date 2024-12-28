@@ -6,11 +6,13 @@ import com.example.bee_shirt.dto.request.AccountCreationRequest;
 import com.example.bee_shirt.dto.request.AccountUpdateRequest;
 import com.example.bee_shirt.dto.response.AccountResponse;
 import com.example.bee_shirt.entity.Account;
+import com.example.bee_shirt.entity.Cart;
 import com.example.bee_shirt.entity.Role;
 import com.example.bee_shirt.exception.AppException;
 import com.example.bee_shirt.exception.ErrorCode;
 import com.example.bee_shirt.mapper.AccountMapper;
 import com.example.bee_shirt.repository.AccountRepository;
+import com.example.bee_shirt.repository.CartRepository;
 import com.example.bee_shirt.repository.RoleRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -42,6 +40,7 @@ public class AccountService {
     AccountRepository accountRepository;
     RoleRepository roleRepository;
     Cloudinary cloudinary;
+    CartRepository cartRepository;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
@@ -136,8 +135,35 @@ public class AccountService {
         Set<Role> roles = getRolesFromRequest(request.getRole());
         account.setRole(roles);
 
-        return accountMapper.toUserResponse(accountRepository.save(account));
+        Account addAccount = accountRepository.save(account);
+
+        System.out.println(addAccount.getRole());
+
+        //Tạo giỏ hàng cho account
+        if (hasUserRole(getRolesFromRequest(request.getRole()))) {
+            String cartCode = generateCartCode();
+            Cart cart = new Cart();
+            cart.setCodeCart(cartCode);
+            cart.setCreateBy("SYSTEM");
+            cart.setAccount(addAccount);
+            cart.setCreateAt(LocalDate.now());
+            cart.setDeleted(false);
+            cart.setStatusCart(1);
+            cartRepository.save(cart);
+        }
+
+        return accountMapper.toUserResponse(addAccount);
     }
+
+    private boolean hasUserRole(Set<Role> roles) {
+        for (Role role : roles) {
+            if ("USER".equals(role.getCode())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public AccountResponse updateAccount(AccountUpdateRequest request, String code) {
 
@@ -212,6 +238,26 @@ public class AccountService {
     private void validateEmail(String email) {
         if (accountRepository.findByEmail(email).isPresent()) {
             throw new AppException(ErrorCode.EMAIL_EXISTED);
+        }
+    }
+
+    private void validateEmail(String email) {
+        if (accountRepository.findByEmail(email).isPresent()) {
+            throw new AppException(ErrorCode.EMAIL_EXISTED);
+        }
+    }
+
+    private String generateCartCode() {
+        String lastCode = Optional.ofNullable(cartRepository.getTop1())
+                .map(Cart::getCodeCart)
+                .orElse("CART000");
+
+        if (lastCode.length() > 6) {
+            String prefix = lastCode.substring(0, 6);
+            int number = Integer.parseInt(lastCode.substring(6));
+            return prefix + (number + 1);
+        } else {
+            return "CART001";
         }
     }
 

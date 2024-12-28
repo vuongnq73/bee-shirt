@@ -77,7 +77,7 @@
           <div class="success" ng-show="successMessage">
             {{ successMessage }}
           </div>
-          <button type="submit" class="login-btn">Đăng Ký</button>
+          <button type="submit" ng-disabled="isSubmitting" class="login-btn">Đăng Ký</button>
         </form>
 
         <div class="register-link">

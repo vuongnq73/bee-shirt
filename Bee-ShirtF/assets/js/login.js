@@ -19,6 +19,8 @@ angular
       username: "",
       password: "",
     };
+    $scope.isSubmitting = false
+
     $scope.rememberMe = false;
     $scope.errorMessage = "";
     $scope.isForgotPasswordModalVisible = false; // Biến điều khiển hiển thị modal
@@ -40,6 +42,14 @@ angular
   
     // Gửi yêu cầu quên mật khẩu
     $scope.forgotPassword = function () {
+
+      if ($scope.isSubmitting) {
+        return;
+      }
+
+       // Đặt trạng thái đang xử lý
+      $scope.isSubmitting = true;
+
       if (!$scope.email) {
         $scope.forgotPasswordError = "Vui lòng nhập email!";
         return;
@@ -59,6 +69,11 @@ angular
           } else {
             $scope.forgotPasswordError = "Không thể gửi email reset mật khẩu.";
           }
+
+        })
+        .finally(function () {
+          $scope.email = "";
+          $scope.isSubmitting = false; // Kích hoạt lại nút sau khi xử lý xong
         });
     };
   
