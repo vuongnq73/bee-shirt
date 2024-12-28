@@ -1,8 +1,6 @@
 package com.example.bee_shirt.service;
 
-import com.example.bee_shirt.dto.request.BillDTO;
-import com.example.bee_shirt.dto.request.BillSummaryDTO;
-import com.example.bee_shirt.dto.request.RevenueDTO;
+import com.example.bee_shirt.dto.request.*;
 import com.example.bee_shirt.entity.Bill;
 import com.example.bee_shirt.repository.BillRepo;
 import com.example.bee_shirt.repository.BillRepository;
@@ -14,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,6 +23,7 @@ import java.util.stream.Collectors;
 public class BillService {
 
     BillRepo billRepository;
+    BillRepository billrepo;
 
     // Method to fetch all Bill Summaries
     public List<BillDTO> getAllBillSummaries() {
@@ -117,5 +117,130 @@ public class BillService {
         BigDecimal TotalOnlineMoney = (BigDecimal) result[6];
         return new BillSummaryDTO(totalOrderInStore, totalOrderOnline, billCount, totalShirtQuantity, totalRevenue,TotalOnlineMoney,TotalInstoreMoney);
     }
+    // lấy danh sách đươn hàng của client có tran thái là 1(chờ xử lý)
+
+    public List<MyOderDTO> getBillsByCustomerIdAndStatus(Integer customerId) {
+        List<Object[]> results = billRepository.findByCustomerIdAndStatusNative(customerId);
+
+        return results.stream().map(result -> new MyOderDTO(
+                result[0].toString(),                                // codeBill
+                new Date(((java.sql.Date) result[1]).getTime()),     // createDate
+                Double.parseDouble(result[2].toString()),            // totalMoney
+                Integer.parseInt(result[3].toString())               // statusBill
+        )).collect(Collectors.toList());
+    }
+    // lấy danh sách đươn hàng của client có tran thái là 3( chờ Đang Giao Hàng)
+
+    public List<MyOderDTO> getBillsByCustomerIdAndStatus2(Integer customerId) {
+        List<Object[]> results = billRepository.findByCustomerIdAndStatusNative2(customerId);
+
+        return results.stream().map(result -> new MyOderDTO(
+                result[0].toString(),                                // codeBill
+                new Date(((java.sql.Date) result[1]).getTime()),     // createDate
+                Double.parseDouble(result[2].toString()),            // totalMoney
+                Integer.parseInt(result[3].toString())               // statusBill
+        )).collect(Collectors.toList());
+    }
+    // lấy danh sách đươn hàng của client có tran thái là 4(Đang Giao Hàng)
+    public List<MyOderDTO> getBillsByCustomerIdAndStatus3(Integer customerId) {
+        List<Object[]> results = billRepository.findByCustomerIdAndStatusNative3(customerId);
+
+        return results.stream().map(result -> new MyOderDTO(
+                result[0].toString(),                                // codeBill
+                new Date(((java.sql.Date) result[1]).getTime()),     // createDate
+                Double.parseDouble(result[2].toString()),            // totalMoney
+                Integer.parseInt(result[3].toString())               // statusBill
+        )).collect(Collectors.toList());
+    }
+    // lấy danh sách đươn hàng của client có tran thái là 5,6(hoàn tất,tahnh toán)
+    public List<MyOderDTO> getBillsByCustomerIdAndStatus4(Integer customerId) {
+        List<Object[]> results = billRepository.findByCustomerIdAndStatusNative4(customerId);
+
+        return results.stream().map(result -> new MyOderDTO(
+                result[0].toString(),                                // codeBill
+                new Date(((java.sql.Date) result[1]).getTime()),     // createDate
+                Double.parseDouble(result[2].toString()),            // totalMoney
+                Integer.parseInt(result[3].toString())               // statusBill
+        )).collect(Collectors.toList());
+    }
+    // lấy danh sách đươn hàng của client có tran thái là 7(Hủyddown)
+    public List<MyOderDTO> getBillsByCustomerIdAndStatus5(Integer customerId) {
+        List<Object[]> results = billRepository.findByCustomerIdAndStatusNative5(customerId);
+
+        return results.stream().map(result -> new MyOderDTO(
+                result[0].toString(),                                // codeBill
+                new Date(((java.sql.Date) result[1]).getTime()),     // createDate
+                Double.parseDouble(result[2].toString()),            // totalMoney
+                Integer.parseInt(result[3].toString())               // statusBill
+        )).collect(Collectors.toList());
+    }
+    //lấy danh sách đơn hàng sau khi xác nhâận mail
+    public List<MyOderDTO> getOrdersByEmail(String email) {
+        List<Object[]> results = billRepository.findByEmail(email);
+
+        return results.stream().map(result -> new MyOderDTO(
+                result[0].toString(),                                // codeBill
+                new java.util.Date(((java.sql.Date) result[1]).getTime()), // createDate
+                Double.parseDouble(result[2].toString()),            // totalMoney
+                Integer.parseInt(result[3].toString())               // statusBill
+        )).collect(Collectors.toList());
+    }
+//
+public List<MyOderDTO> getBillsByEmailAndStatus1(String email) {
+    List<Object[]> results = billRepository.findBillByEmail1(email);
+
+    return results.stream().map(result -> new MyOderDTO(
+            result[0].toString(),                                // codeBill
+            new Date(((java.sql.Date) result[1]).getTime()),     // createDate
+            Double.parseDouble(result[2].toString()),            // totalMoney
+            Integer.parseInt(result[3].toString())               // statusBill
+    )).collect(Collectors.toList());
+}
+//
+public List<MyOderDTO> getBillsByEmailAndStatus2(String email) {
+    List<Object[]> results = billRepository.findBillByEmail2(email);
+
+    return results.stream().map(result -> new MyOderDTO(
+            result[0].toString(),                                // codeBill
+            new Date(((java.sql.Date) result[1]).getTime()),     // createDate
+            Double.parseDouble(result[2].toString()),            // totalMoney
+            Integer.parseInt(result[3].toString())               // statusBill
+    )).collect(Collectors.toList());
+}
+//
+public List<MyOderDTO> getBillsByEmailAndStatus3(String email) {
+    List<Object[]> results = billRepository.findBillByEmail3(email);
+
+    return results.stream().map(result -> new MyOderDTO(
+            result[0].toString(),                                // codeBill
+            new Date(((java.sql.Date) result[1]).getTime()),     // createDate
+            Double.parseDouble(result[2].toString()),            // totalMoney
+            Integer.parseInt(result[3].toString())               // statusBill
+    )).collect(Collectors.toList());
+}
+//
+public List<MyOderDTO> getBillsByEmailAndStatus4(String email) {
+    List<Object[]> results = billRepository.findBillByEmail4(email);
+
+    return results.stream().map(result -> new MyOderDTO(
+            result[0].toString(),                                // codeBill
+            new Date(((java.sql.Date) result[1]).getTime()),     // createDate
+            Double.parseDouble(result[2].toString()),            // totalMoney
+            Integer.parseInt(result[3].toString())               // statusBill
+    )).collect(Collectors.toList());
+}
+//
+public List<MyOderDTO> getBillsByEmailAndStatus5(String email) {
+    List<Object[]> results = billRepository.findBillByEmail5(email);
+
+    return results.stream().map(result -> new MyOderDTO(
+            result[0].toString(),                                // codeBill
+            new Date(((java.sql.Date) result[1]).getTime()),     // createDate
+            Double.parseDouble(result[2].toString()),            // totalMoney
+            Integer.parseInt(result[3].toString())               // statusBill
+    )).collect(Collectors.toList());
+}
+//
+
 
 }

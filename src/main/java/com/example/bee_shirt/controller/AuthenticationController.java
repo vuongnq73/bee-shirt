@@ -4,6 +4,7 @@ import com.example.bee_shirt.dto.request.AuthenticationRequest;
 import com.example.bee_shirt.dto.request.LogoutRequest;
 import com.example.bee_shirt.dto.response.ApiResponse;
 import com.example.bee_shirt.dto.response.AuthenticationResponse;
+import com.example.bee_shirt.exception.AppException;
 import com.example.bee_shirt.service.AuthenticationService;
 import com.example.bee_shirt.service.SendEmailService;
 import com.nimbusds.jose.JOSEException;
@@ -13,6 +14,8 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.Map;
+
 
 @RestController
 @RequestMapping("/auth")
@@ -48,5 +51,26 @@ public class AuthenticationController {
                 .build();
 
     }
+    @PostMapping("/send-verification-code")
+    public ApiResponse<String> sendVerificationCode(@RequestBody Map<String, String> payload) {
+        String email = payload.get("email");
+        return ApiResponse.<String>builder()
+                .result(sendEmailService.sendVerificationCode(email))
+                .build();
+    }
+
+    @PostMapping("/verify-code")
+    public ApiResponse<String> verifyVerificationCode(@RequestParam String email, @RequestParam String token) {
+        ApiResponse<String> response = new ApiResponse<>();
+        try {
+            // Gọi service để kiểm tra mã xác minh
+            String result = sendEmailService.verifyVerificationCode(email, token);
+            response.setResult(result);  // Trả về thông báo mã hợp lệ
+        } catch (AppException ex) {
+            response.setMessage(ex.getMessage());  // Thông báo lỗi khi không khớp mã hoặc mã không tồn tại
+        }
+        return response;
+    }
+
 
 }

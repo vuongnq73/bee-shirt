@@ -46,6 +46,12 @@ public enum ErrorCode {
 
     ACCOUNT_BANED(1019,"Account has been baned", HttpStatus.BAD_REQUEST),
 
+    VERIFICATION_TOKEN_NOT_FOUND(1020,"Verification token not found", HttpStatus.NOT_FOUND),  // Lỗi khi không tìm thấy mã xác minh
+
+    VERIFICATION_CODE_EXPIRED(1021,"Verification code expired", HttpStatus.BAD_REQUEST),  // Lỗi khi mã xác minh hết hạn
+
+    INVALID_VERIFICATION_CODE(1022,"Invalid verification code", HttpStatus.BAD_REQUEST);
+
     ;
     private int code;
 

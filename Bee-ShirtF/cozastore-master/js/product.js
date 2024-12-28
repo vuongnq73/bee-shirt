@@ -50,6 +50,7 @@ angular.module("productApp", []).controller("ProductController", [
               .then(function (response) {
                 if (response.data && response.data.code === 1000) {
 
+
                   $scope.totalProducts = response.data.result;
                 } else {
                   $scope.errorMessage = "Failed to get total products count.";
@@ -142,6 +143,7 @@ angular.module("productApp", []).controller("ProductController", [
         .get(url)
         .then(function (response) {
           if (response.data && response.data.code === 1000) {
+
             let shirtDetails = response.data.result;
 
             // Lọc để loại bỏ sản phẩm trùng tên
@@ -175,6 +177,7 @@ angular.module("productApp", []).controller("ProductController", [
               })
               .then(function (response) {
                 if (response.data && response.data.code === 1000) {
+
 
                   $scope.totalProducts =  response.data.result; // Số lượng sản phẩm
                 } else {
@@ -245,6 +248,7 @@ angular.module("productApp", []).controller("ProductController", [
         })
         .then(function (response) {
           if (response.data && response.data.code === 1000) {
+
             let shirtDetails = response.data.result;
     
             // Lọc để loại bỏ sản phẩm trùng tên
@@ -328,6 +332,7 @@ angular.module("productApp", []).controller("ProductController", [
           alert("Có lỗi xảy ra khi đăng xuất. Vui lòng thử lại!");
         });
     };
+
 
     // Hàm kiểm tra xem giá đã chọn có phải là giá này không
     $scope.isPriceSelected = function (min, max) {

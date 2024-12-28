@@ -235,6 +235,11 @@ public class AccountService {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
     }
+    private void validateEmail(String email) {
+        if (accountRepository.findByEmail(email).isPresent()) {
+            throw new AppException(ErrorCode.EMAIL_EXISTED);
+        }
+    }
 
     private void validateEmail(String email) {
         if (accountRepository.findByEmail(email).isPresent()) {
