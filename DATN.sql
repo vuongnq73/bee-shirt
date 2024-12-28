@@ -1,1 +1,0 @@
-select * from shirt_detail
