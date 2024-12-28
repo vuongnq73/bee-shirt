@@ -28,7 +28,19 @@ angular.module("productApp", []).controller("ProductController", [
         .get("http://localhost:8080/homepage/getallshirt")
         .then(function (response) {
           if (response.data && response.data.code === 1000) {
-            $scope.shirtDetails = response.data.result;
+            let shirtDetails = response.data.result;
+
+            // Lọc để loại bỏ sản phẩm trùng tên
+            const uniqueShirts = [];
+            const seenNames = new Set();
+            for (let shirt of shirtDetails) {
+              if (!seenNames.has(shirt.nameShirt)) {
+                uniqueShirts.push(shirt);
+                seenNames.add(shirt.nameShirt);
+              }
+            }
+
+            $scope.shirtDetails = uniqueShirts;
             // Giới hạn chỉ hiển thị 8 sản phẩm
             $scope.filteredShirtList = $scope.shirtDetails.slice(0, 8);
 
@@ -37,7 +49,8 @@ angular.module("productApp", []).controller("ProductController", [
               .get("http://localhost:8080/homepage/countall")
               .then(function (response) {
                 if (response.data && response.data.code === 1000) {
-                  $scope.totalProducts = response.data.result; // Số lượng sản phẩm
+
+                  $scope.totalProducts = response.data.result;
                 } else {
                   $scope.errorMessage = "Failed to get total products count.";
                 }
@@ -129,7 +142,19 @@ angular.module("productApp", []).controller("ProductController", [
         .get(url)
         .then(function (response) {
           if (response.data && response.data.code === 1000) {
-            $scope.shirtDetails = response.data.result;
+            let shirtDetails = response.data.result;
+
+            // Lọc để loại bỏ sản phẩm trùng tên
+            const uniqueShirts = [];
+            const seenNames = new Set();
+            for (let shirt of shirtDetails) {
+              if (!seenNames.has(shirt.nameShirt)) {
+                uniqueShirts.push(shirt);
+                seenNames.add(shirt.nameShirt);
+              }
+            }
+
+            $scope.shirtDetails = uniqueShirts;
             // Hiển thị sản phẩm đầu tiên
             $scope.filteredShirtList = $scope.shirtDetails.slice(
               0,
@@ -150,7 +175,8 @@ angular.module("productApp", []).controller("ProductController", [
               })
               .then(function (response) {
                 if (response.data && response.data.code === 1000) {
-                  $scope.totalProducts = response.data.result; // Số lượng sản phẩm
+
+                  $scope.totalProducts =  response.data.result; // Số lượng sản phẩm
                 } else {
                   $scope.errorMessage = "Failed to get total products count.";
                 }
@@ -190,7 +216,8 @@ angular.module("productApp", []).controller("ProductController", [
         })
         .then(function (response) {
           if (response.data && response.data.code === 1000) {
-            $scope.totalProducts = response.data.result; // Cập nhật tổng số sản phẩm
+
+            $scope.totalProducts = response.data.result;; // Số lượng sản phẩm
 
             // Nếu số sản phẩm hiện tại đã bằng tổng số sản phẩm, ẩn nút Load More
             if ($scope.shirtDetails.length >= $scope.totalProducts) {
@@ -218,7 +245,19 @@ angular.module("productApp", []).controller("ProductController", [
         })
         .then(function (response) {
           if (response.data && response.data.code === 1000) {
-            let newShirts = response.data.result;
+            let shirtDetails = response.data.result;
+    
+            // Lọc để loại bỏ sản phẩm trùng tên
+            const uniqueShirts = [];
+            const seenNames = new Set();
+            for (let shirt of shirtDetails) {
+              if (!seenNames.has(shirt.nameShirt)) {
+                uniqueShirts.push(shirt);
+                seenNames.add(shirt.nameShirt);
+              }
+            }
+
+            let newShirts = uniqueShirts;
             if (newShirts && newShirts.length > 0) {
               $scope.shirtDetails = $scope.shirtDetails.concat(newShirts);
               $scope.filteredShirtList = $scope.shirtDetails.slice(
@@ -289,7 +328,6 @@ angular.module("productApp", []).controller("ProductController", [
           alert("Có lỗi xảy ra khi đăng xuất. Vui lòng thử lại!");
         });
     };
-
 
     // Hàm kiểm tra xem giá đã chọn có phải là giá này không
     $scope.isPriceSelected = function (min, max) {

@@ -160,7 +160,7 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
     List<Object[]> getAllShirtByColor(@Param("code") String code);
 
     @Query(value = """
-               SELECT COUNT(*)
+               SELECT COUNT(DISTINCT s.name_shirt)
             FROM shirt_detail sd
             LEFT JOIN shirt s ON sd.shirt_id = s.id AND s.status_shirt = 1
             LEFT JOIN category c ON s.category_id = c.id AND c.status_category = 1
