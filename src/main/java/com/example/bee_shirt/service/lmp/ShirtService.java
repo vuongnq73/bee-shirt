@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -32,15 +33,29 @@ public class ShirtService {
 
 
     public Shirt addShirt(Shirt shirt) {
-        // Tạo mã ngẫu nhiên bắt đầu bằng "S" và theo sau là 6 số ngẫu nhiên
+        // Kiểm tra tên áo thun đã tồn tại
+        boolean exists = shirtRepository.existsByNameshirt(shirt.getNameshirt());
+        if (exists) {
+            throw new IllegalArgumentException("Tên áo thun đã tồn tại!");
+        }
+        // Kiểm tra thương hiệu
+        Optional<Brand> brand = brandRepository.findById(shirt.getBrand().getId());
+        if (brand.isEmpty()) {
+            throw new IllegalArgumentException("Thương hiệu không tồn tại!");
+        }
+        // Kiểm tra danh mục
+        Optional<Category> category = categoryRepository.findById(shirt.getCategory().getId());
+        if (category.isEmpty()) {
+            throw new IllegalArgumentException("Danh mục không tồn tại!");
+        }
+        // Tạo mã sản phẩm ngẫu nhiên
         String generatedCode = "S" + generateRandomNumber(6);
-
-        // Gán mã sản phẩm vào đối tượng shirt
         shirt.setCodeshirt(generatedCode);
 
-        // Lưu sản phẩm vào cơ sở dữ liệu
+        // Lưu vào cơ sở dữ liệu
         return shirtRepository.save(shirt);
     }
+
     public Shirt updateShirt(String codeshirt, Shirt updatedShirt) {
         // Tìm áo thun theo mã code
         Shirt existingShirt = shirtRepository.findByCodeshirt(codeshirt);

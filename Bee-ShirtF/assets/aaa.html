@@ -1,193 +1,113 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="productApp">
+<html lang="en" ng-app="app">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý Kích Thước và Màu Sắc</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <title>Shirts with Dynamic Color and Size</title>
+    <script src="https://code.angularjs.org/1.8.2/angular.min.js"></script>
     <script>
-        var app = angular.module('productApp', []);
+        angular.module('app', [])
+        .controller('ShirtController', ['$scope', '$http', function($scope, $http) {
+            // API endpoint để lấy dữ liệu sản phẩm
+            $http.get('http://localhost:8080/shirt-details/online/hienthi')
+                .then(function(response) {
+                    $scope.shirts = response.data;
 
-app.service('sizeColorService', ['$http', function($http) {
-    this.getItems = function(page, isSize) {
-        if (isSize) {
-            return $http.get(`http://localhost:8080/api/sizes/list?page=${page}`);
-        } else {
-            return $http.get(`http://localhost:8080/api/colors/list?page=${page}`);
-        }
-    };
-
-    this.addItem = function(item, isSize) {
-        if (isSize) {
-            return $http.post('http://localhost:8080/api/sizes/add', item);
-        } else {
-            return $http.post('http://localhost:8080/api/colors/add', item);
-        }
-    };
-
-    this.updateItem = function(code, item, isSize) {
-        if (isSize) {
-            return $http.put(`http://localhost:8080/api/sizes/update/${code}`, item);
-        } else {
-            return $http.put(`http://localhost:8080/api/colors/update/${code}`, item);
-        }
-    };
-
-    this.deleteItem = function(code, isSize) {
-        if (isSize) {
-            return $http.put(`http://localhost:8080/api/sizes/delete/${code}`);
-        } else {
-            return $http.put(`http://localhost:8080/api/colors/delete/${code}`);
-        }
-    };
-}]);
-
-app.controller('itemController', ['$scope', 'sizeColorService', function($scope, sizeColorService) {
-    $scope.items = [];
-    $scope.currentPage = 0;
-    $scope.isEdit = false;
-    $scope.isSize = true;  // Quản lý Kích Thước mặc định
-    $scope.currentItem = {};
-    $scope.totalPages = 0;
-
-    // Lấy danh sách Kích thước hoặc Màu sắc
-    $scope.getItems = function(page) {
-        sizeColorService.getItems(page, $scope.isSize).then(function(response) {
-            $scope.items = response.data.content.map(function(item) {
-                return $scope.isSize ? {
-                    codeSize: item[0],
-                    namesize: item[1],
-                    statussize: item[2]
-                } : {
-                    codeColor: item[0],
-                    namecolor: item[1],
-                    statuscolor: item[2]
-                };
-            });
-            $scope.totalPages = response.data.totalPages;
-            $scope.pages = Array.from({ length: $scope.totalPages }, (_, i) => i);
-        });
-    };
-
-    // Chuyển sang quản lý Kích Thước
-    $scope.switchToSize = function() {
-        $scope.isSize = true;
-        $scope.getItems($scope.currentPage);
-    };
-
-    // Chuyển sang quản lý Màu Sắc
-    $scope.switchToColor = function() {
-        $scope.isSize = false;
-        $scope.getItems($scope.currentPage);
-    };
-
-    // Lưu Kích Thước hoặc Màu Sắc
-    $scope.saveItem = function() {
-        if ($scope.isSize) {
-            if ($scope.isEdit) {
-                sizeColorService.updateItem($scope.currentItem.codeSize, $scope.currentItem, true).then(function() {
-                    alert('Cập nhật kích thước thành công');
-                    $scope.getItems($scope.currentPage);
+                    // Khởi tạo giá trị mặc định cho mỗi sản phẩm
+                    $scope.shirts.forEach(function(shirt) {
+                        shirt.selectedColorGroup = shirt.colorGroups[0];  // Mặc định chọn màu đầu tiên
+                        shirt.selectedVariant = shirt.selectedColorGroup.variants[0];  // Mặc định chọn biến thể đầu tiên
+                    });
+                })
+                .catch(function(error) {
+                    console.log('Error:', error);
                 });
-            } else {
-                sizeColorService.addItem($scope.currentItem, true).then(function() {
-                    alert('Thêm kích thước thành công');
-                    $scope.getItems($scope.currentPage);
-                });
-            }
-        } else {
-            if ($scope.isEdit) {
-                sizeColorService.updateItem($scope.currentItem.codeColor, $scope.currentItem, false).then(function() {
-                    alert('Cập nhật màu sắc thành công');
-                    $scope.getItems($scope.currentPage);
-                });
-            } else {
-                sizeColorService.addItem($scope.currentItem, false).then(function() {
-                    alert('Thêm màu sắc thành công');
-                    $scope.getItems($scope.currentPage);
-                });
-            }
-        }
-    };
 
-    // Chỉnh sửa Kích Thước hoặc Màu Sắc
-    $scope.editItem = function(item) {
-        $scope.isEdit = true;
-        $scope.currentItem = angular.copy(item);
-    };
+            // Cập nhật thông tin khi người dùng thay đổi màu sắc
+            $scope.changeColor = function(shirt, colorGroup) {
+                shirt.selectedColorGroup = colorGroup;
+                shirt.selectedVariant = colorGroup.variants[0]; // Mặc định chọn biến thể đầu tiên của màu mới
+            };
 
-    // Xóa Kích Thước hoặc Màu Sắc
-    $scope.deleteItem = function(code) {
-        sizeColorService.deleteItem(code, $scope.isSize).then(function() {
-            alert($scope.isSize ? 'Xóa kích thước thành công' : 'Xóa màu sắc thành công');
-            $scope.getItems($scope.currentPage);
-        });
-    };
-
-    // Lấy dữ liệu ban đầu
-    $scope.switchToSize();
-    
-}]);
-
+            // Cập nhật thông tin khi người dùng thay đổi kích thước
+            $scope.changeSize = function(shirt, variant) {
+                shirt.selectedVariant = variant;
+            };
+        }]);
     </script>
+    <style>
+        .product {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px;
+            width: 300px;
+            display: inline-block;
+            vertical-align: top;
+        }
+        .product img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+        .option-button {
+            display: inline-block;
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: center;
+            width: 70px;
+        }
+        .option-button.selected {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .option-button:hover {
+            background-color: #ddd;
+        }
+    </style>
 </head>
-<body ng-controller="itemController">
-    <div class="container">
-        <h2>Quản lý Kích Thước và Màu Sắc</h2>
+<body ng-controller="ShirtController">
+    <div ng-repeat="shirt in shirts">
+        <div class="product">
+            <h2>{{shirt.nameShirt}} ({{shirt.nameBrand}})</h2>
+            <p>Danh mục: {{shirt.nameCategory}}</p>
+            
+            <!-- Chọn màu -->
+            <label>Chọn màu:</label>
+            <div>
+                <div ng-repeat="colorGroup in shirt.colorGroups" 
+                    class="option-button" 
+                    ng-class="{'selected': colorGroup === shirt.selectedColorGroup}" 
+                    ng-click="changeColor(shirt, colorGroup)">
+                    {{colorGroup.colorName}}
+                </div>
+            </div>
 
-        <!-- Chuyển đổi giữa Size và Color -->
-        <div>
-            <button ng-click="switchToSize()">Quản lý Kích Thước</button>
-            <button ng-click="switchToColor()">Quản lý Màu Sắc</button>
-        </div>
+            <!-- Chọn kích thước -->
+            <label>Chọn kích thước:</label>
+            <div>
+                <div ng-repeat="variant in shirt.selectedColorGroup.variants" 
+                    class="option-button" 
+                    ng-class="{'selected': variant === shirt.selectedVariant}" 
+                    ng-click="changeSize(shirt, variant)">
+                    {{variant.namesize}}
+                </div>
+            </div>
 
-        <!-- Danh sách Kích thước hoặc Màu Sắc -->
-        <div>
-            <h3>{{ isSize ? 'Danh sách Kích Thước' : 'Danh sách Màu Sắc' }}</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>{{ isSize ? 'Mã Kích Thước' : 'Mã Màu Sắc' }}</th>
-                        <th>{{ isSize ? 'Tên Kích Thước' : 'Tên Màu Sắc' }}</th>
-                        <th>{{ isSize ? 'Trạng Thái Kích Thước' : 'Trạng Thái Màu Sắc' }}</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="item in items">
-                        <td>{{ isSize ? item.codeSize : item.codeColor }}</td>
-                        <td>{{ isSize ? item.namesize : item.namecolor }}</td>
-                        <td>{{ isSize ? (item.statussize == 1 ? 'Active' : 'Inactive') : (item.statuscolor == 1 ? 'Active' : 'Inactive') }}</td>
-                        <td>
-                            <button ng-click="editItem(item)">Sửa</button>
-                            <button ng-click="deleteItem(isSize ? item.codeSize : item.codeColor)">Xóa</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Form Thêm/Sửa Kích Thước hoặc Màu Sắc -->
-        <div>
-            <h3 ng-if="isEdit && isSize">Sửa Kích Thước</h3>
-            <h3 ng-if="!isEdit && isSize">Thêm Kích Thước</h3>
-            <h3 ng-if="isEdit && !isSize">Sửa Màu Sắc</h3>
-            <h3 ng-if="!isEdit && !isSize">Thêm Màu Sắc</h3>
-            <form ng-submit="saveItem()">
-                <label for="code">{{ isSize ? 'Mã Kích Thước' : 'Mã Màu Sắc' }}:</label>
-                <input type="text" id="code" ng-model="currentItem.code" required>
-
-                <label for="name">{{ isSize ? 'Tên Kích Thước' : 'Tên Màu Sắc' }}:</label>
-                <input type="text" id="name" ng-model="currentItem.name" required>
-
-                <label for="status">Trạng Thái:</label>
-                <select id="status" ng-model="currentItem.status" required>
-                    <option value="1" ng-selected="currentItem.status === 1">Active</option>
-                    <option value="0" ng-selected="currentItem.status === 0">Inactive</option>
-                </select>
-
-                <button type="submit">{{ isEdit ? 'Cập Nhật' : 'Thêm' }}</button>
-            </form>
+            <!-- Hiển thị thông tin chi tiết -->
+            <div>
+                <p>Size: {{shirt.selectedVariant.namesize}}</p>
+                <p>Material: {{shirt.selectedVariant.nameMaterial}}</p>
+                <p>Quantity: {{shirt.selectedVariant.quantity}}</p>
+                <p>Price: {{shirt.selectedVariant.price | currency}}</p>
+                <div>
+                    <img ng-src="{{shirt.selectedVariant.image}}" alt="{{shirt.selectedVariant.nameColor}}">
+                    <img ng-src="{{shirt.selectedVariant.image2}}" alt="{{shirt.selectedVariant.nameColor}}">
+                    <img ng-src="{{shirt.selectedVariant.image3}}" alt="{{shirt.selectedVariant.nameColor}}">
+                </div>
+            </div>
         </div>
     </div>
 </body>

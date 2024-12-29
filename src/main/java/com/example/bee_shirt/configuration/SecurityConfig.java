@@ -34,7 +34,17 @@ public class SecurityConfig {
         httpSecurity.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
 
         httpSecurity.authorizeHttpRequests(request ->
+<<<<<<< Updated upstream
                 request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+=======
+                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS_POST).permitAll()
+                        .requestMatchers("/homepage/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/shirt-details/online/hienthi").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/shirts/api/categories").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/shirt-details/api/sizes").permitAll()
+                        .requestMatchers(HttpMethod.POST,"api/cart/add").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/shirts/api/brands").permitAll()
+>>>>>>> Stashed changes
                         .requestMatchers(HttpMethod.GET, ADMIN_GET_ENDPOINTS).hasAuthority(Constant.ROLE_ADMIN)
                         .requestMatchers(HttpMethod.POST, ADMIN_POST_ENDPOINTS).hasAuthority(Constant.ROLE_ADMIN)
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
