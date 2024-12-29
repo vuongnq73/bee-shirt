@@ -3,9 +3,13 @@ package com.example.bee_shirt.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+
+import java.time.LocalDate;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 
 @Data
 @Entity
@@ -14,7 +18,6 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
 
     @ManyToOne
     @JoinColumn(name = "account_id")
@@ -30,7 +33,8 @@ public class Cart {
     private String createBy;
 
     @Column(name = "create_at")
-    private LocalDateTime createAt;
+    private LocalDate createAt;
+
 
     @Column(name = "update_by", length = 100)
     private String updateBy;
@@ -41,3 +45,4 @@ public class Cart {
     @Column(name = "deleted")
     private Boolean deleted;
 }
+

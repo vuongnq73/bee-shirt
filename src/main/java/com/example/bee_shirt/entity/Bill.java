@@ -23,9 +23,10 @@ public class Bill {
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
     private Account customer;
+
 
     @Column(name = "code_bill", length = 50)
     private String codeBill;

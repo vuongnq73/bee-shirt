@@ -81,10 +81,6 @@ public class ShirtDetail {
     @Column(name = "update_by")
     private String updateBy;
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
     @Column(name = "update_at")
     private Date updateAt;
 

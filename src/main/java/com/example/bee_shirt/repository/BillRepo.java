@@ -41,10 +41,11 @@ public interface BillRepo extends JpaRepository<Bill, Integer> {
             "FROM bill bl " +
             "LEFT JOIN bill_payment bp ON bl.id = bp.bill_id " +
             "LEFT JOIN payment_method pm ON bp.payment_method_id = pm.id " +
-            "WHERE bl.status_bill =1  and bl.type_bill='Online'" +
+            "WHERE bl.status_bill IN (1, 2, 3, 4, 5) AND bl.type_bill = 'Online' " +
             "ORDER BY bl.id DESC",
             nativeQuery = true)
     List<Object[]> findBillSummaryNative2();
+
 
     //listBill có trạngthai status_bill = đã hủy
     @Query(value = "SELECT bl.code_bill, " +
@@ -116,5 +117,86 @@ public interface BillRepo extends JpaRepository<Bill, Integer> {
       AND b.status_bill = 6
 """, nativeQuery = true)
     List<Object[]> getBillSummaryRaw(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+    //
+    // danh sách đơn mua hàng phía client có trạng thái là chờ xử lý
+    @Query(value = "SELECT code_bill, create_date, total_money, status_bill " +
+            "FROM bill " +
+            "WHERE customer_id = :customerId AND status_bill IN (1, 2)  AND type_bill = 'Online' " +
+            "ORDER BY create_date DESC",
+            nativeQuery = true)
+    List<Object[]> findByCustomerIdAndStatusNative(@Param("customerId") Integer customerId);
+    // danh sách đơn mua hàng phía client có trạng thái là Chờ giao hàng
+    @Query(value = "SELECT code_bill, create_date, total_money, status_bill " +
+            "FROM bill " +
+            "WHERE customer_id = :customerId AND status_bill = 3 AND type_bill = 'Online' " +
+            "ORDER BY create_date DESC",
+            nativeQuery = true)
+
+    List<Object[]> findByCustomerIdAndStatusNative2(@Param("customerId") Integer customerId);
+    // danh sách đơn mua hàng phía client có trạng thái là dang gaio hàng
+    @Query(value = "SELECT code_bill, create_date, total_money, status_bill " +
+            "FROM bill " +
+            "WHERE customer_id = :customerId AND status_bill = 4  AND type_bill = 'Online' " +
+            "ORDER BY create_date DESC",
+            nativeQuery = true)
+    List<Object[]> findByCustomerIdAndStatusNative3(@Param("customerId") Integer customerId);
+    // danh sách đơn mua hàng phía client có trạng thái là hoàn tất
+    @Query(value = "SELECT code_bill, create_date, total_money, status_bill " +
+            "FROM bill " +
+            "WHERE customer_id = :customerId AND status_bill IN (5, 6) " +
+            "ORDER BY create_date DESC",
+            nativeQuery = true)
+    List<Object[]> findByCustomerIdAndStatusNative4(@Param("customerId") Integer customerId);
+    // danh sách đơn mua hàng phía client có trạng thái là dã hủy
+    @Query(value = "SELECT code_bill, create_date, total_money, status_bill " +
+            "FROM bill " +
+            "WHERE customer_id = :customerId AND status_bill = 7 " +
+            "ORDER BY create_date DESC",
+            nativeQuery = true)
+    List<Object[]> findByCustomerIdAndStatusNative5(@Param("customerId") Integer customerId);
+
+    @Query(value = "SELECT code_bill, create_at, total_money, status_bill " +
+            "FROM bill " +
+            "WHERE customer_name = :email " +
+            "ORDER BY create_at DESC",
+            nativeQuery = true)
+    List<Object[]> findByEmail(@Param("email") String email);
+//
+//
+@Query(value = "SELECT code_bill, create_date, total_money, status_bill " +
+        "FROM bill " +
+        "WHERE email = :email " +
+        "AND status_bill IN (1, 2) " +
+        "ORDER BY create_date DESC", nativeQuery = true)
+List<Object[]> findBillByEmail1(@Param("email") String email);
+//
+@Query(value = "SELECT code_bill, create_date, total_money, status_bill " +
+        "FROM bill " +
+        "WHERE email = :email " +
+        "AND status_bill = 3 " +
+        "ORDER BY create_date DESC", nativeQuery = true)
+List<Object[]> findBillByEmail2(@Param("email") String email);
+//
+@Query(value = "SELECT code_bill, create_date, total_money, status_bill " +
+        "FROM bill " +
+        "WHERE email = :email " +
+        "AND status_bill = 4 " +
+        "ORDER BY create_date DESC", nativeQuery = true)
+List<Object[]> findBillByEmail3(@Param("email") String email);
+//
+    @Query(value = "SELECT code_bill, create_date, total_money, status_bill " +
+            "FROM bill " +
+            "WHERE email = :email " +
+            "AND status_bill IN (5, 6) " +
+            "ORDER BY create_date DESC", nativeQuery = true)
+    List<Object[]> findBillByEmail4(@Param("email") String email);
+//
+@Query(value = "SELECT code_bill, create_date, total_money, status_bill " +
+        "FROM bill " +
+        "WHERE email = :email " +
+        "AND status_bill = 7 " +
+        "ORDER BY create_date DESC", nativeQuery = true)
+List<Object[]> findBillByEmail5(@Param("email") String email);
 
 }

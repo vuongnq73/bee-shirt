@@ -12,4 +12,5 @@ public interface GenderRepository extends JpaRepository<Gender, Integer> {
     Page<Gender> findAllGender(Pageable pageable);
 
     Gender findByCodeGender(String codeGender);
+
 }

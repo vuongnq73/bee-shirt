@@ -99,8 +99,10 @@
             ng-model="user.status"
             ng-options="status.value as status.name for status in statuses"
             class="form-control"
+            ng-disabled="!isAdmin()"
           ></select>
         </div>
+        
 
         <div class="field">
           <label for="username">Tên đăng nhập:</label>

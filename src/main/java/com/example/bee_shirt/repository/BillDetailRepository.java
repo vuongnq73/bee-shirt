@@ -20,4 +20,5 @@ public interface BillDetailRepository extends JpaRepository<BillDetail,Integer> 
     @Query("SELECT bd FROM BillDetail bd WHERE bd.bill.createAt < CURRENT_DATE AND bd.bill.statusBill = 0 AND bd.statusBillDetail = 0")
     List<BillDetail> findOldPendingBillDetails();
 
+
 }
