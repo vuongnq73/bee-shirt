@@ -34,7 +34,6 @@ public class SecurityConfig {
 
         // Cấu hình xác thực cho các endpoint
         httpSecurity.authorizeHttpRequests(request ->
-                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                 request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS_POST).permitAll()
                         .requestMatchers("/homepage/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/shirt-details/online/hienthi").permitAll()
@@ -42,7 +41,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/shirt-details/api/sizes").permitAll()
                         .requestMatchers(HttpMethod.POST,"api/cart/add").permitAll()
                         .requestMatchers(HttpMethod.GET,"/shirts/api/brands").permitAll()
-                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS_POST).permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/verify-code/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/myOderByEmail/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/bills/detailsOnline/**").permitAll()
