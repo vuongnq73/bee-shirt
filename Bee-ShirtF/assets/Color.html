@@ -66,7 +66,7 @@
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
           <a href="BanHang.html" class="logo">
-            <img src="img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="20" />
+            <img src="img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="40" />
           </a>
           <div class="nav-toggle">
             <button class="btn btn-toggle toggle-sidebar">
@@ -532,161 +532,180 @@
             </li>
             
           </ul>
-            <h2>Danh sách Màu Sắc</h2>
+          <h2 class="text-center">Danh sách Màu Sắc</h2>
 
-            <!-- Bảng hiển thị danh sách màu sắc -->
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                      <th>STT</th>
-                        <th>Mã</th>
-                        <th>Màu Sắc <button class="btn btn-link" ng-click="sortColor('nameColor')">
-                          <i class="bi bi-arrow-down-up"></i>
-                      </button></th>
-                        <th>Trạng Thái</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="color in colors">
-                      <td>{{$index + 1 }}</td>
-                        <td>{{ color.codeColor }}</td>
-                        <td>{{ color.nameColor }}</td>
-                        <td>{{ color.statusColor == 1 ? 'Active' : 'Inactive' }}</td>
-                        <td>
-                            <button class="btn btn-warning" ng-click="editColor(color)">Xem Chi Tiết</button>
-                            <button class="btn btn-danger" ng-click="deleteColor(color.codeColor)">Xóa</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="d-flex justify-content-center mt-4">
-                <ul class="pagination">
-                    <!-- Nút Đầu -->
-                    <li class="page-item" ng-class="{'disabled': currentPage === 0}">
-                        <button class="page-link" ng-click="goToPage(0)">Đầu</button>
-                    </li>
-                    
-                    <!-- Nút Previous -->
-                    <li class="page-item" ng-class="{'disabled': currentPage === 0}">
-                        <button class="page-link" ng-click="goToPage(currentPage - 1)">Previous</button>
-                    </li>
-            
-                    <!-- Các trang giữa -->
-                    <li class="page-item" ng-repeat="page in pages" ng-class="{'active': currentPage === page}">
-                        <button class="page-link" ng-click="goToPage(page)">{{ page + 1 }}</button>
-                    </li>
-            
-                    <!-- Nút Next -->
-                    <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
-                        <button class="page-link" ng-click="goToPage(currentPage + 1)">Next</button>
-                    </li>
-            
-                    <!-- Nút Cuối -->
-                    <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
-                        <button class="page-link" ng-click="goToPage(totalPages - 1)">Cuối</button>
-                    </li>
-                </ul>
-            </div>
-            
-            
-    
-            <!-- Nút Mở Modal Thêm Màu Sắc -->
-            <button class="btn btn-success" ng-click="openAddColorModal()" data-bs-toggle="modal" data-bs-target="#addColorModal">Thêm Màu Sắc</button>
-    
-            <!-- Modal Thêm Màu Sắc -->
-            <div class="modal fade" id="addColorModal" tabindex="-1" aria-labelledby="addColorModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addColorModalLabel">Thêm Màu Sắc</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form ng-submit="saveNewColor()">
+          <!-- Bảng hiển thị danh sách màu sắc -->
+          <div class="table-responsive">
+              <table class="table table-bordered table-hover text-center">
+                  <thead >
+                      <tr>
+                          <th>STT</th>
+                          <th>Màu Sắc</th>
+                          <th>
+                              Tên Màu Sắc
+                              <button class="btn btn-link p-0 ms-1" ng-click="sortColor('nameColor')" title="Sắp xếp">
+                                  <i class="bi bi-arrow-down-up"></i>
+                              </button>
+                          </th>
+                          <th>Hành động</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr ng-repeat="color in colors" ng-class="{'table-warning': $index % 2 === 1}">
+                          <td>{{ $index + 1 }}</td>
+                          <td style="background-color: #{{ color.codeColor }};" >&nbsp;</td>
+                          <td  >{{color.nameColor}}</td>
+                          <td>
+                              <button class="btn btn-warning btn-sm me-2" ng-click="editColor(color)" data-bs-toggle="modal" data-bs-target="#editColorModal">
+                                  Sửa
+                              </button>
+                              <button class="btn btn-danger btn-sm" ng-click="deleteColor(color.codeColor)" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                                  Xóa
+                              </button>
+                          </td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+          
+          <!-- Phân trang -->
+          <div class="d-flex justify-content-center mt-4">
+              <ul class="pagination">
+                  <li class="page-item" ng-class="{'disabled': currentPage === 0}">
+                      <button class="page-link" ng-click="goToPage(0)">Đầu</button>
+                  </li>
+                  <li class="page-item" ng-class="{'disabled': currentPage === 0}">
+                      <button class="page-link" ng-click="goToPage(currentPage - 1)">Trước</button>
+                  </li>
+                  <li class="page-item" ng-repeat="page in pages" ng-class="{'active': currentPage === page}">
+                      <button class="page-link" ng-click="goToPage(page)">{{ page + 1 }}</button>
+                  </li>
+                  <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
+                      <button class="page-link" ng-click="goToPage(currentPage + 1)">Tiếp</button>
+                  </li>
+                  <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
+                      <button class="page-link" ng-click="goToPage(totalPages - 1)">Cuối</button>
+                  </li>
+              </ul>
+          </div>
+          
+          <!-- Nút Thêm Màu Sắc -->
+          <div class="d-flex justify-content-end mt-3">
+              <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addColorModal">+ Thêm Màu Sắc</button>
+          </div>
+          
+          <!-- Modal Thêm Màu Sắc -->
+          <div class="modal fade" id="addColorModal" tabindex="-1" aria-labelledby="addColorModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="addColorModalLabel">Thêm Màu Sắc</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form ng-submit="saveNewColor()">
+                            <div class="mb-3">
+                              <label for="colorPicker" class="form-label">Chọn Mã Màu (HEX):</label>
+                              <div style="position: relative;">
+                                <!-- Div hiển thị màu sắc -->
+                                <div ng-click="showColorPicker = true" 
+                                     style="background-color: {{newColor.codeColor}}; width: 50px; height: 50px; border: 1px solid #000; cursor: pointer;">
+                                </div>
+                            
+                                <!-- Input ẩn, chỉ hiện khi click vào div -->
+                                <input type="color" id="colorPicker" ng-model="newColor.codeColor" 
+                                       ng-show="showColorPicker" 
+                                       ng-blur="showColorPicker = false" 
+                                       style="position: absolute; top: 0; left: 0; opacity: 0; width: 50px; height: 50px;">
+                            </div>
+                            
+                          </div>
+                              <div class="mb-3">
+                                  <label for="namecolor" class="form-label">Tên Màu Sắc:</label>
+                                  <input type="text" id="namecolor" ng-model="newColor.nameColor" class="form-control" required>
+                              </div>
+                             
+                              <div class="d-flex justify-content-end">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                  <button type="submit" class="btn btn-primary ms-2">Thêm</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Modal Sửa Màu Sắc -->
+          <div class="modal fade" id="editColorModal" tabindex="-1" aria-labelledby="editColorModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="editColorModalLabel">Sửa Màu Sắc</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form ng-submit="saveEditColor()">
+                            
+                            <div style="position: relative;">
+                              <!-- Div hiển thị màu sắc -->
+                              <div ng-click="showColorPicker = true" 
+                                   style="background-color: {{color.codeColor}}; width: 50px; height: 50px; border: 1px solid #000; cursor: pointer;">
+                              </div>
                           
-                                <div class="mb-3">
-                                    <label for="namecolor" class="form-label">Tên Màu Sắc:</label>
-                                    <input type="text" id="namecolor" ng-model="newColor.nameColor" class="form-control" required>
+                              <!-- Input ẩn, chỉ hiện khi click vào div -->
+                              <input type="color" id="colorPicker" ng-model="color.codeColor" 
+                                     ng-show="showColorPicker" 
+                                     ng-blur="hideColorPicker()" 
+                                     style="position: absolute; top: 0; left: 0; opacity: 0; width: 50px; height: 50px;">
+                          </div>
+                          
+                        
+                          
+                              <div class="mb-3">
+                                  <label for="namecolor" class="form-label">Tên Màu Sắc:</label>
+                                  <input type="text" id="namecolor" ng-model="color.nameColor" class="form-control" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="statuscolor" class="form-label">Trạng Thái:</label>
+                                <div>
+                                    <label>
+                                        <input type="radio" ng-model="color.statusColor" value="1" ng-checked="color.statusColor === 1"> Hoạt Động
+                                    </label>
+                                    <label>
+                                        <input type="radio" ng-model="color.statusColor" value="0" ng-checked="color.statusColor === 0"> Ngừng Hoạt Động
+                                    </label>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="statuscolor" class="form-label">Trạng Thái:</label>
-                                    <div>
-                                        <label>
-                                            <input type="radio" ng-model="newColor.statusColor" value="1"> Active
-                                        </label>
-                                        <label>
-                                            <input type="radio" ng-model="newColor.statusColor" value="0"> Inactive
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-end">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                    <button type="submit" class="btn btn-primary ms-2">Thêm Màu Sắc</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    
-            <!-- Modal Sửa Màu Sắc -->
-            <div class="modal fade" id="editColorModal" tabindex="-1" aria-labelledby="editColorModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="editColorModalLabel">Sửa Màu Sắc</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form ng-submit="saveEditColor()">
-                                <div class="mb-3">
-                                    <label for="codeColor" class="form-label"disable>Mã Màu Sắc:</label>
-                                    <input type="text" id="codeColor" ng-model="color.codeColor" class="form-control" disabled>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="namecolor" class="form-label">Tên Màu Sắc:</label>
-                                    <input type="text" id="namecolor" ng-model="color.nameColor" class="form-control" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="statuscolor" class="form-label">Trạng Thái:</label>
-                                    <div>
-                                        <label>
-                                            <input type="radio" ng-model="color.statusColor" value="1" ng-checked="color.statusColor === 1"> Hoạt Động
-                                        </label>
-                                        <label>
-                                            <input type="radio" ng-model="color.statusColor" value="0" ng-checked="color.statusColor === 0"> Ngừng Hoạt Động
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-end">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                    <button type="submit" class="btn btn-primary ms-2">Cập nhật Màu Sắc</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    
-            <!-- Modal Confirm Xóa -->
-            <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="confirmDeleteModalLabel">Xác Nhận Xóa</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Bạn có chắc chắn muốn xóa màu sắc này?</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Không</button>
-                            <button type="button" class="btn btn-danger" ng-click="confirmDeleteColor()">Có</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            </div>
+                              <div class="d-flex justify-content-end">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                  <button type="submit" class="btn btn-primary ms-2">Cập Nhật</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+      
+          <!-- Modal Xác Nhận Xóa -->
+          <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="confirmDeleteModalLabel">Xác Nhận Xóa</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <p>Bạn có chắc chắn muốn xóa màu sắc này?</p>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Không</button>
+                          <button type="button" class="btn btn-danger" ng-click="confirmDeleteColor()">Có</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
       </div>
    <!-- end container -->
       
@@ -777,7 +796,7 @@
   <script src="js/plugin/datatables/datatables.min.js"></script>
 
   <!-- Bootstrap Notify -->
-  <script src="js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+  <!-- <script src="js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script> -->
 
   <!-- jQuery Vector Maps -->
   <script src="js/plugin/jsvectormap/jsvectormap.min.js"></script>

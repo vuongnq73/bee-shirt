@@ -58,4 +58,7 @@ public interface ShirtRepository extends JpaRepository<Shirt, Integer> {
             "WHERE s.deleted=false " +
             "ORDER BY s.id DESC")
     ShirtResponseDTO findByCode(String codeshirt);
+    //check trùng tên
+    boolean existsByNameshirt(String nameshirt);
+
 }

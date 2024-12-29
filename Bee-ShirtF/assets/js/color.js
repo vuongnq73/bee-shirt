@@ -97,9 +97,11 @@ app.controller('colorController', ['$scope', 'colorService', function($scope, co
         colorService.getColors(page).then(function(response) {
             $scope.colors = response.data.content.map(function(item) {
                 return {
-                    codeColor: item[0],
-                    nameColor: item[1],
-                    statusColor: item[2]
+                    id: item[0],
+                    codeColor: item[1],
+                    nameColor: item[2],
+                    statusColor: item[3],
+
                 };
             });
             $scope.totalPages = response.data.totalPages;
@@ -145,8 +147,8 @@ app.controller('colorController', ['$scope', 'colorService', function($scope, co
         }
     };
 
-    $scope.viewColorDetail = function(codeColor) {
-        colorService.getColorDetail(codeColor).then(function(response) {
+    $scope.viewColorDetail = function(id) {
+        colorService.getColorDetail(id).then(function(response) {
             $scope.color = response.data;
             $('#viewColorDetailModal').modal('show');
         });
@@ -160,38 +162,57 @@ app.controller('colorController', ['$scope', 'colorService', function($scope, co
     };
 
     $scope.saveNewColor = function() {
+        // Loại bỏ dấu '#' nếu có
+        if ($scope.newColor.codeColor.startsWith('#')) {
+            $scope.newColor.codeColor = $scope.newColor.codeColor.substring(1);
+        }
+    
+        // Sau khi loại bỏ dấu '#', gọi API để thêm màu
         colorService.addColor($scope.newColor).then(function(response) {
             $scope.getColors($scope.currentPage);
             $('#addColorModal').modal('hide');
-            location.reload(); 
-
+            location.reload(); // Tải lại trang nếu cần
         });
     };
 
     $scope.editColor = function(color) {
         $scope.color = angular.copy(color);
+        console.log($scope.color);  // Kiểm tra xem color.id có được sao chép đúng không
+
         $('#editColorModal').modal('show');
 
     };
-
+    
+    
     $scope.saveEditColor = function() {
-        colorService.updateColor($scope.color.codeColor, $scope.color).then(function(response) {
+        // Loại bỏ dấu '#' nếu có
+        if ($scope.color.codeColor.startsWith('#')) {
+            $scope.color.codeColor = $scope.color.codeColor.substring(1);
+        }
+    
+        // Sau khi loại bỏ dấu '#', gọi API để sửa màu
+        colorService.updateColor($scope.color.id, $scope.color).then(function(response) {
             $scope.getColors($scope.currentPage);
             $('#editColorModal').modal('hide');
+            location.reload(); // Tải lại trang nếu cần
         });
     };
 
     $scope.deleteColor = function(codeColor) {
         $scope.colorToDelete = codeColor;
         $('#confirmDeleteModal').modal('show');
+
     };
 
     $scope.confirmDeleteColor = function() {
         colorService.deleteColor($scope.colorToDelete).then(function(response) {
             $scope.getColors($scope.currentPage);
             $('#confirmDeleteModal').modal('hide');
+            location.reload(); 
+
         });
     };
 
     $scope.getColors($scope.currentPage);
 }]);
+

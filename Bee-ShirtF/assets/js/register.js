@@ -12,15 +12,20 @@ angular
       avatarFile: null, // File ảnh đại diện từ input
     };
 
+    $scope.isSubmitting = false
+
     $scope.errorMessage = "";
     $scope.successMessage = ""; // Biến để lưu thông báo thành công
 
     // Hàm đăng ký
     $scope.register = function () {
       // Kiểm tra điều kiện
-      if (!validateForm()) {
+      if (!validateForm() || $scope.isSubmitting) {
         return;
       }
+
+       // Đặt trạng thái đang xử lý
+       $scope.isSubmitting = true;
 
       // Gọi hàm xử lý đăng ký
       submitRegistration();
@@ -66,6 +71,9 @@ angular
             $scope.errorMessage = "Đăng ký thất bại.";
           }
           $scope.successMessage = ""; // Xóa thông báo thành công (nếu có)
+        })
+        .finally(function () {
+          $scope.isSubmitting = false; // Kích hoạt lại nút sau khi xử lý xong
         });
     }
 

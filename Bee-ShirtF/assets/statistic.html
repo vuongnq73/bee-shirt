@@ -8,6 +8,13 @@
   <link rel="icon" href="img/kaiadmin/favicon.ico" type="image/x-icon" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chartist@0.11.4/dist/chartist.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+<!-- Thêm SweetAlert2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.6/dist/sweetalert2.min.css" rel="stylesheet">
+
+<!-- Thêm SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.6/dist/sweetalert2.min.js"></script>
+
 
   <!-- Fonts and icons -->
   <script src="js/plugin/webfont/webfont.min.js"></script>
@@ -55,7 +62,7 @@
     #monthlyChart {
       width: 100%;
       /* Chiếm toàn bộ chiều rộng của phần tử chứa */
-      height: 395px;
+      height: 150px;
       /* Bạn có thể điều chỉnh chiều cao tùy ý */
       margin: 0 auto;
       /* Căn giữa biểu đồ */
@@ -103,6 +110,34 @@
       height: 15px;
       display: inline-block;
       margin-right: 5px;
+    }
+
+    #statistics-table_filter input {
+      width: auto !important;
+    }
+
+    /* css nút lọc ở doanh thu theo ngày */
+    .compact-form label,
+    .compact-form input,
+    .compact-form button {
+      font-size: 0.75rem;
+      /* Smaller font size for all elements */
+      line-height: 1.2;
+      /* Compact line height */
+    }
+
+    .compact-input {
+      width: 80px;
+      /* Narrower inputs */
+      padding: 2px 4px;
+      /* Minimal padding */
+    }
+
+    .compact-button {
+      padding: 2px 8px;
+      /* Reduced button padding */
+      font-size: 0.75rem;
+      /* Smaller font size */
     }
   </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -185,57 +220,21 @@
               <div class="collapse" id="tables">
                 <ul class="nav nav-collapse">
                   <li>
-                    <a href="Category.html">
-                      <span class="sub-item">Danh Mục Sản Phẩm</span>
-                    </a>
-                  </li>
-                  <li>
                     <a href="Products.html">
-                      <span class="sub-item">Danh sách sản phẩm</span>
+                      <span class="sub-item">Danh Sách Sản Phẩm</span>
                     </a>
                   </li>
+
                   <li>
                     <a href="ProductDetail.html">
-                      <span class="sub-item">Danh Sách Biến Thể Sản Phẩm<span>
+                      <span class="sub-item">Danh Sách Sản Phẩm Chi Tiết</span>
                     </a>
                   </li>
                   <li>
-                    <a href="Size.html">
-                      <span class="sub-item">Danh Sách Kích Thước<span>
+                    <a href="Category.html">
+                      <span class="sub-item">Danh Sách Thuộc Tính<span>
                     </a>
                   </li>
-                  <li>
-                    <a href="Season.html">
-                      <span class="sub-item">Danh Sách Mùa<span>
-                    </a>
-                  </li>
-                  <li>
-
-                    <a href="Pattern.html">
-                      <span class="sub-item">Danh Sách Mẫu<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Origin.html">
-                      <span class="sub-item">Danh Sách Nguồn gốc<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Color.html">
-                      <span class="sub-item">Danh Sách Màu Sắc<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Gender.html">
-                      <span class="sub-item">Danh Sách Giới tính<span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="Material.html">
-                      <span class="sub-item">Danh Sách Chất Liệu<span>
-                    </a>
-                  </li>
-
 
                 </ul>
               </div>
@@ -323,7 +322,8 @@
                         <div class="u-text">
                           <h4>{{ myProfile.firstName }} {{ myProfile.lastName }}</h4>
                           <p class="text-muted">{{ myProfile.email }}</p>
-                          <a href="/assets/staff/Profile.html" ng-click="viewProfile()" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+                          <a href="/assets/staff/Profile.html" ng-click="viewProfile()"
+                            class="btn btn-xs btn-secondary btn-sm">View Profile</a>
                         </div>
                       </div>
                     </li>
@@ -334,10 +334,10 @@
                   </div>
                 </ul>
               </li>
-                             
+
             </ul>
           </div>
-        </nav>   
+        </nav>
         <!-- End Navbar -->
       </div>
 
@@ -416,44 +416,78 @@
 
           <div class="row">
             <div class="col-md-8">
-              <div class="card card-round">
+              <div class="card card-round" style="height: 570px;">
                 <div class="card-header">
                   <div class="card-head-row">
-                    <div class="card-title">Thống kê</div>
+                    <div class="card-title">Biểu Đồ</div>
                     <div class="card-tools d-flex justify-content-between">
-                      <!-- Export Button -->
-                      <a href="#" class="btn btn-label-success btn-round btn-sm me-2">
-                        <span class="btn-label">
-                          <i class="fa fa-pencil"></i>
-                        </span>
-                        Export
-                      </a>
+                      <!-- Start bộ lọc theo thời gian cho biểu đồ  -->
+                      <div class="d-flex align-items-center compact-form" style="gap: 8px; ">
+                        <!-- Input Từ ngày -->
+                        <div class="d-flex align-items-center">
+                          <label for="startDate" class="form-label mb-0"
+                            style="font-size: 0.75rem; margin-right: 4px;">Từ:</label>
+                          <input type="date" id="startDate" class="form-control form-control-sm"
+                            style="width: 90px; padding: 2px; border-radius: 20px;" />
+                        </div>
 
-                      <!-- Filter Dropdown -->
-                      <div class="dropdown">
+                        <!-- Input Đến ngày -->
+                        <div class="d-flex align-items-center">
+                          <label for="endDate" class="form-label mb-0"
+                            style="font-size: 0.75rem; margin-right: 4px;">Đến:</label>
+                          <input type="date" id="endDate" class="form-control form-control-sm"
+                            style="width: 90px; padding: 2px; border-radius: 20px;" />
+                        </div>
+
+                        <!-- Button Áp dụng -->
+                        <button class="btn btn-info btn-sm d-flex align-items-center"
+                          style="font-size: 0.75rem; padding: 6px 8px; border-radius: 20px;"
+                          onclick="applyCustomFilter()">
+                          <i class="fa fa-filter me-1" style="font-size: 13px;"></i>Áp dụng
+                        </button>
+                        <!--  button reset -->
+                        <button class="btn btn-label-info btn-sm d-flex align-items-center"
+                          style="font-size: 0.75rem; padding: 6px 8px; border-radius: 20px; margin-right: 10px;"
+                          onclick="resetChartData()">
+                          <i class="fa fa-undo me-1" style="font-size: 13px;"></i>Reset
+                        </button>
+
+                      </div>
+
+                      <!-- end bộ lọc theo thời gian chô biểu đồ -->
+
+                      <!-- Lọc theo thời gian cố định -->
+                      <!-- <div class="dropdown">
+
                         <button class="btn btn-label-info btn-round btn-sm dropdown-toggle" type="button"
                           id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           <span class="btn-label">
                             <i class="fa fa-filter"></i>
                           </span>
-                          Lọc
+                          Lọcc
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                           <select id="filterOptions" class="form-select" onchange="applyFilter(this.value)">
                             <option value="all">Tất cả</option>
-                            <option value="today">Hôm nay</option>
                             <option value="this-week">Tuần này</option>
                             <option value="this-month">Tháng này</option>
                             <option value="last-month">Tháng trước</option>
                           </select>
 
                         </div>
-                      </div>
+                      </div> -->
+                      <!-- end lọc theo thời gian cố định -->
+                      <!-- Export Button -->
+                      <button class="btn btn-label-success btn-sm d-flex align-items-center"
+                      style="font-size: 0.75rem; padding: 6px 8px; border-radius: 20px; margin-right: 10px;"
+                      onclick="exportChartToExcel()">
+                      <i class="fa fa-file-excel me-1" style="font-size: 13px;"></i>
+                      Excel
+                    </button>
 
                     </div>
                   </div>
                 </div>
-
                 <div class="card-body">
                   <div class="chart-container" style="min-height: 375px">
                     <canvas id="statisticsChart"></canvas>
@@ -462,66 +496,60 @@
                 </div>
               </div>
             </div>
+
             <div class="col-md-4">
-              <div class="card card-primary card-round" style="height: 320px;">
+              <div class="card card-linght card-round" style="height: 570px;">
                 <div class="card-header">
+
                   <div class="card-head-row">
-                    <div class="card-title">Doanh thu theo ngày</div>
-                    <div class="card-tools">
-                      <button class="btn btn-sm btn-label-light" type="button">
-                        Export
-                      </button>
+                    <div class="card-title">Doanh thu theo ngày
+                      <hr>
                     </div>
-                    <div class="card-tools">
-                      <div class="dropdown">
-                        <button class="btn btn-sm btn-label-light dropdown-toggle" type="button" id="dropdownMenuButton"
-                          data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <span class="btn-label">
-                            <i class="fa fa-filter"></i>
-                          </span>
-                          Lọc
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <select id="filterOptions" class="form-select" ng-model="selectedFilter"
-                            ng-change="fetchStatistics()">
-                            <option value="today">Hôm Nay</option>
-                            <option value="last7days">7 ngày trước</option>
-                            <option value="current-month">30 ngày trước</option>
-                            <option value="current-year">Năm này</option>
-                          </select>
-                        </div>
-                      </div>
 
-                    </div>
+
                   </div>
+                  <div class="d-flex align-items-center compact-form" style="gap: 5px;">
+                    <label for="startDate" class="small-label"
+                      style="font-size: 0.75rem; margin-right: 4px;">Từ:</label>
+                    <input type="date" id="startDate" class="form-control compact-input"
+                      style="width: 80px; padding: 2px; margin-right: 4px; border-radius: 20px;" ng-model="startDate">
+
+                    <label for="endDate" class="small-label" style="font-size: 0.75rem; margin-right: 4px;">Đến:</label>
+                    <input type="date" id="endDate" class="form-control compact-input"
+                      style="width: 80px; padding:  2px; margin-right: 4px; border-radius: 20px;" ng-model="endDate">
+
+                    <button class="btn btn-label-info"
+                      style="padding: 5px 8px; font-size: 0.75rem; margin-left: 4px; border-radius: 20px;"
+                      ng-click="filterData()">
+                      <span class="btn-label">
+                        <i class="fa fa-filter"></i>lọc
+                      </span>
+                    </button>
+                    <button class="btn btn-label-info btn-sm d-flex align-items-center"
+                      style="font-size: 0.75rem; padding: 6px 8px; border-radius: 20px;" >
+  <a href="statistic.html">                    <i class="fa fa-undo me-1"></i></a>
+                    </button>
+                  </div>
+
+
                 </div>
                 <div class="card-body pb-0">
-                  <p>Tổng Doanh Thu</p>
-                  <div class="mb-4 mt-2">
-                    <h6>{{ formatCurrency(totalAllMoney) }}</h6>
-                  </div>
-                  <p>Doanh Thu Bán Hàng Tại Quầy</p>
-                  <div class="mb-4 mt-2">
-                    <h6>{{ formatCurrency(totalInstoreMoney) }}</h6>
-                  </div>
-                  <p>Doanh Thu Bán Hàng Online</p>
-                  <div class="mb-4 mt-2">
-                    <h6>{{ formatCurrency(totalOnlineMoney) }}</h6>
+                  <p>Tổng Doanh Thu : {{ formatCurrency(totalRevenue) }}</p>
+                  <hr>
+                  <p>Doanh Thu Bán Hàng Tại Quầy : {{ formatCurrency(totalInstoreMoney) }}</p>
+                  <hr>
+                  <p>Doanh Thu Bán Hàng Online : {{ formatCurrency(totalOnlineMoney) }}</p>
+                  <hr>
 
-                  </div>
-                </div>
-                
-              </div>
+                  <h4 class="card-title">Biểu đồ hóa đơn</h4>
+                  <p class="card-category">
+                    Tỉ lệ các đơn mua hàng </p>
 
 
-              <div class="card card-round">
-                <div class="card-body pb-0">
+                  <div id="monthlyChart" class="Chartist chart-pie"></div>
+                  <br>
+                  <ul id="pieChartLegend" class="chart-legend"></ul>
 
-                  <p class="text-muted">Thống kê đơn hàng</p>
-                  <div class="pull-in sparkline-fix">
-                    <canvas id="stackedColumnChart" width="400" height="100"></canvas>
-
-                  </div>
                 </div>
               </div>
 
@@ -529,11 +557,11 @@
           </div>
 
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
               <div class="card card-round">
                 <div class="card-header">
                   <div class="card-head-row card-tools-still-right">
-                    <div class="card-title">Sản Phẩm Bán Chạy Nhất Trong Tháng </div>
+                    <div class="card-title">Sản Phẩm Bán Chạy Nhất</div>
                     <div class="card-tools">
                       <div class="dropdown">
                         <label>Lọc</label>
@@ -546,45 +574,14 @@
                           </svg>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <!-- Combobox cho Brand -->
-                          <label for="brandSelect" style="margin-left: 10px; margin-right: 5px;">Chọn Thương
-                            Hiệu</label>
-                          <select class="dropdown-item" id="brandSelect" ng-model="selectedBrand"
+                          <!-- Lọc theo Thời gian -->
+                          <label for="timeFilter" style="margin-left: 10px; margin-right: 5px;">Lọc theo Thời
+                            gian</label>
+                          <select class="dropdown-item" id="timeFilter" ng-model="selectedTimeFilter"
                             ng-change="applyFilter()" style="width: 150px; padding: 2px 5px;">
-                            <option value="">Tất Cả</option>
-                            <option value="Brand A">Brand A</option>
-                            <option value="Brand B">Brand B</option>
-                            <option value="Brand C">Brand C</option>
+                            <option value="30">Trong 30 Ngày</option>
+                            <option value="365">Trong 1 Năm</option>
                           </select>
-
-                          <!-- Combobox cho Shirt Name
-                          <label for="shirtNameSelect" style="margin-left: 10px; margin-right: 5px;">Chọn Sản Phẩm</label>
-                          <select class="dropdown-item" id="shirtNameSelect" ng-model="selectedShirtName" ng-change="applyFilter()" style="width: 150px; padding: 2px 5px;">
-                            <option value="">Tất Cả</option>
-                            <option value="Shirt A">Shirt A</option>
-                            <option value="Shirt B">Shirt B</option>
-                          </select>
-               -->
-                          <!-- Combobox cho Size -->
-                          <label for="sizeSelect" style="margin-left: 10px; margin-right: 5px;">Chọn Size</label>
-                          <select class="dropdown-item" id="sizeSelect" ng-model="selectedSize"
-                            ng-change="applyFilter()" style="width: 150px; padding: 2px 5px;">
-                            <option value="">Tất Cả</option>
-                            <option value="S">Size S</option>
-                            <option value="M">Size M</option>
-                            <option value="L">Size L</option>
-                          </select>
-
-                          <!-- Lọc theo Thời gian
-                          <label for="startDateInput" style="margin-left: 10px; margin-right: 5px;">Thời gian</label>
-                          <input type="date" id="startDateInput" ng-model="startDate" class="dropdown-item" style="width: 150px; padding: 2px 5px;" />
-              
-                          Lọc theo Ngày Kết Thúc -->
-                          <!-- <label for="endDateInput" style="margin-left: 10px; margin-right: 5px;">Đến Ngày</label>
-                          <input type="date" id="endDateInput" ng-model="endDate" class="dropdown-item" style="width: 150px; padding: 2px 5px;" />
-               -->
-                          <!-- Nút áp dụng lọc -->
-                          <!-- <button class="dropdown-item" id="applyFilterButton" ng-click="applyFilter()">Áp dụng lọc</button> -->
                         </div>
                       </div>
                     </div>
@@ -601,29 +598,17 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <!-- Do not use ng-repeat for DataTable, it's handled by DataTable -->
+                      <!-- Dữ liệu sẽ được cập nhật thông qua API -->
                     </tbody>
                   </table>
-
-
                 </div>
               </div>
-
-
-
             </div>
+
+
             <div class="col-md-4">
               <div class="card card-round">
-                <div class="card-body pb-0">
-                  <h4 class="card-title">Biểu đồ thanh toán</h4>
-                  <p class="card-category">
-                    Tỉ lệ các hình thức thanh toán trong tháng</p>
 
-
-                  <div id="monthlyChart" class="Chartist chart-pie"></div>
-                  <ul id="pieChartLegend" class="chart-legend"></ul>
-
-                </div>
               </div>
             </div>
 
@@ -695,289 +680,131 @@
           </div>
         </div>
       </div>
-        <footer class="footer">
-          <div class="container-fluid d-flex justify-content-between">
-            <nav class="pull-left">
-              <ul class="nav">
-                <li class="nav-item">
-                  <a class="nav-link" href="#">
-                    Home
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#"> Help </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#"> Licenses </a>
-                </li>
-              </ul>
-            </nav>
-            <div class="copyright">
-              2024, made with <i class="fa fa-heart heart text-danger"></i> by
-              <a href="#">5 Anh Em Siêu Nhân</a>
-            </div>
-            <div>
-              Distributed by
-              <a target="_blank" href="https://themewagon.com/">Bee-Shirt</a>.
-            </div>
-          </div>
-        </footer>
-      </div>
 
-      <!-- Custom template | don't include it in your project! -->
-      <div class="custom-template">
-        <div class="title">Settings</div>
-        <div class="custom-content">
-          <div class="switcher">
-            <div class="switch-block">
-              <h4>Logo Header</h4>
-              <div class="btnSwitch">
-                <button
-                  type="button"
-                  class="selected changeLogoHeaderColor"
-                  data-color="dark"
-                ></button>
-                <button
-                  type="button"
-                  class="changeLogoHeaderColor"
-                  data-color="blue"
-                ></button>
-                <button
-                  type="button"
-                  class="changeLogoHeaderColor"
-                  data-color="purple"
-                ></button>
-                <button
-                  type="button"
-                  class="changeLogoHeaderColor"
-                  data-color="light-blue"
-                ></button>
-                <button
-                  type="button"
-                  class="changeLogoHeaderColor"
-                  data-color="green"
-                ></button>
-                <button
-                  type="button"
-                  class="changeLogoHeaderColor"
-                  data-color="orange"
-                ></button>
-                <button
-                  type="button"
-                  class="changeLogoHeaderColor"
-                  data-color="red"
-                ></button>
-                <button
-                  type="button"
-                  class="changeLogoHeaderColor"
-                  data-color="white"
-                ></button>
-                <br />
-                <button
-                  type="button"
-                  class="changeLogoHeaderColor"
-                  data-color="dark2"
-                ></button>
-                <button
-                  type="button"
-                  class="changeLogoHeaderColor"
-                  data-color="blue2"
-                ></button>
-                <button
-                  type="button"
-                  class="changeLogoHeaderColor"
-                  data-color="purple2"
-                ></button>
-                <button
-                  type="button"
-                  class="changeLogoHeaderColor"
-                  data-color="light-blue2"
-                ></button>
-                <button
-                  type="button"
-                  class="changeLogoHeaderColor"
-                  data-color="green2"
-                ></button>
-                <button
-                  type="button"
-                  class="changeLogoHeaderColor"
-                  data-color="orange2"
-                ></button>
-                <button
-                  type="button"
-                  class="changeLogoHeaderColor"
-                  data-color="red2"
-                ></button>
-              </div>
-            </div>
-            <div class="switch-block">
-              <h4>Navbar Header</h4>
-              <div class="btnSwitch">
-                <button
-                  type="button"
-                  class="changeTopBarColor"
-                  data-color="dark"
-                ></button>
-                <button
-                  type="button"
-                  class="changeTopBarColor"
-                  data-color="blue"
-                ></button>
-                <button
-                  type="button"
-                  class="changeTopBarColor"
-                  data-color="purple"
-                ></button>
-                <button
-                  type="button"
-                  class="changeTopBarColor"
-                  data-color="light-blue"
-                ></button>
-                <button
-                  type="button"
-                  class="changeTopBarColor"
-                  data-color="green"
-                ></button>
-                <button
-                  type="button"
-                  class="changeTopBarColor"
-                  data-color="orange"
-                ></button>
-                <button
-                  type="button"
-                  class="changeTopBarColor"
-                  data-color="red"
-                ></button>
-                <button
-                  type="button"
-                  class="selected changeTopBarColor"
-                  data-color="white"
-                ></button>
-                <br />
-                <button
-                  type="button"
-                  class="changeTopBarColor"
-                  data-color="dark2"
-                ></button>
-                <button
-                  type="button"
-                  class="changeTopBarColor"
-                  data-color="blue2"
-                ></button>
-                <button
-                  type="button"
-                  class="changeTopBarColor"
-                  data-color="purple2"
-                ></button>
-                <button
-                  type="button"
-                  class="changeTopBarColor"
-                  data-color="light-blue2"
-                ></button>
-                <button
-                  type="button"
-                  class="changeTopBarColor"
-                  data-color="green2"
-                ></button>
-                <button
-                  type="button"
-                  class="changeTopBarColor"
-                  data-color="orange2"
-                ></button>
-                <button
-                  type="button"
-                  class="changeTopBarColor"
-                  data-color="red2"
-                ></button>
-              </div>
-            </div>
-            <div class="switch-block">
-              <h4>Sidebar</h4>
-              <div class="btnSwitch">
-                <button
-                  type="button"
-                  class="changeSideBarColor"
-                  data-color="white"
-                ></button>
-                <button
-                  type="button"
-                  class="selected changeSideBarColor"
-                  data-color="dark"
-                ></button>
-                <button
-                  type="button"
-                  class="changeSideBarColor"
-                  data-color="dark2"
-                ></button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="custom-toggle">
-          <i class="icon-settings"></i>
-        </div>
-      </div>
-      <!-- End Custom template -->
     </div>
-    <!--   Core JS Files   -->
-    <script src="js/core/jquery-3.7.1.min.js"></script>
-    <script src="js/core/popper.min.js"></script>
-    <script src="js/core/bootstrap.min.js"></script>
 
-    <!-- jQuery Scrollbar -->
-    <script src="js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+    <!-- Custom template | don't include it in your project! -->
+    <div class="custom-template">
+      <div class="title">Settings</div>
+      <div class="custom-content">
+        <div class="switcher">
+          <div class="switch-block">
+            <h4>Logo Header</h4>
+            <div class="btnSwitch">
+              <button type="button" class="selected changeLogoHeaderColor" data-color="dark"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="blue"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="purple"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="light-blue"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="green"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="orange"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="red"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="white"></button>
+              <br />
+              <button type="button" class="changeLogoHeaderColor" data-color="dark2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="blue2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="purple2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="light-blue2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="green2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="orange2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="red2"></button>
+            </div>
+          </div>
+          <div class="switch-block">
+            <h4>Navbar Header</h4>
+            <div class="btnSwitch">
+              <button type="button" class="changeTopBarColor" data-color="dark"></button>
+              <button type="button" class="changeTopBarColor" data-color="blue"></button>
+              <button type="button" class="changeTopBarColor" data-color="purple"></button>
+              <button type="button" class="changeTopBarColor" data-color="light-blue"></button>
+              <button type="button" class="changeTopBarColor" data-color="green"></button>
+              <button type="button" class="changeTopBarColor" data-color="orange"></button>
+              <button type="button" class="changeTopBarColor" data-color="red"></button>
+              <button type="button" class="selected changeTopBarColor" data-color="white"></button>
+              <br />
+              <button type="button" class="changeTopBarColor" data-color="dark2"></button>
+              <button type="button" class="changeTopBarColor" data-color="blue2"></button>
+              <button type="button" class="changeTopBarColor" data-color="purple2"></button>
+              <button type="button" class="changeTopBarColor" data-color="light-blue2"></button>
+              <button type="button" class="changeTopBarColor" data-color="green2"></button>
+              <button type="button" class="changeTopBarColor" data-color="orange2"></button>
+              <button type="button" class="changeTopBarColor" data-color="red2"></button>
+            </div>
+          </div>
+          <div class="switch-block">
+            <h4>Sidebar</h4>
+            <div class="btnSwitch">
+              <button type="button" class="changeSideBarColor" data-color="white"></button>
+              <button type="button" class="selected changeSideBarColor" data-color="dark"></button>
+              <button type="button" class="changeSideBarColor" data-color="dark2"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="custom-toggle">
+        <i class="icon-settings"></i>
+      </div>
+    </div>
+    <!-- End Custom template -->
+  </div>
+  <!--   Core JS Files   -->
+  <script src="js/core/jquery-3.7.1.min.js"></script>
+  <script src="js/core/popper.min.js"></script>
+  <script src="js/core/bootstrap.min.js"></script>
 
-    <!-- Chart JS -->
-    <script src="js/plugin/chart.js/chart.min.js"></script>
+  <!-- jQuery Scrollbar -->
+  <script src="js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
 
-    <!-- jQuery Sparkline -->
-    <script src="/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+  <!-- Chart JS -->
+  <script src="js/plugin/chart.js/chart.min.js"></script>
 
-    <!-- Chart Circle -->
-    <script src="js/plugin/chart-circle/circles.min.js"></script>
+  <!-- jQuery Sparkline -->
+  <script src="/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+  <!-- Chart Circle -->
+  <script src="js/plugin/chart-circle/circles.min.js"></script>
 
 
 
-    <!-- Datatables -->
-    <script src="js/plugin/datatables/datatables.min.js"></script>
+  <!-- Datatables -->
+  <script src="js/plugin/datatables/datatables.min.js"></script>
 
-    <!-- Bootstrap Notify -->
-    <script src="js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+  <!-- Bootstrap Notify -->
+  <script src="js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
 
-    <!-- jQuery Vector Maps -->
-    <script src="js/plugin/jsvectormap/jsvectormap.min.js"></script>
-    <script src="js/plugin/jsvectormap/world.js"></script>
+  <!-- jQuery Vector Maps -->
+  <script src="js/plugin/jsvectormap/jsvectormap.min.js"></script>
+  <script src="js/plugin/jsvectormap/world.js"></script>
 
-    <!-- Sweet Alert -->
-    <script src="js/plugin/sweetalert/sweetalert.min.js"></script>
+  <!-- Sweet Alert -->
+  <script src="js/plugin/sweetalert/sweetalert.min.js"></script>
 
-    <!-- Kaiadmin JS -->
-    <script src="js/kaiadmin.min.js"></script>
-    <!--  -->
-    <script src="js/plugin/chartist/chartist.min.js"></script>
-    <script src="js/plugin/chartist/plugin/chartist-plugin-tooltip.min.js"></script>
+  <!-- Kaiadmin JS -->
+  <script src="js/kaiadmin.min.js"></script>
+  <!--  -->
+  <script src="js/plugin/chartist/chartist.min.js"></script>
+  <script src="js/plugin/chartist/plugin/chartist-plugin-tooltip.min.js"></script>
 
-    <!-- Kaiadmin DEMO methods, don't include it in your project! -->
-    <script src="js/setting-demo.js"></script>
+  <!-- Kaiadmin DEMO methods, don't include it in your project! -->
+  <script src="js/setting-demo.js"></script>
   <!-- <script src="../assets/js/setting-demo2.js"></script> -->
 
-    <script src="js/demo.js"></script>
-    <script src="js/oders.js"></script>
-    <script>
-      // Hàm lấy token từ sessionStorage
-     
-    </script>
-    
+  <script src="js/demo.js"></script>
+  <script src="js/oders.js"></script>
+  <script>
+    // Hàm lấy token từ sessionStorage
 
-    <!-- //Lịch thống kê ngày tháng năm -->
-    <!-- Thêm CSS và JS cho Daterangepicker -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-    <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+  </script>
 
-    <script>
 
-    </script>
+  <!-- //Lịch thống kê ngày tháng năm -->
+  <!-- Thêm CSS và JS cho Daterangepicker -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+  <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+  <script>
+
+  </script>
 </body>
 
 </html>

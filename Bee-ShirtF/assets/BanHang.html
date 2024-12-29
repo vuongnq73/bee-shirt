@@ -63,7 +63,7 @@
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
           <a href="BanHang.html" class="logo">
-            <img src="img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="20" />
+            <img src="img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="40" />
           </a>
           <div class="nav-toggle">
             <button class="btn btn-toggle toggle-sidebar">
@@ -408,13 +408,13 @@
                 <i class="icon-arrow-right"></i>
               </li>
               <li class="nav-item">
-                <a href="/assets/Bill.html">Bán Hàng</a>
+                <a href="/assets/BanHang.html">Bán Hàng</a>
               </li>
               <li class="separator">
                 <i class="icon-arrow-right"></i>
               </li>
               <li class="nav-item">
-                <a href="/assets/BillDetail.html">Tạo Hóa Đơn</a>
+                <a href="/assets/BanHang.html">Tạo Hóa Đơn</a>
               </li>
             </ul>
             <div class="ms-md-auto py-2 py-md-0">
@@ -424,7 +424,6 @@
           </div>
           <!-- endheader bán hàng -->
 
-
           <div class="row">
             <nav class="navbar navbar-light bg-light p-3">
               <div class="container-fluid">
@@ -433,12 +432,18 @@
                     <div class="position-relative">
                       <input type="text" class="form-control" id="searchInput" placeholder="Search..."
                         onkeyup="performSearch()" autocomplete="off">
-                      <ul id="suggestions" class="suggestions-list list-group position-absolute w-100"></ul>
+                      <ul id="suggestions" class="suggestions-list list-group position-absolute w-100"> </ul>
                     </div>
-                    <button class="btn btn-outline-secondary" type="button" onclick="scanBarcode()">
-                      <i class="bi bi-upc-scan"></i>
+                    <button class="btn btn-outline-secondary" type="button" onclick="scanBarcode()" style="margin-left: 5px;">
+                      QR Code <i class="bi bi-upc-scan"></i>
                     </button>
+                    <button class="btn btn-outline-secondary" type="button"  style="margin-left: 5px;">
+                      <a href="/assets/ListProducts.html">
+                      <i class="bi bi-plus-square-fill"></i>
 
+                      </a>
+          
+                    </button>
                   </div>
                 </form>
                 <div class="d-flex align-items-center" ng-app="staffApp" ng-controller="StaffController">
@@ -727,33 +732,7 @@
       </div>
     </div>
     <!-- end container -->
-    <footer class="footer">
-      <div class="container-fluid d-flex justify-content-between">
-        <nav class="pull-left">
-          <ul class="nav">
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                Home
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#"> Help </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#"> Licenses </a>
-            </li>
-          </ul>
-        </nav>
-        <div class="copyright">
-          2024, made with <i class="fa fa-heart heart text-danger"></i> by
-          <a href="#">5 Anh Em Siêu Nhân</a>
-        </div>
-        <div>
-          Distributed by
-          <a target="_blank" href="https://themewagon.com/">Bee-Shirt</a>.
-        </div>
-      </div>
-    </footer>
+ 
   </div>
 
   <!-- Custom template | don't include it in your project! -->

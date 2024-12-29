@@ -57,6 +57,8 @@ PRIMARY KEY CLUSTERED
     private Integer statusshirt;
     @Column(name = "deleted")
     private boolean deleted;
+    @Column(name = "description")
+    private String description;
     @PrePersist
     public void prePersist() {
         if (createAt == null) {

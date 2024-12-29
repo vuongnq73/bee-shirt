@@ -14,7 +14,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 
   <style>
-       #basic-datatables {
+    #basic-datatables {
       width: 100% !important;
       /* Ghi đè bất kỳ giá trị nào từ thư viện */
     }
@@ -28,7 +28,6 @@
       width: 100% !important;
       /* Ghi đè bất kỳ giá trị nào từ thư viện */
     }
-
   </style>
 
   <!-- Fonts and icons -->
@@ -67,7 +66,7 @@
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
           <a href="/assets/BanHang.html" class="logo">
-            <img src="img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="40" />
+            <img src="/assets/img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="40" />
           </a>
           <div class="nav-toggle">
             <button class="btn btn-toggle toggle-sidebar">
@@ -129,7 +128,7 @@
                       <span class="sub-item">Danh Sách Sản Phẩm</span>
                     </a>
                   </li>
-                  
+
                   <li>
                     <a href="ProductDetail.html">
                       <span class="sub-item">Danh Sách Sản Phẩm Chi Tiết</span>
@@ -140,7 +139,7 @@
                       <span class="sub-item">Danh Sách Thuộc Tính<span>
                     </a>
                   </li>
-                 
+
                 </ul>
               </div>
             </li>
@@ -438,43 +437,11 @@
 
 
           </div>
-
-
-
-
-
-
-
+          <!-- end tab -->
         </div>
       </div>
 
-      <footer class="footer">
-        <div class="container-fluid d-flex justify-content-between">
-          <nav class="pull-left">
-            <ul class="nav">
-              <li class="nav-item">
-                <a class="nav-link" href="http://www.themekita.com">
-                  ThemeKita
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#"> Help </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#"> Licenses </a>
-              </li>
-            </ul>
-          </nav>
-          <div class="copyright">
-            2024, made with <i class="fa fa-heart heart text-danger"></i> by
-            <a href="http://www.themekita.com">ThemeKita</a>
-          </div>
-          <div>
-            Distributed by
-            <a target="_blank" href="https://themewagon.com/">ThemeWagon</a>.
-          </div>
-        </div>
-      </footer>
+
     </div>
 
     <!-- Custom template | don't include it in your project! -->
@@ -572,96 +539,15 @@
           const options = { year: "numeric", month: "2-digit", day: "2-digit" };
           return new Date(date).toLocaleDateString("vi-VN", options);
         };
-    
-        // Hàm khởi tạo DataTable
-        $scope.initializeDataTable = function (tableId, orders) {
-          if ($.fn.DataTable.isDataTable(tableId)) {
-            $(tableId).DataTable().destroy();
-          }
-    
-          $(tableId).DataTable({
-            paging: true,
-            searching: true,
-            ordering: true,
-            pageLength: 5,
-            data: orders.map((order) => [
-              order.stt,
-              order.codeBill,
-              order.customerName || 'Không có', // Nếu customerName là null, hiển thị trống
-              order.phoneNumber || 'không có', // Nếu phoneNumber là null, hiển thị trống
-              order.typeBill || 'không có', // Nếu typeBill là null, hiển thị trống
-              order.desiredDate || 'không có', // Nếu desiredDate là null, hiển thị trống
-              order.paymentMethod || 'không có', // Nếu paymentMethod là null, hiển thị trống
-              order.totalMoney || 'không có', // Nếu totalMoney là null, hiển thị trống
-              order.statusBill || 'không có' // Nếu statusBill là null, hiển thị trống
-            ]),
-            columns: [
-              { title: "STT" },
-              { title: "Mã Hóa Đơn" },
-              { title: "Tên Khách Hàng" },
-              { title: "SĐT" },
-              { title: "Loại Hóa Đơn" },
-              { title: "Ngày Thanh Toán" },
-              { title: "Hình Thức Thanh Toán" },
-              { title: "Tổng Tiền" },
-              { title: "Trạng Thái", orderable: false },
-            ],
-            createdRow: function (row, data) {
-              $(row)
-                .find(".status-btn")
-                .on("click", function (e) {
-                  e.stopPropagation(); // Ngăn không kích hoạt sự kiện click của hàng
-                  const codeBill = $(this).data("code");
-                  const status = $(this).data("status");
-                  const statusText = status === 1
-                    ? "Đã Hoàn Tất"
-                    : status === 2
-                    ? "Chờ Xử Lý"
-                    : status === 3
-                    ? "Đã Hủy"
-                    : "Không Xác Định";
-    
-                  alert(`Bạn đã nhấn vào hóa đơn ${codeBill} với trạng thái ${statusText}`);
-                });
-            },
-            language: {
-              search: "Tìm kiếm:",
-              lengthMenu: "Hiện _MENU_ mục",
-              info: "Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ mục",
-              paginate: {
-                first: "Đầu",
-                last: "Cuối",
-                next: "Tiếp",
-                previous: "Trước",
 
-              },
-            },
-          });
-    
-          $(tableId + " tbody").on("click", "tr", function () {
-            const rowData = $(tableId).DataTable().row(this).data();
-            const codeBill = rowData[1];
-            const typeBill = rowData[4];
-    
-            if (typeBill === "Online") {
-              window.location.href = `/assets/BillDetailTimeLine.html?codeBill=${encodeURIComponent(codeBill)}`;
-            } else if (typeBill === "In-Store") {
-              window.location.href = `/assets/BillDetail.html?codeBill=${encodeURIComponent(codeBill)}`;
-            } else {
-              alert("Loại hóa đơn không xác định. Không thể chuyển hướng.");
-            }
-          });
-        };
-    
-        // Hàm tải dữ liệu cho từng tab
         $scope.loadDataOrder = function (url, tableId) {
           const token = sessionStorage.getItem("jwtToken");
-    
+
           if (!token) {
             alert("Bạn cần đăng nhập để tải dữ liệu.");
             return;
           }
-    
+
           $.ajax({
             type: "GET",
             url: url,
@@ -670,37 +556,46 @@
             },
             success: function (response) {
               console.log(`Phản hồi từ server (${url}):`, response);
-    
+
               const ordersData = Array.isArray(response.result) ? response.result : [];
               if (ordersData.length > 0) {
                 const orders = ordersData.map((order, index) => ({
                   stt: index + 1,
-                  codeBill: order.codeBill || 'không có', // Nếu codeBill là null, hiển thị trống
-                  customerName: order.customerName || 'không có', // Nếu customerName là null, hiển thị trống
-                  phoneNumber: order.phoneNumber || 'không có', // Nếu phoneNumber là null, hiển thị trống
-                  typeBill: order.typeBill || 'không có', // Nếu typeBill là null, hiển thị trống
+                  codeBill: order.codeBill || 'không có',
+                  customerName: order.customerName || 'không có',
+                  phoneNumber: order.phoneNumber || 'không có',
+                  typeBill: order.typeBill || 'không có',
                   desiredDate: $scope.formatDate(order.desiredDate),
-                  paymentMethod: order.namePaymentMethod || 'không có', // Nếu namePaymentMethod là null, hiển thị trống
-                  totalMoney: (order.totalMoney || 0).toLocaleString("vi-VN", {
-                    style: "currency",
-                    currency: "VND",
-                  }), // Nếu totalMoney là null, hiển thị 0
-                  statusBill: `<button class="btn btn-${order.statusBill === 1 ? "success"
-                    : order.statusBill === 2 ? "primary"
-                      : order.statusBill === 3 ? "info"
-                        : "secondary"} btn-sm status-btn" 
-                      data-code="${order.codeBill}" 
-                      data-status="${order.statusBill}">
-                      ${order.statusBill === 1 ? "Đã Hoàn Tất"
-                        : order.statusBill === 2 ? "Chờ Xử Lý"
-                          : order.statusBill === 3 ? "Đã Hủy"
-                            : "Không Xác Định" }
-                    </button>`,
+                  paymentMethod: order.namePaymentMethod || 'không có',
+                  totalMoney: (order.totalMoney || 0).toLocaleString("vi-VN", { style: "currency", currency: "VND" }),
+                  statusBill: `
+            <span class="status-text text-${order.statusBill === 5 ? "success"
+                      : order.statusBill === 1 ? "primary"
+                        : order.statusBill === 7 ? "danger"
+                          : "primary"}">
+              ${order.statusBill === 6 ? "Hoàn Tất"
+                      : order.statusBill === 1 ? "Chờ Xử Lý"
+                        : order.statusBill === 2 ? "Đã Xác Nhận"
+                          : order.statusBill === 3 ? "Chờ Giao Hàng"
+                            : order.statusBill === 4 ? "Đang Giao Hàng"
+                              : order.statusBill === 5 ? "Đã Thanh Toán"
+                                : order.statusBill === 7 ? "Đã Hủy"
+                                  : "Không Xác Định"}
+            </span>
+          `,
                 }));
-    
-                $timeout(() => $scope.initializeDataTable(tableId, orders), 0);
-              } else {
-                alert("Không có dữ liệu để hiển thị.");
+
+                // Kiểm tra nếu chưa khởi tạo DataTable
+                $timeout(() => {
+                  // Kiểm tra xem DataTable đã được khởi tạo hay chưa
+                  if ($.fn.DataTable.isDataTable(tableId)) {
+                    // Nếu đã khởi tạo, làm mới dữ liệu
+                    $(tableId).DataTable().clear().rows.add(orders).draw();
+                  } else {
+                    // Nếu chưa khởi tạo, khởi tạo mới
+                    $scope.initializeDataTable(tableId, orders);
+                  }
+                }, 0);
               }
             },
             error: function () {
@@ -708,16 +603,68 @@
             },
           });
         };
-    
+
+   // Hàm khởi tạo DataTable
+$scope.initializeDataTable = function (tableId, orders) {
+  if ($.fn.DataTable.isDataTable(tableId)) {
+    $(tableId).DataTable().destroy();
+  }
+
+  $(tableId).DataTable({
+    paging: true,
+    searching: true,
+    ordering: true,
+    pageLength: 5,
+    data: orders,
+    columns: [
+      { title: "STT", data: "stt" },
+      { title: "Mã Hóa Đơn", data: "codeBill" },
+      { title: "Tên Khách Hàng", data: "customerName" },
+      { title: "SĐT", data: "phoneNumber" },
+      { title: "Loại Hóa Đơn", data: "typeBill" },
+      { title: "Ngày Thanh Toán", data: "desiredDate" },
+      { title: "Hình Thức Thanh Toán", data: "paymentMethod" },
+      { title: "Tổng Tiền", data: "totalMoney" },
+      { title: "Trạng Thái", data: "statusBill", orderable: false },
+    ],
+    language: {
+      search: "Tìm kiếm:",
+      lengthMenu: "Hiện _MENU_ mục",
+      info: "Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ mục",
+      paginate: {
+        first: "Đầu",
+        last: "Cuối",
+        next: "Tiếp",
+        previous: "Trước",
+      },
+    },
+  });
+
+  // Xử lý sự kiện click vào hàng trong bảng
+  $(tableId + " tbody").on("click", "tr", function () {
+    const rowData = $(tableId).DataTable().row(this).data();
+    const codeBill = rowData.codeBill;  // Dùng `codeBill` thay vì lấy từ `rowData[1]`
+    const typeBill = rowData.typeBill;
+
+    if (typeBill === "Online") {
+      window.location.href = `/assets/BillDetailTimeLine.html?codeBill=${encodeURIComponent(codeBill)}`;
+    } else if (typeBill === "In-Store") {
+      window.location.href = `/assets/BillDetail.html?codeBill=${encodeURIComponent(codeBill)}`;
+    } else {
+      alert("Loại hóa đơn không xác định. Không thể chuyển hướng.");
+    }
+  });
+};
+
         // Hàm lấy thông tin tài khoản
         $scope.getMyProfile = function () {
           const token = sessionStorage.getItem("jwtToken");
-    
+
           if (!token) {
             alert("Bạn cần đăng nhập để xem thông tin cá nhân.");
             return;
           }
-    
+
           $.ajax({
             type: "GET",
             url: "http://localhost:8080/admin/myProfile",
@@ -737,17 +684,23 @@
             },
           });
         };
-    
+
         // Khi tài liệu sẵn sàng
         angular.element(document).ready(function () {
           $scope.getMyProfile();
           $scope.loadDataOrder("http://localhost:8080/bills/list", "#basic-datatables");
           $scope.loadDataOrder("http://localhost:8080/bills/list2", "#basic-datatables2");
           $scope.loadDataOrder("http://localhost:8080/bills/list3", "#basic-datatables3");
+
+          // Tự động tải lại dữ liệu mỗi 10 giây
+          setInterval(function () {
+            $scope.loadDataOrder("http://localhost:8080/bills/list", "#basic-datatables");
+            $scope.loadDataOrder("http://localhost:8080/bills/list2", "#basic-datatables2");
+            $scope.loadDataOrder("http://localhost:8080/bills/list3", "#basic-datatables3");
+          }, 1000); // 10000ms = 10 giây
         });
       });
-    </script>
-    
+  </script>
 </body>
 
 </html>

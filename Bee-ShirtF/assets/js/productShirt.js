@@ -134,32 +134,80 @@ ShirtApp.controller('ShirtController', ['$scope', 'shirtService', function($scop
             $scope.currentPage = 1; // Reset to page 1
         });
     };
-
+    
     $scope.getBrands = function() {
         shirtService.getBrands().then(function(response) {
             $scope.brands = response.data;
         });
     };
-
+    
     $scope.getCategories = function() {
         shirtService.getCategories().then(function(response) {
             $scope.categories = response.data;
         });
     };
-
+    
     $scope.addShirt = function() {
-        $scope.newShirt.statusshirt = 0;
-
-        shirtService.addShirt($scope.newShirt).then(function() {
-            $scope.getShirts();
-            $scope.newShirt = {};
-        });
+        const namePattern = /^[A-Za-zÀ-ÿ\s]+$/;
+        
+        // Kiểm tra tên áo thun
+        if (!$scope.newShirt.nameshirt) {
+            alert("Tên áo thun không được để trống!");
+            return;
+        } else if (!namePattern.test($scope.newShirt.nameshirt)) {
+            alert("Tên áo thun chỉ được chứa chữ cái và khoảng trắng, không được nhập số hoặc ký tự đặc biệt!");
+            return;
+        } else if ($scope.newShirt.nameshirt.length > 120) {
+            alert("Tên áo thun không được vượt quá 120 ký tự!");
+            return;
+        }
+    
+        // Kiểm tra trùng tên
+        if ($scope.shirts.some(shirt => shirt.nameshirt === $scope.newShirt.nameshirt)) {
+            alert("Tên áo thun đã tồn tại, vui lòng chọn tên khác!");
+            return;
+        }
+    
+        // Kiểm tra trùng thương hiệu
+        if ($scope.brands.some(brand => brand.id === $scope.newShirt.brandId)) {
+            alert("Thương hiệu đã tồn tại!");
+            return;
+        }
+    
+        // Kiểm tra trùng danh mục
+        if ($scope.categories.some(category => category.id === $scope.newShirt.categoryId)) {
+            alert("Danh mục đã tồn tại!");
+            return;
+        }
+    
+        // Xác nhận thêm mới
+        if (confirm("Bạn có chắc muốn thêm áo thun này không?")) {
+            $scope.newShirt.statusshirt = 0;
+        
+            // Gọi service để thêm áo thun
+            shirtService.addShirt($scope.newShirt).then(function() {
+                alert("Thêm áo thun thành công!");
+                $scope.getShirts(); // Cập nhật danh sách
+                $scope.newShirt = {}; // Reset form
+            }).catch(function(error) {
+                // Xử lý lỗi trả về từ backend
+                if (error.data && error.data.message === "Tên áo thun đã tồn tại!") {
+                    alert("Tên áo thun đã tồn tại, vui lòng chọn tên khác!");
+                } else {
+                    console.error(error); // Log lỗi chi tiết
+                    alert("Đã xảy ra lỗi, vui lòng thử lại sau.");
+                }
+            });
+        }
     };
+    
+    
 
     $scope.deleteShirt = function(codeshirt) {
         if (confirm('Bạn có chắc chắn muốn xóa áo này không?')) {
             shirtService.deleteShirt(codeshirt).then(function() {
                 $scope.getShirts();
+                location.reload();
             });
         }
     };
@@ -178,19 +226,38 @@ ShirtApp.controller('ShirtController', ['$scope', 'shirtService', function($scop
         $scope.editingShirt.deleted = $scope.editingShirt.deleted;  // Trạng thái xóa
     };
 
-    // Cập nhật áo thun
     $scope.updateShirt = function() {
+        // Kiểm tra xem tên có hợp lệ không
+        if (!$scope.editingShirt.nameshirt || $scope.editingShirt.nameshirt.trim() === "") {
+            alert("Tên áo không được để trống");
+            return;
+        }
+        
+    
+        // Kiểm tra tên có chỉ chứa chữ, dấu và khoảng trắng
+        var nameRegex = /^[A-Za-zÀ-ÿ\s]+$/;
+        if (!nameRegex.test($scope.editingShirt.name)) {
+            alert("Tên áo chỉ được chứa chữ cái, dấu và khoảng trắng, không được chứa ký tự đặc biệt khác");
+            return;  // Dừng thực hiện nếu tên có ký tự đặc biệt ngoài dấu
+        }
+    
+        // Xác nhận hành động cập nhật
+        var confirmation = confirm("Bạn có chắc chắn muốn cập nhật áo thun này?");
+        if (!confirmation) {
+            return;  // Dừng thực hiện nếu người dùng không xác nhận
+        }
+    
         // Sao chép dữ liệu áo thun đang chỉnh sửa
         let updatedShirt = angular.copy($scope.editingShirt);
     
         // Chuyển brandId và categoryId thành đối tượng tương ứng
         updatedShirt.brand = { id: updatedShirt.brandId };  // Chuyển brandId thành đối tượng brand
         updatedShirt.category = { id: updatedShirt.categoryId };  // Chuyển categoryId thành đối tượng category
-        
+    
         // Đảm bảo cập nhật trạng thái
         updatedShirt.statusshirt = $scope.editingShirt.statusshirt;  // Trạng thái áo
         updatedShirt.deleted = $scope.editingShirt.deleted;  // Trạng thái xóa
-        
+    
         // Gửi yêu cầu cập nhật
         shirtService.updateShirt(updatedShirt.codeshirt, updatedShirt).then(function() {
             // Tải lại dữ liệu áo thun mới từ server (không cần tải lại trang)
@@ -204,13 +271,13 @@ ShirtApp.controller('ShirtController', ['$scope', 'shirtService', function($scop
             
             // Đóng modal (đóng modal bằng Bootstrap)
             $('#editShirtModal').modal('hide');
+            location.reload();
         }, function(error) {
             // Hiển thị lỗi trên console nếu cần
             console.error("Error updating shirt", error);
-            
         });
-        
     };
+    
     
 
     $scope.goToShirtDetail = function(codeshirt) {

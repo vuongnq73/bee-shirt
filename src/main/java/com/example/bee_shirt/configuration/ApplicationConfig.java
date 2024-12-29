@@ -43,6 +43,10 @@ public class ApplicationConfig {
                 Account account = Account.builder()
                         .username("admin")
                         .pass(passwordEncoder.encode("admin"))
+                        .status(0)
+                        .avatar("https://asset.cloudinary.com/dbshkldsj/d178b36973b41db7beffc0beed20ebf7")
+                        .email("giangdtph40542@fpt.edu.vn")
+                        .phone("0325762818")
                         .build();
 
                 Set<Role> roles = new HashSet<>();
