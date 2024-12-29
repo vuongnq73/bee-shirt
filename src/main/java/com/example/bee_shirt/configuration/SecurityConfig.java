@@ -34,12 +34,19 @@ public class SecurityConfig {
 
         // Cấu hình xác thực cho các endpoint
         httpSecurity.authorizeHttpRequests(request ->
+                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS_POST).permitAll()
+                        .requestMatchers("/homepage/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/shirt-details/online/hienthi").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/shirts/api/categories").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/shirt-details/api/sizes").permitAll()
+                        .requestMatchers(HttpMethod.POST,"api/cart/add").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/shirts/api/brands").permitAll()
                 request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS_POST).permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/verify-code/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/myOderByEmail/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/bills/detailsOnline/**").permitAll()
                         .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS_GET).permitAll()  // Cho phép GET không cần xác thực
-
                         .requestMatchers(HttpMethod.GET, ADMIN_GET_ENDPOINTS).hasAuthority(Constant.ROLE_ADMIN)
                         .requestMatchers(HttpMethod.POST, ADMIN_POST_ENDPOINTS).hasAuthority(Constant.ROLE_ADMIN)
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()

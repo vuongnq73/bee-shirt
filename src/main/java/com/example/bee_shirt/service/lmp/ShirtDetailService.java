@@ -2,6 +2,8 @@ package com.example.bee_shirt.service.lmp;
 
 import com.example.bee_shirt.EntityThuocTinh.*;
 import com.example.bee_shirt.dto.ShirtDetailDTO;
+import com.example.bee_shirt.entity.*;
+import com.example.bee_shirt.dto.*;
 import com.example.bee_shirt.dto.request.BillStaticsDTO;
 import com.example.bee_shirt.dto.response.AccountResponse;
 import com.example.bee_shirt.dto.response.HomePageResponse;
@@ -18,10 +20,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,6 +43,8 @@ public class ShirtDetailService {
     @Autowired private AccountRepository accountRepository;
 
     private AccountMapper accountMapper;
+    @Autowired
+    private BrandRepository brandRepository;
 
     public AccountResponse getMyInfo() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -47,10 +52,57 @@ public class ShirtDetailService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         return accountMapper.toUserResponse(account);
     }
+
     // Lấy tất cả chi tiết áo
     public List<ShirtDetailDTO> getAllShirtDetails(Pageable pageable) {
         return shirtDetailRepository.findAllShirtDetails();
     }
+    //lấy áo online
+    public List<OnlineShirtWithColorsDTO> getShirtsWithColors() {
+        // Lấy danh sách áo thun không trùng lặp
+        List<OnlineShirtDTO> shirts = shirtDetailRepository.findDistinctShirts();
+
+        List<OnlineShirtWithColorsDTO> result = new ArrayList<>();
+
+        // Duyệt qua từng áo thun để lấy thông tin chi tiết về các màu sắc
+        for (OnlineShirtDTO shirt : shirts) {
+            List<OnlineColorDTO> colors = shirtDetailRepository.findColorsByShirtCode(shirt.getCodeshirt());
+
+            // Tạo một Map để nhóm các màu sắc
+            Map<String, List<OnlineColorDTO>> colorGroups = new HashMap<>();
+
+            for (OnlineColorDTO color : colors) {
+                String colorName = color.getNameColor(); // Nhóm theo tên màu
+                if (!colorGroups.containsKey(colorName)) {
+                    colorGroups.put(colorName, new ArrayList<>());
+                }
+                colorGroups.get(colorName).add(color); // `color` chứa cả `codeColor`
+            }
+
+
+            // Chuyển Map thành danh sách nhóm màu
+            List<ColorGroupDTO> colorGroupsList = new ArrayList<>();
+
+            for (Map.Entry<String, List<OnlineColorDTO>> entry : colorGroups.entrySet()) {
+                String colorCode = entry.getValue().get(0).getCodeColor(); // Lấy codeColor từ phần tử đầu tiên
+                colorGroupsList.add(new ColorGroupDTO(colorCode,entry.getKey(), entry.getValue()));
+            }
+
+            // Thêm áo thun cùng với danh sách nhóm màu vào kết quả
+            result.add(new OnlineShirtWithColorsDTO(
+                    shirt.getCodeBrand(),
+                    shirt.getNameBrand(),
+                    shirt.getCodeCategory(),
+                    shirt.getNameCategory(),
+                    shirt.getCodeshirt(),
+                    shirt.getNameshirt(),
+                    shirt.getDescription(),
+                    colorGroupsList));
+        }
+
+        return result;
+    }
+
     public List<ShirtDetail> addShirtDetails(List<ShirtDetailDTO> shirtDetailDTOs) {
         // Chuyển đổi từ DTO sang entity và xử lý liên kết
         List<ShirtDetail> shirtDetails = shirtDetailDTOs.stream().map(dto -> {
@@ -278,7 +330,9 @@ public class ShirtDetailService {
     public Iterable<Gender> getAllGenders() {
         return genderRepository.findAll();
     }
-
+    public Iterable<Brand> getAllBrands() {
+        return brandRepository.findAll();
+    }
     // Lấy tất cả các mẫu áo
     public Iterable<Pattern> getAllPatterns() {
         return patternRepository.findAll();

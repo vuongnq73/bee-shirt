@@ -81,9 +81,6 @@ public class ShirtDetail {
     @Column(name = "update_by")
     private String updateBy;
 
-    @Column(name = "image")
-    private String image;
-
     @Column(name = "update_at")
     private Date updateAt;
 

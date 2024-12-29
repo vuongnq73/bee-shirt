@@ -1,6 +1,9 @@
 package com.example.bee_shirt.controller;
 
 import com.example.bee_shirt.EntityThuocTinh.*;
+import com.example.bee_shirt.dto.OnlineColorDTO;
+import com.example.bee_shirt.dto.OnlineShirtDTO;
+import com.example.bee_shirt.dto.OnlineShirtWithColorsDTO;
 import com.example.bee_shirt.dto.ShirtDetailDTO;
 import com.example.bee_shirt.dto.response.AccountResponse;
 import com.example.bee_shirt.dto.response.ApiResponse;
@@ -70,14 +73,18 @@ public class ShirtDetailController {
         Iterable<Shirt> shirts = shirtDetailService.getAllShirts();
         return ResponseEntity.ok(shirts);
     }
-    // Hiển thị danh sách chi tiết áo thun với phân trang
-    // Hiển thị danh sách chi tiết áo thun với phân trang
+    // Hiển thị danh sách chi tiết áo thun
     @GetMapping("/api/hienthi")
     public ResponseEntity<List<ShirtDetailDTO>> getShirtDetails(Pageable pageable) {
         List<ShirtDetailDTO> results = shirtDetailService.getAllShirtDetails(pageable);
         return ResponseEntity.ok(results);
     }
-
+    // Hiển thị danh sách onl(ảnh,tên,giá)
+    @GetMapping("/online/hienthi")
+    public ResponseEntity<List<OnlineShirtWithColorsDTO>> getShirtsWithColors() {
+        List<OnlineShirtWithColorsDTO> shirtsWithColors = shirtDetailService.getShirtsWithColors();
+        return ResponseEntity.ok(shirtsWithColors);
+    }
 
 
     // Thêm chi tiết áo thun

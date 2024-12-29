@@ -1,5 +1,7 @@
 package com.example.bee_shirt.repository;
 
+import com.example.bee_shirt.dto.OnlineColorDTO;
+import com.example.bee_shirt.dto.OnlineShirtDTO;
 import com.example.bee_shirt.dto.ShirtDetailDTO;
 import com.example.bee_shirt.dto.response.HomePageResponse;
 import com.example.bee_shirt.entity.ShirtDetail;
@@ -37,7 +39,7 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
 
     // Truy vấn chi tiết áo theo mã không bị xóa và có trạng thái 0
     @Query("SELECT new com.example.bee_shirt.dto.ShirtDetailDTO(" +
-            "sdt.id, sdt.codeShirtDetail,ss.codeshirt, CONCAT(ss.nameshirt, ' ', c.nameColor, ' ', si.namesize), sdt.price, sdt.quantity, p.namePattern, g.nameGender, o.nameOrigin, " +
+            "sdt.id, sdt.codeShirtDetail,ss.codeshirt, CONCAT(ss.nameshirt, ' [', c.nameColor, ' +', si.namesize,']'), sdt.price, sdt.quantity, p.namePattern, g.nameGender, o.nameOrigin, " +
             "s.nameSeason, si.namesize, m.nameMaterial, c.nameColor, sdt.statusshirtdetail, sdt.createBy, " +
             "sdt.createAt, sdt.updateBy, sdt.updateAt, sdt.deleted,ss.id,p.id,g.id,o.id,s.id,si.id,m.id,c.id,sdt.image,sdt.image2,sdt.image3) " +
             "FROM ShirtDetail sdt " +
@@ -263,6 +265,24 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
 
     @Query("SELECT sd FROM ShirtDetail sd WHERE sd.codeShirtDetail LIKE %:query% OR sd.shirt.nameshirt LIKE %:query%")
     Page<ShirtDetail> findListShirtDetailByCodeOrName(@Param("query") String query, Pageable pageable);
+
+
+    @Query("SELECT DISTINCT new com.example.bee_shirt.dto.OnlineShirtDTO(b.codeBrand,b.nameBrand,ca.codeCategory, ca.nameCategory,s.codeshirt, s.nameshirt,s.description) " +
+            "FROM ShirtDetail sd " +
+            "JOIN sd.shirt s " +
+            "JOIN s.brand b " +
+            "JOIN s.category ca ")
+    List<OnlineShirtDTO> findDistinctShirts();
+    @Query("SELECT DISTINCT new com.example.bee_shirt.dto.OnlineColorDTO(" +
+            " s.codeshirt, c.codeColor, c.nameColor, si.codeSize, si.namesize, sd.image, sd.image2, sd.image3, m.nameMaterial, sd.quantity, sd.price,sd.id) " +
+            "FROM ShirtDetail sd " +
+            "JOIN sd.shirt s " +
+            "JOIN sd.color c " +
+            "JOIN sd.material m " +
+            "JOIN sd.size si " +
+            "WHERE s.codeshirt = :codeshirt")
+    List<OnlineColorDTO> findColorsByShirtCode(@Param("codeshirt") String codeshirt);
+
 
 
 }
