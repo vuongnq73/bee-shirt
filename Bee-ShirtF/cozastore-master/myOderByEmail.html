@@ -49,6 +49,18 @@
 			margin-left: 100px;
 			/* Đẩy cả nhóm tab sang phải */
 		}
+		.menu-desktop .main-menu li a {
+			text-decoration: none;
+			/* Xóa gạch chân */
+		}
+
+		/* Thêm hiệu ứng khi hover nếu muốn */
+		.menu-desktop .main-menu li a:hover {
+			text-decoration: none;
+			/* Đảm bảo không có gạch chân khi hover */
+			color: #007bff;
+			/* Màu sắc tùy chỉnh khi hover (có thể thay đổi) */
+		}
 	</style>
 </head>
 
@@ -250,7 +262,7 @@
 		<!-- breadcrumb -->
 		<div class="container">
 			<div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
-				<a href="index.html" class="stext-109 cl8 hov-cl1 trans-04">
+				<a href="index.html" class="stext-109 cl8 hov-cl1 trans-04"  style=" text-decoration: none;">
 					Trang chủ
 					<i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
 				</a>

@@ -56,6 +56,7 @@ public class CartController {
     @PostMapping("/checkout")
     public ResponseEntity<?> handlePostRequest(@RequestBody Map<String, Object> requestBody) {
         return cartService.processCheckout(requestBody);
+
     }
     @GetMapping("/getIDCart")
     public ResponseEntity<List<Integer>> getMyCartIds() {

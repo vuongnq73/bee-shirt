@@ -50,6 +50,7 @@ public class CartService {
     public List<CartDetail> getAllCartDetails(String codeAccount) {
         return cartDetailRepository.findCartDetailByAccountCodeAndStatusCartDetail(codeAccount, 0);
     }
+
     public AccountResponse getMyInfo() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Account account = accountRepository.findByUsername(username)
@@ -60,7 +61,6 @@ public class CartService {
         Integer accountId = this.getMyInfo().getId();
         return cartRepository.findCartIdsByAccountId(accountId);
     }
-
 
     public int cancelCartDetail(String codeCartDetail){
         return cartDetailRepository.cancelCartDetail(codeCartDetail);

@@ -10,6 +10,7 @@ import com.example.bee_shirt.repository.BillPaymentRepo;
 import com.example.bee_shirt.repository.BillRepo;
 import com.example.bee_shirt.service.BillService;
 import com.example.bee_shirt.service.BillStaticsService;
+import com.example.bee_shirt.service.lmp.ShirtDetailService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,7 +21,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -37,7 +40,7 @@ public class BillController {
     BillDetailrepo billDetailrepo;
     private final BillService billService;
     private final BillStaticsService billStaticsService;
-
+    private final  ShirtDetailService shirtDetailService;
     @GetMapping("/history") // Đổi đường dẫn cho lịch sử hóa đơn
     public ApiResponse<List<BillHistoryDTO>> getBillHistory() {
         List<Bill> bills = billrepo.findAll();
@@ -127,8 +130,24 @@ public ResponseEntity<Void> updateStatus(@RequestBody BillStatusUpdateRequest re
     }
 }
 //
+// API cập nhật số lượng sản phẩm trong kho khi trạng thái bill = 6
 
 
+
+    @PutMapping("/updateStock/{codeBill}")
+    public ResponseEntity<Map<String, String>> updateQuantity(@PathVariable("codeBill") String codeBill) {
+        Map<String, String> response = new HashMap<>();
+        try {
+            shirtDetailService.updateQuantityByCodeBill(codeBill);
+            response.put("message", "Quantity updated successfully.");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            // Log lỗi để kiểm tra nguyên nhân
+            e.printStackTrace();  // In chi tiết lỗi ra console
+            response.put("error", "An error occurred while updating the quantity: " + e.getMessage());
+            return ResponseEntity.status(500).body(response);
+        }
+    }
 
 
 }

@@ -17,6 +17,7 @@ angular.module('app', [])
         .catch(function(error) {
             console.log('Error:', error);
         });
+
         function checkPermission() {
             const token = sessionStorage.getItem("jwtToken");
             if (!token) {
@@ -81,6 +82,7 @@ angular.module('app', [])
             let priceValid = true;
             if ($scope.priceMin && shirt.selectedVariant.price < $scope.priceMin) {
                 priceValid = false;
+
             }
             if ($scope.priceMax && shirt.selectedVariant.price > $scope.priceMax) {
                 priceValid = false;
@@ -138,6 +140,7 @@ angular.module('app', [])
             shirt.selectedVariant = null; // Không có size nào
         }
     };
+
 
    // Cập nhật thông tin khi người dùng thay đổi kích thước
 $scope.changeSize = function(shirt, variant) {
@@ -200,6 +203,4 @@ $scope.addToCart = function(shirtDetailId) {
     });
 };
 
-
-    
 }]);
