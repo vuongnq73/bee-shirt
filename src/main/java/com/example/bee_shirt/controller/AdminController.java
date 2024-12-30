@@ -190,7 +190,9 @@ public class AdminController {
             @RequestParam(value = "status", required = false) Integer status,
             @RequestParam(value = "deleted", required = false) Boolean deleted) {
 
-        // Create an update request object
+        log.info("Received account update request for user: {}", code);
+
+        // Tạo đối tượng yêu cầu cập nhật tài khoản
         AccountUpdateRequest request = new AccountUpdateRequest();
         request.setFirstName(firstName);
         request.setLastName(lastName);
@@ -203,16 +205,16 @@ public class AdminController {
         request.setStatus(status);
         request.setDeleted(deleted);
 
-        log.info("Received account update request for user: {}", code);
-
-        // Call the service to perform the update
+        // Gọi service để thực hiện cập nhật
         AccountResponse accountResponse = accountService.updateAccount(request, code);
 
+        // Trả về kết quả
         return ApiResponse.<AccountResponse>builder()
                 .code(1000)
                 .result(accountResponse)
                 .build();
     }
+
 
     @GetMapping("/account/{code}")
     public ApiResponse<AccountResponse> getAccountWithCode(

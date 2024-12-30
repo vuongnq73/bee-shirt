@@ -25,6 +25,7 @@ angular
     $scope.isForgotPasswordModalVisible = false; // Biến điều khiển hiển thị modal
     $scope.forgotPasswordError = "";
     $scope.email = "";
+    $scope.username = "";
   
     // Hàm quên mật khẩu (hiển thị modal)
     $scope.showForgotPasswordModal = function () {
@@ -52,10 +53,15 @@ angular
         $scope.forgotPasswordError = "Vui lòng nhập email!";
         return;
       }
+      if (!$scope.username) {
+        $scope.forgotPasswordError = "Vui lòng nhập username!";
+        return;
+      }
       const email = $scope.email;
+      const username = $scope.username;
       console.log(email);
       $http
-        .post("http://localhost:8080/auth/forgot-password?email=" + encodeURIComponent(email))
+        .post("http://localhost:8080/auth/forgot-password?email=" + encodeURIComponent(email) + "&username=" + encodeURIComponent(username))
         .then(function (response) {
           alert("Email đã được gửi đến " + email + " để reset mật khẩu.");
           $scope.closeForgotPasswordModal(); // Đóng modal sau khi gửi email
@@ -70,6 +76,7 @@ angular
         })
         .finally(function () {
           $scope.email = "";
+          $scope.username = "";
           $scope.isSubmitting = false; // Kích hoạt lại nút sau khi xử lý xong
         });
     };
