@@ -128,8 +128,12 @@ body {
 
 /* Hiệu ứng fade-in */
 @keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 /* Close Button */
@@ -158,7 +162,16 @@ body {
 }
 
 /* Input fields */
-input[type="email"] {
+input[id="1"] {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+input[id="2"] {
   width: 100%;
   padding: 12px;
   margin: 10px 0;
@@ -168,7 +181,11 @@ input[type="email"] {
   transition: border-color 0.3s;
 }
 
-input[type="email"]:focus {
+input[id="2"]:focus {
+  border-color: #007bff; /* Màu xanh khi focus vào input */
+  outline: none;
+}
+input[id="1"]:focus {
   border-color: #007bff; /* Màu xanh khi focus vào input */
   outline: none;
 }
