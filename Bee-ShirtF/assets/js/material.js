@@ -83,7 +83,6 @@ function getHighestRole(scopes) {
         });
     };
 }]);
-
 app.controller('materialController', ['$scope', 'materialService', function($scope, materialService) {
     $scope.materials = [];
     $scope.currentPage = 0;
@@ -93,37 +92,37 @@ app.controller('materialController', ['$scope', 'materialService', function($sco
     $scope.newMaterial = {};
     $scope.confirmDelete = false;
     $scope.materialToDelete = null;
-$scope.sortOrder = 'asc';  // Biến lưu trữ thứ tự sắp xếp, 'asc' là tăng dần, 'desc' là giảm dần
+    $scope.sortOrder = 'asc'; // Thứ tự sắp xếp
 
-// Hàm sắp xếp
-$scope.sortMaterials = function(field) {
-    if ($scope.sortOrder === 'asc') {
-        // Nếu đang sắp xếp tăng dần, thì sắp xếp giảm dần
-        $scope.materials = $scope.materials.sort(function(a, b) {
-            if (a[field] < b[field]) {
-                return -1;
-            }
-            if (a[field] > b[field]) {
-                return 1;
-            }
-            return 0;
-        });
-        $scope.sortOrder = 'desc';  // Sau khi sắp xếp xong, đổi sang giảm dần
-    } else {
-        // Nếu đang sắp xếp giảm dần, thì sắp xếp tăng dần
-        $scope.materials = $scope.materials.sort(function(a, b) {
-            if (a[field] < b[field]) {
-                return 1;
-            }
-            if (a[field] > b[field]) {
-                return -1;
-            }
-            return 0;
-        });
-        $scope.sortOrder = 'asc';  // Sau khi sắp xếp xong, đổi sang tăng dần
-    }
-};
+    // Hàm kiểm tra tên không chứa ký tự đặc biệt và không quá 250 ký tự
+    $scope.isValidMaterialName = function(name) {
+        const regex = /^[a-zA-ZÀ-ỹà-ỹ0-9 ]+$/;  // Chỉ cho phép chữ cái, chữ số và dấu cách
+        return regex.test(name) && name.trim().length <= 250;  // Kiểm tra không trống và không quá 250 ký tự
+    };
 
+    // Kiểm tra tên vật liệu có trùng không
+    $scope.isMaterialNameDuplicate = function(name) {
+        return $scope.materials.some(function(material) {
+            return material.nameMaterial.toLowerCase() === name.toLowerCase();  // So sánh không phân biệt chữ hoa chữ thường
+        });
+    };
+
+    // Sắp xếp danh sách vật liệu
+    $scope.sortMaterials = function(field) {
+        if ($scope.sortOrder === 'asc') {
+            $scope.materials.sort(function(a, b) {
+                return a[field] < b[field] ? -1 : a[field] > b[field] ? 1 : 0;
+            });
+            $scope.sortOrder = 'desc';
+        } else {
+            $scope.materials.sort(function(a, b) {
+                return a[field] < b[field] ? 1 : a[field] > b[field] ? -1 : 0;
+            });
+            $scope.sortOrder = 'asc';
+        }
+    };
+
+    // Lấy danh sách vật liệu
     $scope.getMaterials = function(page) {
         materialService.getMaterials(page).then(function(response) {
             $scope.materials = response.data.content.map(function(item) {
@@ -137,15 +136,8 @@ $scope.sortMaterials = function(field) {
             $scope.pages = new Array($scope.totalPages);
         });
     };
-    
-    // Go to the next/previous page
-    $scope.goToPage = function(page) {
-        if (page >= 0 && page < $scope.totalPages) {
-            $scope.currentPage = page;
-            $scope.getMaterials($scope.currentPage);
-        }
-    };
 
+    // Lấy chi tiết vật liệu
     $scope.viewMaterialDetail = function(codeMaterial) {
         materialService.getMaterialDetail(codeMaterial).then(function(response) {
             $scope.material = response.data;
@@ -153,46 +145,77 @@ $scope.sortMaterials = function(field) {
         });
     };
 
-    // Close modal function
-    $scope.closeModal = function(modalId) {
-        $(`#${modalId}`).modal('hide');
-    };
-
+    // Thêm vật liệu mới
     $scope.openAddMaterialModal = function() {
         $scope.newMaterial = {};
     };
 
     $scope.saveNewMaterial = function() {
-        materialService.addMaterial($scope.newMaterial).then(function(response) {
-            $scope.getMaterials($scope.currentPage);
-            $('#addMaterialModal').modal('hide');
-            location.reload(); 
-        });
+        if (!$scope.isValidMaterialName($scope.newMaterial.nameMaterial)) {
+            alert("Tên vật liệu không hợp lệ. Vui lòng nhập tên không chứa ký tự đặc biệt và không quá 250 ký tự.");
+            return;
+        }
+
+        if ($scope.isMaterialNameDuplicate($scope.newMaterial.nameMaterial)) {
+            alert("Tên vật liệu đã tồn tại. Vui lòng nhập tên khác.");
+            return;
+        }
+
+        // Xác nhận trước khi thêm
+        if (confirm("Bạn chắc chắn muốn thêm vật liệu này?")) {
+            materialService.addMaterial($scope.newMaterial).then(function(response) {
+                $scope.getMaterials($scope.currentPage);
+                $('#addMaterialModal').modal('hide');
+                alert("Sửa thành công");
+
+            });
+        }
     };
 
+    // Chỉnh sửa vật liệu
     $scope.editMaterial = function(material) {
         $scope.material = angular.copy(material);
         $('#editMaterialModal').modal('show');
     };
 
     $scope.saveEditMaterial = function() {
-        materialService.updateMaterial($scope.material.codeMaterial, $scope.material).then(function(response) {
-            $scope.getMaterials($scope.currentPage);
-            $('#editMaterialModal').modal('hide');
-        });
+        if (!$scope.isValidMaterialName($scope.material.nameMaterial)) {
+            alert("Tên vật liệu không hợp lệ. Vui lòng nhập tên không chứa ký tự đặc biệt và không quá 250 ký tự.");
+            return;
+        }
+
+        if ($scope.isMaterialNameDuplicate($scope.material.nameMaterial)) {
+            alert("Tên vật liệu đã tồn tại. Vui lòng nhập tên khác.");
+            return;
+        }
+
+        // Xác nhận trước khi sửa
+        if (confirm("Bạn chắc chắn muốn sửa vật liệu này?")) {
+            materialService.updateMaterial($scope.material.codeMaterial, $scope.material).then(function(response) {
+                $scope.getMaterials($scope.currentPage);
+                alert("Sửa thành công");
+                $('#editMaterialModal').modal('hide');
+                
+            });
+        }
     };
 
+    // Xóa vật liệu
     $scope.deleteMaterial = function(codeMaterial) {
         $scope.materialToDelete = codeMaterial;
         $('#confirmDeleteModal').modal('show');
     };
 
     $scope.confirmDeleteMaterial = function() {
-        materialService.deleteMaterial($scope.materialToDelete).then(function(response) {
-            $scope.getMaterials($scope.currentPage);
-            $('#confirmDeleteModal').modal('hide');
-        });
+        // Xác nhận trước khi xóa
+        if (confirm("Bạn chắc chắn muốn xóa vật liệu này?")) {
+            materialService.deleteMaterial($scope.materialToDelete).then(function(response) {
+                $scope.getMaterials($scope.currentPage);
+                $('#confirmDeleteModal').modal('hide');
+            });
+        }
     };
 
+    // Lấy danh sách vật liệu khi load trang
     $scope.getMaterials($scope.currentPage);
 }]);

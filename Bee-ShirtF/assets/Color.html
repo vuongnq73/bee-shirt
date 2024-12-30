@@ -534,61 +534,61 @@
           </ul>
           <h2 class="text-center">Danh sách Màu Sắc</h2>
 
-          <!-- Bảng hiển thị danh sách màu sắc -->
-          <div class="table-responsive">
-              <table class="table table-bordered table-hover text-center">
-                  <thead >
-                      <tr>
-                          <th>STT</th>
-                          <th>Màu Sắc</th>
-                          <th>
-                              Tên Màu Sắc
-                              <button class="btn btn-link p-0 ms-1" ng-click="sortColor('nameColor')" title="Sắp xếp">
-                                  <i class="bi bi-arrow-down-up"></i>
-                              </button>
-                          </th>
-                          <th>Hành động</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr ng-repeat="color in colors" ng-class="{'table-warning': $index % 2 === 1}">
-                          <td>{{ $index + 1 }}</td>
-                          <td style="background-color: #{{ color.codeColor }};" >&nbsp;</td>
-                          <td  >{{color.nameColor}}</td>
-                          <td>
-                              <button class="btn btn-warning btn-sm me-2" ng-click="editColor(color)" data-bs-toggle="modal" data-bs-target="#editColorModal">
-                                  Sửa
-                              </button>
-                              <button class="btn btn-danger btn-sm" ng-click="deleteColor(color.codeColor)" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                                  Xóa
-                              </button>
-                          </td>
-                      </tr>
-                  </tbody>
-              </table>
-          </div>
-          
-          <!-- Phân trang -->
-          <div class="d-flex justify-content-center mt-4">
-              <ul class="pagination">
-                  <li class="page-item" ng-class="{'disabled': currentPage === 0}">
-                      <button class="page-link" ng-click="goToPage(0)">Đầu</button>
-                  </li>
-                  <li class="page-item" ng-class="{'disabled': currentPage === 0}">
-                      <button class="page-link" ng-click="goToPage(currentPage - 1)">Trước</button>
-                  </li>
-                  <li class="page-item" ng-repeat="page in pages" ng-class="{'active': currentPage === page}">
-                      <button class="page-link" ng-click="goToPage(page)">{{ page + 1 }}</button>
-                  </li>
-                  <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
-                      <button class="page-link" ng-click="goToPage(currentPage + 1)">Tiếp</button>
-                  </li>
-                  <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
-                      <button class="page-link" ng-click="goToPage(totalPages - 1)">Cuối</button>
-                  </li>
-              </ul>
-          </div>
-          
+        <!-- Bảng hiển thị danh sách màu sắc -->
+<div class="table-responsive">
+  <table class="table table-bordered table-hover text-center">
+      <thead>
+          <tr>
+              <th>STT</th>
+              <th>Màu Sắc</th>
+              <th>
+                  Tên Màu Sắc
+                  <button class="btn btn-link p-0 ms-1" ng-click="sortColor('nameColor')" title="Sắp xếp" aria-label="Sắp xếp tên màu sắc">
+                      <i class="bi bi-arrow-down-up"></i>
+                  </button>
+              </th>
+              <th>Hành động</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr ng-repeat="color in colors" ng-class="{'table-warning': $index % 2 === 1}">
+              <td>{{ $index + 1 }}</td>
+              <td style="background-color: #{{ color.codeColor }};" >&nbsp;</td>
+              <td>{{ color.nameColor }}</td>
+              <td>
+                  <button class="btn btn-warning btn-sm me-2" ng-click="editColor(color)" data-bs-toggle="modal" data-bs-target="#editColorModal" aria-label="Chỉnh sửa màu sắc">
+                      Sửa
+                  </button>
+                  <button class="btn btn-danger btn-sm" ng-click="deleteColor(color.codeColor)" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" aria-label="Xóa màu sắc">
+                      Xóa
+                  </button>
+              </td>
+          </tr>
+      </tbody>
+  </table>
+</div>
+
+<!-- Phân trang -->
+<div class="d-flex justify-content-center mt-4">
+  <ul class="pagination">
+      <li class="page-item" ng-disabled="currentPage === 0">
+          <button class="page-link" ng-click="goToPage(0)" aria-label="Trang đầu tiên">Đầu</button>
+      </li>
+      <li class="page-item" ng-disabled="currentPage === 0">
+          <button class="page-link" ng-click="goToPage(currentPage - 1)" aria-label="Trang trước đó">Trước</button>
+      </li>
+      <li class="page-item" ng-repeat="page in pages" ng-class="{'active': currentPage === page}">
+          <button class="page-link" ng-click="goToPage(page)" aria-label="Trang {{ page + 1 }}">{{ page + 1 }}</button>
+      </li>
+      <li class="page-item" ng-disabled="currentPage === totalPages - 1">
+          <button class="page-link" ng-click="goToPage(currentPage + 1)" aria-label="Trang tiếp theo">Tiếp</button>
+      </li>
+      <li class="page-item" ng-disabled="currentPage === totalPages - 1">
+          <button class="page-link" ng-click="goToPage(totalPages - 1)" aria-label="Trang cuối cùng">Cuối</button>
+      </li>
+  </ul>
+</div>
+
           <!-- Nút Thêm Màu Sắc -->
           <div class="d-flex justify-content-end mt-3">
               <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addColorModal">+ Thêm Màu Sắc</button>
