@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,5 +29,10 @@ public class CartController {
     @ResponseBody
     public List<CartDetail> getCartDetails(@RequestParam("codeAccount") String codeAccount) {
         return cartService.getCartDetails(codeAccount);
+    }
+    @GetMapping("/getIDCart")
+    public ResponseEntity<List<Integer>> getMyCartIds() {
+        List<Integer> cartId = cartService.getCartIdsForCurrentAccount();
+        return ResponseEntity.ok(cartId);
     }
 }

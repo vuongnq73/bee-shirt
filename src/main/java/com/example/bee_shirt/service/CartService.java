@@ -1,15 +1,14 @@
 package com.example.bee_shirt.service;
 
-import com.example.bee_shirt.entity.BillDetail;
-import com.example.bee_shirt.entity.Cart;
-import com.example.bee_shirt.entity.CartDetail;
-import com.example.bee_shirt.entity.ShirtDetail;
-import com.example.bee_shirt.repository.BillRepository;
-import com.example.bee_shirt.repository.CartDetailRepository;
-import com.example.bee_shirt.repository.CartRepository;
-import com.example.bee_shirt.repository.ShirtDetailRepository;
+import com.example.bee_shirt.dto.response.AccountResponse;
+import com.example.bee_shirt.entity.*;
+import com.example.bee_shirt.exception.AppException;
+import com.example.bee_shirt.exception.ErrorCode;
+import com.example.bee_shirt.mapper.AccountMapper;
+import com.example.bee_shirt.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +17,10 @@ import java.util.List;
 public class CartService {
     @Autowired
     private CartDetailRepository cartDetailRepository;
+    @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
+    private AccountMapper accountMapper;
 
     @Autowired
     private CartRepository cartRepository;
@@ -25,5 +28,16 @@ public class CartService {
     public List<CartDetail> getCartDetails(String codeAccount) {
         return cartDetailRepository.findCartDetailByAccountCodeAndStatusCartDetail(codeAccount, 0);
     }
+    public AccountResponse getMyInfo() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Account account = accountRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        return accountMapper.toUserResponse(account);
+    }
+    public List<Integer> getCartIdsForCurrentAccount() {
+        Integer accountId = this.getMyInfo().getId();
+        return cartRepository.findCartIdsByAccountId(accountId);
+    }
+
 
 }

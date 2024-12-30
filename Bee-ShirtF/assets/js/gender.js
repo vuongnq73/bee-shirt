@@ -1,5 +1,6 @@
 var app = angular.module('GenderApp', []);
 app.service('genderService', ['$http', function($http) {
+    // Hàm kiểm tra quyền truy cập
     function checkPermission() {
         const token = sessionStorage.getItem("jwtToken");
         if (!token) {
@@ -22,26 +23,12 @@ app.service('genderService', ['$http', function($http) {
         return true; // Cho phép tiếp tục nếu có quyền
     }
     
-    if (!checkPermission()) return; // Kiểm tra quyền trước khi thực hiện bất kỳ hành động nào
-    // Lấy token từ sessionStorage sau khi đã kiểm tra quyền
-const token = sessionStorage.getItem("jwtToken");
+    // Kiểm tra quyền trước khi thực hiện bất kỳ hành động nào
+    if (!checkPermission()) return;
+    
+    const token = sessionStorage.getItem("jwtToken");
 
-function getHighestRole(scopes) {
-    const roles = scopes ? scopes.split(" ") : [];
-    const rolePriority = {
-        ROLE_ADMIN: 1,
-        ROLE_STAFF: 2,
-        ROLE_USER: 3,
-    };
-
-    // Lọc các vai trò hợp lệ và sắp xếp theo độ ưu tiên
-    const validRoles = roles.filter(role => rolePriority[role]);
-    validRoles.sort((a, b) => rolePriority[a] - rolePriority[b]);
-
-    // Trả về vai trò có độ ưu tiên cao nhất
-    return validRoles[0] || null;
-}
-
+    // Lấy danh sách giới tính
     this.getGenders = function(page) {
         return $http.get(`http://localhost:8080/api/genders/list?page=${page}`, {
             headers: {
@@ -50,6 +37,7 @@ function getHighestRole(scopes) {
         });
     };
 
+    // Lấy chi tiết giới tính
     this.getGenderDetail = function(codeGender) {
         return $http.get(`http://localhost:8080/api/genders/detail/${codeGender}`, {
             headers: {
@@ -58,6 +46,7 @@ function getHighestRole(scopes) {
         });
     };
 
+    // Thêm giới tính
     this.addGender = function(gender) {
         return $http.post('http://localhost:8080/api/genders/add', gender, {
             headers: {
@@ -66,6 +55,7 @@ function getHighestRole(scopes) {
         });
     };
 
+    // Cập nhật giới tính
     this.updateGender = function(codeGender, gender) {
         return $http.put(`http://localhost:8080/api/genders/update/${codeGender}`, gender, {
             headers: {
@@ -74,16 +64,18 @@ function getHighestRole(scopes) {
         });
     };
 
+    // Xóa giới tính
     this.deleteGender = function(codeGender) {
-        return $http.put(`http://localhost:8080/api/genders/delete/${codeGender}`, {
+        return $http.put(`http://localhost:8080/api/genders/delete/${codeGender}`, {}, {
             headers: {
                 Authorization: "Bearer " + token,
             }
-        });
+        })
     };
-}]);
 
+}]);
 app.controller('genderController', ['$scope', 'genderService', function($scope, genderService) {
+    // Các biến cần thiết
     $scope.genders = [];
     $scope.currentPage = 0;
     $scope.totalPages = 0;
@@ -93,6 +85,20 @@ app.controller('genderController', ['$scope', 'genderService', function($scope, 
     $scope.confirmDelete = false;
     $scope.genderToDelete = null;
 
+    // Kiểm tra tên không có ký tự đặc biệt và chỉ có chữ
+    $scope.isValidGenderName = function(name) {
+        const regex = /^[a-zA-ZÀ-ỹà-ỹ ]+$/;  // Chỉ cho phép chữ cái và dấu cách
+        return regex.test(name) && name.trim().length > 0;  // Kiểm tra không trống và chỉ có chữ cái
+    };
+
+    // Kiểm tra tên giới tính có bị trùng hay không
+    $scope.isGenderNameDuplicate = function(name) {
+        return $scope.genders.some(function(gender) {
+            return gender.nameGender.toLowerCase() === name.toLowerCase();  // So sánh không phân biệt chữ hoa chữ thường
+        });
+    };
+
+    // Lấy danh sách giới tính
     $scope.getGenders = function(page) {
         genderService.getGenders(page).then(function(response) {
             $scope.genders = response.data.content.map(function(item) {
@@ -104,94 +110,56 @@ app.controller('genderController', ['$scope', 'genderService', function($scope, 
             });
             $scope.totalPages = response.data.totalPages;
             $scope.pages = new Array($scope.totalPages);
+        }).catch(function(error) {
+            alert("Không thể tải danh sách giới tính. Vui lòng thử lại.");
+            console.error("Lỗi khi tải danh sách giới tính:", error);
         });
     };
 
-    $scope.sortOrder = 'asc';  // Biến lưu trữ thứ tự sắp xếp, 'asc' là tăng dần, 'desc' là giảm dần
-
-    // Hàm sắp xếp
-    $scope.sortGender = function(field) {
-        if ($scope.sortOrder === 'asc') {
-            // Nếu đang sắp xếp tăng dần, thì sắp xếp giảm dần
-            $scope.genders = $scope.genders.sort(function(a, b) {
-                if (a[field] < b[field]) {
-                    return -1;
-                }
-                if (a[field] > b[field]) {
-                    return 1;
-                }
-                return 0;
-            });
-            $scope.sortOrder = 'desc';  // Sau khi sắp xếp xong, đổi sang giảm dần
-        } else {
-            // Nếu đang sắp xếp giảm dần, thì sắp xếp tăng dần
-            $scope.genders = $scope.genders.sort(function(a, b) {
-                if (a[field] < b[field]) {
-                    return 1;
-                }
-                if (a[field] > b[field]) {
-                    return -1;
-                }
-                return 0;
-            });
-            $scope.sortOrder = 'asc';  // Sau khi sắp xếp xong, đổi sang tăng dần
-        }
-    };
-    // Chuyển đến trang mới
-    $scope.goToPage = function(page) {
-        if (page >= 0 && page < $scope.totalPages) {
-            $scope.currentPage = page;
-            $scope.getGenders($scope.currentPage);
-        }
-    };
-
-    $scope.viewGenderDetail = function(codeGender) {
-        genderService.getGenderDetail(codeGender).then(function(response) {
-            $scope.gender = response.data;
-            $('#viewGenderDetailModal').modal('show');
-        });
-    };
-
-    // Đóng modal
-    $scope.closeModal = function(modalId) {
-        $(`#${modalId}`).modal('hide');
-    };
-
-    $scope.openAddGenderModal = function() {
-        $scope.newGender = {};
-    };
-
+    // Lưu giới tính mới
     $scope.saveNewGender = function() {
+        if (!$scope.isValidGenderName($scope.newGender.nameGender)) {
+            alert("Tên giới tính không hợp lệ. Vui lòng nhập tên chỉ bao gồm chữ và dấu cách.");
+            return;
+        }
+        if ($scope.isGenderNameDuplicate($scope.newGender.nameGender)) {
+            alert("Tên giới tính đã tồn tại. Vui lòng nhập tên khác.");
+            return;
+        }
+
         genderService.addGender($scope.newGender).then(function(response) {
             $scope.getGenders($scope.currentPage);
             $('#addGenderModal').modal('hide');
-            location.reload(); 
+            location.reload();
+        }).catch(function(error) {
+            alert("Lỗi khi thêm giới tính. Vui lòng thử lại.");
+            console.error("Lỗi khi thêm giới tính:", error);
         });
     };
 
-    $scope.editGender = function(gender) {
-        $scope.gender = angular.copy(gender);
-        $('#editGenderModal').modal('show');
-    };
-
+    // Lưu sửa giới tính
     $scope.saveEditGender = function() {
+        if (!$scope.isValidGenderName($scope.gender.nameGender)) {
+            alert("Tên giới tính không hợp lệ. Vui lòng nhập tên chỉ bao gồm chữ và dấu cách.");
+            return;
+        }
+        if ($scope.isGenderNameDuplicate($scope.gender.nameGender)) {
+            alert("Tên giới tính đã tồn tại. Vui lòng nhập tên khác.");
+            return;
+        }
+
         genderService.updateGender($scope.gender.codeGender, $scope.gender).then(function(response) {
             $scope.getGenders($scope.currentPage);
             $('#editGenderModal').modal('hide');
+        }).catch(function(error) {
+            alert("Lỗi khi cập nhật giới tính. Vui lòng thử lại.");
+            console.error("Lỗi khi cập nhật giới tính:", error);
         });
     };
 
-    $scope.deleteGender = function(codeGender) {
-        $scope.genderToDelete = codeGender;
-        $('#confirmDeleteModal').modal('show');
-    };
+    // Các phương thức khác của controller
 
-    $scope.confirmDeleteGender = function() {
-        genderService.deleteGender($scope.genderToDelete).then(function(response) {
-            $scope.getGenders($scope.currentPage);
-            $('#confirmDeleteModal').modal('hide');
-        });
-    };
-
+    // Lấy danh sách giới tính ban đầu
     $scope.getGenders($scope.currentPage);
 }]);
+

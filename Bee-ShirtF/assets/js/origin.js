@@ -4,13 +4,12 @@ app.service('originService', ['$http', function($http) {
         const token = sessionStorage.getItem("jwtToken");
         if (!token) {
             alert("Bạn chưa đăng nhập!");
-            window.location.href = "/assets/account/login.html"; // Chuyển hướng đến trang đăng nhập
-            return false; // Dừng lại nếu không có token
+            window.location.href = "/assets/account/login.html"; // Redirect to login page
+            return false; // Stop if no token found
         }
     
-        // Giải mã token và lấy payload
+        // Decode token and extract payload
         const payload = JSON.parse(atob(token.split(".")[1]));
-    
         const roles = payload.scope ? payload.scope.split(" ") : [];
     
         if (!roles.includes("ROLE_STAFF") && !roles.includes("ROLE_ADMIN")) {
@@ -19,28 +18,13 @@ app.service('originService', ['$http', function($http) {
           return false;
         }
     
-        return true; // Cho phép tiếp tục nếu có quyền
+        return true; // Allow if permissions are valid
     }
     
-    if (!checkPermission()) return; // Kiểm tra quyền trước khi thực hiện bất kỳ hành động nào
-    // Lấy token từ sessionStorage sau khi đã kiểm tra quyền
-const token = sessionStorage.getItem("jwtToken");
+    if (!checkPermission()) return; // Check permissions before any action
 
-function getHighestRole(scopes) {
-    const roles = scopes ? scopes.split(" ") : [];
-    const rolePriority = {
-        ROLE_ADMIN: 1,
-        ROLE_STAFF: 2,
-        ROLE_USER: 3,
-    };
-
-    // Lọc các vai trò hợp lệ và sắp xếp theo độ ưu tiên
-    const validRoles = roles.filter(role => rolePriority[role]);
-    validRoles.sort((a, b) => rolePriority[a] - rolePriority[b]);
-
-    // Trả về vai trò có độ ưu tiên cao nhất
-    return validRoles[0] || null;
-}
+    // Get token after permission check
+    const token = sessionStorage.getItem("jwtToken");
 
     this.getOrigins = function(page) {
         return $http.get(`http://localhost:8080/api/origins/list?page=${page}`, {
@@ -82,7 +66,6 @@ function getHighestRole(scopes) {
         });
     };
 }]);
-
 app.controller('originController', ['$scope', 'originService', function($scope, originService) {
     $scope.origins = [];
     $scope.currentPage = 0;
@@ -92,12 +75,11 @@ app.controller('originController', ['$scope', 'originService', function($scope, 
     $scope.newOrigin = {};
     $scope.confirmDelete = false;
     $scope.originToDelete = null;
-    $scope.sortOrder = 'asc';  // Biến lưu trữ thứ tự sắp xếp, 'asc' là tăng dần, 'desc' là giảm dần
+    $scope.sortOrder = 'asc';
 
-    // Hàm sắp xếp
+    // Sorting function
     $scope.sortOrigins = function(field) {
         if ($scope.sortOrder === 'asc') {
-            // Nếu đang sắp xếp tăng dần, thì sắp xếp giảm dần
             $scope.origins = $scope.origins.sort(function(a, b) {
                 if (a[field] < b[field]) {
                     return -1;
@@ -107,9 +89,8 @@ app.controller('originController', ['$scope', 'originService', function($scope, 
                 }
                 return 0;
             });
-            $scope.sortOrder = 'desc';  // Sau khi sắp xếp xong, đổi sang giảm dần
+            $scope.sortOrder = 'desc';  // Switch to descending order
         } else {
-            // Nếu đang sắp xếp giảm dần, thì sắp xếp tăng dần
             $scope.origins = $scope.origins.sort(function(a, b) {
                 if (a[field] < b[field]) {
                     return 1;
@@ -119,11 +100,11 @@ app.controller('originController', ['$scope', 'originService', function($scope, 
                 }
                 return 0;
             });
-            $scope.sortOrder = 'asc';  // Sau khi sắp xếp xong, đổi sang tăng dần
+            $scope.sortOrder = 'asc';  // Switch to ascending order
         }
     };
-    
 
+    // Fetch origins with pagination
     $scope.getOrigins = function(page) {
         originService.getOrigins(page).then(function(response) {
             $scope.origins = response.data.content.map(function(item) {
@@ -137,8 +118,8 @@ app.controller('originController', ['$scope', 'originService', function($scope, 
             $scope.pages = new Array($scope.totalPages);
         });
     };
-    
-    // Chuyển đến trang mới
+
+    // Navigate to specific page
     $scope.goToPage = function(page) {
         if (page >= 0 && page < $scope.totalPages) {
             $scope.currentPage = page;
@@ -146,6 +127,7 @@ app.controller('originController', ['$scope', 'originService', function($scope, 
         }
     };
 
+    // View origin details
     $scope.viewOriginDetail = function(codeOrigin) {
         originService.getOriginDetail(codeOrigin).then(function(response) {
             $scope.origin = response.data;
@@ -153,46 +135,97 @@ app.controller('originController', ['$scope', 'originService', function($scope, 
         });
     };
 
-    // Đóng modal
+    // Close modal
     $scope.closeModal = function(modalId) {
         $(`#${modalId}`).modal('hide');
     };
 
+    // Open modal to add new origin
     $scope.openAddOriginModal = function() {
         $scope.newOrigin = {};
     };
 
-    $scope.saveNewOrigin = function() {
-        originService.addOrigin($scope.newOrigin).then(function(response) {
-            $scope.getOrigins($scope.currentPage);
-            $('#addOriginModal').modal('hide');
-            location.reload(); 
-        });
-    };
 
+    // Edit origin
     $scope.editOrigin = function(origin) {
         $scope.origin = angular.copy(origin);
         $('#editOriginModal').modal('show');
     };
-
+    $scope.saveNewOrigin = function() {
+        // Kiểm tra nếu tên gốc rỗng hoặc dài hơn 250 ký tự
+        if (!$scope.newOrigin.nameOrigin || $scope.newOrigin.nameOrigin.length > 250) {
+            alert("Tên gốc không được để trống và không được vượt quá 250 ký tự!");
+            return;
+        }
+    
+        // Kiểm tra nếu tên gốc có chứa ký tự đặc biệt
+        const regex = /^[a-zA-Z0-9\s\u00C0-\u1EF9]+$/;
+        if (!regex.test($scope.newOrigin.nameOrigin)) {
+            alert("Tên gốc không được chứa ký tự đặc biệt!");
+            return;
+        }
+        
+    
+        // Kiểm tra nếu tên gốc đã tồn tại
+        const isExist = $scope.origins.some(origin => origin.nameOrigin === $scope.newOrigin.nameOrigin);
+        if (isExist) {
+            alert("Tên gốc này đã tồn tại trong hệ thống!");
+            return;
+        }
+    
+        // Thực hiện thêm mới gốc
+        originService.addOrigin($scope.newOrigin).then(function(response) {
+            $scope.getOrigins($scope.currentPage);
+            $('#addOriginModal').modal('hide');
+            alert("Thêm gốc thành công!");
+        });
+    };
+    
     $scope.saveEditOrigin = function() {
+        // Kiểm tra nếu tên gốc rỗng hoặc dài hơn 250 ký tự
+        if (!$scope.origin.nameOrigin || $scope.origin.nameOrigin.length > 250) {
+            alert("Tên gốc không được để trống và không được vượt quá 250 ký tự!");
+            return;
+        }
+    
+        // Kiểm tra nếu tên gốc có chứa ký tự đặc biệt
+        const regex = /^[a-zA-Z0-9\s\u00C0-\u1EF9]+$/;
+if (!regex.test($scope.newOrigin.nameOrigin)) {
+    alert("Tên gốc không được chứa ký tự đặc biệt!");
+    return;
+}
+
+    
+        // Kiểm tra nếu tên gốc đã tồn tại
+        const isExist = $scope.origins.some(origin => origin.nameOrigin === $scope.origin.nameOrigin);
+        if (isExist) {
+            alert("Tên gốc này đã tồn tại trong hệ thống!");
+            return;
+        }
+    
+        // Thực hiện cập nhật gốc
         originService.updateOrigin($scope.origin.codeOrigin, $scope.origin).then(function(response) {
             $scope.getOrigins($scope.currentPage);
             $('#editOriginModal').modal('hide');
+            alert("Cập nhật gốc thành công!");
         });
     };
-
+    
+    // Mark origin for deletion
     $scope.deleteOrigin = function(codeOrigin) {
         $scope.originToDelete = codeOrigin;
         $('#confirmDeleteModal').modal('show');
     };
 
+    // Confirm and delete origin
     $scope.confirmDeleteOrigin = function() {
         originService.deleteOrigin($scope.originToDelete).then(function(response) {
             $scope.getOrigins($scope.currentPage);
             $('#confirmDeleteModal').modal('hide');
+            alert("Xóa thành công!");  // Thông báo xóa thành công
         });
     };
 
+    // Initial load
     $scope.getOrigins($scope.currentPage);
 }]);
