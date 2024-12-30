@@ -531,6 +531,9 @@
             </li>
             
           </ul>
+          <br>
+
+          <button style="float: right;" class="btn btn-success" ng-click="openAddCategoryModal()" data-bs-toggle="modal" data-bs-target="#addCategoryModal">Thêm Danh Mục Sản Phẩm</button>
             <h2>Danh Mục Sản Phẩm</h2>
 
             <!-- Bảng hiển thị danh sách Category -->
@@ -551,7 +554,7 @@
                       <td>{{$index + 1 }}</td>
                         <td>{{ category.codeCategory }}</td>
                         <td>{{ category.nameCategory }}</td>
-                        <td>{{ category.statusCategory == 1 ? 'Active' : 'Inactive' }}</td>
+                        <td>{{ category.statusCategory == 1 ? 'Hoạt động' : 'Ngừng hoạt động' }}</td>
                         <td>
                             <button class="btn btn-warning" ng-click="editCategory(category)">Xem Chi Tiết</button>
                             <button class="btn btn-danger" ng-click="deleteCategory(category.codeCategory)">Xóa</button>
@@ -590,37 +593,26 @@
             </div>
             
             <!-- Nút Mở Modal Thêm Category -->
-            <button class="btn btn-success" ng-click="openAddCategoryModal()" data-bs-toggle="modal" data-bs-target="#addCategoryModal">Thêm Category</button>
             
             <!-- Modal Thêm Category -->
             <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="addCategoryModalLabel">Thêm Category</h5>
+                            <h5 class="modal-title" id="addCategoryModalLabel">Thêm Danh Mục</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <form ng-submit="saveNewCategory()">
                                
                                 <div class="mb-3">
-                                    <label for="nameCategory" class="form-label">Tên Category:</label>
+                                    <label for="nameCategory" class="form-label">Tên Danh Mục:</label>
                                     <input type="text" id="nameCategory" ng-model="newCategory.nameCategory" class="form-control" required>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="statusCategory" class="form-label">Trạng Thái:</label>
-                                    <div>
-                                        <label>
-                                            <input type="radio" ng-model="newCategory.statusCategory" value="1"> Active
-                                        </label>
-                                        <label>
-                                            <input type="radio" ng-model="newCategory.statusCategory" value="0"> Inactive
-                                        </label>
-                                    </div>
-                                </div>
+                                
                                 <div class="d-flex justify-content-end">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                    <button type="submit" class="btn btn-primary ms-2">Thêm Category</button>
+                                    <button type="submit" class="btn btn-primary ms-2">Thêm Danh Mục</button>
                                 </div>
                             </form>
                         </div>
@@ -633,17 +625,17 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="editCategoryModalLabel">Sửa Category</h5>
+                            <h5 class="modal-title" id="editCategoryModalLabel">Sửa Danh Mục</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <form ng-submit="saveEditCategory()">
                                 <div class="mb-3">
-                                    <label for="codeCategory" class="form-label" disable>Mã Category:</label>
+                                    <label for="codeCategory" class="form-label" disable>Mã Danh Mục:</label>
                                     <input type="text" id="codeCategory" ng-model="category.codeCategory" class="form-control" disabled>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="nameCategory" class="form-label">Tên Category:</label>
+                                    <label for="nameCategory" class="form-label">Tên Danh Mục:</label>
                                     <input type="text" id="nameCategory" ng-model="category.nameCategory" class="form-control" required>
                                 </div>
                                 <div class="mb-3">
@@ -659,7 +651,7 @@
                                 </div>
                                 <div class="d-flex justify-content-end">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                    <button type="submit" class="btn btn-primary ms-2">Cập nhật Category</button>
+                                    <button type="submit" class="btn btn-primary ms-2">Cập nhật Danh Mục</button>
                                 </div>
                             </form>
                         </div>

@@ -755,7 +755,8 @@
 		let timeoutId = null;  // Biến toàn cục để lưu trữ ID của setTimeout
 
 		async function loadCartDetails() {
-			if (token) {
+
+			if (!token) {
 				alert("Không tìm thấy token, vui lòng đăng nhập lại.");
 				window.location.href = "/assets/account/login.html";
 				return;

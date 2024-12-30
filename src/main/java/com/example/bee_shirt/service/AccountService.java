@@ -200,9 +200,8 @@ public class AccountService {
             account.setAvatar(uploadAvatar(request.getAvatarFile()));
         }
 
-        // Xử lý logic đổi mật khẩu (nếu có yêu cầu)
-        if (request.getOldPassword() != null && request.getOldPassword().isEmpty() && request.getPass() != null && request.getPass().isEmpty()) {
-            // Kiểm tra mật khẩu cũ
+        if (request.getOldPassword() != null && !request.getOldPassword().isEmpty()
+                && request.getPass() != null && !request.getPass().isEmpty()) {
             if (!passwordEncoder.matches(request.getOldPassword(), account.getPass())) {
                 throw new AppException(ErrorCode.INVALID_OLD_PASSWORD);
             }
