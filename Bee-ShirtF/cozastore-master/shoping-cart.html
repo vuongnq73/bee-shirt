@@ -752,6 +752,7 @@
 		};
 		const userCode = sessionStorage.getItem("userCode");
 		let selectedCartDetails = [];
+		let selectedTotal = 0;
 		let timeoutId = null;  // Biến toàn cục để lưu trữ ID của setTimeout
 
 		async function loadCartDetails() {
@@ -775,7 +776,7 @@
 				cartSummaryElement.innerHTML = '';
 
 				let subtotal = 0;
-				let selectedTotal = 0;
+				selectedTotal = 0;
 
 				// Populate the cart table
 				data.forEach((item, index) => {
@@ -842,7 +843,13 @@
 					updateSelectedTotal();
 				});
 
-
+				// Function to check if "Select All" should be checked
+				function checkSelectAllState() {
+					const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+					const someChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+					selectAllCheckbox.checked = allChecked;
+					selectAllCheckbox.indeterminate = !allChecked && someChecked; // Hiển thị trạng thái "không xác định"
+				}
 
 				attachQuantityChangeEvent();
 
@@ -851,13 +858,7 @@
 			}
 		}
 
-		// Function to check if "Select All" should be checked
-		function checkSelectAllState() {
-			const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
-			const someChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
-			selectAllCheckbox.checked = allChecked;
-			selectAllCheckbox.indeterminate = !allChecked && someChecked; // Hiển thị trạng thái "không xác định"
-		}
+
 
 		function remove(codeCartDetail) {
 			const response = fetch("http://localhost:8080/cart/cancel-cart-detail?codeCartDetail=" + codeCartDetail, {
@@ -967,6 +968,7 @@
 				toastr.error('Chưa chọn sản phẩm');
 				return;
 			}
+
 			try {
 				const response = await fetch("http://localhost:8080/cart/checkout?accCode=" + userCode, {
 					method: 'POST', // Sử dụng POST để gửi dữ liệu

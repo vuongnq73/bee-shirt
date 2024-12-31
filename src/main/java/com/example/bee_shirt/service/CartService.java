@@ -140,7 +140,7 @@ public class CartService {
 
         Bill bill2 = billRepository.findBillByCode(bill.getCodeBill());
         Voucher1 voucher = voucherRepository.findVoucherByCode("codeVoucher").orElse(null);
-        Account account = bill2.getCustomer();
+        Account account = bill2.getAccount();
         bill2.setVoucher(voucher);
         bill2.setCustomer(account);
         bill2.setTypeBill("Online");
@@ -179,6 +179,7 @@ public class CartService {
             voucher.setQuantity(voucher.getQuantity()-1);
             voucherRepository.save(voucher);
         }
+        System.out.println(bill2);
         billRepository.save(bill2);
         System.out.println("Received list: " + list);
 
