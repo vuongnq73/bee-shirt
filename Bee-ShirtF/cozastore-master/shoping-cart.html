@@ -950,7 +950,7 @@
 
 		function updateSelectedTotal() {
 			const checkboxes = document.querySelectorAll('.select-item:checked');
-			let selectedTotal = 0;
+			selectedTotal = 0;
 			selectedCartDetails = [];
 
 			checkboxes.forEach(checkbox => {
@@ -963,12 +963,15 @@
 			document.getElementById('selected-total').innerText = `$ ${selectedTotal.toFixed(2)}`;
 		}
 
-		async function sendList() {
+		function sendList() {
 			if (selectedCartDetails.length === 0) {
 				toastr.error('Chưa chọn sản phẩm');
 				return;
 			}
+			submitOrder(selectedTotal)
+		}
 
+		async function checkout() {
 			try {
 				const response = await fetch("http://localhost:8080/cart/checkout?accCode=" + userCode, {
 					method: 'POST', // Sử dụng POST để gửi dữ liệu
@@ -1023,6 +1026,78 @@
 					scheduleChangeQuantity(input, codeCartDetail);
 				});
 			});
+		}
+
+		// Gửi đơn hàng để lấy URL thanh toán
+		function submitOrder(money) {
+			localStorage.setItem('selectedCartDetails', JSON.stringify(selectedCartDetails));
+
+			const orderData = {
+				amount: money,  // Số tiền (VND)
+				orderInfo: 'Online Payment'  // Thông tin đơn hàng
+			};
+
+			fetch('http://localhost:8080/submitOrder', {
+				method: 'POST',
+				headers: {
+					'Authorization': `Bearer ${token}`,
+					'Content-Type': 'application/x-www-form-urlencoded'
+				},
+				body: new URLSearchParams(orderData).toString(),
+			})
+				.then(response => response.text())
+				.then(data => {
+					// Chuyển hướng người dùng đến URL của VNPay
+					window.location.href = data;
+				})
+				.catch(error => {
+					console.error('Error submitting order:', error);
+					alert('There was an error processing your order. Please try again.');
+				});
+		}
+
+		// Xử lý kết quả thanh toán khi được trả về
+		function handlePaymentResponse() {
+			const params = new URLSearchParams(window.location.search);
+			if (!params.toString()) {
+				return;
+			}
+
+			if (params.toString()) {
+				fetch(`http://localhost:8080/vnpay-payment?${params.toString()}`, {
+					method: 'GET',
+					headers: headers
+				})
+					.then(response => response.json())
+					.then(data => {
+						if (data.paymentStatus === 'success') {
+							toastr.success('Thanh toán thành công')
+							checkout()
+							// window.location.href = 'http://127.0.0.1:5500/cozastore-master/shoping-cart.html'
+							selectedCartDetails = [];
+						} else {
+							// window.location.href = 'http://127.0.0.1:5500/cozastore-master/shoping-cart.html'
+							toastr.error('Thanh toán thất bại')
+							selectedCartDetails = [];
+						}
+					})
+					.catch(error => {
+						console.error('Error handling payment response:', error);
+						toastr.error('Error fetching payment status. Please contact support.');
+					});
+			}
+		}
+
+		// Gọi hàm xử lý kết quả ngay khi tải trang
+		window.onload = function () {
+			// Lấy selectedCartDetails từ localStorage
+			const savedCartDetails = localStorage.getItem('selectedCartDetails');
+			if (savedCartDetails) {
+				selectedCartDetails = JSON.parse(savedCartDetails);
+			}
+
+			// Xử lý kết quả thanh toán
+			handlePaymentResponse();
 		}
 
 

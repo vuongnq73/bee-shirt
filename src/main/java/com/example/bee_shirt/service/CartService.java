@@ -25,8 +25,6 @@ public class CartService {
     @Autowired
     private CartDetailRepository cartDetailRepository;
     @Autowired
-    private AccountRepository accountRepository;
-    @Autowired
     private AccountMapper accountMapper;
 
     @Autowired
