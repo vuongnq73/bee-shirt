@@ -70,5 +70,7 @@ public interface BillDetailrepo extends JpaRepository<BillDetail, Integer> {
     WHERE bl.code_bill = :codeBill
 """, nativeQuery = true)
 List<Object[]> findBillDetailsByCodeBillTimeLine(@Param("codeBill") String codeBill);
+//
+
 
 }

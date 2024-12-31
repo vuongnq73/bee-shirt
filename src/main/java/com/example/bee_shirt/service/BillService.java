@@ -2,8 +2,13 @@ package com.example.bee_shirt.service;
 
 import com.example.bee_shirt.dto.request.*;
 import com.example.bee_shirt.entity.Bill;
+import com.example.bee_shirt.entity.BillDetail;
+import com.example.bee_shirt.entity.ShirtDetail;
+import com.example.bee_shirt.repository.BillDetailRepository;
 import com.example.bee_shirt.repository.BillRepo;
 import com.example.bee_shirt.repository.BillRepository;
+import com.example.bee_shirt.repository.ShirtDetailRepository;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -241,6 +246,43 @@ public List<MyOderDTO> getBillsByEmailAndStatus5(String email) {
     )).collect(Collectors.toList());
 }
 //
+@Autowired
+private BillDetailRepository billDetailRepository;
 
+    @Autowired
+    private ShirtDetailRepository shirtDetailRepository;
 
+    @Transactional
+    public boolean updateProductStock(String codeBillDetail, Integer newQuantity) {
+        // Lấy chi tiết hóa đơn
+        BillDetail billDetail = billDetailRepository.findBillDetailByCode(codeBillDetail);
+        if (billDetail == null || billDetail.getBill() == null) {
+            return false; // Không tìm thấy chi tiết hóa đơn hoặc hóa đơn không hợp lệ
+        }
+        // Kiểm tra trạng thái hóa đơn (chỉ xử lý nếu trạng thái là 6)
+        if (billDetail.getBill().getStatusBill() != 6) {
+            return false; // Trạng thái hóa đơn không phù hợp
+        }
+        // Lấy chi tiết áo
+        ShirtDetail shirtDetail = billDetail.getShirtDetail();
+        if (shirtDetail == null) {
+            return false; // Không tìm thấy chi tiết áo
+        }
+        // Lấy số lượng cũ và tồn kho hiện tại
+        Integer oldQuantity = billDetail.getQuantity();
+        Integer stockQuantity = shirtDetail.getQuantity();
+        // Tính chênh lệch số lượng
+        int quantityDelta = newQuantity - oldQuantity;
+        // Kiểm tra tồn kho (đảm bảo không bị âm)
+        if (stockQuantity - quantityDelta < 0) {
+            return false; // Không đủ hàng trong kho
+        }
+        // Cập nhật số lượng trong hóa đơn
+        billDetail.setQuantity(newQuantity);
+        billDetailRepository.save(billDetail);
+        // Cập nhật số lượng trong kho
+        shirtDetail.setQuantity(stockQuantity - quantityDelta);
+        shirtDetailRepository.save(shirtDetail);
+        return true; // Cập nhật thành công
+    }
 }

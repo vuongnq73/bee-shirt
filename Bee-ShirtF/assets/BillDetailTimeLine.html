@@ -1073,6 +1073,7 @@
           });
         };
 // Client-side polling (Poll API every X seconds)
+$scope.updatedBills = {};  // Đối tượng theo dõi các hóa đơn đã cập nhật
 $scope.pollStatusUpdate = function () {
   const token = sessionStorage.getItem("jwtToken");
   const urlParams = new URLSearchParams(window.location.search);
@@ -1083,8 +1084,8 @@ $scope.pollStatusUpdate = function () {
     return;
   }
 
-  // Poll every 5 seconds (5000 ms)
-  setInterval(function () {
+  // Kiểm tra mỗi 5 giây một lần
+  const intervalId = setInterval(function () {
     $http({
       method: "GET",
       url: `http://localhost:8080/bills/detailsOnline/${codeBill}`,
@@ -1097,18 +1098,52 @@ $scope.pollStatusUpdate = function () {
           $scope.billInfo.statusBill = billDetail.statusBill;
           $scope.updateTimeline($scope.billInfo.statusBill);
           $scope.currentStatusLabel = $scope.statusLabels[$scope.billInfo.statusBill - 1];
+
+          // Kiểm tra nếu statusBill là 5 hoặc 6 và chưa được cập nhật
+          if ((billDetail.statusBill === 5 || billDetail.statusBill === 6) && !$scope.updatedBills[codeBill]) {
+            // Gọi API để cập nhật số lượng
+            $http({
+              method: "PUT",
+              url: `http://localhost:8080/bills/updateStock/${codeBill}`,
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + token, // Thêm token nếu cần
+              }
+            })
+              .then(function(response) {
+                // Kiểm tra nếu dữ liệu trả về là JSON với message "Quantity updated successfully."
+                if (response.data && response.data.message && response.data.message === "Quantity updated successfully.") {
+                  console.log("Cập nhật số lượng thành công.");
+                  // Đánh dấu hóa đơn này là đã được cập nhật
+                  $scope.updatedBills[codeBill] = true;
+
+                  // Dừng interval sau khi cập nhật thành công
+                  clearInterval(intervalId);  // Dừng polling sau khi cập nhật thành công
+                } else {
+                  console.error("Dữ liệu trả về không hợp lệ:", response.data);
+                }
+              })
+              .catch(function(error) {
+                console.error("Lỗi khi cập nhật số lượng:", error);
+              });
+          } else if ($scope.updatedBills[codeBill]) {
+            // Nếu hóa đơn đã được cập nhật, dừng interval
+            clearInterval(intervalId);
+          }
         }
       })
       .catch(function error(err) {
         console.error("Lỗi khi kiểm tra trạng thái hóa đơn:", err);
       });
-  }, 5000);  // Chạy mỗi 5 giây
+  }, 5000);  // Kiểm tra mỗi 5 giây
 };
+
 
         // Xử lý khi tài liệu sẵn sàng
         angular.element(document).ready(function () {
           $scope.getMyProfile();
           $scope.loadBillDetail();
+        
           $scope.pollStatusUpdate();  // Bắt đầu Polling
         });
       }]);

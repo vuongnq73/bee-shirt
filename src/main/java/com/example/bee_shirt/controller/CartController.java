@@ -57,4 +57,9 @@ public class CartController {
     public ResponseEntity<?> handlePostRequest(@RequestBody Map<String, Object> requestBody, @RequestParam("accCode") String accCode) {
         return cartService.processCheckout(requestBody, accCode);
     }
+    @GetMapping("/getIDCart")
+    public ResponseEntity<List<Integer>> getMyCartIds() {
+        List<Integer> cartId = cartService.getCartIdsForCurrentAccount();
+        return ResponseEntity.ok(cartId);
+    }
 }

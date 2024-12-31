@@ -8,6 +8,7 @@ import com.example.bee_shirt.entity.ShirtDetail;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -283,6 +284,16 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
             "WHERE s.codeshirt = :codeshirt")
     List<OnlineColorDTO> findColorsByShirtCode(@Param("codeshirt") String codeshirt);
 
+//
+@Modifying
+@Query(value = "UPDATE shirt_detail " +
+        "SET shirt_detail.quantity = shirt_detail.quantity - bd.quantity " +
+        "FROM shirt_detail " +
+        "JOIN bill_detail bd ON shirt_detail.id = bd.shirt_detail_id " +
+        "JOIN bill b ON b.id = bd.bill_id " +
+        "WHERE b.code_bill = :codeBill",
+        nativeQuery = true)
+void updateQuantityByCodeBill(@Param("codeBill") String codeBill);
 
 
 }

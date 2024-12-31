@@ -14,6 +14,7 @@ import com.example.bee_shirt.exception.AppException;
 import com.example.bee_shirt.exception.ErrorCode;
 import com.example.bee_shirt.mapper.AccountMapper;
 import com.example.bee_shirt.repository.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
@@ -116,7 +117,7 @@ public class ShirtDetailService {
             shirtDetail.setQuantity(dto.getQuantity());
             shirtDetail.setPrice(dto.getPrice());
             shirtDetail.setStatusshirtdetail(dto.getStatusshirtdetail());
-            shirtDetail.setCreateBy(getMyInfo().getUsername());
+            shirtDetail.setCreateBy(dto.getCreateBy());
             shirtDetail.setCreateAt(dto.getCreateAt());
             shirtDetail.setUpdateBy(dto.getUpdateBy());
             shirtDetail.setUpdateAt(dto.getUpdateAt());
@@ -450,6 +451,11 @@ public class ShirtDetailService {
     public Integer countAll(BigDecimal min, BigDecimal max, String color, String brand, String size, Integer category){
         Integer total = shirtDetailRepository.countAll(min, max, color, brand, size, category);
         return total;
+    }
+
+    @Transactional
+    public void updateQuantityByCodeBill(String codeBill) {
+        shirtDetailRepository.updateQuantityByCodeBill(codeBill);
     }
 }
 
