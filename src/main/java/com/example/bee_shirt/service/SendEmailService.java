@@ -57,8 +57,12 @@ public class SendEmailService {
     }
 
 
-    public String forgotPassword(String email){
+    public String forgotPassword(String email, String username){
         Optional<Account> account = accountRepository.findByEmail(email);
+        Optional<Account> check = accountRepository.findByUsername(username);
+        if(!account.equals(check) ){
+            throw new AppException(ErrorCode.EMAIL_EXISTED);
+        }
         if(account.isEmpty()){
             throw new AppException(ErrorCode.ACCOUNT_NOT_FOUND);
         }

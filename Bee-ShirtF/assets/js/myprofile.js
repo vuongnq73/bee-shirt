@@ -203,19 +203,18 @@ angular
           $scope.errorMessage = "Vui lòng nhập đầy đủ thông tin mật khẩu.";
           return;
         }
-
+    
         // Kiểm tra mật khẩu mới và mật khẩu xác nhận có khớp không
         if ($scope.passwordData.pass !== $scope.passwordData.confirmPassword) {
           $scope.errorMessage = "Mật khẩu mới và xác nhận mật khẩu không khớp.";
           return;
         }
-
+    
         // Tạo formData để gửi dữ liệu lên server
         var formData = new FormData();
         formData.append("oldPassword", $scope.passwordData.oldPassword);
         formData.append("pass", $scope.passwordData.pass);
-        formData.append("confirmPassword", $scope.passwordData.confirmPassword);
-
+    
         // Gửi yêu cầu cập nhật mật khẩu
         $http
           .put(`${API_BASE_URL}/update/${userCode}`, formData, {
@@ -226,15 +225,21 @@ angular
             },
           })
           .then(function (response) {
+            // Thông báo thành công
             $scope.successMessage = "Mật khẩu đã được cập nhật thành công!";
             $scope.toggleChangePassword(); // Ẩn form
             $scope.goBack();
           })
           .catch(function (error) {
-            $scope.errorMessage = "Mật khẩu cũ không chính xác.";
+            // Kiểm tra lỗi từ server (mật khẩu cũ không chính xác)
+            if (error.data && error.data.errorCode === 'INVALID_OLD_PASSWORD') {
+              $scope.errorMessage = "Mật khẩu cũ không chính xác.";
+            } else {
+              $scope.errorMessage = "Đã có lỗi xảy ra. Vui lòng thử lại.";
+            }
           });
-      };
-
+    };
+    
       // Quay lại trang trước
       $scope.goBack = function () {
         $window.history.back();

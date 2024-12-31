@@ -40,6 +40,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/shirts/api/categories").permitAll()
                         .requestMatchers(HttpMethod.GET,"/shirt-details/api/sizes").permitAll()
                         .requestMatchers(HttpMethod.POST,"api/cart/add").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/cart/getIDCart").permitAll()
                         .requestMatchers(HttpMethod.GET,"/shirts/api/brands").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/verify-code/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/myOderByEmail/**").permitAll()
