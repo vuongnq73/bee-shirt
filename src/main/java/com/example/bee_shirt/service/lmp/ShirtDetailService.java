@@ -99,7 +99,7 @@ public class ShirtDetailService {
                     shirt.getNameshirt(),
                     shirt.getDescription(),
                     colorGroupsList));
-        }
+            }
 
         return result;
     }
@@ -369,12 +369,13 @@ public class ShirtDetailService {
 
         // Chuyển đổi kết quả query thành danh sách DTO
         return results.stream().map(result -> new HomePageResponse(
-                (String) result[0],
+                (Integer) result[0],
                 (String) result[1],
                 (String) result[2],
                 (String) result[3],
                 (String) result[4],
-                (BigDecimal) result[5]
+                (String) result[5],
+                (BigDecimal) result[6]
                 )).collect(Collectors.toList());
     }
 
@@ -383,12 +384,13 @@ public class ShirtDetailService {
 
         // Chuyển đổi kết quả query thành danh sách DTO
         return results.stream().map(result -> new HomePageResponse(
-                (String) result[0],
+                (Integer) result[0],
                 (String) result[1],
                 (String) result[2],
                 (String) result[3],
                 (String) result[4],
-                (BigDecimal) result[5]
+                (String) result[5],
+                (BigDecimal) result[6]
         )).collect(Collectors.toList());
     }
 
@@ -397,12 +399,13 @@ public class ShirtDetailService {
         List<Object[]> results = shirtDetailRepository.getAllShirtByCategoryCode(code);
 
         return results.stream().map(result -> new HomePageResponse(
-                (String) result[0],
+                (Integer) result[0],
                 (String) result[1],
                 (String) result[2],
                 (String) result[3],
                 (String) result[4],
-                (BigDecimal) result[5]
+                (String) result[5],
+                (BigDecimal) result[6]
         )).collect(Collectors.toList());
     }
 
@@ -411,12 +414,13 @@ public class ShirtDetailService {
         List<Object[]> results = shirtDetailRepository.getAllShirtByFiller(min,max,color,brand,size,category, offset, limit);
 
         return results.stream().map(result -> new HomePageResponse(
-                (String) result[0],
+                (Integer) result[0],
                 (String) result[1],
                 (String) result[2],
                 (String) result[3],
                 (String) result[4],
-                (BigDecimal) result[5]
+                (String) result[5],
+                (BigDecimal) result[6]
         )).collect(Collectors.toList());
     }
 
@@ -425,12 +429,13 @@ public class ShirtDetailService {
         List<Object[]> results = shirtDetailRepository.getAllByFiller(min,max,color,brand,size,category);
 
         return results.stream().map(result -> new HomePageResponse(
-                (String) result[0],
+                (Integer) result[0],
                 (String) result[1],
                 (String) result[2],
                 (String) result[3],
                 (String) result[4],
-                (BigDecimal) result[5]
+                (String) result[5],
+                (BigDecimal) result[6]
         )).collect(Collectors.toList());
     }
 
@@ -439,12 +444,13 @@ public class ShirtDetailService {
         List<Object[]> results = shirtDetailRepository.getAllShirtByColor(code);
 
         return results.stream().map(result -> new HomePageResponse(
-                (String) result[0],
+                (Integer) result[0],
                 (String) result[1],
                 (String) result[2],
                 (String) result[3],
                 (String) result[4],
-                (BigDecimal) result[5]
+                (String) result[5],
+                (BigDecimal) result[6]
         )).collect(Collectors.toList());
     }
 
