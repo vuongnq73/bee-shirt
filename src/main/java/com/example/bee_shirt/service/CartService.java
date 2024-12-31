@@ -71,7 +71,7 @@ public class CartService {
         return randomCode.toString();
     }
 
-    public ResponseEntity<?> processCheckout(Map<String, Object> requestBody) {
+    public ResponseEntity<?> processCheckout(Map<String, Object> requestBody, String accCode) {
         // Lấy danh sách từ request body
         Object listObject = requestBody.get("list");
 
@@ -86,6 +86,7 @@ public class CartService {
         bill.setCreateAt(LocalDateTime.now());
         bill.setStatusBill(0);
         bill.setDeleted(false);
+        bill.setAccount(accountRepository.findByCode(accCode).get());
 
         billRepository.save(bill);
 
@@ -109,8 +110,8 @@ public class CartService {
             billDetail.setCodeBillDetail("CBD" + randomCodeBillDetail);
             billDetailRepository.save(billDetail);
 
-            shirtDetail.setQuantity(shirtDetail.getQuantity() - cd4Checkout.getQuantity());
-            shirtDetailRepository.save(shirtDetail);
+//            shirtDetail.setQuantity(shirtDetail.getQuantity() - cd4Checkout.getQuantity());
+//            shirtDetailRepository.save(shirtDetail);
         });
 
         Bill bill2 = billRepository.findBillByCode(bill.getCodeBill());
@@ -119,9 +120,9 @@ public class CartService {
         bill2.setVoucher(voucher);
         bill2.setCustomer(account);
         bill2.setTypeBill("Online");
-//        bill2.setCustomerName(account.getFirstName()+account.getLastName());
-//        bill2.setPhoneNumber(account.getPhone());
-//        bill2.setAddressCustomer(account.getAddress());
+        bill2.setCustomerName(account.getFirstName()+account.getLastName());
+        bill2.setPhoneNumber(account.getPhone());
+        bill2.setAddressCustomer(account.getAddress());
         bill2.setMoneyShip(BigDecimal.ZERO);
         double subtotalBeforeDiscount = 0.0;
         double moneyReduce = 0.0;

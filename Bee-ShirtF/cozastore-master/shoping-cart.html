@@ -967,7 +967,7 @@
 				return;
 			}
 			try {
-				const response = await fetch("http://localhost:8080/cart/checkout", {
+				const response = await fetch("http://localhost:8080/cart/checkout?accCode=" + userCode, {
 					method: 'POST', // Sử dụng POST để gửi dữ liệu
 					headers: headers,
 					body: JSON.stringify({ list: selectedCartDetails }) // Gửi danh sách dưới dạng JSON
@@ -1018,7 +1018,6 @@
 				// Xử lý khi mất focus (blur)
 				input.addEventListener('blur', () => {
 					scheduleChangeQuantity(input, codeCartDetail);
-					// Gọi hàm cập nhật số lượng trên server tại đây nếu cần
 				});
 			});
 		}

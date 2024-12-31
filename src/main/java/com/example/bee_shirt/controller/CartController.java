@@ -54,7 +54,7 @@ public class CartController {
         return cartService.changeQuantityCartDetail(codeCartDetail, quantity);
     }
     @PostMapping("/checkout")
-    public ResponseEntity<?> handlePostRequest(@RequestBody Map<String, Object> requestBody) {
-        return cartService.processCheckout(requestBody);
+    public ResponseEntity<?> handlePostRequest(@RequestBody Map<String, Object> requestBody, @RequestParam("accCode") String accCode) {
+        return cartService.processCheckout(requestBody, accCode);
     }
 }
