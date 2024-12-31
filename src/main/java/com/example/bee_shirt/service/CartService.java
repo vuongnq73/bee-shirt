@@ -41,8 +41,6 @@ public class CartService {
     @Autowired
     private VoucherRepository1 voucherRepository;
 
-    @Autowired
-    private AccountRepository accountRepository;
 
     @Autowired
     private BillDetailRepository billDetailRepository;
