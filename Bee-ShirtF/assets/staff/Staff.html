@@ -54,7 +54,7 @@
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
           <a href="/assets/BanHang.html" class="logo">
-            <img src="/assets/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20" />
+            <img src="/assets/img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="40" />
           </a>
           <div class="nav-toggle">
             <button class="btn btn-toggle toggle-sidebar">
@@ -91,25 +91,12 @@
               </a>
             </li>
             <li class="nav-item">
-              <a data-bs-toggle="collapse" href="#sidebarLayouts">
+              <a  href="/assets/Voucher.html">
                 <i class="fas fa-ticket-alt"></i>
                 <p>Voucher</p>
-                <span class="caret"></span>
+                
               </a>
-              <div class="collapse" id="sidebarLayouts">
-                <ul class="nav nav-collapse">
-                  <li>
-                    <a href="sidebar-style-2.html">
-                      <span class="sub-item">Sidebar Style 2</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="icon-menu.html">
-                      <span class="sub-item">Icon Menu</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
+              
             </li>
             <li class="nav-item">
               <a href="/assets/Bill.html">
@@ -126,19 +113,26 @@
               <div class="collapse" id="tables">
                 <ul class="nav nav-collapse">
                   <li>
-                    <a href="#">
-                      <span class="sub-item">Basic Table</span>
+                    <a href="/assets/Products.html">
+                      <span class="sub-item">Danh Sách Sản Phẩm</span>
+                    </a>
+                  </li>
+                  
+                  <li>
+                    <a href="/assets/ProductDetail.html">
+                      <span class="sub-item">Danh Sách Sản Phẩm Chi Tiết</span>
                     </a>
                   </li>
                   <li>
-
-                    <span class="sub-item">Datatables</span>
+                    <a href="/assets/Category.html">
+                      <span class="sub-item">Danh Sách Thuộc Tính<span>
                     </a>
                   </li>
+                 
                 </ul>
               </div>
             </li>
-            <li class="nav-item">
+            <li class="nav-item active submenu">
               <a data-bs-toggle="collapse" href="#account">
                 <i class="fas fa-user"></i>
                 <p>Account</p>
@@ -214,6 +208,7 @@
         <!-- Navbar Header -->
         <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
           <div class="container-fluid">
+
             <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
               <div class="input-group">
                 <div class="input-group-prepend">
@@ -383,7 +378,7 @@
                     <span class="fw-bold">{{ myProfile.firstName }}</span> <!-- Hiển thị tên người dùng -->
                   </span>
                 </a>
-              
+
                 <ul class="dropdown-menu dropdown-user animated fadeIn">
                   <div class="dropdown-user-scroll scrollbar-outer">
                     <li ng-if="myProfile"> <!-- Ngăn lỗi nếu myProfile chưa tải xong -->
@@ -400,12 +395,12 @@
                     </li>
                     <li>
                       <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="/assets/account/login.html" ng-click="logout()">Logout</a>
+                      <a class="dropdown-item" ng-click="logout()" >Logout</a>
                     </li>
                   </div>
                 </ul>
               </li>
-              
+
                              
             </ul>
           </div>
@@ -415,10 +410,31 @@
 <!-- container -->
 <div class="container">
   <div class="page-inner">
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h3>Danh sách</h3>
+    <div class="page-header">
+      <h3 class="fw-bold mb-3">Account</h3>
+      <ul class="breadcrumbs mb-3">
+        <li class="nav-home">
+          <a href="Staff.html">
+            <i class="fas fa-layer-group"></i>
+          </a>
+        </li>
+        <li class="separator">
+          <i class="icon-arrow-right"></i>
+        </li>
+        <li class="nav-item">
+          <a href="/assets/staff/Staff.html">Nhân Viên</a>
+        </li>
+
+      </ul>
+      <div class="ms-md-auto py-2 py-md-0">
+        
         <button ng-click="showCreateAccountForm = true" class="btn btn-primary">Tạo tài khoản</button>
+      </div>
+    </div>
+    <div class="card">
+   
+      <div class="card-header">
+        <h4 class="card-title">Nhân viên</h4>
       </div>
       <div class="card-body">
         

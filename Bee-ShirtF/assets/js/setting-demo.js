@@ -68,14 +68,13 @@ $(".changeBackgroundColor").on("click", function () {
   $(this).addClass("selected");
   getCheckmark();
 });
-
-function customCheckColor() {
-  var logoHeader = $(".logo-header").attr("data-background-color");
-  if (logoHeader !== "white") {
-    $(".logo-header .navbar-brand").attr("src", "assets/img/kaiadmin/logo_light.svg");
-  } else {
-    $(".logo-header .navbar-brand").attr("src", "assets/img/kaiadmin/logo_dark.svg");
-  }
+function customCheckColor(){
+	var logoHeader = $('.logo-header').attr('data-background-color');
+	if (logoHeader !== "white") {
+		$('.logo-header .navbar-brand').attr('src', '../assets/img/kaiadmin/logo_light.png');
+	} else {
+		$('.logo-header .navbar-brand').attr('src', '../assets/img/kaiadmin/logo_dark.png');
+	}
 }
 
 var toggle_customSidebar = false,

@@ -5,19 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login Page</title>
     <link rel="stylesheet" href="/assets/css/login.css" />
-    <!-- Gọi file CSS -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
     <script src="/assets/js/login.js"></script>
-    <!-- Đảm bảo login.js chứa module loginApp -->
     <script src="/assets/js/staff.js"></script>
     <script src="/assets/js/myprofile.js"></script>
+    <style></style>
   </head>
   <body ng-controller="loginController">
     <div class="login-container">
       <div class="login-box">
         <h2>Đăng Nhập</h2>
-        <form name="loginForm" ng-submit="login()">
+        <form name="loginForm" ng-submit="login()" novalidate>
           <div class="input-group">
             <input
               type="text"
@@ -25,6 +24,7 @@
               placeholder="Tài khoản"
               ng-model="user.username"
               required
+              ng-class="{'input-error': loginForm.username.$invalid && loginForm.username.$touched}"
             />
             <i class="fas fa-user"></i>
           </div>
@@ -35,15 +35,15 @@
               placeholder="Mật khẩu"
               ng-model="user.password"
               required
+              ng-class="{'input-error': loginForm.password.$invalid && loginForm.password.$touched}"
             />
             <i class="fas fa-lock"></i>
           </div>
           <div class="remember-forgot">
-            <label
-              ><input type="checkbox" ng-model="rememberMe" /> Remember
-              Me</label
-            >
-            <a href="#">Quên mật khẩu?</a>
+            <label>
+              <input type="checkbox" ng-model="rememberMe" /> Remember Me
+            </label>
+            <a href="#" ng-click="showForgotPasswordModal()">Quên mật khẩu?</a>
           </div>
           <button
             type="submit"
@@ -52,7 +52,6 @@
           >
             Đăng Nhập
           </button>
-          <!-- Thông báo lỗi -->
           <div class="error" ng-if="errorMessage">{{ errorMessage }}</div>
           <div class="register-link">
             Bạn chưa có tài khoản?
@@ -61,6 +60,35 @@
         </form>
       </div>
     </div>
+    <!-- Modal Quên mật khẩu -->
+    <div class="modal" ng-show="isForgotPasswordModalVisible">
+      <div class="modal-content">
+        <span class="close" ng-click="closeForgotPasswordModal()">&times;</span>
+        <h3>Nhập email và username của bạn để nhận mật khẩu mới</h3>
+        <form ng-submit="forgotPassword()">
+          <input
+          type="text"
+          id="1"
+          ng-model="username"
+          placeholder="Nhập username"
+          required
+        />
+          <input
+            type="email"
+            id="2"
+            ng-model="email"
+            placeholder="Nhập email"
+            required
+          />
+          <button type="submit">Gửi Email</button>
+
+        </form>
+        <div class="error" ng-if="forgotPasswordError">
+          {{ forgotPasswordError }}
+        </div>
+      </div>
+    </div>
+
     <script
       src="https://kit.fontawesome.com/a076d05399.js"
       crossorigin="anonymous"

@@ -117,6 +117,38 @@ angular
         $window.location.href = "/assets/staff/Profile.html";
       };
 
+      $scope.logout = function () {
+        // Lấy token từ sessionStorage
+        const token = sessionStorage.getItem("jwtToken");
+        if (!token) {
+          alert("Không tìm thấy token, vui lòng đăng nhập lại.");
+          window.location.href = "/assets/account/login.html";
+          return;
+        }
+
+        // Tạo payload cho API logout
+        const logoutRequest = {
+          token: token, // Gửi token của người dùng hiện tại
+        };
+
+        // Gửi yêu cầu logout đến backend
+        $http
+          .post("http://localhost:8080/auth/logout", logoutRequest)
+          .then(function (response) {
+            // Xóa token khỏi sessionStorage
+            sessionStorage.removeItem("jwtToken");
+
+            // Chuyển hướng về trang đăng nhập
+            alert("Đăng xuất thành công!");
+            window.location.href = "/assets/account/login.html";
+          })
+          .catch(function (error) {
+            // Xử lý lỗi khi không logout được
+            console.error("Lỗi khi đăng xuất:", error);
+            alert("Có lỗi xảy ra khi đăng xuất. Vui lòng thử lại!");
+          });
+      };
+
       $scope.getMyProfile = function () {
         //Lấy thông tin của tài khoản đang đăng nhập
         const token = sessionStorage.getItem("jwtToken");
@@ -274,6 +306,41 @@ angular
           });
       }
 
+      function fastRegister() {
+        const formData = new FormData(); // Tạo FormData để gửi file
+        formData.append("firstName", $scope.user.firstName);
+        formData.append("lastName", $scope.user.lastName);
+        formData.append("phone", $scope.user.phone);
+        formData.append("email", $scope.user.email);
+        formData.append("username", $scope.user.email);
+        formData.append("pass", $scope.user.phone);
+        formData.append("address", $scope.user.address);
+
+        // Gửi dữ liệu đến API
+        $http
+          .post("http://localhost:8080/user/register", formData, {
+            transformRequest: angular.identity,
+            headers: { "Content-Type": undefined }, // Để tự động thiết lập kiểu content type
+          })
+          .then(function (response) {
+            console.log("Response nhận được từ server:", response);
+            $scope.successMessage =
+              "Đăng ký thành công! Bạn có thể đăng nhập ngay."; // Thông báo thành công
+            $scope.errorMessage = ""; // Xóa thông báo lỗi (nếu có)
+            resetForm();
+          })
+          .catch(function (error) {
+            console.log("Lỗi:", error);
+            // Kiểm tra cấu trúc của đối tượng lỗi
+            if (error.data && error.data.message) {
+              $scope.errorMessage = error.data.message;
+            } else {
+              $scope.errorMessage = "Đăng ký thất bại.";
+            }
+            $scope.successMessage = ""; // Xóa thông báo thành công (nếu có)
+          });
+      }
+
       // Hàm reset form
       // Hàm reset form
       function resetForm() {
@@ -294,6 +361,7 @@ angular
         if (fileInput) {
           fileInput.value = null; // Reset trường file
         }
+        $scope.errorMessage = "";
       }
 
       // Hàm xác thực dữ liệu
@@ -325,6 +393,27 @@ angular
         $scope.errorMessage = "";
         return true;
       }
+      // Hàm xác thực dữ liệu
+      function validateModal() {
+        const phoneRegex = /^(0[3|5|7|8|9])[0-9]{8}$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!$scope.user.firstName || !$scope.user.lastName) {
+          $scope.errorMessage = "Tên và họ không được để trống.";
+          return false;
+        }
+        if (!$scope.user.phone || !$scope.user.phone.match(phoneRegex)) {
+          $scope.errorMessage = "Số điện thoại không hợp lệ.";
+          return false;
+        }
+        if (!$scope.user.email || !$scope.user.email.match(emailRegex)) {
+          $scope.errorMessage = "Email không hợp lệ.";
+          return false;
+        }
+        $scope.errorMessage = "";
+        return true;
+      }
+
       $scope.cancelCreateAccount = function () {
         $scope.showCreateAccountForm = false; // Đặt lại trạng thái form về không hiển thị
         resetForm(); // Gọi hàm resetForm để làm sạch dữ liệu
@@ -342,6 +431,17 @@ angular
         // Gọi hàm xử lý create
         submitcreation();
       };
+
+      $scope.register = function () {
+        // Kiểm tra điều kiện
+        if (!validateModal()) {
+          return;
+        }
+
+        // Gọi hàm xử lý đăng ký
+        fastRegister();
+      };
+
       $scope.deleteAccount = function (code) {
         if (confirm("Are you sure you want to delete this account?")) {
           const token = sessionStorage.getItem("jwtToken");

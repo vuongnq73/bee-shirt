@@ -6,11 +6,13 @@ import com.example.bee_shirt.dto.request.AccountCreationRequest;
 import com.example.bee_shirt.dto.request.AccountUpdateRequest;
 import com.example.bee_shirt.dto.response.AccountResponse;
 import com.example.bee_shirt.entity.Account;
+import com.example.bee_shirt.entity.Cart;
 import com.example.bee_shirt.entity.Role;
 import com.example.bee_shirt.exception.AppException;
 import com.example.bee_shirt.exception.ErrorCode;
 import com.example.bee_shirt.mapper.AccountMapper;
 import com.example.bee_shirt.repository.AccountRepository;
+import com.example.bee_shirt.repository.CartRepository;
 import com.example.bee_shirt.repository.RoleRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -42,6 +40,7 @@ public class AccountService {
     AccountRepository accountRepository;
     RoleRepository roleRepository;
     Cloudinary cloudinary;
+    CartRepository cartRepository;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
@@ -113,6 +112,8 @@ public class AccountService {
     public AccountResponse createAccount(AccountCreationRequest request, boolean isAdmin) {
         validateUsername(request.getUsername());
 
+        validateEmail(request.getEmail());
+
         // Tạo mã tài khoản tự động
         String generatedCode = generateAccountCode();
         request.setCode(generatedCode);
@@ -134,10 +135,38 @@ public class AccountService {
         Set<Role> roles = getRolesFromRequest(request.getRole());
         account.setRole(roles);
 
-        return accountMapper.toUserResponse(accountRepository.save(account));
+        Account addAccount = accountRepository.save(account);
+
+        System.out.println(addAccount.getRole());
+
+        //Tạo giỏ hàng cho account
+        if (hasUserRole(getRolesFromRequest(request.getRole()))) {
+            String cartCode = generateCartCode();
+            Cart cart = new Cart();
+            cart.setCodeCart(cartCode);
+            cart.setCreateBy("SYSTEM");
+            cart.setAccount(addAccount);
+            cart.setCreateAt(LocalDate.now());
+            cart.setDeleted(false);
+            cart.setStatusCart(1);
+            cartRepository.save(cart);
+        }
+
+        return accountMapper.toUserResponse(addAccount);
     }
 
+    private boolean hasUserRole(Set<Role> roles) {
+        for (Role role : roles) {
+            if ("USER".equals(role.getCode())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     public AccountResponse updateAccount(AccountUpdateRequest request, String code) {
+
         Account account = accountRepository.findByCode(code)
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
 
@@ -152,6 +181,10 @@ public class AccountService {
             account.setPhone(request.getPhone());
         }
         if (request.getEmail() != null) {
+            Optional<Account> existingAccount = accountRepository.findByEmail(request.getEmail());
+            if (existingAccount.isPresent() && !existingAccount.get().getCode().equals(account.getCode())) {
+                throw new AppException(ErrorCode.EMAIL_EXISTED);
+            }
             account.setEmail(request.getEmail());
         }
         if (request.getAddress() != null) {
@@ -167,9 +200,8 @@ public class AccountService {
             account.setAvatar(uploadAvatar(request.getAvatarFile()));
         }
 
-        // Xử lý logic đổi mật khẩu (nếu có yêu cầu)
-        if (request.getOldPassword() != null && request.getOldPassword().isEmpty() && request.getPass() != null && request.getPass().isEmpty()) {
-            // Kiểm tra mật khẩu cũ
+        if (request.getOldPassword() != null && !request.getOldPassword().isEmpty()
+                && request.getPass() != null && !request.getPass().isEmpty()) {
             if (!passwordEncoder.matches(request.getOldPassword(), account.getPass())) {
                 throw new AppException(ErrorCode.INVALID_OLD_PASSWORD);
             }
@@ -194,12 +226,33 @@ public class AccountService {
             }
         }
         log.warn("No avatar file provided, using default avatar URL.");
-        return "https://drive.google.com/file/d/1vGatwMMr89lX1l1_FkkhvyWZbCa40mD3/view?usp=drive_link"; // Cần thay thế bằng URL hợp lệ
+        return "https://asset.cloudinary.com/dbshkldsj/d178b36973b41db7beffc0beed20ebf7";
     }
 
     private void validateUsername(String username) {
         if (accountRepository.findByUsername(username).isPresent()) {
             throw new AppException(ErrorCode.USER_EXISTED);
+        }
+    }
+
+
+    private void validateEmail(String email) {
+        if (accountRepository.findByEmail(email).isPresent()) {
+            throw new AppException(ErrorCode.EMAIL_EXISTED);
+        }
+    }
+
+    private String generateCartCode() {
+        String lastCode = Optional.ofNullable(cartRepository.getTop1())
+                .map(Cart::getCodeCart)
+                .orElse("CART000");
+
+        if (lastCode.length() > 6) {
+            String prefix = lastCode.substring(0, 6);
+            int number = Integer.parseInt(lastCode.substring(6));
+            return prefix + (number + 1);
+        } else {
+            return "CART001";
         }
     }
 

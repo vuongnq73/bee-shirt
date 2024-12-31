@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shirts with Dynamic Color and Size</title>
+    <script src="https://code.angularjs.org/1.8.2/angular.min.js"></script>
+    <script>
+        angular.module('app', [])
+        .controller('ShirtController', ['$scope', '$http', function($scope, $http) {
+            // API endpoint để lấy dữ liệu sản phẩm
+            $http.get('http://localhost:8080/shirt-details/online/hienthi')
+                .then(function(response) {
+                    $scope.shirts = response.data;
+
+                    // Khởi tạo giá trị mặc định cho mỗi sản phẩm
+                    $scope.shirts.forEach(function(shirt) {
+                        shirt.selectedColorGroup = shirt.colorGroups[0];  // Mặc định chọn màu đầu tiên
+                        shirt.selectedVariant = shirt.selectedColorGroup.variants[0];  // Mặc định chọn biến thể đầu tiên
+                    });
+                })
+                .catch(function(error) {
+                    console.log('Error:', error);
+                });
+
+            // Cập nhật thông tin khi người dùng thay đổi màu sắc
+            $scope.changeColor = function(shirt, colorGroup) {
+                shirt.selectedColorGroup = colorGroup;
+                shirt.selectedVariant = colorGroup.variants[0]; // Mặc định chọn biến thể đầu tiên của màu mới
+            };
+
+            // Cập nhật thông tin khi người dùng thay đổi kích thước
+            $scope.changeSize = function(shirt, variant) {
+                shirt.selectedVariant = variant;
+            };
+        }]);
+    </script>
+    <style>
+        .product {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px;
+            width: 300px;
+            display: inline-block;
+            vertical-align: top;
+        }
+        .product img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+        .option-button {
+            display: inline-block;
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: center;
+            width: 70px;
+        }
+        .option-button.selected {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .option-button:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body ng-controller="ShirtController">
+    <div ng-repeat="shirt in shirts">
+        <div class="product">
+            <h2>{{shirt.nameShirt}} ({{shirt.nameBrand}})</h2>
+            <p>Danh mục: {{shirt.nameCategory}}</p>
+            
+            <!-- Chọn màu -->
+            <label>Chọn màu:</label>
+            <div>
+                <div ng-repeat="colorGroup in shirt.colorGroups" 
+                    class="option-button" 
+                    ng-class="{'selected': colorGroup === shirt.selectedColorGroup}" 
+                    ng-click="changeColor(shirt, colorGroup)">
+                    {{colorGroup.colorName}}
+                </div>
+            </div>
+
+            <!-- Chọn kích thước -->
+            <label>Chọn kích thước:</label>
+            <div>
+                <div ng-repeat="variant in shirt.selectedColorGroup.variants" 
+                    class="option-button" 
+                    ng-class="{'selected': variant === shirt.selectedVariant}" 
+                    ng-click="changeSize(shirt, variant)">
+                    {{variant.namesize}}
+                </div>
+            </div>
+
+            <!-- Hiển thị thông tin chi tiết -->
+            <div>
+                <p>Size: {{shirt.selectedVariant.namesize}}</p>
+                <p>Material: {{shirt.selectedVariant.nameMaterial}}</p>
+                <p>Quantity: {{shirt.selectedVariant.quantity}}</p>
+                <p>Price: {{shirt.selectedVariant.price | currency}}</p>
+                <div>
+                    <img ng-src="{{shirt.selectedVariant.image}}" alt="{{shirt.selectedVariant.nameColor}}">
+                    <img ng-src="{{shirt.selectedVariant.image2}}" alt="{{shirt.selectedVariant.nameColor}}">
+                    <img ng-src="{{shirt.selectedVariant.image3}}" alt="{{shirt.selectedVariant.nameColor}}">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

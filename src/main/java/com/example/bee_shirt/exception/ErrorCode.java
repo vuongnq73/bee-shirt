@@ -36,6 +36,22 @@ public enum ErrorCode {
 
     INVALID_OLD_PASSWORD(1014,"Old password invalid", HttpStatus.BAD_REQUEST),
 
+    EMAIL_EXISTED(1015,"Email existed", HttpStatus.BAD_REQUEST),
+
+    TOKEN_NOT_FOUND(1016,"Token not found", HttpStatus.NOT_FOUND),
+
+    TOKEN_EXPIRED(1017,"Token expired", HttpStatus.BAD_REQUEST),
+
+    EMAIL_SENDING_FAILED(1018,"Email sending failed", HttpStatus.BAD_REQUEST),
+
+    ACCOUNT_BANED(1019,"Account has been baned", HttpStatus.BAD_REQUEST),
+
+    VERIFICATION_TOKEN_NOT_FOUND(1020,"Verification token not found", HttpStatus.NOT_FOUND),  // Lỗi khi không tìm thấy mã xác minh
+
+    VERIFICATION_CODE_EXPIRED(1021,"Verification code expired", HttpStatus.BAD_REQUEST),  // Lỗi khi mã xác minh hết hạn
+
+    INVALID_VERIFICATION_CODE(1022,"Invalid verification code", HttpStatus.BAD_REQUEST);
+
     ;
     private int code;
 

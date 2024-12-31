@@ -33,8 +33,8 @@ angular
       $scope.successMessage = "";
       $scope.isSubmitting = false;
       $scope.statuses = [
-        { value: 0, name: "Active" },
-        { value: 1, name: "Inactive" },
+        { value: 0, name: "Hoạt Động" },
+        { value: 1, name: "Ngưng Hoạt Động" },
       ];
 
       // Biến cho chức năng đổi mật khẩu
@@ -69,6 +69,36 @@ angular
         $scope.errorMessage = "";
         return true;
       }
+
+          // Hàm lấy quyền cao nhất
+    function getHighestRole(scopes) {
+      const roles = scopes ? scopes.split(" ") : [];
+      const rolePriority = {
+        ROLE_ADMIN: 1,
+        ROLE_STAFF: 2,
+        ROLE_USER: 3,
+      };
+  
+      const validRoles = roles.filter((role) => rolePriority[role]);
+      validRoles.sort((a, b) => rolePriority[a] - rolePriority[b]);
+  
+      return validRoles[0] || null;
+    }
+    
+    $scope.isAdmin = function () {
+      const token = sessionStorage.getItem("jwtToken");
+      if (!token) {
+        alert("Bạn chưa đăng nhập!");
+        window.location.href = "/assets/account/login.html";
+        return false;
+      }
+    
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const highestRole = getHighestRole(payload.scope);
+    
+      return highestRole === "ROLE_ADMIN";
+    };
+    
 
       // Gửi dữ liệu cập nhật thông tin người dùng
       function submitUpdate() {
@@ -173,19 +203,18 @@ angular
           $scope.errorMessage = "Vui lòng nhập đầy đủ thông tin mật khẩu.";
           return;
         }
-
+    
         // Kiểm tra mật khẩu mới và mật khẩu xác nhận có khớp không
         if ($scope.passwordData.pass !== $scope.passwordData.confirmPassword) {
           $scope.errorMessage = "Mật khẩu mới và xác nhận mật khẩu không khớp.";
           return;
         }
-
+    
         // Tạo formData để gửi dữ liệu lên server
         var formData = new FormData();
         formData.append("oldPassword", $scope.passwordData.oldPassword);
         formData.append("pass", $scope.passwordData.pass);
-        formData.append("confirmPassword", $scope.passwordData.confirmPassword);
-
+    
         // Gửi yêu cầu cập nhật mật khẩu
         $http
           .put(`${API_BASE_URL}/update/${userCode}`, formData, {
@@ -196,15 +225,21 @@ angular
             },
           })
           .then(function (response) {
+            // Thông báo thành công
             $scope.successMessage = "Mật khẩu đã được cập nhật thành công!";
             $scope.toggleChangePassword(); // Ẩn form
             $scope.goBack();
           })
           .catch(function (error) {
-            $scope.errorMessage = "Mật khẩu cũ không chính xác.";
+            // Kiểm tra lỗi từ server (mật khẩu cũ không chính xác)
+            if (error.data && error.data.errorCode === 'INVALID_OLD_PASSWORD') {
+              $scope.errorMessage = "Mật khẩu cũ không chính xác.";
+            } else {
+              $scope.errorMessage = "Đã có lỗi xảy ra. Vui lòng thử lại.";
+            }
           });
-      };
-
+    };
+    
       // Quay lại trang trước
       $scope.goBack = function () {
         $window.history.back();
