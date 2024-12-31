@@ -22,13 +22,7 @@ angular.module("homePageApp", []).controller("HomePageController", [
     $scope.selectedSize = null;
     $scope.selectedCategory = null;
 
-    $scope.viewDetails2 = function(shirt) {
-      // Lưu dữ liệu sản phẩm vào localStorage
-      localStorage.setItem('selectedShirt', JSON.stringify(shirt));
 
-      // Chuyển đến trang chi tiết sản phẩm
-      window.location.href = '/cozastore-master/product-detail.html'; // Chuyển sang trang chi tiết
-  };
     $scope.fetchHomePageData = function () {
       event.preventDefault(); // Ngăn ngừa hành vi mặc định của thẻ <a>
       $http
