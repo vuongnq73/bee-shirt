@@ -58,7 +58,7 @@ public class CartDetailService {
         cartDetail.setCart(cart);
         cartDetail.setShirtDetail(shirtDetail);
         cartDetail.setQuantity(1);  // Số lượng mặc định là 1
-        cartDetail.setStatusCartDetail(1); // Trạng thái mặc định
+        cartDetail.setStatusCartDetail(0); // Trạng thái mặc định
         cartDetail.setDeleted(false);      // Chưa bị xóa
 
         // Lưu đối tượng CartDetail vào cơ sở dữ liệu và trả về
