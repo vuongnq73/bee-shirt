@@ -752,9 +752,11 @@
 		};
 		const userCode = sessionStorage.getItem("userCode");
 		let selectedCartDetails = [];
+		let selectedTotal = 0;
 		let timeoutId = null;  // Biến toàn cục để lưu trữ ID của setTimeout
 
 		async function loadCartDetails() {
+
 			if (!token) {
 				alert("Không tìm thấy token, vui lòng đăng nhập lại.");
 				window.location.href = "/assets/account/login.html";
@@ -774,7 +776,7 @@
 				cartSummaryElement.innerHTML = '';
 
 				let subtotal = 0;
-				let selectedTotal = 0;
+				selectedTotal = 0;
 
 				// Populate the cart table
 				data.forEach((item, index) => {
@@ -841,7 +843,13 @@
 					updateSelectedTotal();
 				});
 
-
+				// Function to check if "Select All" should be checked
+				function checkSelectAllState() {
+					const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+					const someChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+					selectAllCheckbox.checked = allChecked;
+					selectAllCheckbox.indeterminate = !allChecked && someChecked; // Hiển thị trạng thái "không xác định"
+				}
 
 				attachQuantityChangeEvent();
 
@@ -850,13 +858,7 @@
 			}
 		}
 
-		// Function to check if "Select All" should be checked
-		function checkSelectAllState() {
-			const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
-			const someChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
-			selectAllCheckbox.checked = allChecked;
-			selectAllCheckbox.indeterminate = !allChecked && someChecked; // Hiển thị trạng thái "không xác định"
-		}
+
 
 		function remove(codeCartDetail) {
 			const response = fetch("http://localhost:8080/cart/cancel-cart-detail?codeCartDetail=" + codeCartDetail, {
@@ -948,7 +950,7 @@
 
 		function updateSelectedTotal() {
 			const checkboxes = document.querySelectorAll('.select-item:checked');
-			let selectedTotal = 0;
+			selectedTotal = 0;
 			selectedCartDetails = [];
 
 			checkboxes.forEach(checkbox => {
@@ -961,13 +963,17 @@
 			document.getElementById('selected-total').innerText = `$ ${selectedTotal.toFixed(2)}`;
 		}
 
-		async function sendList() {
+		function sendList() {
 			if (selectedCartDetails.length === 0) {
 				toastr.error('Chưa chọn sản phẩm');
 				return;
 			}
+			submitOrder(selectedTotal)
+		}
+
+		async function checkout() {
 			try {
-				const response = await fetch("http://localhost:8080/cart/checkout", {
+				const response = await fetch("http://localhost:8080/cart/checkout?accCode=" + userCode, {
 					method: 'POST', // Sử dụng POST để gửi dữ liệu
 					headers: headers,
 					body: JSON.stringify({ list: selectedCartDetails }) // Gửi danh sách dưới dạng JSON
@@ -1018,9 +1024,80 @@
 				// Xử lý khi mất focus (blur)
 				input.addEventListener('blur', () => {
 					scheduleChangeQuantity(input, codeCartDetail);
-					// Gọi hàm cập nhật số lượng trên server tại đây nếu cần
 				});
 			});
+		}
+
+		// Gửi đơn hàng để lấy URL thanh toán
+		function submitOrder(money) {
+			localStorage.setItem('selectedCartDetails', JSON.stringify(selectedCartDetails));
+
+			const orderData = {
+				amount: money,  // Số tiền (VND)
+				orderInfo: 'Online Payment'  // Thông tin đơn hàng
+			};
+
+			fetch('http://localhost:8080/submitOrder', {
+				method: 'POST',
+				headers: {
+					'Authorization': `Bearer ${token}`,
+					'Content-Type': 'application/x-www-form-urlencoded'
+				},
+				body: new URLSearchParams(orderData).toString(),
+			})
+				.then(response => response.text())
+				.then(data => {
+					// Chuyển hướng người dùng đến URL của VNPay
+					window.location.href = data;
+				})
+				.catch(error => {
+					console.error('Error submitting order:', error);
+					alert('There was an error processing your order. Please try again.');
+				});
+		}
+
+		// Xử lý kết quả thanh toán khi được trả về
+		function handlePaymentResponse() {
+			const params = new URLSearchParams(window.location.search);
+			if (!params.toString()) {
+				return;
+			}
+
+			if (params.toString()) {
+				fetch(`http://localhost:8080/vnpay-payment?${params.toString()}`, {
+					method: 'GET',
+					headers: headers
+				})
+					.then(response => response.json())
+					.then(data => {
+						if (data.paymentStatus === 'success') {
+							toastr.success('Thanh toán thành công')
+							checkout()
+							// window.location.href = 'http://127.0.0.1:5500/cozastore-master/shoping-cart.html'
+							selectedCartDetails = [];
+						} else {
+							// window.location.href = 'http://127.0.0.1:5500/cozastore-master/shoping-cart.html'
+							toastr.error('Thanh toán thất bại')
+							selectedCartDetails = [];
+						}
+					})
+					.catch(error => {
+						console.error('Error handling payment response:', error);
+						toastr.error('Error fetching payment status. Please contact support.');
+					});
+			}
+		}
+
+		// Gọi hàm xử lý kết quả ngay khi tải trang
+		window.onload = function () {
+			// Lấy selectedCartDetails từ localStorage
+			const savedCartDetails = localStorage.getItem('selectedCartDetails');
+			if (savedCartDetails) {
+				selectedCartDetails = JSON.parse(savedCartDetails);
+			}
+
+			// Xử lý kết quả thanh toán
+			handlePaymentResponse();
 		}
 
 

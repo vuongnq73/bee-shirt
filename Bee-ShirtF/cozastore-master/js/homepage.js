@@ -22,6 +22,7 @@ angular.module("homePageApp", []).controller("HomePageController", [
     $scope.selectedSize = null;
     $scope.selectedCategory = null;
 
+
     $scope.fetchHomePageData = function () {
       event.preventDefault(); // Ngăn ngừa hành vi mặc định của thẻ <a>
       $http

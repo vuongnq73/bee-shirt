@@ -14,7 +14,6 @@ import com.example.bee_shirt.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,8 +23,6 @@ import java.util.*;
 public class CartService {
     @Autowired
     private CartDetailRepository cartDetailRepository;
-    @Autowired
-    private AccountRepository accountRepository;
     @Autowired
     private AccountMapper accountMapper;
 
@@ -41,6 +38,9 @@ public class CartService {
     @Autowired
     private VoucherRepository1 voucherRepository;
 
+    @Autowired
+    private AccountRepository accountRepository;
+
 
     @Autowired
     private BillDetailRepository billDetailRepository;
@@ -48,6 +48,7 @@ public class CartService {
     public List<CartDetail> getAllCartDetails(String codeAccount) {
         return cartDetailRepository.findCartDetailByAccountCodeAndStatusCartDetail(codeAccount, 0);
     }
+
     public AccountResponse getMyInfo() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Account account = accountRepository.findByUsername(username)
@@ -58,7 +59,6 @@ public class CartService {
         Integer accountId = this.getMyInfo().getId();
         return cartRepository.findCartIdsByAccountId(accountId);
     }
-
 
     public int cancelCartDetail(String codeCartDetail){
         return cartDetailRepository.cancelCartDetail(codeCartDetail);
@@ -93,7 +93,7 @@ public class CartService {
         return randomCode.toString();
     }
 
-    public ResponseEntity<?> processCheckout(Map<String, Object> requestBody) {
+    public ResponseEntity<?> processCheckout(Map<String, Object> requestBody, String accCode) {
         // Lấy danh sách từ request body
         Object listObject = requestBody.get("list");
 
@@ -108,6 +108,7 @@ public class CartService {
         bill.setCreateAt(LocalDateTime.now());
         bill.setStatusBill(0);
         bill.setDeleted(false);
+        bill.setAccount(accountRepository.findByCode(accCode).get());
 
         billRepository.save(bill);
 
@@ -131,19 +132,19 @@ public class CartService {
             billDetail.setCodeBillDetail("CBD" + randomCodeBillDetail);
             billDetailRepository.save(billDetail);
 
-            shirtDetail.setQuantity(shirtDetail.getQuantity() - cd4Checkout.getQuantity());
-            shirtDetailRepository.save(shirtDetail);
+//            shirtDetail.setQuantity(shirtDetail.getQuantity() - cd4Checkout.getQuantity());
+//            shirtDetailRepository.save(shirtDetail);
         });
 
         Bill bill2 = billRepository.findBillByCode(bill.getCodeBill());
         Voucher1 voucher = voucherRepository.findVoucherByCode("codeVoucher").orElse(null);
-        Account account = bill2.getCustomer();
+        Account account = bill2.getAccount();
         bill2.setVoucher(voucher);
         bill2.setCustomer(account);
         bill2.setTypeBill("Online");
-//        bill2.setCustomerName(account.getFirstName()+account.getLastName());
-//        bill2.setPhoneNumber(account.getPhone());
-//        bill2.setAddressCustomer(account.getAddress());
+        bill2.setCustomerName(account.getFirstName()+account.getLastName());
+        bill2.setPhoneNumber(account.getPhone());
+        bill2.setAddressCustomer(account.getAddress());
         bill2.setMoneyShip(BigDecimal.ZERO);
         double subtotalBeforeDiscount = 0.0;
         double moneyReduce = 0.0;
@@ -176,6 +177,7 @@ public class CartService {
             voucher.setQuantity(voucher.getQuantity()-1);
             voucherRepository.save(voucher);
         }
+        System.out.println(bill2);
         billRepository.save(bill2);
         System.out.println("Received list: " + list);
 

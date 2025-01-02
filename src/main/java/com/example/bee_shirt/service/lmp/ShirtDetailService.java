@@ -14,6 +14,7 @@ import com.example.bee_shirt.exception.AppException;
 import com.example.bee_shirt.exception.ErrorCode;
 import com.example.bee_shirt.mapper.AccountMapper;
 import com.example.bee_shirt.repository.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
@@ -98,7 +99,7 @@ public class ShirtDetailService {
                     shirt.getNameshirt(),
                     shirt.getDescription(),
                     colorGroupsList));
-        }
+            }
 
         return result;
     }
@@ -116,7 +117,7 @@ public class ShirtDetailService {
             shirtDetail.setQuantity(dto.getQuantity());
             shirtDetail.setPrice(dto.getPrice());
             shirtDetail.setStatusshirtdetail(dto.getStatusshirtdetail());
-            shirtDetail.setCreateBy(getMyInfo().getUsername());
+            shirtDetail.setCreateBy(dto.getCreateBy());
             shirtDetail.setCreateAt(dto.getCreateAt());
             shirtDetail.setUpdateBy(dto.getUpdateBy());
             shirtDetail.setUpdateAt(dto.getUpdateAt());
@@ -368,12 +369,13 @@ public class ShirtDetailService {
 
         // Chuyển đổi kết quả query thành danh sách DTO
         return results.stream().map(result -> new HomePageResponse(
-                (String) result[0],
+                (Integer) result[0],
                 (String) result[1],
                 (String) result[2],
                 (String) result[3],
                 (String) result[4],
-                (BigDecimal) result[5]
+                (String) result[5],
+                (BigDecimal) result[6]
                 )).collect(Collectors.toList());
     }
 
@@ -382,12 +384,13 @@ public class ShirtDetailService {
 
         // Chuyển đổi kết quả query thành danh sách DTO
         return results.stream().map(result -> new HomePageResponse(
-                (String) result[0],
+                (Integer) result[0],
                 (String) result[1],
                 (String) result[2],
                 (String) result[3],
                 (String) result[4],
-                (BigDecimal) result[5]
+                (String) result[5],
+                (BigDecimal) result[6]
         )).collect(Collectors.toList());
     }
 
@@ -396,12 +399,13 @@ public class ShirtDetailService {
         List<Object[]> results = shirtDetailRepository.getAllShirtByCategoryCode(code);
 
         return results.stream().map(result -> new HomePageResponse(
-                (String) result[0],
+                (Integer) result[0],
                 (String) result[1],
                 (String) result[2],
                 (String) result[3],
                 (String) result[4],
-                (BigDecimal) result[5]
+                (String) result[5],
+                (BigDecimal) result[6]
         )).collect(Collectors.toList());
     }
 
@@ -410,12 +414,13 @@ public class ShirtDetailService {
         List<Object[]> results = shirtDetailRepository.getAllShirtByFiller(min,max,color,brand,size,category, offset, limit);
 
         return results.stream().map(result -> new HomePageResponse(
-                (String) result[0],
+                (Integer) result[0],
                 (String) result[1],
                 (String) result[2],
                 (String) result[3],
                 (String) result[4],
-                (BigDecimal) result[5]
+                (String) result[5],
+                (BigDecimal) result[6]
         )).collect(Collectors.toList());
     }
 
@@ -424,12 +429,13 @@ public class ShirtDetailService {
         List<Object[]> results = shirtDetailRepository.getAllByFiller(min,max,color,brand,size,category);
 
         return results.stream().map(result -> new HomePageResponse(
-                (String) result[0],
+                (Integer) result[0],
                 (String) result[1],
                 (String) result[2],
                 (String) result[3],
                 (String) result[4],
-                (BigDecimal) result[5]
+                (String) result[5],
+                (BigDecimal) result[6]
         )).collect(Collectors.toList());
     }
 
@@ -438,18 +444,24 @@ public class ShirtDetailService {
         List<Object[]> results = shirtDetailRepository.getAllShirtByColor(code);
 
         return results.stream().map(result -> new HomePageResponse(
-                (String) result[0],
+                (Integer) result[0],
                 (String) result[1],
                 (String) result[2],
                 (String) result[3],
                 (String) result[4],
-                (BigDecimal) result[5]
+                (String) result[5],
+                (BigDecimal) result[6]
         )).collect(Collectors.toList());
     }
 
     public Integer countAll(BigDecimal min, BigDecimal max, String color, String brand, String size, Integer category){
         Integer total = shirtDetailRepository.countAll(min, max, color, brand, size, category);
         return total;
+    }
+
+    @Transactional
+    public void updateQuantityByCodeBill(String codeBill) {
+        shirtDetailRepository.updateQuantityByCodeBill(codeBill);
     }
 }
 
