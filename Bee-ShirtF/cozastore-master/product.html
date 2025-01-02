@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" ng-app="productApp">
   <head>
     <title>Product</title>
     <meta charset="UTF-8" />
@@ -12,15 +12,6 @@
       type="text/css"
       href="vendor/bootstrap/css/bootstrap.min.css"
     />
-    <!-- Liên kết tới Bootstrap 5 CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- Liên kết tới Bootstrap 5 JavaScript và Popper (Cần thiết cho các thành phần như modal) -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-
-
-    <link rel="stylesheet" href="css/product.css">
     <!--===============================================================================================-->
     <link
       rel="stylesheet"
@@ -104,12 +95,9 @@
       .panel-filter .filter-link {
         font-weight: bold;
       }
-   
-
-
     </style>
   </head>
-  <body class="animsition" ng-app="app" ng-controller="ShirtController">
+  <body class="animsition" ng-controller="ProductController">
     <!-- Header -->
     <header class="header-v4">
       <!-- Header desktop -->
@@ -187,17 +175,15 @@
                   <a href="contact.html">Contact</a>
                 </li>
               </ul>
-              <div style="padding-left: 120px;display: inline-flex;padding-bottom: 4px;"
-                class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11">
-                <i class="zmdi zmdi-search btn" style="padding-right: 10px;padding-top: 3px;" ng-click="applyFilters()"></i>
-                <input type="text" id="searchText" style="font-size: 18px;height: 30px; border: 2px solid #0e0e0e; border-radius: 5px;"
-                      ng-model="searchText" placeholder="Nhập tên áo ...">
             </div>
-
 
             <!-- Icon header -->
             <div class="wrap-icon-header flex-w flex-r-m">
-             
+              <div
+                class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search"
+              >
+                <i class="zmdi zmdi-search"></i>
+              </div>
 
               <div
                 class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart"
@@ -318,7 +304,28 @@
         </ul>
       </div>
 
-      
+      <!-- Modal Search -->
+      <div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
+        <div class="container-search-header">
+          <button
+            class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search"
+          >
+            <img src="images/icons/icon-close2.png" alt="CLOSE" />
+          </button>
+
+          <form class="wrap-search-header flex-w p-l-15">
+            <button class="flex-c-m trans-04">
+              <i class="zmdi zmdi-search"></i>
+            </button>
+            <input
+              class="plh3"
+              type="text"
+              name="search"
+              placeholder="Search..."
+            />
+          </form>
+        </div>
+      </div>
     </header>
 
     <!-- Cart -->
@@ -416,144 +423,271 @@
     <!-- Product -->
     <section class="bg0 p-t-23 p-b-140">
       <div class="container">
-        <!-- Bộ lọc sản phẩm -->
-        <div class="filters">
-            <!-- Lọc theo giá -->
-            <div class="filter-price">
-                <label>Giá từ:</label>
-                <input type="number" ng-model="priceMin" ng-change="applyFilters()" placeholder="Giá từ">
-                <label>Giá đến:</label>
-                <input type="number" ng-model="priceMax" ng-change="applyFilters()" placeholder="Giá đến">
-            </div>
-    
-            <!-- Lọc theo thương hiệu -->
-            <div class="filter-brand">
-                <label>Thương hiệu:</label>
-                <select ng-model="selectedBrand" ng-options="brand.nameBrand for brand in brands" ng-change="applyFilters()">
-                    <option value="">Chọn thương hiệu</option>
-                </select>
-            </div>
-    
-            <!-- Lọc theo danh mục -->
-            <div class="filter-category">
-                <label>Danh mục:</label>
-                <select ng-model="selectedCategory" ng-options="category.nameCategory for category in categories" ng-change="applyFilters()">
-                    <option value="">Tất cả</option>
-                </select>
-            </div>
-    
-            <!-- Sắp xếp theo giá -->
-            <div class="filter-sort">
-                <label>Sắp xếp theo giá:</label>
-                <select ng-model="sortOrder" ng-change="applyFilters()">
-                    <option value="">Chọn thứ tự</option>
-                    <option value="asc">Tăng dần</option>
-                    <option value="desc">Giảm dần</option>
-                </select>
-            </div>
-        </div>
-    
+        <div class="flex-w">
+          <button
+            class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5"
+            ng-click="clearFilters()"
+          >
+            Tất Cả
+          </button>
 
-        
-        <!-- Hiển thị màu sắc cho từng sản phẩm -->
-        <div ng-repeat="shirt in filteredShirts">
-            <div class="product">
-                <!-- Hiển thị ảnh đầu tiên của màu được chọn -->
-                <div class="product-image">
-                    <img ng-src="{{shirt.selectedVariant.image}}" alt="{{shirt.nameShirt}}"ng-click="viewDetails2(shirt)">
-    
-                    <!-- Nút "Xem chi tiết" sẽ hiển thị khi di chuột vào -->
-                    <button class="btn-view-detail" ng-click="viewDetails(shirt)">
-                      Xem chi tiết
-                  </button>
-                </div>
-    
-                <!-- Hiển thị thông tin cơ bản -->
-                <h4>{{shirt.nameShirt}} </h4>
-    
-                <!-- Hiển thị màu sắc riêng cho từng sản phẩm -->
-                <div>
-                    <span ng-repeat="colorGroup in shirt.colorGroups" 
-                          class="color-box" 
-                          ng-style="{'background-color': '#' + colorGroup.codeColor}" 
-                          ng-class="{'selected': colorGroup === shirt.selectedColorGroup}"
-                          ng-click="changeColor(shirt, colorGroup)">
-                    </span>
-                </div>
-    
-                <!-- Hiển thị thông tin của màu được chọn -->
-                <p>{{shirt.selectedVariant.price | currency}}</p>
+          <div
+            class="flex-w flex-l-m filter-tope-group m-tb-10"
+            ng-repeat="category in categories"
+          >
+            <a
+              href="#"
+              class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5"
+              ng-class="{'active': isBrandSelected(category.id)}"
+              ng-click="fetchShirtsByFilter(null, null, null, null, null, category.id)"
+            >
+              {{category.nameCategory}}
+            </a>
+          </div>
+
+          <div class="flex-w flex-c-m m-tb-10">
+            <div
+              class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter"
+            >
+              <i
+                class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"
+              ></i>
+              <i
+                class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"
+              ></i>
+              Lọc
+            </div>
+
+            <div
+              class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search"
+            >
+              <i
+                class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"
+              ></i>
+              <i
+                class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"
+              ></i>
+              Tìm kiếm
             </div>
           </div>
 
-          <div class="modal fade" id="productModal" tabindex="-1" style="padding-right:300px ;" aria-labelledby="modalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body d-flex" >
-                  <div id="carouselExampleControls" class="carousel slide col-md-5" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                      <div class="carousel-item active">
-                        <img  ng-src="{{selectedShirt.selectedVariant.image}}" alt="{{selectedShirt.selectedVariant.nameColor}}" class="d-block w-100" >
-                      </div>
-                      <div class="carousel-item">
-                        <img ng-src="{{selectedShirt.selectedVariant.image2}}" alt="{{selectedShirt.selectedVariant.nameColor}}" class="d-block w-100">
-                      </div>
-                      <div class="carousel-item">
-                        <img ng-src="{{selectedShirt.selectedVariant.image3}}" alt="{{selectedShirt.selectedVariant.nameColor}}" class="d-block w-100" >
-                      </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                      <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                      <span class="visually-hidden">Next</span>
-                    </button>
-                  </div>
-                  <div  class="col-md-9">
-                  <h4 class="modal-title" id="modalLabel">Tên sản phẩm :<strong>{{selectedShirt.nameShirt}}</strong></h4>
-                  <label class="modal-title" id="modalLabel">Mã SP: <strong>{{selectedShirt.codeShirt}}</strong></label>
-                  <br>
-                  <p>Chất liệu: <strong> {{selectedShirt.selectedVariant.nameMaterial}}</strong></p>
+          <!-- Search product -->
+          <div class="dis-none panel-search w-full p-t-10 p-b-15">
+            <div class="bor8 dis-flex p-l-15">
+              <!-- Nút tìm kiếm -->
+              <button
+                class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04"
+                ng-click="searchShirt()"
+              >
+                <i class="zmdi zmdi-search"></i>
+              </button>
 
-                  <h5>Giá bán: <strong>{{selectedShirt.selectedVariant.price | currency}}</strong> </h5>
-                  <p>Số lượng tồn: <strong> {{selectedShirt.selectedVariant.quantity}}</strong></p>
-                  
-                  <br>
-                  <label>Màu sắc:</label>
-                  <div ng-repeat="colorGroup in selectedShirt.colorGroups" 
-                  class="color-box" style="width: 35px ;height: 35px;"
-                    ng-style="{'background-color': '#' + colorGroup.codeColor}" 
-                    ng-class="{'selected': colorGroup === selectedShirt.selectedColorGroup}" 
-                    ng-click="changeColor(selectedShirt, colorGroup)">
-                </div>
-                <br>
-                <p>Kích thước: {{selectedShirt.selectedVariant.namesize}}</p>
-                <div ng-repeat="variant in selectedShirt.selectedColorGroup.variants" 
-                  class="option-button" 
-                  ng-class="{'selected': variant === selectedShirt.selectedVariant}" 
-                  ng-click="changeSize(selectedShirt, variant)">
-                  {{variant.namesize}}
-                  
+              <!-- Ô input tìm kiếm -->
+              <input
+                class="mtext-107 cl2 size-114 plh2 p-r-15"
+                type="text"
+                placeholder="Tìm kiếm"
+                ng-model="searchQuery"
+                ng-change="searchShirt()"
+              />
+            </div>
+          </div>
+
+          <!-- Filter -->
+          <div class="dis-none panel-filter w-full p-t-10">
+            <div
+              class="wrap-filter flex-w bg6 w-full p-lr-40 p-t-27 p-lr-15-sm"
+            >
+              <!-- Lọc theo hãng -->
+              <div class="filter-col4 p-b-27">
+                <div class="mtext-102 cl2 p-b-15">Branchs</div>
+                <ul>
+                  <li
+                    class="p-b-6"
+                    ng-repeat="brand in brands"
+                    ng-class="{'active': isBrandSelected(brand.codeBrand)}"
+                  >
+                    <a
+                      href="#"
+                      class="filter-link stext-106 trans-04"
+                      ng-click="fetchShirtsByFilter(null, null, null, brand.codeBrand)"
+                    >
+                      {{brand.nameBrand}}
+                    </a>
+                  </li>
+                </ul>
               </div>
-                  <br>
-                  <button type="submit" ng-click="addToCart(selectedShirt.selectedVariant.id)" style="border-radius: 1px;background-color: red;width: 250px ;text-align: center;height: 50px;font-size: 18px;font-weight: bold;color: white;">Thêm vào giỏ hàng</button>
-                </div>
+
+              <!-- Thêm các input để lưu min và max price -->
+              <!-- Lọc theo giá -->
+              <div class="filter-col4 p-r-15 p-b-27">
+                <div class="mtext-102 cl2 p-b-15">Price</div>
+                <ul>
+                  <li
+                    class="p-b-6"
+                    ng-class="{'active': isPriceSelected('0', '50')}"
+                  >
+                    <a
+                      href="#"
+                      class="filter-link stext-106 trans-04"
+                      ng-click="fetchShirtsByFilter('0', '50')"
+                    >
+                      $0.00 - $50.00
+                    </a>
+                  </li>
+                  <li
+                    class="p-b-6"
+                    ng-class="{'active': isPriceSelected('50', '100')}"
+                  >
+                    <a
+                      href="#"
+                      class="filter-link stext-106 trans-04"
+                      ng-click="fetchShirtsByFilter('50', '100')"
+                    >
+                      $50.00 - $100.00
+                    </a>
+                  </li>
+                  <li
+                    class="p-b-6"
+                    ng-class="{'active': isPriceSelected('100', '150')}"
+                  >
+                    <a
+                      href="#"
+                      class="filter-link stext-106 trans-04"
+                      ng-click="fetchShirtsByFilter('100', '150')"
+                    >
+                      $100.00 - $150.00
+                    </a>
+                  </li>
+                  <li
+                    class="p-b-6"
+                    ng-class="{'active': isPriceSelected('150', '200')}"
+                  >
+                    <a
+                      href="#"
+                      class="filter-link stext-106 trans-04"
+                      ng-click="fetchShirtsByFilter('150', '200')"
+                    >
+                      $150.00 - $200.00
+                    </a>
+                  </li>
+                  <li
+                    class="p-b-6"
+                    ng-class="{'active': isPriceSelected('200', 'max')}"
+                  >
+                    <a
+                      href="#"
+                      class="filter-link stext-106 trans-04"
+                      ng-click="fetchShirtsByFilter('200', 'max')"
+                    >
+                      $200.00+
+                    </a>
+                  </li>
+                </ul>
               </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+
+              <!-- Lọc theo màu -->
+              <div class="filter-col4 p-r-15 p-b-27">
+                <div class="mtext-102 cl2 p-b-15">Color</div>
+
+                <ul>
+                  <li
+                    class="p-b-6"
+                    ng-repeat="color in colors"
+                    ng-class="{'active': isColorSelected(color.codeColor)}"
+                  >
+                    <a
+                      href="#"
+                      class="filter-link stext-106 trans-04"
+                      ng-click="fetchShirtsByFilter(null, null, color.codeColor)"
+                    >
+                      <span
+                        class="fs-15 lh-12 m-r-6"
+                        ng-style="{'color': color.codeColor}"
+                      >
+                        <i
+                          class="zmdi zmdi-circle"
+                          ng-style="{'color': color.codeColor}"
+                        ></i>
+                      </span>
+                      {{color.nameColor}}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Lọc theo size -->
+              <div class="filter-col1 p-r-15 p-b-27">
+                <div class="mtext-102 cl2 p-b-15">Size</div>
+
+                <ul>
+                  <li
+                    class="p-b-6"
+                    ng-repeat="size in sizes"
+                    ng-class="{'active': isSizeSelected(size.codeSize)}"
+                  >
+                    <a
+                      href="#"
+                      class="filter-link stext-106 trans-04"
+                      ng-click="fetchShirtsByFilter(null, null, null, null, size.codeSize)"
+                    >
+                      {{size.namesize}}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" id="shirtsList">
+          <div
+            class="col-sm-6 col-md-4 col-lg-3 p-b-35"
+            ng-repeat="shirt in filteredShirtList"
+          >
+            <!-- Block2 -->
+            <div class="block2">
+              <div class="block2-pic hov-img0">
+                <img src="{{ shirt.nameImage }}" alt="{{ shirt.nameShirt }}" />
+                <a
+                  href="/cozastore-master/product-detail.html"
+                  class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"
+                >
+                  Xem Nhanh
+                </a>
+              </div>
+
+              <div class="block2-txt flex-w flex-t p-t-14">
+                <div class="block2-txt-child1 flex-col-l">
+                  <a
+                    href="/cozastore-master/product-detail.html"
+                    class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"
+                  >
+                    {{ shirt.nameShirt }}
+                  </a>
+                  <span class="stext-105 cl3"> {{ shirt.price }}VND </span>
                 </div>
               </div>
             </div>
           </div>
-
-          
         </div>
 
+        <!-- Load More -->
+        <div class="flex-c-m flex-w w-full p-t-45" ng-if="canLoadMore">
+          <a
+            href="#"
+            ng-click="loadMore()"
+            class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04"
+          >
+            Xem Thêm
+          </a>
+        </div>
+
+        <!-- Hiển thị tổng số sản phẩm -->
+        <div class="text-center">
+          <p>{{shirtDetails.length}} / {{totalProducts}} sản phẩm</p>
+        </div>
+      </div>
     </section>
 
     <!-- Footer -->
