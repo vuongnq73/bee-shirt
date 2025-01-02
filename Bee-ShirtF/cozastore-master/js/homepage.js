@@ -566,7 +566,9 @@ $interval(function() {
     };
     
 
+
     $scope.fetchHomePageData();
+
     $scope.getMyProfile();
     $scope.getCategories();
     $scope.loadBestSaler();
