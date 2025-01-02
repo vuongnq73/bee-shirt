@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 //Access ModiFier
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class HomePageResponse {
-    Integer idShirt;
+    String codeShirt;
     String nameImage;
     String nameShirt;
     String branch;

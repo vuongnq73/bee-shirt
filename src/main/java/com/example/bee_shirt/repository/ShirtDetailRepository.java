@@ -77,7 +77,7 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
 
     @Query(value = """
             SELECT TOP 5
-              sd.shirt_id AS idShirt,
+              s.code_shirt AS codeShirt,
               sd.image AS image,
               s.name_shirt AS nameShirt,
               b.name_brand AS nameBrand,
@@ -96,7 +96,7 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
             LEFT JOIN color cl ON sd.color_id = cl.id
             WHERE sd.status_shirt_detail = 1
             GROUP BY
-            sd.shirt_id,
+            s.code_shirt,
               sd.image,
               s.name_shirt,
               b.name_brand,
@@ -108,7 +108,7 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
 
     @Query(value = """
                                     SELECT 
-                                    sd.shirt_id AS idShirt,
+                                    s.code_shirt AS codeShirt,
                                       sd.image AS image,
                                       s.name_shirt AS nameShirt,
                                       b.name_brand AS nameBrand,
@@ -122,7 +122,7 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
                           			LEFT JOIN color cl ON sd.color_id = cl.id
                           			WHERE sd.status_shirt_detail = 1
                           			GROUP BY
-                          			sd.shirt_id,
+                          			s.code_shirt,
                                       sd.image,
                                       s.name_shirt,
                                       b.name_brand,
@@ -133,7 +133,7 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
 
     @Query(value = """
                 SELECT 
-                sd.shirt_id AS idShirt,
+                s.code_shirt AS codeShirt,
                 sd.image AS image,
                 s.name_shirt AS nameShirt,
                 b.name_brand AS nameBrand,
@@ -148,7 +148,7 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
                 LEFT JOIN color cl ON sd.color_id = cl.id
                 WHERE sd.status_shirt_detail = 1 AND c.code_category like :code 
                 GROUP BY
-                sd.shirt_id
+                s.code_shirt,
                                       sd.image,
                                       s.name_shirt,
                                       b.name_brand,
@@ -159,7 +159,7 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
 
     @Query(value = """
                 SELECT 
-                sd.shirt_id AS idShirt,
+                s.code_shirt AS codeShirt,
                 sd.image AS image,
                 s.name_shirt AS nameShirt,
                 b.name_brand AS nameBrand,
@@ -174,7 +174,7 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
                 LEFT JOIN color cl ON sd.color_id = cl.id
                 WHERE sd.status_shirt_detail = 1 AND cl.code_color like :code
                 GROUP BY
-                sd.shirt_id
+                s.code_shirt,
                                       sd.image,
                                       s.name_shirt,
                                       b.name_brand,
@@ -221,7 +221,7 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
 
     @Query(value = """
                 SELECT 
-                sd.shirt_id AS idShirt,
+                s.code_shirt AS codeShirt,
                 sd.image AS image,
                 s.name_shirt AS nameShirt,
                 b.name_brand AS nameBrand,
@@ -242,14 +242,14 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
             AND (:category IS NULL OR s.category_id LIKE :category)
             )
              GROUP BY
-            sd.shirt_id,
+           s.code_shirt,
                                       sd.image,
                                       s.name_shirt,
                                       b.name_brand,
                                       sz.name_size,
                                       cl.name_color
             ORDER BY  
-            sd.shirt_id,
+            s.code_shirt,
             sd.image ,
                 s.name_shirt,
                 b.name_brand,
@@ -268,7 +268,7 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
 
     @Query(value = """
                 SELECT 
-                sd.shirt_id,
+                s.code_shirt AS codeShirt,
                 sd.image AS image,
                 s.name_shirt AS nameShirt,
                 b.name_brand AS nameBrand,
@@ -289,7 +289,7 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
             AND (:category IS NULL OR s.category_id LIKE :category)
             )
             GROUP BY
-            sd.shirt_id,
+            s.code_shirt,
                                       sd.image,
                                       s.name_shirt,
                                       b.name_brand,
