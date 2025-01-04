@@ -93,9 +93,14 @@ public class CartService {
         return randomCode.toString();
     }
 
-    public ResponseEntity<?> processCheckout(Map<String, Object> requestBody, String accCode) {
+    public ResponseEntity<?> processCheckout(Map<String, Object> requestBody, String accCode, String voucherCode, Map<String, Object> address) {
         // Lấy danh sách từ request body
         Object listObject = requestBody.get("list");
+
+        System.out.println(address);
+        System.out.println(requestBody);
+        System.out.println(accCode);
+        System.out.println(voucherCode);
 
         // Kiểm tra danh sách có tồn tại và là một List hay không
         if (!(listObject instanceof List<?>)) {
@@ -108,7 +113,9 @@ public class CartService {
         bill.setCreateAt(LocalDateTime.now());
         bill.setStatusBill(0);
         bill.setDeleted(false);
-        bill.setAccount(accountRepository.findByCode(accCode).get());
+
+
+        bill.setAccount(accountRepository.findByCode(accCode).orElse(null));
 
         billRepository.save(bill);
 
@@ -137,7 +144,7 @@ public class CartService {
         });
 
         Bill bill2 = billRepository.findBillByCode(bill.getCodeBill());
-        Voucher1 voucher = voucherRepository.findVoucherByCode("codeVoucher").orElse(null);
+        Voucher1 voucher = voucherRepository.findVoucherByCode(voucherCode).orElse(null);
         Account account = bill2.getAccount();
         bill2.setVoucher(voucher);
         bill2.setCustomer(account);
@@ -176,6 +183,11 @@ public class CartService {
         if (voucher!=null){
             voucher.setQuantity(voucher.getQuantity()-1);
             voucherRepository.save(voucher);
+        }
+        if (address != null) {
+            bill2.setCustomerName((String) address.get("name"));
+            bill2.setPhoneNumber((String) address.get("phone"));
+            bill2.setAddressCustomer((String) address.get("fullAddress"));
         }
         System.out.println(bill2);
         billRepository.save(bill2);
