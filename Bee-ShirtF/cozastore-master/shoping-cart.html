@@ -1095,6 +1095,21 @@
 				toastr.error('Chưa chọn sản phẩm');
 				return;
 			}
+
+			const selectedAddressOption = document.querySelector('input[name="addressOption"]:checked').value;
+			if (selectedAddressOption === 'new') {
+				const province = document.getElementById('province').value;
+				const district = document.getElementById('district').value;
+				const detailedAddress = document.getElementById('detailedAddress').value;
+				const name = document.getElementById('name').value;
+				const phone = document.getElementById('phone').value;
+
+				// Kiểm tra nếu thiếu thông tin
+				if (!province || !district || !detailedAddress || !name || !phone) {
+					toastr.error('Vui lòng điền đầy đủ thông tin địa chỉ, tên và số điện thoại.');
+					return;
+				}
+			}
 			const selectedMethod = document.getElementById("paymentMethod").value;
 
 			if (selectedMethod === "online") {
@@ -1116,12 +1131,6 @@
 					const detailedAddress = document.getElementById('detailedAddress').value;
 					const name = document.getElementById('name').value;
 					const phone = document.getElementById('phone').value;
-
-					// Kiểm tra nếu thiếu thông tin
-					if (!province || !district || !detailedAddress || !name || !phone) {
-						alert("Vui lòng điền đầy đủ thông tin địa chỉ, tên và số điện thoại.");
-						return;
-					}
 
 					// Gộp địa chỉ thành một chuỗi
 					const fullAddress = `${detailedAddress}, ${district}, ${province}`;
@@ -1154,6 +1163,7 @@
 			} catch (error) {
 				console.error("Error:", error);
 			}
+			selectedCartDetails = []
 			loadCartDetails()
 			document.getElementById('select-all').checked = false;
 			localStorage.removeItem('selectedCartDetails');
