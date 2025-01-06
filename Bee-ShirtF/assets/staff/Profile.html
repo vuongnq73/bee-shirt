@@ -204,6 +204,7 @@
             id="status"
             ng-model="user.status"
             ng-options="status.value as status.name for status in statuses"
+            ng-disabled="!isAdmin()"
           ></select>
         </div>
         <div class="form-group">

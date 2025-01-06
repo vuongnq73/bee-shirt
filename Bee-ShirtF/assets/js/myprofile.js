@@ -53,11 +53,11 @@ angular
           $scope.errorMessage = "Tên và họ không được để trống.";
           return false;
         }
-        if (!$scope.user.phone.match(phoneRegex)) {
+        if (!$scope.user.phone || !$scope.user.phone.match(phoneRegex)) {
           $scope.errorMessage = "Số điện thoại không hợp lệ.";
           return false;
         }
-        if (!$scope.user.email.match(emailRegex)) {
+        if (!$scope.user.email || !$scope.user.email.match(emailRegex)) {
           $scope.errorMessage = "Email không hợp lệ.";
           return false;
         }
