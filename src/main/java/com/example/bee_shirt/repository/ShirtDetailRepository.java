@@ -184,7 +184,7 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
     List<Object[]> getAllShirtByColor(@Param("code") String code);
 
     @Query(value = """
-               SELECT COUNT(DISTINCT s.name_shirt)
+               SELECT COUNT(distinct s.name_shirt)
             FROM shirt_detail sd
             RIGHT JOIN shirt s ON sd.shirt_id = s.id AND s.status_shirt = 1
             LEFT JOIN category c ON s.category_id = c.id AND c.status_category = 1
@@ -205,57 +205,50 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
                      @Param("codeSize") String size,
                      @Param("category") Integer category);
 
-    @Query(value = """
-                SELECT 
-                COUNT(*)
-                FROM shirt_detail sd
-                RIGHT JOIN shirt s ON sd.shirt_id = s.id AND s.status_shirt = 1
-                LEFT JOIN category c ON s.category_id = c.id AND c.status_category = 1
-                LEFT JOIN brand b ON s.brand_id = b.id
-                LEFT JOIN size sz ON sd.size_id = sz.id
-                LEFT JOIN color cl ON sd.color_id = cl.id
-                WHERE sd.status_shirt_detail = 1 AND c.code_category like :code                                                                                                                                                                         
-""", nativeQuery = true)
-    Integer countAllByCategoryCode(@Param("code") String code);
-
 
     @Query(value = """
-                SELECT 
-                s.code_shirt AS codeShirt,
-                sd.image AS image,
-                s.name_shirt AS nameShirt,
-                b.name_brand AS nameBrand,
-                sz.name_size AS nameSize,
-                cl.name_color AS nameColor,
-                MIN(sd.price) AS price
-                FROM shirt_detail sd
-                RIGHT JOIN shirt s ON sd.shirt_id = s.id AND s.status_shirt = 1
-                LEFT JOIN category c ON s.category_id = c.id AND c.status_category = 1
-                LEFT JOIN brand b ON s.brand_id = b.id
-                LEFT JOIN size sz ON sd.size_id = sz.id
-                LEFT JOIN color cl ON sd.color_id = cl.id
-                WHERE sd.status_shirt_detail = 1 AND (
+WITH RankedShirts AS (
+    SELECT
+        s.code_shirt AS codeShirt,
+        sd.image AS image,
+        s.name_shirt AS nameShirt,
+        b.name_brand AS nameBrand,
+        sz.name_size AS nameSize,
+        cl.name_color AS nameColor,
+        sd.price,
+        ROW_NUMBER() OVER (PARTITION BY s.code_shirt ORDER BY sd.price ASC) AS rn
+    FROM shirt_detail sd
+    LEFT JOIN shirt s ON sd.shirt_id = s.id AND s.status_shirt = 1
+    LEFT JOIN category c ON s.category_id = c.id AND c.status_category = 1
+    LEFT JOIN brand b ON s.brand_id = b.id
+    LEFT JOIN size sz ON sd.size_id = sz.id
+    LEFT JOIN color cl ON sd.color_id = cl.id
+    WHERE sd.status_shirt_detail = 1 AND (
             (:min IS NULL OR :max IS NULL OR (sd.price BETWEEN :min AND :max))
             AND (:codeColor IS NULL OR cl.code_color LIKE :codeColor)
             AND (:codeBrand IS NULL OR b.code_brand LIKE :codeBrand)
             AND (:codeSize IS NULL OR sz.code_size LIKE :codeSize)
             AND (:category IS NULL OR s.category_id LIKE :category)
             )
-             GROUP BY
-           s.code_shirt,
-                                      sd.image,
-                                      s.name_shirt,
-                                      b.name_brand,
-                                      sz.name_size,
-                                      cl.name_color
-            ORDER BY  
-            s.code_shirt,
-            sd.image ,
-                s.name_shirt,
-                b.name_brand,
-                sz.name_size,
-                cl.name_color
-            OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY
+)
+SELECT
+    codeShirt,
+    image,
+    nameShirt,
+    nameBrand,
+    nameSize,
+    nameColor,
+    price
+FROM RankedShirts
+WHERE rn = 1
+ORDER BY
+    codeShirt,
+    image,
+    nameShirt,
+    nameBrand,
+    nameSize,
+    nameColor
+    OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY
             """, nativeQuery = true)
     List<Object[]> getAllShirtByFiller(@Param("min") BigDecimal min,
                                        @Param("max") BigDecimal max,
@@ -267,34 +260,47 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
                                        @Param("offset") int offset);
 
     @Query(value = """
-                SELECT 
-                s.code_shirt AS codeShirt,
-                sd.image AS image,
-                s.name_shirt AS nameShirt,
-                b.name_brand AS nameBrand,
-                sz.name_size AS nameSize,
-                cl.name_color AS nameColor,
-                MIN(sd.price) AS price
-                FROM shirt_detail sd
-                RIGHT JOIN shirt s ON sd.shirt_id = s.id AND s.status_shirt = 1
-                LEFT JOIN category c ON s.category_id = c.id AND c.status_category = 1
-                LEFT JOIN brand b ON s.brand_id = b.id
-                LEFT JOIN size sz ON sd.size_id = sz.id
-                LEFT JOIN color cl ON sd.color_id = cl.id
-                WHERE sd.status_shirt_detail = 1 AND (
+WITH RankedShirts AS (
+    SELECT
+        s.code_shirt AS codeShirt,
+        sd.image AS image,
+        s.name_shirt AS nameShirt,
+        b.name_brand AS nameBrand,
+        sz.name_size AS nameSize,
+        cl.name_color AS nameColor,
+        sd.price,
+        ROW_NUMBER() OVER (PARTITION BY s.code_shirt ORDER BY sd.price ASC) AS rn
+    FROM shirt_detail sd
+    LEFT JOIN shirt s ON sd.shirt_id = s.id AND s.status_shirt = 1
+    LEFT JOIN category c ON s.category_id = c.id AND c.status_category = 1
+    LEFT JOIN brand b ON s.brand_id = b.id
+    LEFT JOIN size sz ON sd.size_id = sz.id
+    LEFT JOIN color cl ON sd.color_id = cl.id
+    WHERE sd.status_shirt_detail = 1 AND (
             (:min IS NULL OR :max IS NULL OR (sd.price BETWEEN :min AND :max))
             AND (:codeColor IS NULL OR cl.code_color LIKE :codeColor)
             AND (:codeBrand IS NULL OR b.code_brand LIKE :codeBrand)
             AND (:codeSize IS NULL OR sz.code_size LIKE :codeSize)
             AND (:category IS NULL OR s.category_id LIKE :category)
             )
-            GROUP BY
-            s.code_shirt,
-                                      sd.image,
-                                      s.name_shirt,
-                                      b.name_brand,
-                                      sz.name_size,
-                                      cl.name_color
+)
+SELECT
+    codeShirt,
+    image,
+    nameShirt,
+    nameBrand,
+    nameSize,
+    nameColor,
+    price
+FROM RankedShirts
+WHERE rn = 1
+ORDER BY
+    codeShirt,
+    image,
+    nameShirt,
+    nameBrand,
+    nameSize,
+    nameColor
             """, nativeQuery = true)
     List<Object[]> getAllByFiller(@Param("min") BigDecimal min,
                                   @Param("max") BigDecimal max,

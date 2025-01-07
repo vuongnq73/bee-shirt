@@ -15,7 +15,7 @@ angular.module("homePageApp", []).controller("HomePageController", [
     $scope.errorMessage = null;
     $scope.loading = true;
     $scope.shirtsPerPage = 8; // Số lượng sản phẩm mỗi lần tải
-    $scope.currentPage = 1; // Trang hiện tại
+    $scope.currentPage = 0; // Trang hiện tại
     $scope.selectedPrice = { min: null, max: null };
     $scope.selectedColor = null;
     $scope.selectedBrand = null;
@@ -32,22 +32,11 @@ angular.module("homePageApp", []).controller("HomePageController", [
     $scope.fetchHomePageData = function () {
       event.preventDefault(); // Ngăn ngừa hành vi mặc định của thẻ <a>
       $http
-        .get("http://localhost:8080/homepage/getallshirt")
+        .get("http://localhost:8080/homepage/all")
         .then(function (response) {
           if (response.data && response.data.code === 1000) {
-            let shirtDetails = response.data.result;
-    
-            // Lọc để loại bỏ sản phẩm trùng tên
-            const uniqueShirts = [];
-            const seenNames = new Set();
-            for (let shirt of shirtDetails) {
-              if (!seenNames.has(shirt.nameShirt)) {
-                uniqueShirts.push(shirt);
-                seenNames.add(shirt.nameShirt);
-              }
-            }
-    
-            $scope.shirtDetails = uniqueShirts;
+
+            $scope.shirtDetails = response.data.result;
     
             // Giới hạn chỉ hiển thị 8 sản phẩm
             $scope.filteredShirtList = $scope.shirtDetails.slice(0, 8);
@@ -126,19 +115,7 @@ angular.module("homePageApp", []).controller("HomePageController", [
         .then(function (response) {
           if (response.data && response.data.code === 1000) {
 
-            let shirtDetails = response.data.result;
-    
-            // Lọc để loại bỏ sản phẩm trùng tên
-            const uniqueShirts = [];
-            const seenNames = new Set();
-            for (let shirt of shirtDetails) {
-              if (!seenNames.has(shirt.nameShirt)) {
-                uniqueShirts.push(shirt);
-                seenNames.add(shirt.nameShirt);
-              }
-            }
-    
-            $scope.shirtDetails = uniqueShirts;
+            $scope.shirtDetails = response.data.result;
             // Hiển thị sản phẩm đầu tiên
             $scope.filteredShirtList = $scope.shirtDetails.slice(
               0,
@@ -281,20 +258,8 @@ angular.module("homePageApp", []).controller("HomePageController", [
         .get("http://localhost:8080/homepage/bestsaler")
         .then(function (response) {
           if (response.data && response.data.code === 1000) {
-
-            let shirtDetails = response.data.result;
     
-            // Lọc để loại bỏ sản phẩm trùng tên
-            const uniqueShirts = [];
-            const seenNames = new Set();
-            for (let shirt of shirtDetails) {
-              if (!seenNames.has(shirt.nameShirt)) {
-                uniqueShirts.push(shirt);
-                seenNames.add(shirt.nameShirt);
-              }
-            }
-    
-            $scope.bestSaler = uniqueShirts;
+            $scope.bestSaler = response.data.result;
             $scope.updateVisibleShirts();
           } else {
             $scope.errorMessage = "Failed to load data. Please try again.";
