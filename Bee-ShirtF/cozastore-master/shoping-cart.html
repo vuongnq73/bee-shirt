@@ -358,10 +358,10 @@
 									</th>
 									<th class="column-1">SẢN PHẨM</th>
 									<th class="column-2"></th>
-									<th class="column-3">Giá</th>
+									<th class="column-3">Đơn giá</th>
 									<th class="column-4">Số lượng</th>
-									<th class="column-5">Tổng tiền</th>
-									<th class="column-6">Hha</th>
+									<th class="column-5">Số tiền</th>
+									<th class="column-6">Thao tác</th>
 								</tr>
 
 								<tbody id="cart-details">
@@ -808,6 +808,7 @@
 		let selectedTotal = 0;
 		let timeoutId = null;  // Biến toàn cục để lưu trữ ID của setTimeout
 		let activeVoucherCode = null;
+		let pm = 'card';
 
 		async function loadCartDetails() {
 			try {
@@ -1117,8 +1118,10 @@
 			const selectedMethod = document.getElementById("paymentMethod").value;
 
 			if (selectedMethod === "online") {
+				pm = 'card'
 				submitOrder(selectedTotal) // Gọi hàm xử lý thanh toán online
 			} else if (selectedMethod === "cash") {
+				pm = 'cash'
 				checkout(); // Gọi hàm xử lý thanh toán tiền mặt
 			}
 
@@ -1145,11 +1148,17 @@
 							fullAddress,
 							name,
 							phone
-						}
+						}, 
+						pm
 					};
-					console.log(bodyData)
+				} else{
+					bodyData = {
+						...bodyData,
+						pm
+					};
 				}
-				// return
+				
+				console.log(bodyData)
 
 				const response = await fetch("http://localhost:8080/cart/checkout?accCode=" + userCode + "&voucherCode=" + activeVoucherCode, {
 					method: 'POST', // Sử dụng POST để gửi dữ liệu
