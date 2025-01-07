@@ -21,7 +21,8 @@ public interface BillRepo extends JpaRepository<Bill, Integer> {
             "       bl.create_at, " +
             "       pm.name_paymentmethod, " +
             "       bl.total_money, " +
-            "       bl.status_bill " +
+            "       bl.status_bill, " +
+            "       bl.note " +
             "FROM bill bl " +
             "LEFT JOIN bill_payment bp ON bl.id = bp.bill_id " +
             "LEFT JOIN payment_method pm ON bp.payment_method_id = pm.id " +
@@ -37,7 +38,8 @@ public interface BillRepo extends JpaRepository<Bill, Integer> {
             "       bl.create_at, " +
             "       pm.name_paymentmethod, " +
             "       bl.total_money, " +
-            "       bl.status_bill " +
+            "       bl.status_bill, " +
+            "       bl.note " +
             "FROM bill bl " +
             "LEFT JOIN bill_payment bp ON bl.id = bp.bill_id " +
             "LEFT JOIN payment_method pm ON bp.payment_method_id = pm.id " +
@@ -55,7 +57,8 @@ public interface BillRepo extends JpaRepository<Bill, Integer> {
             "       bl.create_at, " +
             "       pm.name_paymentmethod, " +
             "       bl.total_money, " +
-            "       bl.status_bill " +
+            "       bl.status_bill, " +
+            "       bl.note " +
             "FROM bill bl " +
             "LEFT JOIN bill_payment bp ON bl.id = bp.bill_id " +
             "LEFT JOIN payment_method pm ON bp.payment_method_id = pm.id " +
@@ -198,5 +201,63 @@ List<Object[]> findBillByEmail3(@Param("email") String email);
         "AND status_bill = 7 " +
         "ORDER BY create_date DESC", nativeQuery = true)
 List<Object[]> findBillByEmail5(@Param("email") String email);
+// lọc theo khaonr thơ gian
+@Query(value = "SELECT bl.code_bill, " +
+        "       bl.customer_name, " +
+        "       bl.phone_number, " +
+        "       bl.type_bill, " +
+        "       bl.create_at, " +
+        "       pm.name_paymentmethod, " +
+        "       bl.total_money, " +
+        "       bl.status_bill, " +
+        "       bl.note " +
+        "FROM bill bl " +
+        "LEFT JOIN bill_payment bp ON bl.id = bp.bill_id " +
+        "LEFT JOIN payment_method pm ON bp.payment_method_id = pm.id " +
+        "WHERE bl.status_bill IN (1, 2, 3, 4, 5) " +
+        "  AND bl.type_bill = 'Online' " +
+        "  AND bl.create_at BETWEEN :startDate AND :endDate " +
+        "ORDER BY bl.id DESC",
+        nativeQuery = true)
+List<Object[]> findBillsByDateRange(@Param("startDate") String startDate, @Param("endDate") String endDate);
+
+    // lọc theo khaonr thơ gian cho tab2
+    @Query(value = "SELECT bl.code_bill, " +
+            "       bl.customer_name, " +
+            "       bl.phone_number, " +
+            "       bl.type_bill, " +
+            "       bl.create_at, " +
+            "       pm.name_paymentmethod, " +
+            "       bl.total_money, " +
+            "       bl.status_bill, " +
+            "       bl.note " +
+            "FROM bill bl " +
+            "LEFT JOIN bill_payment bp ON bl.id = bp.bill_id " +
+            "LEFT JOIN payment_method pm ON bp.payment_method_id = pm.id " +
+            "WHERE bl.status_bill = 6 " +
+            "  AND bl.create_at BETWEEN :startDate AND :endDate " +
+            "ORDER BY bl.id DESC",
+            nativeQuery = true)
+    List<Object[]> findBillsByDateRange2(@Param("startDate") String startDate, @Param("endDate") String endDate);
+    // lọc theo khaonr thơ gian cho tab3
+    @Query(value = "SELECT bl.code_bill, " +
+            "       bl.customer_name, " +
+            "       bl.phone_number, " +
+            "       bl.type_bill, " +
+            "       bl.create_at, " +
+            "       pm.name_paymentmethod, " +
+            "       bl.total_money, " +
+            "       bl.status_bill, " +
+            "       bl.note " +
+            "FROM bill bl " +
+            "LEFT JOIN bill_payment bp ON bl.id = bp.bill_id " +
+            "LEFT JOIN payment_method pm ON bp.payment_method_id = pm.id " +
+            "WHERE bl.status_bill = 7 " +
+            "  AND bl.type_bill = 'Online' " +
+            "  AND bl.create_at BETWEEN :startDate AND :endDate " +
+            "ORDER BY bl.id DESC",
+            nativeQuery = true)
+    List<Object[]> findBillsByDateRange3(@Param("startDate") String startDate, @Param("endDate") String endDate);
+
 
 }
