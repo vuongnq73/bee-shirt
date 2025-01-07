@@ -30,6 +30,12 @@ public class CartController {
         return cartService.getAllCartDetails(codeAccount);
     }
 
+    @GetMapping("/update-invalid-quantity")
+    @ResponseBody
+    public int updateInvalidQuantity(@RequestParam("codeAccount") String codeAccount) {
+        return cartService.updateInvalidQuantity(codeAccount);
+    }
+
     @PostMapping("/cancel-cart-detail")
     @ResponseBody
     public int cancelCartDetail(@RequestParam("codeCartDetail") String codeCartDetail) {

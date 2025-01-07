@@ -810,13 +810,17 @@
 		let activeVoucherCode = null;
 
 		async function loadCartDetails() {
-
-			if (!token) {
-				alert("Không tìm thấy token, vui lòng đăng nhập lại.");
-				window.location.href = "/assets/account/login.html";
-				return;
-			}
 			try {
+				// Gửi yêu cầu cập nhật invalid quantity và chờ hoàn thành
+				const updateResponse = await fetch("http://localhost:8080/cart/update-invalid-quantity?codeAccount=" + userCode, {
+					method: 'GET',
+					headers: headers // Thêm headers vào yêu cầu
+				});
+
+				if (!updateResponse.ok) {
+					throw new Error("Failed to update invalid quantity");
+				}
+
 				const response = await fetch("http://localhost:8080/cart/get-all-cart-details?codeAccount=" + userCode, {
 					method: 'GET',
 					headers: headers // Thêm headers vào yêu cầu
