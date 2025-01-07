@@ -205,7 +205,7 @@ function applyFilter(filterValue) {
     })
     .catch(error => {
         console.error("Error fetching data:", error);
-        alert("Lỗi khi tải dữ liệu! Vui lòng thử lại.");
+        alert("Chưa có đơn hàng nào được bán ngày hôm nay");
     });
 }
 
