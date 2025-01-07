@@ -6,11 +6,14 @@ import com.example.bee_shirt.exception.AppException;
 import com.example.bee_shirt.exception.ErrorCode;
 import com.example.bee_shirt.mapper.AccountMapper;
 import com.example.bee_shirt.repository.*;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import com.example.bee_shirt.entity.*;
+import com.example.bee_shirt.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,11 +41,16 @@ public class CartService {
     @Autowired
     private AccountRepository accountRepository;
 
+
     @Autowired
     private BillDetailRepository billDetailRepository;
 
     public List<CartDetail> getAllCartDetails(String codeAccount) {
         return cartDetailRepository.findCartDetailByAccountCodeAndStatusCartDetail(codeAccount, 0);
+    }
+
+    public int updateInvalidQuantity(String codeAccount) {
+        return cartDetailRepository.updateInvalidQuantity(codeAccount);
     }
 
     public AccountResponse getMyInfo() {
@@ -89,9 +97,14 @@ public class CartService {
         return randomCode.toString();
     }
 
-    public ResponseEntity<?> processCheckout(Map<String, Object> requestBody, String accCode) {
+    public ResponseEntity<?> processCheckout(Map<String, Object> requestBody, String accCode, String voucherCode, Map<String, Object> address) {
         // Lấy danh sách từ request body
         Object listObject = requestBody.get("list");
+
+        System.out.println(address);
+        System.out.println(requestBody);
+        System.out.println(accCode);
+        System.out.println(voucherCode);
 
         // Kiểm tra danh sách có tồn tại và là một List hay không
         if (!(listObject instanceof List<?>)) {
@@ -104,7 +117,9 @@ public class CartService {
         bill.setCreateAt(LocalDateTime.now());
         bill.setStatusBill(0);
         bill.setDeleted(false);
-        bill.setAccount(accountRepository.findByCode(accCode).get());
+
+
+        bill.setAccount(accountRepository.findByCode(accCode).orElse(null));
 
         billRepository.save(bill);
 
@@ -133,7 +148,7 @@ public class CartService {
         });
 
         Bill bill2 = billRepository.findBillByCode(bill.getCodeBill());
-        Voucher1 voucher = voucherRepository.findVoucherByCode("codeVoucher").orElse(null);
+        Voucher1 voucher = voucherRepository.findVoucherByCode(voucherCode).orElse(null);
         Account account = bill2.getAccount();
         bill2.setVoucher(voucher);
         bill2.setCustomer(account);
@@ -172,6 +187,11 @@ public class CartService {
         if (voucher!=null){
             voucher.setQuantity(voucher.getQuantity()-1);
             voucherRepository.save(voucher);
+        }
+        if (address != null) {
+            bill2.setCustomerName((String) address.get("name"));
+            bill2.setPhoneNumber((String) address.get("phone"));
+            bill2.setAddressCustomer((String) address.get("fullAddress"));
         }
         System.out.println(bill2);
         billRepository.save(bill2);
