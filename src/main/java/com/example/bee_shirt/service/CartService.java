@@ -49,6 +49,10 @@ public class CartService {
         return cartDetailRepository.findCartDetailByAccountCodeAndStatusCartDetail(codeAccount, 0);
     }
 
+    public int updateInvalidQuantity(String codeAccount) {
+        return cartDetailRepository.updateInvalidQuantity(codeAccount);
+    }
+
     public AccountResponse getMyInfo() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Account account = accountRepository.findByUsername(username)
