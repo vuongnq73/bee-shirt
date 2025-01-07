@@ -23,6 +23,7 @@ import java.util.*;
 public class CartService {
     @Autowired
     private CartDetailRepository cartDetailRepository;
+
     @Autowired
     private AccountMapper accountMapper;
 
@@ -45,6 +46,13 @@ public class CartService {
     @Autowired
     private BillDetailRepository billDetailRepository;
 
+    @Autowired
+    private BillPaymentRepo billPaymentRepository;
+
+    @Autowired
+    private PaymentMethodRepo paymentMethodRepository;
+
+
     public List<CartDetail> getAllCartDetails(String codeAccount) {
         return cartDetailRepository.findCartDetailByAccountCodeAndStatusCartDetail(codeAccount, 0);
     }
@@ -59,16 +67,17 @@ public class CartService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         return accountMapper.toUserResponse(account);
     }
+
     public List<Integer> getCartIdsForCurrentAccount() {
         Integer accountId = this.getMyInfo().getId();
         return cartRepository.findCartIdsByAccountId(accountId);
     }
 
-    public int cancelCartDetail(String codeCartDetail){
+    public int cancelCartDetail(String codeCartDetail) {
         return cartDetailRepository.cancelCartDetail(codeCartDetail);
     }
 
-    public int changeQuantityCartDetail(String codeCartDetail, Integer quantity){
+    public int changeQuantityCartDetail(String codeCartDetail, Integer quantity) {
         return cartDetailRepository.changeQuantityCartDetail(codeCartDetail, quantity);
     }
 
@@ -97,11 +106,10 @@ public class CartService {
         return randomCode.toString();
     }
 
-    public ResponseEntity<?> processCheckout(Map<String, Object> requestBody, String accCode, String voucherCode, Map<String, Object> address) {
+    public ResponseEntity<?> processCheckout(Map<String, Object> requestBody, String accCode, String voucherCode, Map<String, Object> address, String pm) {
         // Lấy danh sách từ request body
         Object listObject = requestBody.get("list");
 
-        System.out.println(address);
         System.out.println(requestBody);
         System.out.println(accCode);
         System.out.println(voucherCode);
@@ -153,7 +161,7 @@ public class CartService {
         bill2.setVoucher(voucher);
         bill2.setCustomer(account);
         bill2.setTypeBill("Online");
-        bill2.setCustomerName(account.getFirstName()+account.getLastName());
+        bill2.setCustomerName(account.getFirstName() + account.getLastName());
         bill2.setPhoneNumber(account.getPhone());
         bill2.setAddressCustomer(account.getAddress());
         bill2.setMoneyShip(BigDecimal.ZERO);
@@ -162,16 +170,16 @@ public class CartService {
         for (BillDetail bd : billDetailRepository.findBillDetailByBillCodeAndStatusBillDetail(bill.getCodeBill(), 0)) {
             subtotalBeforeDiscount += bd.getQuantity() * bd.getShirtDetail().getPrice().doubleValue();
         }
-        if (voucher!=null) {
-            if(Objects.equals(voucher.getType_voucher(), "Amount")){
-                if (!(voucher.getMin_bill_value() >subtotalBeforeDiscount)) {
-                    moneyReduce=voucher.getDiscount_value();
+        if (voucher != null) {
+            if (Objects.equals(voucher.getType_voucher(), "Amount")) {
+                if (!(voucher.getMin_bill_value() > subtotalBeforeDiscount)) {
+                    moneyReduce = voucher.getDiscount_value();
                 }
             } else {
-                if (!(voucher.getMin_bill_value() >subtotalBeforeDiscount)) {
-                    moneyReduce=voucher.getDiscount_value()*subtotalBeforeDiscount/100;
-                    if (moneyReduce>voucher.getMaximum_discount()){
-                        moneyReduce=voucher.getMaximum_discount();
+                if (!(voucher.getMin_bill_value() > subtotalBeforeDiscount)) {
+                    moneyReduce = voucher.getDiscount_value() * subtotalBeforeDiscount / 100;
+                    if (moneyReduce > voucher.getMaximum_discount()) {
+                        moneyReduce = voucher.getMaximum_discount();
                     }
                 }
             }
@@ -184,8 +192,8 @@ public class CartService {
         bill2.setStatusBill(1);
         bill2.setUpdateAt(LocalDate.now());
         bill2.setNote("None");
-        if (voucher!=null){
-            voucher.setQuantity(voucher.getQuantity()-1);
+        if (voucher != null) {
+            voucher.setQuantity(voucher.getQuantity() - 1);
             voucherRepository.save(voucher);
         }
         if (address != null) {
@@ -193,6 +201,20 @@ public class CartService {
             bill2.setPhoneNumber((String) address.get("phone"));
             bill2.setAddressCustomer((String) address.get("fullAddress"));
         }
+
+        BillPayment bp = new BillPayment();
+        bp.setBill(bill2);
+        bp.setPaymentAmount(bill2.getTotalMoney());
+        bp.setDeleted(false);
+
+        System.out.println(pm);
+        if (Objects.equals(pm, "cash")) {
+            bp.setPaymentMethod(paymentMethodRepository.findPaymentMethodByCode("PM001"));
+        } else {
+            bp.setPaymentMethod(paymentMethodRepository.findPaymentMethodByCode("PM002"));
+        }
+        billPaymentRepository.save(bp);
+
         System.out.println(bill2);
         billRepository.save(bill2);
         System.out.println("Received list: " + list);
