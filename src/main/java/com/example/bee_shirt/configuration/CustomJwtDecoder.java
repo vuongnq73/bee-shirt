@@ -24,7 +24,6 @@ public class CustomJwtDecoder implements JwtDecoder{
     private NimbusJwtDecoder nimbusJwtDecoder = null;
 
     //truyền signerKey của Jwt vào SecretKeySpec(xem ở /service/AuthenticationService)
-    //Get quyền của tài khoản để xét qua token
     @Override
     public Jwt decode(String token) throws JwtException {
         //Check token xem đã hết hạn ỏ bị logout chưa
@@ -39,7 +38,7 @@ public class CustomJwtDecoder implements JwtDecoder{
 //            throw new JwtException(e.getMessage());
 //        }
 
-        //Xác thực token và build jwt theo yêu cầu của security
+        //Get quyền của tài khoản để xét qua token
         if (Objects.isNull(nimbusJwtDecoder)) {
             SecretKeySpec secretKeySpec = new SecretKeySpec("jyl4q4MPE5mpdiRnlDFpjWb3Vowfj52sYT9YHRSOsQlLIhznImeyGZZFUnz8ghEl".getBytes(), "HS512");
             nimbusJwtDecoder = NimbusJwtDecoder

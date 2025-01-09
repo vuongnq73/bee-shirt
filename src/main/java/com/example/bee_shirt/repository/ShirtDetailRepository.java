@@ -216,7 +216,7 @@ WITH RankedShirts AS (
         sz.name_size AS nameSize,
         cl.name_color AS nameColor,
         sd.price,
-        ROW_NUMBER() OVER (PARTITION BY s.code_shirt ORDER BY sd.price ASC) AS rn
+        ROW_NUMBER() OVER (PARTITION BY s.code_shirt ORDER BY sd.price ASC, sd.id ASC) AS rn
     FROM shirt_detail sd
     LEFT JOIN shirt s ON sd.shirt_id = s.id AND s.status_shirt = 1
     LEFT JOIN category c ON s.category_id = c.id AND c.status_category = 1
@@ -248,7 +248,7 @@ ORDER BY
     nameBrand,
     nameSize,
     nameColor
-    OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY
+OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY
             """, nativeQuery = true)
     List<Object[]> getAllShirtByFiller(@Param("min") BigDecimal min,
                                        @Param("max") BigDecimal max,
@@ -269,7 +269,7 @@ WITH RankedShirts AS (
         sz.name_size AS nameSize,
         cl.name_color AS nameColor,
         sd.price,
-        ROW_NUMBER() OVER (PARTITION BY s.code_shirt ORDER BY sd.price ASC) AS rn
+        ROW_NUMBER() OVER (PARTITION BY s.code_shirt ORDER BY sd.price ASC, sd.id ASC) AS rn
     FROM shirt_detail sd
     LEFT JOIN shirt s ON sd.shirt_id = s.id AND s.status_shirt = 1
     LEFT JOIN category c ON s.category_id = c.id AND c.status_category = 1
