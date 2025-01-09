@@ -106,7 +106,7 @@ public class CartService {
         return randomCode.toString();
     }
 
-    public ResponseEntity<?> processCheckout(Map<String, Object> requestBody, String accCode, String voucherCode, Map<String, Object> address, String pm) {
+    public ResponseEntity<?> processCheckout(Map<String, Object> requestBody, String accCode, String voucherCode, Map<String, Object> address, String pm, Integer ship) {
         // Lấy danh sách từ request body
         Object listObject = requestBody.get("list");
 
@@ -164,7 +164,7 @@ public class CartService {
         bill2.setCustomerName(account.getFirstName() + account.getLastName());
         bill2.setPhoneNumber(account.getPhone());
         bill2.setAddressCustomer(account.getAddress());
-        bill2.setMoneyShip(BigDecimal.valueOf(30000));
+        bill2.setMoneyShip(BigDecimal.valueOf(ship));
         double subtotalBeforeDiscount = 0.0;
         double moneyReduce = 0.0;
         for (BillDetail bd : billDetailRepository.findBillDetailByBillCodeAndStatusBillDetail(bill.getCodeBill(), 0)) {
@@ -186,7 +186,7 @@ public class CartService {
         }
         bill2.setSubtotalBeforeDiscount(BigDecimal.valueOf(subtotalBeforeDiscount));
         bill2.setMoneyReduce(BigDecimal.valueOf(moneyReduce));
-        bill2.setTotalMoney(BigDecimal.valueOf(subtotalBeforeDiscount - moneyReduce));
+        bill2.setTotalMoney(BigDecimal.valueOf(subtotalBeforeDiscount - moneyReduce + ship));
         bill2.setCreateDate(LocalDate.now());
         bill2.setDesiredDate(LocalDate.now());
         bill2.setStatusBill(1);
