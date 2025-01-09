@@ -164,7 +164,7 @@ public class CartService {
         bill2.setCustomerName(account.getFirstName() + account.getLastName());
         bill2.setPhoneNumber(account.getPhone());
         bill2.setAddressCustomer(account.getAddress());
-        bill2.setMoneyShip(BigDecimal.ZERO);
+        bill2.setMoneyShip(BigDecimal.valueOf(30000));
         double subtotalBeforeDiscount = 0.0;
         double moneyReduce = 0.0;
         for (BillDetail bd : billDetailRepository.findBillDetailByBillCodeAndStatusBillDetail(bill.getCodeBill(), 0)) {

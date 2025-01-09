@@ -808,25 +808,26 @@
 		let timeoutId = null;  // Biến toàn cục để lưu trữ ID của setTimeout
 		let activeVoucherCode = null;
 		let pm = 'card';
+		let allowed = true
 
 		async function miniCart() {
 			const response = await fetch("http://localhost:8080/cart/get-all-cart-details?codeAccount=" + userCode, {
-					method: 'GET',
-					headers: headers // Thêm headers vào yêu cầu
-				});
+				method: 'GET',
+				headers: headers // Thêm headers vào yêu cầu
+			});
 
 			const data = await response.json();
 
-				const cartItemsContainer = document.querySelector('.header-cart-wrapitem');
-				cartItemsContainer.innerHTML = ''; // Xóa các phần tử cũ trong giỏ hàng
+			const cartItemsContainer = document.querySelector('.header-cart-wrapitem');
+			cartItemsContainer.innerHTML = ''; // Xóa các phần tử cũ trong giỏ hàng
 
-				// Duyệt qua danh sách các món hàng và thêm vào HTML
-				let total = 0;
-				console.log(data);
-				data.forEach(item => {
-					const itemElement = document.createElement('li');
-					itemElement.classList.add('header-cart-item', 'flex-w', 'flex-t', 'm-b-12');
-					itemElement.innerHTML = `
+			// Duyệt qua danh sách các món hàng và thêm vào HTML
+			let total = 0;
+			console.log(data);
+			data.forEach(item => {
+				const itemElement = document.createElement('li');
+				itemElement.classList.add('header-cart-item', 'flex-w', 'flex-t', 'm-b-12');
+				itemElement.innerHTML = `
                 <div class="header-cart-item-img">
                     <img src="${item.shirtDetail.image}" alt="IMG">
                 </div>
@@ -835,15 +836,15 @@
                     <span class="header-cart-item-info">${item.quantity} x ${item.shirtDetail.price} VNĐ</span>
                 </div>
             `;
-					cartItemsContainer.appendChild(itemElement);
+				cartItemsContainer.appendChild(itemElement);
 
-					total += item.quantity * item.shirtDetail.price;
-				});
+				total += item.quantity * item.shirtDetail.price;
+			});
 
-				// Cập nhật tổng giá trị giỏ hàng
-				const totalElement = document.querySelector('.header-cart-total');
-				totalElement.innerHTML = `Tổng tiền: ${total} VNĐ`;
-			
+			// Cập nhật tổng giá trị giỏ hàng
+			const totalElement = document.querySelector('.header-cart-total');
+			totalElement.innerHTML = `Tổng tiền: ${total} VNĐ`;
+
 		}
 
 		async function loadCartDetails() {
@@ -929,6 +930,9 @@
                     <li>Tổng giá trị giỏ hàng: <span>${subtotal} VNĐ</span></li>
                     <li>Tổng tiền thanh toán: <span id="selected-total">${selectedTotal} VNĐ</span></li>
                 `;
+
+				selectedTotal > 50000000 ? allowed = false : allowed = true;
+
 
 				// Add event listeners to checkboxes
 				const checkboxes = document.querySelectorAll('.select-item');
@@ -1063,6 +1067,7 @@
 			checkboxes.forEach(checkbox => {
 				selectedTotal += parseFloat(checkbox.dataset.total);
 				selectedCartDetails.push(checkbox.dataset.code); // Lấy giá trị thuộc tính name và thêm vào danh sách
+				selectedTotal > 50000000 ? allowed = false : allowed = true;
 			});
 
 
@@ -1135,6 +1140,11 @@
 			if (selectedCartDetails.length === 0) {
 				toastr.error('Chưa chọn sản phẩm');
 				return;
+			}
+
+			if (!allowed) {
+				toastr.error('Giá trị tối đa được cho phép của đơn hàng là 50.000.000 VNĐ');
+				return
 			}
 
 			const selectedAddressOption = document.querySelector('input[name="addressOption"]:checked').value;
