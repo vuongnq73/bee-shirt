@@ -60,10 +60,10 @@ public class CartController {
         return cartService.changeQuantityCartDetail(codeCartDetail, quantity);
     }
     @PostMapping("/checkout")
-    public ResponseEntity<?> handlePostRequest(@RequestBody Map<String, Object> requestBody, @RequestParam("accCode") String accCode, @RequestParam(value = "voucherCode", required = false) String voucherCode) {
+    public ResponseEntity<?> handlePostRequest(@RequestBody Map<String, Object> requestBody, @RequestParam("accCode") String accCode, @RequestParam("ship") Integer ship, @RequestParam(value = "voucherCode", required = false) String voucherCode) {
         Map<String, Object> address = (Map<String, Object>) requestBody.get("address");
         String pm = (String) requestBody.get("pm");
-        return cartService.processCheckout(requestBody, accCode, voucherCode, address, pm);
+        return cartService.processCheckout(requestBody, accCode, voucherCode, address, pm, ship);
     }
     @GetMapping("/getIDCart")
     public ResponseEntity<List<Integer>> getMyCartIds() {
