@@ -222,12 +222,13 @@
             <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
               <div class="input-group">
                 <div class="input-group-prepend">
-                  <button type="submit" class="btn btn-search pe-1">
+                  <button type="submit" class="btn btn-search pe-1"ng-click="filterShirtDetails()">
                     <i class="fa fa-search search-icon"></i>
                   </button>
                 </div>
-                <input type="text" placeholder="Search ..." class="form-control" />
+                <input type="text" ng-model="filters.searchTerm" placeholder="Nhập mã,tên sản phẩm...." class="form-control" />
               </div>
+              
             </nav>
 
             <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
@@ -503,10 +504,7 @@
         <!-- Nút mở modal -->
       <div class="page-inner">
 
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addVariantModal">
-      Thêm Sản Phẩm Chi Tiết
-      </button>
-
+     
       <!-- Modal -->
       <div class="modal fade" id="addVariantModal" tabindex="-1" aria-labelledby="addVariantModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
@@ -574,10 +572,12 @@
       </div>
       <div class="row mb-3">
         <div class="col-md-6">
-          <label for="price">Giá:</label>
+          <label for="price" style="padding-bottom: 10px;">Giá:</label>
+          <br>
           <input type="text" ng-model="newShirtDetail.price" ng-change="generateVariants()"
                  placeholder="Nhập giá" style="width: 250px; height: 30px; border: 1px solid #ddd; border-radius: 5px;" />
-          <p style="color: green;">Giá tiền: {{newShirtDetail.priceFormatted}} VNĐ</p>
+          <br>
+          <p style="color: green;padding-top: 10px;">Giá tiền: {{newShirtDetail.priceFormatted}} VNĐ</p>
           <span class="text-danger" ng-if="errors.price">{{errors.price}}</span>
       </div>
       
@@ -670,6 +670,94 @@
       </div>
       </div>
       </div>
+      <div>
+        <div class="filter-container">
+          <!-- Bộ lọc -->
+          <div class="filter-column">
+              <label for="productCode">Mã sản phẩm:</label>
+              <select id="shirt" ng-model="filters.shirtId" style="border-radius: 5px;width: 220px;">
+                  <option value="">Tất cả</option>
+                  <option ng-repeat="shirt in shirts" ng-value="{{shirt.id}}">{{shirt.nameshirt}}</option>
+              </select>
+          </div>
+      
+          <div class="filter-column">
+              <label for="color">Màu sắc:</label>
+              <select id="color" ng-model="filters.colorId"style="border-radius: 5px;width: 220px;">
+                  <option value="">Tất cả</option>
+                  <option ng-repeat="color in colors" ng-value="{{color.id}}">{{color.nameColor}}</option>
+              </select>
+          </div>
+      
+          <div class="filter-column">
+              <label for="material">Chất liệu:</label>
+              <select id="material" ng-model="filters.materialId"style="border-radius: 5px;width: 220px;">
+                  <option value="">Tất cả</option>
+                  <option ng-repeat="material in materials" ng-value="{{material.id}}">{{material.nameMaterial}}</option>
+              </select>
+          </div>
+      
+          <div class="filter-column">
+              <label for="size">Kích cỡ:</label>
+              <select id="size" ng-model="filters.sizeId"style="border-radius: 5px;width: 220px;">
+                  <option value="">Tất cả</option>
+                  <option ng-repeat="size in sizes" ng-value="{{size.id}}">{{size.namesize}}</option>
+              </select>
+          </div>
+      </div>
+      
+      <div class="filter-container">
+        <div class="filter-column">
+          <label for="origin">Xuất xứ:</label>
+          <select id="origin" ng-model="filters.originId"style="border-radius: 5px;width: 220px;">
+              <option value="">Tất cả</option>
+              <option ng-repeat="origin in origins" ng-value="{{origin.id}}">{{origin.nameOrigin}}</option>
+          </select>
+      </div>
+        <div class="filter-column">
+          <label for="pattern">Mẫu áo:</label>
+          <select id="pattern" ng-model="filters.patternId"style="border-radius: 5px;width: 220px;">
+              <option value="">Tất cả</option>
+              <option ng-repeat="pattern in patterns" ng-value="{{pattern.id}}">{{pattern.namePattern}}</option>
+          </select>
+      </div>
+      <div class="filter-column">
+        <label for="gender">Giới tính:</label>
+        <select id="gender" ng-model="filters.genderId"style="border-radius: 5px;width: 220px;">
+            <option value="">Tất cả</option>
+            <option ng-repeat="gender in genders" ng-value="{{gender.id}}">{{gender.nameGender}}</option>
+        </select>
+    </div>
+    <div class="filter-column">
+      <label for="season">Mùa:</label>
+      <select id="season" ng-model="filters.seasonId"style="border-radius: 5px;width: 220px;">
+          <option value="">Tất cả</option>
+          <option ng-repeat="season in seasons" ng-value="{{season.id}}">{{season.nameSeason}}</option>
+      </select>
+  </div>  
+      </div>
+      <div class="filter-container">
+        <div class="filter-column col-md-2">
+          <label for="priceFrom">Khoảng giá</label>
+          <input type="number" id="priceFrom" ng-model="filters.priceFrom" placeholder="Giá từ" style="border-radius: 5px;" />
+      </div>
+        <div style="padding-top: 25.5px;text-align: center;padding-right: 10px;">
+          <p>---</p>
+      </div>
+
+      <div class="filter-column col-md-2"style="padding-top:25.5px;">
+          <input type="number" id="priceTo" ng-model="filters.priceTo" placeholder="Giá đến" style="border-radius: 5px;"/>
+      </div>
+      <div class="filter-column" style="padding-top: 22px;padding-left: 50px;">
+        <button style="width: 140px;height: 40px;border-radius: 5px;background-color: #1572e8;color: white;" ng-click="filterShirtDetails()">Lọc</button>
+    </div>
+      </div>
+          
+    </div>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addVariantModal">
+      Thêm Sản Phẩm Chi Tiết
+      </button>
+
       <h2 class="mt-5">Danh Sách Chi Tiết Áo Thun</h2>
       <table class="table table-bordered">
       <thead>
