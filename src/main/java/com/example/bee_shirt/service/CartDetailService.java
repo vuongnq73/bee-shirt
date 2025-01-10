@@ -43,29 +43,28 @@ public class CartDetailService {
         ShirtDetail shirtDetail = shirtDetailRepository.findById(addToCartRequestDTO.getShirtDetailId())
                 .orElseThrow(() -> new IllegalArgumentException("Chi tiết áo không tồn tại với ID: " + addToCartRequestDTO.getShirtDetailId()));
 
-        // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
-        Optional<CartDetail> existingCartDetail = cartDetailRepository.findByCartAndShirtDetail(cart, shirtDetail);
+        Optional<CartDetail> existingCartDetail = cartDetailRepository.findByCartAndShirtDetailAndStatusCartDetail(cart, shirtDetail, 0);
+
         if (existingCartDetail.isPresent()) {
-            // Nếu sản phẩm đã tồn tại, bạn có thể tăng số lượng sản phẩm trong giỏ hàng
+            // Nếu tìm thấy sản phẩm có trạng thái 0, xử lý logic tăng số lượng
             CartDetail cartDetail = existingCartDetail.get();
             cartDetail.setQuantity(cartDetail.getQuantity() + 1); // Tăng số lượng lên 1
-            return cartDetailRepository.save(cartDetail); // Cập nhật CartDetail với số lượng mới
+            return cartDetailRepository.save(cartDetail);
+        } else {
+            // Nếu không tìm thấy sản phẩm, tạo mới CartDetail
+            CartDetail newCartDetail = new CartDetail();
+            newCartDetail.setCodeCartDetail(generateOriginCode());
+            newCartDetail.setCart(cart);
+            newCartDetail.setShirtDetail(shirtDetail);
+            newCartDetail.setQuantity(1);
+            newCartDetail.setStatusCartDetail(0); // Trạng thái là 0
+            newCartDetail.setDeleted(false);
+
+            return cartDetailRepository.save(newCartDetail);
         }
-
-        // Tạo mới đối tượng CartDetail nếu sản phẩm chưa có trong giỏ hàng
-        CartDetail cartDetail = new CartDetail();
-        cartDetail.setCodeCartDetail(generateOriginCode()); // Hàm này cần đảm bảo sinh mã duy nhất
-        cartDetail.setCart(cart);
-        cartDetail.setShirtDetail(shirtDetail);
-        cartDetail.setQuantity(1);  // Số lượng mặc định là 1
-        cartDetail.setStatusCartDetail(0); // Trạng thái mặc định
-        cartDetail.setDeleted(false);      // Chưa bị xóa
-
-        // Lưu đối tượng CartDetail vào cơ sở dữ liệu và trả về
-        return cartDetailRepository.save(cartDetail);
     }
 
-    // Hàm tạo mã ngẫu nhiên cho Origin
+        // Hàm tạo mã ngẫu nhiên cho Origin
     private String generateOriginCode() {
         Random random = new Random();
         int randomCode = random.nextInt(100000);  // Sinh số ngẫu nhiên trong phạm vi từ 0 - 99999

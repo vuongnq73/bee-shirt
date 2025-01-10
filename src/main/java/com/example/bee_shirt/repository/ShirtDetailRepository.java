@@ -4,6 +4,7 @@ import com.example.bee_shirt.dto.OnlineColorDTO;
 import com.example.bee_shirt.dto.OnlineShirtDTO;
 import com.example.bee_shirt.dto.ShirtDetailDTO;
 import com.example.bee_shirt.dto.response.HomePageResponse;
+import com.example.bee_shirt.entity.Shirt;
 import com.example.bee_shirt.entity.ShirtDetail;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -71,7 +72,6 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
             "WHERE ss.codeshirt = :codeshirt " +
             "ORDER BY sdt.id DESC")
     List<ShirtDetailDTO> findAllShirtDetailByCodeShirt(@Param("codeshirt") String codeshirt);
-
 
 
     @Query(value = """

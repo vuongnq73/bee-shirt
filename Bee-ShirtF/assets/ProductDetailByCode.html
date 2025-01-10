@@ -517,99 +517,93 @@
       </div>
       <div class="modal-body">
         <div class="row mb-3">
-          <div class="col-md-6">
-              <label for="shirt" class="form-label">Sản Phẩm</label>
-              <select class="form-select" id="shirt" ng-model="newShirtDetail.shirt.id" ng-change="updateErrorState('shirt')" required>
-                  <option value="" disabled selected>Chọn Sản Phẩm</option>
-                  <option ng-repeat="shirt in shirts" ng-value="shirt.id">{{ shirt.nameshirt }}</option>
-              </select>
-              <span class="text-danger" ng-if="errors.shirt">Vui lòng chọn sản phẩm.</span>
-          </div>
-          <div class="col-md-6">
-              <label for="material" class="form-label">Chất Liệu</label>
-              <select class="form-select" id="material" ng-model="newShirtDetail.material.id" ng-change="updateErrorState('material')" required>
-                  <option value="" disabled selected>Chọn Chất Liệu</option>
-                  <option ng-repeat="material in materials" ng-value="material.id">{{ material.nameMaterial }}</option>
-              </select>
-              <span class="text-danger" ng-if="errors.material">Vui lòng chọn chất liệu.</span>
-          </div>
-      </div>
-      
-      <div class="row mb-3">
-          <div class="col-md-6">
-              <label for="gender" class="form-label">Giới Tính</label>
-              <select class="form-select" id="gender" ng-model="newShirtDetail.gender.id" ng-change="updateErrorState('gender')" required>
-                  <option value="" disabled selected>Chọn Giới Tính</option>
-                  <option ng-repeat="gender in genders" ng-value="gender.id">{{ gender.nameGender }}</option>
-              </select>
-              <span class="text-danger" ng-if="errors.gender">Vui lòng chọn giới tính.</span>
-          </div>
-          <div class="col-md-6">
-              <label for="pattern" class="form-label">Họa Tiết</label>
-              <select class="form-select" id="pattern" ng-model="newShirtDetail.pattern.id" ng-change="updateErrorState('pattern')" required>
-                  <option value="" disabled selected>Chọn Họa Tiết</option>
-                  <option ng-repeat="pattern in patterns" ng-value="pattern.id">{{ pattern.namePattern }}</option>
-              </select>
-              <span class="text-danger" ng-if="errors.pattern">Vui lòng chọn họa tiết.</span>
-          </div>
-      </div>
-      
-      <div class="row mb-3">
-          <div class="col-md-6">
-              <label for="season" class="form-label">Mùa</label>
-              <select class="form-select" id="season" ng-model="newShirtDetail.season.id" ng-change="updateErrorState('season')" required>
-                  <option value="" disabled selected>Chọn Mùa</option>
-                  <option ng-repeat="season in seasons" ng-value="season.id">{{ season.nameSeason }}</option>
-              </select>
-              <span class="text-danger" ng-if="errors.season">Vui lòng chọn mùa.</span>
-          </div>
-          <div class="col-md-6">
-              <label for="origin" class="form-label">Xuất Xứ</label>
-              <select class="form-select" id="origin" ng-model="newShirtDetail.origin.id" ng-change="updateErrorState('origin')" required>
-                  <option value="" disabled selected>Chọn Xuất Xứ</option>
-                  <option ng-repeat="origin in origins" ng-value="origin.id">{{ origin.nameOrigin }}</option>
-              </select>
-              <span class="text-danger" ng-if="errors.origin">Vui lòng chọn xuất xứ.</span>
-          </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label for="price">Giá:</label>
-          <input type="text" ng-model="newShirtDetail.price" ng-change="generateVariants()"
-                 placeholder="Nhập giá" style="width: 250px; height: 30px; border: 1px solid #ddd; border-radius: 5px;" />
-          <p style="color: green;">Giá tiền: {{newShirtDetail.priceFormatted}} VNĐ</p>
-          <span class="text-danger" ng-if="errors.price">{{errors.price}}</span>
-      </div>
-      
-        <div class="col-md-6">
-          <!-- Chọn Size -->
-        <label class="form-label">Chọn Size:</label>
-        <div class="size-selection">
-            <div class="size-option" 
-                ng-class="{'selected': selectedSizes.indexOf(size.id) !== -1}" 
-                ng-click="toggleSizeSelection(size.id); updateErrorState('sizes')" 
-                ng-repeat="size in sizes">{{ size.namesize }}
+            <div class="col-md-6">
+                <label for="shirtName">Tên Áo Thun:</label>
+                <input type="text" id="shirtName" class="form-control" ng-model="newShirtDetail.shirt.nameshirt" disabled>
+                <p>Bạn đã chọn: {{ newShirtDetail.shirt.nameshirt }}</p>
             </div>
+            
+            
+          <div class="col-md-6">
+            <label for="material" class="form-label">Chất Liệu</label>
+            <select class="form-select" id="material" ng-model="newShirtDetail.material.id" required>
+              <option value="" disabled selected>Chọn Chất Liệu</option>
+              <option ng-repeat="material in materials" ng-value="material.id">{{material.nameMaterial}}</option>
+            </select>
+          </div>
         </div>
-        <span class="text-danger" ng-if="errors.sizes">Vui lòng chọn ít nhất một kích thước.</span>
+        
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="gender" class="form-label">Giới Tính</label>
+            <select class="form-select" id="gender" ng-model="newShirtDetail.gender.id" required>
+              <option value="" disabled selected>Chọn Giới Tính</option>
+              <option ng-repeat="gender in genders" ng-value="gender.id">{{gender.nameGender}}</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="pattern" class="form-label">Họa Tiết</label>
+            <select class="form-select" id="pattern" ng-model="newShirtDetail.pattern.id" required>
+              <option value="" disabled selected>Chọn Họa Tiết</option>
+              <option ng-repeat="pattern in patterns" ng-value="pattern.id">{{pattern.namePattern}}</option>
+            </select>
+          </div>
         </div>
-      </div>
+        
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="season" class="form-label">Mùa</label>
+            <select class="form-select" id="season" ng-model="newShirtDetail.season.id" required>
+              <option value="" disabled selected>Chọn Mùa</option>
+              <option ng-repeat="season in seasons" ng-value="season.id">{{season.nameSeason}}</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="origin" class="form-label">Xuất Xứ</label>
+            <select class="form-select" id="origin" ng-model="newShirtDetail.origin.id" required>
+              <option value="" disabled selected>Chọn Xuất Xứ</option>
+              <option ng-repeat="origin in origins" ng-value="origin.id">{{origin.nameOrigin}}</option>
+            </select>
+          </div>
+        </div>
+        <label for="">Giá:
+          <input type="number" 
+                 ng-model="newShirtDetail.price" 
+                 placeholder="Giá" 
+                 style="width: 80px; padding: 5px; border: 1px solid #ddd; border-radius: 5px;" 
+                 ng-change="validatePrice()"
+                 min="1" 
+                 max="999999999"
+                 required />
+      </label>
+      <span class="text-danger" ng-if="errors.price">{{ errors.priceMessage }}</span>
       
-
-    <br>
+    
       <!-- Chọn Màu -->
       <label>Chọn Màu:</label>
-      <div class="color-selection">
-          <div class="color-option" 
-               ng-class="{'selected': selectedColors.indexOf(color.id) !== -1}" 
-               ng-click="toggleColorSelection(color.id); updateErrorState('colors')" 
-               ng-repeat="color in colors">{{ color.nameColor }}
-          </div>
+      <div class="color-selection" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
+        <div class="color-option" 
+            ng-class="{'selected': selectedColors.indexOf(color.id) !== -1}" 
+            ng-click="toggleColorSelection(color.id)" 
+            ng-repeat="color in colors" 
+            style="padding: 10px; border: 1px solid #ddd; cursor: pointer; border-radius: 5px; text-align: center;">
+          {{color.nameColor}}
+        </div>
       </div>
-      <span class="text-danger" ng-if="errors.colors">Vui lòng chọn ít nhất một màu.</span>
-      <br>
-    
-      <button ng-click="generateVariants()" class="btn btn-primary">Tạo Biến Thể</button>
+
+      <!-- Chọn Size -->
+      <label>Chọn Size:</label>
+      <div class="size-selection" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
+        <div class="size-option" 
+            ng-class="{'selected': selectedSizes.indexOf(size.id) !== -1}" 
+            ng-click="toggleSizeSelection(size.id)" 
+            ng-repeat="size in sizes" 
+            style="padding: 10px; border: 1px solid #ddd; cursor: pointer; border-radius: 5px; text-align: center;">
+          {{size.namesize}}
+        </div>
+      </div>
+        <!-- Nút tạo biến thể -->
+        <button ng-click="generateVariants()" class="btn btn-primary" style="margin-top: 10px; margin-bottom: 20px;">Tạo Biến Thể</button>
 
         <!-- Hiển thị các biến thể và ô nhập số lượng -->
         <div class="variant-list" ng-if="variants.length > 0" style="margin-top: 20px;">
@@ -620,46 +614,27 @@
             </span>
         
             <label for="">Số Lượng:
-              <input type="number" ng-model="variant.quantity" placeholder="Số lượng" min="0" style="width: 80px; padding: 5px; border: 1px solid #ddd; border-radius: 5px;" />
-          </label>
-          <!-- Thông báo lỗi cho số lượng -->
-          <span ng-if="errors.quantity" class="text-danger">
-              {{errors.quantity}}
-          </span>
-          
+                <input type="number" ng-model="variant.quantity" placeholder="Số lượng" min="0" style="width: 80px; padding: 5px; border: 1px solid #ddd; border-radius: 5px;" />
+            </label>
+        
+        
           <label>Ảnh 1:</label>
           <input type="file" ng-files="fileNameChanged($files, $index, 1)" />
-          <!-- Hiển thị ảnh 1 nếu đã được chọn -->
           <div ng-if="variant.imagePreview">
               <img ng-src="{{variant.imagePreview}}" alt="Ảnh 1" style="max-width: 100px; max-height: 100px; margin-top: 10px;" />
           </div>
-          <!-- Thông báo lỗi cho ảnh 1 -->
-          <span ng-if="errors.image" class="text-danger">
-              {{errors.image}}
-          </span>
-          
+
           <label>Ảnh 2:</label>
           <input type="file" ng-files="fileNameChanged($files, $index, 2)" />
-          <!-- Hiển thị ảnh 2 nếu đã được chọn -->
           <div ng-if="variant.image2Preview">
               <img ng-src="{{variant.image2Preview}}" alt="Ảnh 2" style="max-width: 100px; max-height: 100px; margin-top: 10px;" />
           </div>
-          <!-- Thông báo lỗi cho ảnh 2 -->
-          <span ng-if="errors.image2" class="text-danger">
-              {{errors.image2}}
-          </span>
-          
+
           <label>Ảnh 3:</label>
           <input type="file" ng-files="fileNameChanged($files, $index, 3)" />
-          <!-- Hiển thị ảnh 3 nếu đã được chọn -->
           <div ng-if="variant.image3Preview">
               <img ng-src="{{variant.image3Preview}}" alt="Ảnh 3" style="max-width: 100px; max-height: 100px; margin-top: 10px;" />
           </div>
-          <!-- Thông báo lỗi cho ảnh 3 -->
-          <span ng-if="errors.image3" class="text-danger">
-              {{errors.image3}}
-          </span>
-          
         </div>
                                         
           <button ng-click="saveAllVariants()" class="btn btn-success" style="margin-top: 10px; margin-bottom: 20px;">Lưu Vào Danh Sách</button>
@@ -864,7 +839,7 @@
    <!-- end container -->
     
     </div>
-<script src="js/productDetail.js"></script>
+<script src="js/productDetailByCode.js"></script>
     <!-- Custom template | don't include it in your project! -->
     <div class="custom-template">
       <div class="title">Settings</div>

@@ -17,6 +17,7 @@ angular.module('app', [])
         .catch(function(error) {
             console.log('Error:', error);
         });
+<<<<<<< Updated upstream
         function checkPermission() {
             const token = sessionStorage.getItem("jwtToken");
             if (!token) {
@@ -52,6 +53,10 @@ angular.module('app', [])
     
             return validRoles[0] || null; // Return highest priority role
         }
+=======
+
+      
+>>>>>>> Stashed changes
     
 
     // Khởi tạo các biến cho modal và sản phẩm đã chọn
@@ -118,6 +123,7 @@ angular.module('app', [])
        $scope.viewDetails = function(shirt) {
           $scope.selectedShirt = angular.copy(shirt); // Tạo bản sao để tránh thay đổi trực tiếp
           var myModal = new bootstrap.Modal(document.getElementById('productModal'));
+        
           
           myModal.show();
       };
@@ -125,7 +131,6 @@ angular.module('app', [])
         $scope.viewDetails2 = function(shirt) {
             // Lưu dữ liệu sản phẩm vào localStorage
             localStorage.setItem('selectedShirt', JSON.stringify(shirt));
-
             // Chuyển đến trang chi tiết sản phẩm
             window.location.href = '/cozastore-master/product-detail.html'; // Chuyển sang trang chi tiết
         };
@@ -143,62 +148,104 @@ angular.module('app', [])
 $scope.changeSize = function(shirt, variant) {
     shirt.selectedVariant = variant;
 };
-
-// Lấy danh sách cartId khi đăng nhập
-$http.get('http://localhost:8080/cart/getIDCart', {
-        headers: {
-            Authorization: "Bearer " + token,
-        }
-    })
-    .then(function(response) {
-        // Kiểm tra kỹ giá trị trả về
-        console.log('Response:', response.data);
-        if (response.data && response.data.length > 0) {
-            $scope.cartId = response.data[0];
-            console.log('Cart ID:', $scope.cartId);
-        } else {
-            console.log('Không có giỏ hàng.');
-        }
-    })
-    .catch(function(error) {
-        console.error('Error fetching Cart ID:', error);
-    });
-
-// Hàm thêm sản phẩm vào giỏ hàng
 $scope.addToCart = function(shirtDetailId) {
     if (!shirtDetailId) {
         alert('Vui lòng chọn sản phẩm với kích thước và màu sắc.');
         return;
     }
 
-    // Kiểm tra nếu cartId chưa được lấy
-    if (!$scope.cartId) {
-        alert('Không tìm thấy giỏ hàng.');
+    // Kiểm tra token đăng nhập
+    const token = sessionStorage.getItem("jwtToken");
+
+    if (!token) {
+        alert('Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng!');
+        window.location.href = "/assets/account/login.html"; // Chuyển hướng tới trang đăng nhập
         return;
     }
 
-    console.log('cartId trong hàm addToCart:', $scope.cartId);
+    // Nếu cartId chưa được lấy, thực hiện lấy cartId từ API
+    if (!$scope.cartId) {
+        $http.get('http://localhost:8080/cart/getIDCart', {
+            headers: {
+                Authorization: "Bearer " + token,
+            }
+        })
+        .then(function(response) {
+            if (response.data && response.data.length > 0) {
+                $scope.cartId = response.data[0];
+                console.log('Cart ID:', $scope.cartId);
 
-    // Thực hiện yêu cầu POST để thêm vào giỏ hàng
+                // Tiếp tục thêm sản phẩm vào giỏ hàng
+                addProductToCart($scope.cartId, shirtDetailId, token);
+            } else {
+                alert('Không tìm thấy giỏ hàng.');
+            }
+        })
+        .catch(function(error) {
+            console.error('Error fetching Cart ID:', error);
+            alert('Có lỗi xảy ra khi lấy thông tin giỏ hàng.');
+        });
+    } else {
+        localStorage.setItem('cartId', $scope.cartId);  // Lưu cartId vào localStorage
+        console.log(cartId);
+        // Nếu đã có cartId, thực hiện thêm sản phẩm vào giỏ hàng
+        addProductToCart($scope.cartId, shirtDetailId, token);
+    }
+};
+// Lấy danh sách cartId khi đăng nhập
+$http.get('http://localhost:8080/cart/getIDCart', {
+    headers: {
+        Authorization: "Bearer " + token,
+    }
+})
+.then(function(response) {
+    // Kiểm tra kỹ giá trị trả về
+    console.log('Response:', response.data);
+    if (response.data && response.data.length > 0) {
+        $scope.cartId = response.data[0];
+        console.log('Cart ID:', $scope.cartId);
+    } else {
+        console.log('Không có giỏ hàng.');
+    }
+})
+.catch(function(error) {
+    console.error('Error fetching Cart ID:', error);
+});
+// Hàm phụ để thêm sản phẩm vào giỏ hàng
+function addProductToCart(cartId, shirtDetailId, token) {
     $http.post('http://localhost:8080/api/cart/add', {
         shirtDetailId: shirtDetailId,
-        cartId: $scope.cartId // Sử dụng $scope.cartId
+        cartId: cartId
+    }, {
+        headers: {
+            Authorization: "Bearer " + token,
+        }
     })
     .then(function(response) {
-        // Nếu không có lỗi, sản phẩm được thêm vào giỏ hàng
-        alert('Sản phẩm đã có trong  giỏ hàng!');
+        alert('Sản phẩm đã được thêm vào giỏ hàng!');
     })
     .catch(function(error) {
-        console.log('Error:', error);
-
-        // Kiểm tra nếu lỗi là do sản phẩm đã tồn tại trong giỏ hàng
-        if (error.status === 400 && error.data.message === "Sản phẩm đã tồn tại trong giỏ hàng.") {
-            alert('Sản phẩm đã có trong giỏ hàng!');
+        console.error('Error:', error);
+    
+        if (error.status === 400) {
+            if (error.data && error.data.message === "Sản phẩm đã tồn tại trong giỏ hàng.") {
+                alert('Sản phẩm đã có trong giỏ hàng. Bạn không cần phải thêm lại!');
+            } else if (error.data && error.data.message === "Sản phẩm này không thể thêm vì trạng thái không hợp lệ.") {
+                alert('Sản phẩm không thể thêm vào vì trạng thái không hợp lệ.');
+            } else {
+                alert('Lỗi: ' + (error.data && error.data.message ? error.data.message : 'Không xác định'));
+            }
+        } else if (error.status === 401) {
+            alert('Phiên đăng nhập đã hết hạn. Bạn cần đăng nhập lại!');
+            window.location.href = "/assets/account/login.html"; // Redirect to login page
         } else {
             alert('Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.');
+            console.error('Chi tiết lỗi:', error); // Log chi tiết hơn
         }
     });
-};
+}
+
+
 
 
     

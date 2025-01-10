@@ -17,7 +17,7 @@ import java.util.Optional;
 public interface CartDetailRepository extends JpaRepository<CartDetail,Integer> {
     @Query("SELECT cd FROM CartDetail cd WHERE cd.cart.account.code LIKE :query AND cd.statusCartDetail = :status AND cd.deleted = false")
     List<CartDetail> findCartDetailByAccountCodeAndStatusCartDetail(String query, Integer status);
-    Optional<CartDetail> findByCartAndShirtDetail(Cart cart, ShirtDetail shirtDetail);
+    Optional<CartDetail> findByCartAndShirtDetailAndStatusCartDetail(Cart cart, ShirtDetail shirtDetail, int statusCartDetail);
 
     @Query("SELECT cd FROM CartDetail cd WHERE cd.codeCartDetail LIKE %:query%")
     CartDetail findCartDetailByCode(@Param("query") String query);

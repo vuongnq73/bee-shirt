@@ -161,6 +161,13 @@ this.getShirtDetailsBasedOnCode = function() {
             }
         });
     };
+    this.getShirts2 = function() {
+        return $http.get(baseUrl + '/api/shirt/byCode/'+codeShirt, {
+            headers: {
+                Authorization: "Bearer " + token,
+            }
+        });
+    };
     this.getShirts = function() {
         return $http.get(baseUrl + '/api/shirts', {
             headers: {
@@ -230,7 +237,6 @@ app.controller('ShirtDetailController', ['$scope', 'shirtDetailService', functio
             $scope.selectedSizes.push(sizeId);
         }
     };
-
     $scope.generateVariants = function() {
         $scope.variants = [];
         angular.forEach($scope.selectedColors, function(colorId) {
@@ -238,80 +244,99 @@ app.controller('ShirtDetailController', ['$scope', 'shirtDetailService', functio
                 $scope.variants.push({ 
                     colorId: colorId, 
                     sizeId: sizeId,
-                    quantity: 0 ,
-                    price: 0,
-                    image:null,
-                    image2:null,
-                    image3:null,
-
+                    quantity: 0,
+                    image: null,
+                    image2: null,
+                    image3: null
                 });
             });
         });
-        
     };
     
-
-    // Hàm preview ảnh, nhận tham số là `input` và một `imageIndex` để xác định ô nào đang được chọn
-    $scope.previewImage = function (input, imageIndex) {
-        if (input.files && input.files[0]) {
+    $scope.loadShirtDetails = function(codeShirt) {
+        // Gọi API để lấy chi tiết áo thun
+        this.getShirtDetailsByCondition(codeShirt).then(function(response) {
+            if (response.data && response.data.length > 0) {
+                // Nếu có chi tiết sản phẩm trả về, gán giá trị vào modal
+                $scope.shirtDetails = response.data;
+    
+                if (codeShirt) {
+                    // Nếu có mã, tự động chọn sản phẩm theo mã
+                    $scope.selectedShirt = response.data[0];  // Lấy chi tiết đầu tiên (hoặc có thể tùy chỉnh)
+                }
+            }
+        }).catch(function(error) {
+            console.log('Lỗi khi tải chi tiết áo thun:', error);
+        });
+        
+        
+    };
+    $scope.fileNameChanged = function(files, index, imageIndex) {
+        if (files && files.length > 0) {
+            var file = files[0]; // Lấy tệp đầu tiên
+            console.log('File được chọn:', file);
+            console.log('Chỉ mục biến thể:', index);
+            console.log('Chỉ số ảnh:', imageIndex);
+    
             var reader = new FileReader();
-            reader.onload = function (e) {
-                $scope.$apply(function () {
-                    var fileName = input.files[0].name; // Lấy tên ảnh
-                    // Lưu ảnh vào biến tương ứng dựa trên `imageIndex`
+            reader.onload = function(e) {
+                $scope.$apply(function() {
+                    // Lưu ảnh vào biến thể và hiển thị ảnh ngay
                     if (imageIndex === 1) {
-                        $scope.image = { src: e.target.result, nameImage: fileName };
+                        $scope.variants[index].imagePreview = e.target.result;
+                        $scope.variants[index].image = file.name;  // Chỉ lưu tên tệp
                     } else if (imageIndex === 2) {
-                        $scope.image2 = { src: e.target.result, nameImage: fileName };
+                        $scope.variants[index].image2Preview = e.target.result;
+                        $scope.variants[index].image2 = file.name;  // Chỉ lưu tên tệp
                     } else if (imageIndex === 3) {
-                        $scope.image3 = { src: e.target.result, nameImage: fileName };
+                        $scope.variants[index].image3Preview = e.target.result;
+                        $scope.variants[index].image3 = file.name;  // Chỉ lưu tên tệp
                     }
                 });
             };
-            reader.readAsDataURL(input.files[0]);
+            reader.readAsDataURL(file);  // Đọc tệp dưới dạng base64 để hiển thị
         }
     };
-
     
-    // Lưu tất cả biến thể (variants), bao gồm tên ảnh
+    
     $scope.saveAllVariants = function() {
-        // Hiển thị hộp thoại xác nhận trước khi thêm
         var confirmation = confirm("Bạn có muốn thêm các biến thể này không?");
-        
-        // Nếu người dùng chọn "OK"
         if (confirmation) {
             angular.forEach($scope.variants, function(variant) {
                 if (variant.quantity > 0) {
-                    var existingVariant = $scope.savedVariants.find(v => v.colorId === variant.colorId && v.sizeId === variant.sizeId);
+                    // Kiểm tra nếu biến thể đã tồn tại
+                    var existingVariant = $scope.savedVariants.find(v => 
+                        v.colorId === variant.colorId && v.sizeId === variant.sizeId
+                    );
                     if (existingVariant) {
-                        existingVariant.quantity = variant.quantity;
+                        existingVariant.quantity = variant.quantity; // Cập nhật số lượng
                     } else {
-                        // Lưu tên ảnh vào trường 'image' trong ShirtDetail
+                        // Thêm biến thể mới
                         $scope.savedVariants.push({
-                            shirtId: $scope.newShirtDetail.shirt.id,  // Lưu tên sản phẩm
+                            shirtId: $scope.newShirtDetail.shirt.id, // Gán ID sản phẩm đã chọn
                             colorId: variant.colorId,
                             sizeId: variant.sizeId,
                             quantity: variant.quantity,
-                            materialId: $scope.newShirtDetail.material.id, // Lưu materialId đã chọn
+                            materialId: $scope.newShirtDetail.material.id,
                             genderId: $scope.newShirtDetail.gender.id,
                             originId: $scope.newShirtDetail.origin.id,
                             patternId: $scope.newShirtDetail.pattern.id,
                             seasonId: $scope.newShirtDetail.season.id,
-                            price: variant.price,
-                            image: $scope.image ? $scope.image.nameImage : '',  // Lưu tên ảnh của sản phẩm
-                            image2: $scope.image2 ? $scope.image2.nameImage : '' , // Lưu tên ảnh của sản phẩm
-                            image3: $scope.image3 ? $scope.image3.nameImage : ''  // Lưu tên ảnh của sản phẩm
+                            price: $scope.newShirtDetail.price,
+                            image: variant.image || '',  // Lưu tên ảnh cho biến thể
+                            image2: variant.image2 || '',  // Lưu tên ảnh2 cho biến thể
+                            image3: variant.image3 || ''  // Lưu tên ảnh3 cho biến thể
                         });
                     }
                 }
             });
             $scope.submitVariants(); // Gửi dữ liệu lên backend
         } else {
-            // Nếu người dùng chọn "Cancel", không làm gì cả
             console.log("Người dùng đã hủy hành động.");
         }
     };
     
+
     // Submit dữ liệu lên backend
     $scope.submitVariants = function() {
         console.log("Dữ liệu sẽ được gửi lên backend:", $scope.savedVariants); // Kiểm tra dữ liệu trước khi gửi
@@ -382,35 +407,95 @@ app.controller('ShirtDetailController', ['$scope', 'shirtDetailService', functio
             $scope.sizes = response.data;
         });
     };
-    $scope.getShirts = function() {
-        shirtDetailService.getShirts().then(function(response) {
-            $scope.shirts = response.data;
+    // Hàm gọi API lấy tất cả áo thun
+$scope.getShirts = function() {
+    shirtDetailService.getShirts().then(function(response) {
+        $scope.shirts = response.data;
+        console.log("Danh sách tất cả áo thun:", $scope.shirts);
+    }, function(error) {
+        console.error('Lỗi khi lấy danh sách áo thun:', error);
+    });
+};
+
+// Hàm gọi API lấy thông tin áo thun theo mã codeShirt
+$scope.getShirts2 = function() {
+    shirtDetailService.getShirts2($scope.selectedCodeShirt).then(function(response) {
+        // Lưu thông tin áo thun vào scope
+        $scope.shirt = response.data;
+        console.log("Thông tin áo thun:", $scope.shirt);
+
+        // Gán thông tin áo vào newShirtDetail.shirt
+        if ($scope.shirt) {
+            $scope.newShirtDetail.shirt = {
+                id: $scope.shirt.id,  // Lưu ID của áo
+                nameshirt: $scope.shirt.nameshirt  // Hiển thị tên áo
+            };
+        }
+    }, function(error) {
+        console.error('Lỗi khi lấy thông tin áo thun:', error);
+    });
+};
+
+// Lấy giá trị selectedCodeShirt từ URL và gọi getShirts2
+const urlParams = new URLSearchParams(window.location.search);
+$scope.selectedCodeShirt = urlParams.get('codeShirt');
+
+$scope.updateImagePreview = function(element, imageNumber) {
+    const file = element.files[0];  // Lấy tệp đã chọn
+    if (file) {
+        // Lấy tên tệp ảnh
+        const fileName = file.name;
+
+        // Lưu tên ảnh và đường dẫn tương đối vào cơ sở dữ liệu
+        const imagePath = '/assets/img/' + fileName;  // Giữ lại đường dẫn bắt đầu từ assets/img/
+
+        // Cập nhật tên ảnh vào đối tượng editingShirtDetail
+        $scope.$apply(function() {
+            switch (imageNumber) {
+                case 1:
+                    $scope.editingShirtDetail.image = imagePath;  // Lưu đường dẫn ảnh vào đối tượng
+                    break;
+                case 2:
+                    $scope.editingShirtDetail.image2 = imagePath;  // Lưu đường dẫn ảnh vào đối tượng
+                    break;
+                case 3:
+                    $scope.editingShirtDetail.image3 = imagePath;  // Lưu đường dẫn ảnh vào đối tượng
+                    break;
+            }
         });
-    };
-        $scope.editShirtDetail = function(shirtdetail) {
-    // Sao chép đối tượng chi tiết áo thun để tránh thay đổi trực tiếp
+    }
+};
+
+
+        
+    $scope.editShirtDetail = function(shirtdetail) {
+        // Sao chép đối tượng chi tiết áo thun để tránh thay đổi trực tiếp
         $scope.editingShirtDetail = angular.copy(shirtdetail);
-
-        //chuyển dữ liệu các dropdown thuộc tính
-        $scope.editingShirtDetail.colorId=$scope.editingShirtDetail.color.id;
-        $scope.editingShirtDetail.genderId=$scope.editingShirtDetail.gender.id;
-        $scope.editingShirtDetail.materialId=$scope.editingShirtDetail.material.id;
-        $scope.editingShirtDetail.originId=$scope.editingShirtDetail.origin.id;
-        $scope.editingShirtDetail.shirtId=$scope.editingShirtDetail.shirt.id;
-        $scope.editingShirtDetail.patternId=$scope.editingShirtDetail.pattern.id;
-        $scope.editingShirtDetail.seasonId=$scope.editingShirtDetail.season.id;
-        $scope.editingShirtDetail.sizeId=$scope.editingShirtDetail.size.id;
-
-        //các trạng thái status, deleted
-        $scope.editingShirtDetail.statusshirtdetail=$scope.editingShirtDetail.statusshirtdetail;
-        $scope.editingShirtDetail.deleted=$scope.editingShirtDetail.deleted;
+        
+        // Chuyển dữ liệu các dropdown thuộc tính
+        $scope.editingShirtDetail.colorId = $scope.editingShirtDetail.color.id;
+        $scope.editingShirtDetail.genderId = $scope.editingShirtDetail.gender.id;
+        $scope.editingShirtDetail.materialId = $scope.editingShirtDetail.material.id;
+        $scope.editingShirtDetail.originId = $scope.editingShirtDetail.origin.id;
+        $scope.editingShirtDetail.shirtId = $scope.editingShirtDetail.shirt.id;
+        $scope.editingShirtDetail.patternId = $scope.editingShirtDetail.pattern.id;
+        $scope.editingShirtDetail.seasonId = $scope.editingShirtDetail.season.id;
+        $scope.editingShirtDetail.sizeId = $scope.editingShirtDetail.size.id;
+        
+        // Các ảnh
+        $scope.editingShirtDetail.image = $scope.editingShirtDetail.image;   // Ảnh 1
+        $scope.editingShirtDetail.image2 = $scope.editingShirtDetail.image2; // Ảnh 2
+        $scope.editingShirtDetail.image3 = $scope.editingShirtDetail.image3; // Ảnh 3
+    
+        // Trạng thái và đã xóa
+        $scope.editingShirtDetail.statusshirtdetail = $scope.editingShirtDetail.statusshirtdetail;
+        $scope.editingShirtDetail.deleted = $scope.editingShirtDetail.deleted;
     };
-
-
+    
     $scope.updateShirtDetail = function() {
-    // Sao chép dữ liệu từ đối tượng editShirtDetail
+        // Sao chép dữ liệu từ đối tượng editingShirtDetail
         let updateShirtDetailed = angular.copy($scope.editingShirtDetail);
-
+    
         // Chuyển các ID thuộc tính thành đối tượng
         updateShirtDetailed.color = { id: updateShirtDetailed.colorId };
         updateShirtDetailed.gender = { id: updateShirtDetailed.genderId };
@@ -420,20 +505,21 @@ app.controller('ShirtDetailController', ['$scope', 'shirtDetailService', functio
         updateShirtDetailed.pattern = { id: updateShirtDetailed.patternId };
         updateShirtDetailed.season = { id: updateShirtDetailed.seasonId };
         updateShirtDetailed.size = { id: updateShirtDetailed.sizeId };
-
+    
         // Cập nhật trạng thái và đã xóa
-
+        updateShirtDetailed.statusshirtdetail = updateShirtDetailed.statusshirtdetail;
+        updateShirtDetailed.deleted = updateShirtDetailed.deleted;
+    
         // Gửi yêu cầu cập nhật chi tiết áo thun
         shirtDetailService.updateShirtDetail(updateShirtDetailed.codeShirtDetail, updateShirtDetailed).then(function() {
-
-        $scope.editingShirtDetail = null;
-        $scope.getShirtDetails();
-
+            // Sau khi cập nhật thành công, reset đối tượng đang sửa và tải lại danh sách
+            $scope.editingShirtDetail = null;
+            $scope.getShirtDetails();
         }, function(error) {
-        console.error("Error updating shirt", error);
-    });
+            console.error("Error updating shirt detail", error);
+        });
     };
-
+    
 
     $scope.deleteShirtDetail = function(codeShirtDetail) {
         console.log("Deleting shirt detail with code:", codeShirtDetail); // Debugging
@@ -473,5 +559,19 @@ app.controller('ShirtDetailController', ['$scope', 'shirtDetailService', functio
 
     $scope.getSizes();
     $scope.getShirts();
+    $scope.getShirts2();
 
+}]);
+app.directive('ngFiles', ['$parse', function($parse) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            var onChangeHandler = $parse(attrs.ngFiles);
+            element.on('change', function(event) {
+                scope.$apply(function() {
+                    onChangeHandler(scope, { $files: event.target.files });
+                });
+            });
+        }
+    };
 }]);
