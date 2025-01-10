@@ -1112,7 +1112,13 @@
 					document.getElementById('ship-money').innerText = `${ship} VNĐ`;
 					document.getElementById('all-the-money').innerText = `${ship + money} VNĐ`;
 					activeVoucherCode = null;
-					updateSelectedTotal()
+					const checkboxes = document.querySelectorAll('.select-item:checked');
+					selectedTotal = 0;
+
+					checkboxes.forEach(checkbox => {
+						selectedTotal += parseFloat(checkbox.dataset.total);
+					});
+
 					return;
 				}
 
@@ -1121,6 +1127,7 @@
 				let maxDiscount = 0;
 				let bestVoucher = null;
 				let lastMoney = money;
+				console.log(money)
 
 
 				vouchers.forEach((voucher) => {
@@ -1644,7 +1651,7 @@
 			ship = 0;
 			document.getElementById('ship-money').innerText = `${ship} VNĐ`;
 			document.getElementById('all-the-money').innerText = `${ship + selectedTotal} VNĐ`;
-			
+
 			// Reset phần nhập liệu
 			document.getElementById('detailedAddress').value = "";;
 			document.getElementById('name').value = "";;
