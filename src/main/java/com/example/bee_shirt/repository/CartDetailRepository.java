@@ -4,7 +4,6 @@ import com.example.bee_shirt.entity.BillDetail;
 import com.example.bee_shirt.entity.Cart;
 import com.example.bee_shirt.entity.CartDetail;
 import com.example.bee_shirt.entity.ShirtDetail;
-
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,6 +18,14 @@ public interface CartDetailRepository extends JpaRepository<CartDetail,Integer> 
     List<CartDetail> findCartDetailByAccountCodeAndStatusCartDetail(String query, Integer status);
     Optional<CartDetail> findByCartAndShirtDetailAndStatusCartDetail(Cart cart, ShirtDetail shirtDetail, int statusCartDetail);
 
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE CartDetail cd SET cd.quantity = cd.shirtDetail.quantity WHERE cd.cart.account.code LIKE :query AND cd.statusCartDetail = 0 AND cd.deleted = false AND cd.quantity > cd.shirtDetail.quantity")
+    int updateInvalidQuantity(@Param("query") String query);
+
+
+
     @Query("SELECT cd FROM CartDetail cd WHERE cd.codeCartDetail LIKE %:query%")
     CartDetail findCartDetailByCode(@Param("query") String query);
 
@@ -31,6 +38,7 @@ public interface CartDetailRepository extends JpaRepository<CartDetail,Integer> 
     @Modifying
     @Query("UPDATE CartDetail cd SET cd.deleted = true WHERE cd.codeCartDetail LIKE %:query%")
     int cancelCartDetail(@Param("query") String query);
+
 
     @Transactional
     @Modifying

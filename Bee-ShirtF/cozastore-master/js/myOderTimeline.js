@@ -140,47 +140,110 @@ angular.module("billDetailApp", []).controller("BillDetailController", ["$scope"
   $scope.confirmCancelOrder = function () {
     Swal.fire({
       title: 'Bạn có chắc chắn muốn hủy đơn này?',
-      text: 'Hành động này không thể hoàn tác!',
-      icon: 'warning',
+      html: `
+<div style="text-align: left;">
+  <p>Hãy chọn lý do hủy hoặc nhập lý do khác:</p>
+  <div  style="display:flex">
+    <input type="checkbox" id="reason1" value="Tìm được giá tốt hơn" class="swal-checkbox">
+    <label for="reason2">Tìm được giá tốt hơn</label>
+  </div>
+  <div  style="display:flex">
+    <input type="checkbox" id="reason2" value="Không có nhu cầu đặt đơn" class="swal-checkbox">
+    <label for="reason2">Không có nhu cầu đặt đơn</label>
+  </div>
+  <div  style="display:flex">
+    <input type="checkbox" id="reason3" value="Địa chỉ không chính xác" class="swal-checkbox">
+    <label for="reason3">Địa chỉ không chính xác</label>
+  </div>
+  <div  style="display:flex">
+    <input type="checkbox" id="reason4" value="Lý do khác" class="swal-checkbox">
+    <label for="reason4">Lý do khác</label>
+  </div>
+<textarea id="reasonTextarea" placeholder="Nhập lý do khác hoặc xem lý do đã chọn..." 
+  style="width: 100%; margin-top: 10px; height: 80px; border: 1px solid #ccc; padding: 8px;">
+</textarea>
+
+</div>
+`,
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
       confirmButtonText: 'Hủy đơn',
       cancelButtonText: 'Quay lại',
+      preConfirm: () => {
+        // Lấy danh sách lý do từ checkbox và textarea
+        const checkboxes = document.querySelectorAll('.swal-checkbox');
+        const textarea = document.getElementById('reasonTextarea');
+        let reasons = Array.from(checkboxes)
+          .filter(checkbox => checkbox.checked) // Chỉ lấy checkbox được chọn
+          .map(checkbox => checkbox.value); // Lấy giá trị của checkbox
+
+        // Thêm nội dung từ textarea nếu có
+        if (textarea.value.trim()) {
+          reasons.push(textarea.value.trim());
+        }
+
+        if (reasons.length === 0) {
+          Swal.showValidationMessage('Vui lòng chọn hoặc nhập ít nhất một lý do hủy đơn!');
+        }
+
+        return reasons.join(', '); // Trả về lý do đã chọn
+      }
     }).then((result) => {
       if (result.isConfirmed) {
-        $scope.cancelOrder();
+        const reason = result.value; // Lấy lý do đã chọn
+        $scope.cancelOrder(reason); // Gửi lý do hủy đến hàm cancelOrder
       } else {
-        console.log("Đơn hàng không bị hủy.");
+        console.log('Đơn hàng không bị hủy.');
       }
     });
-  };
 
-  // Hủy đơn
-  $scope.cancelOrder = function () {
+    // Sự kiện để hiển thị lý do vào textarea khi chọn checkbox
+    setTimeout(() => {
+      const checkboxes = document.querySelectorAll('.swal-checkbox');
+      const textarea = document.getElementById('reasonTextarea');
+
+      checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+          const selectedReasons = Array.from(checkboxes)
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
+
+          textarea.value = selectedReasons.join('\n');
+        });
+      });
+    }, 0);
+  };
+  //
+  $scope.cancelOrder = function (reason) {
+    // Cập nhật trạng thái thành 7 khi nhấn nút Hủy đơn
     $scope.billInfo.statusBill = 7;
 
     const payload = {
       codeBill: $scope.billInfo.codeBill,
       statusBill: $scope.billInfo.statusBill,
+      note: reason // Thêm lý do hủy vào payload
     };
 
     console.log("Payload gửi API khi hủy đơn:", JSON.stringify(payload));
+    const token = sessionStorage.getItem("jwtToken");
 
     $http({
       method: 'PUT',
       url: 'http://localhost:8080/bills/updateStatus',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': "Bearer " + token, // Thêm token nếu cần
       },
-      data: JSON.stringify(payload),
+      data: JSON.stringify(payload)
     })
       .then(function (response) {
         if (response.status === 200 || response.status === 204) {
           console.log("Đơn hàng đã được hủy.");
-          $scope.updateTimeline($scope.billInfo.statusBill);
-          $scope.currentStatusLabel = $scope.statusLabels[$scope.billInfo.statusBill - 1];
-          window.location.href = "http://127.0.0.1:5500/cozastore-master/myOder.html#";
+          $scope.updateTimeline($scope.billInfo.statusBill);  // Cập nhật tiến trình
+          $scope.currentStatusLabel = $scope.statusLabels[$scope.billInfo.statusBill - 1];  // Cập nhật nhãn trạng thái
+          window.location.href = "http://127.0.0.1:5500/cozastore-master/myOder.html";
+
         } else {
           console.warn("API trả về trạng thái không mong đợi:", response.status);
         }
@@ -195,6 +258,7 @@ angular.module("billDetailApp", []).controller("BillDetailController", ["$scope"
         }
       });
   };
+
 
   // Cập nhật tiến trình
   $scope.updateTimeline = function (statusBill) {
@@ -232,8 +296,80 @@ angular.module("billDetailApp", []).controller("BillDetailController", ["$scope"
         steps[i].classList.add('active');
       }
     }
-  };
 
+    $scope.statusLabels = [
+      "Chờ Xử lý",
+      "Đã Xác Nhận",
+      "Chờ Giao Hàng",
+      "Đang Giao Hàng",
+      "Hoàn Tất",
+      "Đã Hủy" // Thêm trạng thái Hủy Đơn
+    ];
+
+    $scope.currentStep = currentStep;
+    $scope.currentStatusLabel = $scope.statusLabels[$scope.currentStep];
+  };
+  $scope.pollStatusUpdate = function () {
+    const token = sessionStorage.getItem("jwtToken");
+    const urlParams = new URLSearchParams(window.location.search);
+    const codeBill = urlParams.get("codeBill");
+  
+    if (!codeBill) {
+      alert("Không tìm thấy mã hóa đơn.");
+      return;
+    }
+  
+    let isUpdated = false; // Biến để kiểm tra xem đã cập nhật chưa
+  
+    // Poll every 5 seconds (5000 ms)
+    const intervalId = setInterval(function () {
+      $http({
+        method: "GET",
+        url: `http://localhost:8080/bills/detailsOnline/${codeBill}`,
+        headers: { Authorization: "Bearer " + token },
+      })
+        .then(function success(response) {
+          const data = response.data;
+          if (data.code === 1000 && Array.isArray(data.result) && data.result.length > 0) {
+            const billDetail = data.result[0];
+            $scope.billInfo.statusBill = billDetail.statusBill;
+            $scope.updateTimeline($scope.billInfo.statusBill);
+            $scope.currentStatusLabel = $scope.statusLabels[$scope.billInfo.statusBill - 1];
+  
+            // Kiểm tra nếu trạng thái là 5 hoặc 6 và chưa cập nhật
+            if ((billDetail.statusBill === 5 || billDetail.statusBill === 6) && !isUpdated) {
+              // Gọi API cập nhật số lượng
+              $http({
+                method: "PUT",
+                url: `http://localhost:8080/bills/updateStock/${codeBill}`,
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': "Bearer " + token,
+                }
+              })
+                .then(function(response) {
+                  console.log("Cập nhật số lượng thành công.");
+                })
+                .catch(function(error) {
+                  console.error("Lỗi khi cập nhật số lượng:", error);
+                });
+  
+              // Đánh dấu là đã cập nhật
+              isUpdated = true;
+  
+              // Dừng polling sau khi cập nhật một lần
+              clearInterval(intervalId);
+            }
+          }
+        })
+        .catch(function error(err) {
+          console.error("Lỗi khi kiểm tra trạng thái hóa đơn:", err);
+        });
+    }, 1000);  // Chạy mỗi 5 giây
+  };
+  
   // Gọi hàm load khi controller khởi tạo
-  $scope.loadBillDetail();
+  $scope.loadBillDetail();      
+  $scope.pollStatusUpdate();  // Bắt đầu Polling
+
 }]);

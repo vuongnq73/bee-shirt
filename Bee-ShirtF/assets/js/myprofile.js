@@ -53,11 +53,11 @@ angular
           $scope.errorMessage = "Tên và họ không được để trống.";
           return false;
         }
-        if (!$scope.user.phone.match(phoneRegex)) {
+        if (!$scope.user.phone || !$scope.user.phone.match(phoneRegex)) {
           $scope.errorMessage = "Số điện thoại không hợp lệ.";
           return false;
         }
-        if (!$scope.user.email.match(emailRegex)) {
+        if (!$scope.user.email || !$scope.user.email.match(emailRegex)) {
           $scope.errorMessage = "Email không hợp lệ.";
           return false;
         }
@@ -238,6 +238,15 @@ angular
               $scope.errorMessage = "Đã có lỗi xảy ra. Vui lòng thử lại.";
             }
           });
+    };
+    
+    $scope.isUser = function () {
+      const token = sessionStorage.getItem("jwtToken");
+      if (!token) return false;
+    
+      const payload = JSON.parse(atob(token.split(".")[1])); // Giải mã JWT
+      const roles = payload.scope ? payload.scope.split(" ") : [];
+      return roles.includes("ROLE_USER") && roles.length === 1; // Chỉ có ROLE_USER
     };
     
       // Quay lại trang trước

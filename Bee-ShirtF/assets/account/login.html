@@ -16,7 +16,7 @@
     <div class="login-container">
       <div class="login-box">
         <h2>Đăng Nhập</h2>
-        <form name="loginForm" ng-submit="login()" novalidate>
+        <form ng-submit="login()" >
           <div class="input-group">
             <input
               type="text"
@@ -24,7 +24,6 @@
               placeholder="Tài khoản"
               ng-model="user.username"
               required
-              ng-class="{'input-error': loginForm.username.$invalid && loginForm.username.$touched}"
             />
             <i class="fas fa-user"></i>
           </div>
@@ -35,7 +34,6 @@
               placeholder="Mật khẩu"
               ng-model="user.password"
               required
-              ng-class="{'input-error': loginForm.password.$invalid && loginForm.password.$touched}"
             />
             <i class="fas fa-lock"></i>
           </div>
@@ -80,8 +78,7 @@
             placeholder="Nhập email"
             required
           />
-          <button type="submit">Gửi Email</button>
-
+          <button type="submit" ng-disabled="isSubmitting">Gửi Email</button>
         </form>
         <div class="error" ng-if="forgotPasswordError">
           {{ forgotPasswordError }}

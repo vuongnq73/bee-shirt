@@ -20,7 +20,6 @@ angular
       password: "",
     };
     $scope.isSubmitting = false
-
     $scope.rememberMe = false;
     $scope.errorMessage = "";
     $scope.isForgotPasswordModalVisible = false; // Biến điều khiển hiển thị modal
@@ -43,7 +42,6 @@ angular
   
     // Gửi yêu cầu quên mật khẩu
     $scope.forgotPassword = function () {
-
       if ($scope.isSubmitting) {
         return;
       }
@@ -75,7 +73,6 @@ angular
           } else {
             $scope.forgotPasswordError = "Không thể gửi email reset mật khẩu.";
           }
-
         })
         .finally(function () {
           $scope.email = "";
