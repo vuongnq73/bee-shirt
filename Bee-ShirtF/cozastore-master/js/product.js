@@ -17,7 +17,6 @@ angular.module('app', [])
         .catch(function(error) {
             console.log('Error:', error);
         });
-<<<<<<< Updated upstream
         function checkPermission() {
             const token = sessionStorage.getItem("jwtToken");
             if (!token) {
@@ -56,7 +55,6 @@ angular.module('app', [])
 =======
 
       
->>>>>>> Stashed changes
     
 
     // Khởi tạo các biến cho modal và sản phẩm đã chọn
@@ -86,6 +84,7 @@ angular.module('app', [])
             let priceValid = true;
             if ($scope.priceMin && shirt.selectedVariant.price < $scope.priceMin) {
                 priceValid = false;
+
             }
             if ($scope.priceMax && shirt.selectedVariant.price > $scope.priceMax) {
                 priceValid = false;
@@ -143,6 +142,7 @@ angular.module('app', [])
             shirt.selectedVariant = null; // Không có size nào
         }
     };
+
 
    // Cập nhật thông tin khi người dùng thay đổi kích thước
 $scope.changeSize = function(shirt, variant) {
@@ -247,6 +247,4 @@ function addProductToCart(cartId, shirtDetailId, token) {
 
 
 
-
-    
 }]);
