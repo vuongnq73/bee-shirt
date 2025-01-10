@@ -14,15 +14,13 @@ import com.example.bee_shirt.exception.AppException;
 import com.example.bee_shirt.exception.ErrorCode;
 import com.example.bee_shirt.mapper.AccountMapper;
 import com.example.bee_shirt.repository.*;
-<<<<<<< Updated upstream
-=======
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import jakarta.transaction.Transactional;
->>>>>>> Stashed changes
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
@@ -53,8 +51,7 @@ public class ShirtDetailService {
     @Autowired private ShirtRepository shirtRepository;
     @Autowired private CategoryRepository categoryRepository;
     @Autowired private AccountRepository accountRepository;
-
-    private AccountMapper accountMapper;
+    @Autowired private AccountMapper accountMapper;
     @Autowired
     private BrandRepository brandRepository;
 

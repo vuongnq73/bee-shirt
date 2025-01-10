@@ -41,7 +41,7 @@ angular.module("homePageApp", []).controller("HomePageController", [
             }
     
             $scope.shirtDetails = uniqueShirts;
-    
+            console.log(shirtDetails);
             // Giới hạn chỉ hiển thị 8 sản phẩm
             $scope.filteredShirtList = $scope.shirtDetails.slice(0, 8);
           } else {
@@ -680,20 +680,28 @@ $interval(function() {
         }
     };
 
-       $scope.viewDetails = function(shirt) {
-          $scope.selectedShirt = angular.copy(shirt); // Tạo bản sao để tránh thay đổi trực tiếp
+    $scope.viewDetails = function(codeshirt) {
+      // Tìm sản phẩm trong danh sách $scope.shirts theo codeshirt
+      const selectedShirt = $scope.shirts.find(shirt => shirt.codeShirt === codeshirt);
+      
+      if (selectedShirt) {
+          $scope.selectedShirt = angular.copy(selectedShirt); // Tạo bản sao để tránh thay đổi trực tiếp
           var myModal = new bootstrap.Modal(document.getElementById('productModal'));
-          
-          myModal.show();
-      };
-      $scope.viewDetails2 = function (codeshirt) {
+          myModal.show(); // Hiển thị modal
+      } else {
+          console.error('Không tìm thấy sản phẩm với codeshirt:', codeshirt);
+      }
+  };
+      $scope.viewDetails2 = function(codeshirt) {
         // Tìm sản phẩm theo codeshirt trong danh sách $scope.shirts
         const selectedShirt = $scope.shirts.find(shirt => shirt.codeShirt === codeshirt);
-        console.log(codeshirt);
+        
+        console.log('Codeshirt:', codeshirt); // Kiểm tra codeshirt
     
         if (selectedShirt) {
             // Lưu sản phẩm vào localStorage
             localStorage.setItem('selectedShirt', JSON.stringify(selectedShirt));
+            console.log('Sản phẩm đã lưu vào localStorage:', selectedShirt);
     
             // Chuyển đến trang chi tiết sản phẩm
             window.location.href = '/cozastore-master/product-detail.html';
@@ -701,6 +709,7 @@ $interval(function() {
             console.error('Không tìm thấy sản phẩm với codeshirt:', codeshirt);
         }
     };
+    
     
     
     // Hàm thay đổi màu sắc

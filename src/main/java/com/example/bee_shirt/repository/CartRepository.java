@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CartRepository extends JpaRepository<Cart, Integer> {
     @Query(value = """
@@ -16,5 +17,6 @@ public interface CartRepository extends JpaRepository<Cart, Integer> {
     Cart getTop1();
     @Query("SELECT c.id FROM Cart c WHERE c.account.id = :accountId")
     List<Integer> findCartIdsByAccountId(@Param("accountId") Integer accountId);
+    Optional<Cart> findById(Integer id);
 
 }

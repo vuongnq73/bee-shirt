@@ -738,15 +738,31 @@
       </div>
       <div class="filter-container">
         <div class="filter-column col-md-2">
-          <label for="priceFrom">Khoảng giá</label>
-          <input type="number" id="priceFrom" ng-model="filters.priceFrom" placeholder="Giá từ" style="border-radius: 5px;" />
+          <label for="priceFrom">Khoảng giá:</label>
+          <input 
+              type="number" 
+              id="priceFrom" 
+              ng-model="filters.priceFrom" 
+              placeholder="Giá từ" 
+              style="border-radius: 5px; width: 100%; padding: 5px; border: 1px solid #ccc;"
+          />
       </div>
-        <div style="padding-top: 25.5px;text-align: center;padding-right: 10px;">
-          <p>---</p>
+  
+      <!-- Ký hiệu ngăn cách -->
+      <div class="col-md-1 text-center" style="padding-top: 25px;">
+          <span style="font-size: 18px; font-weight: bold;">—</span>
       </div>
-
-      <div class="filter-column col-md-2"style="padding-top:25.5px;">
-          <input type="number" id="priceTo" ng-model="filters.priceTo" placeholder="Giá đến" style="border-radius: 5px;"/>
+  
+      <!-- Input Giá Đến -->
+      <div class="filter-column col-md-2">
+          <label for="priceTo" style="visibility: hidden;">Khoảng giá:</label> <!-- Ẩn label nhưng giữ cấu trúc -->
+          <input 
+              type="number" 
+              id="priceTo" 
+              ng-model="filters.priceTo" 
+              placeholder="Giá đến" 
+              style="border-radius: 5px; width: 100%; padding: 5px; border: 1px solid #ccc;"
+          />
       </div>
       <div class="filter-column" style="padding-top: 22px;padding-left: 50px;">
         <button style="width: 140px;height: 40px;border-radius: 5px;background-color: #1572e8;color: white;" ng-click="filterShirtDetails()">Lọc</button>

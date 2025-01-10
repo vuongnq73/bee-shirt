@@ -30,19 +30,20 @@ public class CartDetailService {
     @Autowired
     private CartDetailRepository cartDetailRepository;
     public CartDetail addToCart(AddToCartRequestDTO addToCartRequestDTO) {
-        // Kiểm tra xem cartId có hợp lệ hay không
-        if (addToCartRequestDTO.getCartId() == null) {
-            throw new IllegalArgumentException("Giỏ hàng không được để trống.");
-        }
+        // Nếu `cartId` không được cung cấp, gán giá trị mặc định là 1
+        Integer cartId = addToCartRequestDTO.getCartId() != null
+                ? addToCartRequestDTO.getCartId()
+                : 1;  // Sử dụng giá trị kiểu Integer
 
         // Lấy giỏ hàng từ cơ sở dữ liệu
-        Cart cart = cartRepository.findById(addToCartRequestDTO.getCartId())
-                .orElseThrow(() -> new IllegalArgumentException("Giỏ hàng không tồn tại với ID: " + addToCartRequestDTO.getCartId()));
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new IllegalArgumentException("Giỏ hàng không tồn tại với ID: " + cartId));
 
         // Kiểm tra xem chi tiết áo có tồn tại không
         ShirtDetail shirtDetail = shirtDetailRepository.findById(addToCartRequestDTO.getShirtDetailId())
                 .orElseThrow(() -> new IllegalArgumentException("Chi tiết áo không tồn tại với ID: " + addToCartRequestDTO.getShirtDetailId()));
 
+        // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng (trạng thái 0) hay chưa
         Optional<CartDetail> existingCartDetail = cartDetailRepository.findByCartAndShirtDetailAndStatusCartDetail(cart, shirtDetail, 0);
 
         if (existingCartDetail.isPresent()) {
@@ -64,7 +65,8 @@ public class CartDetailService {
         }
     }
 
-        // Hàm tạo mã ngẫu nhiên cho Origin
+
+    // Hàm tạo mã ngẫu nhiên cho Origin
     private String generateOriginCode() {
         Random random = new Random();
         int randomCode = random.nextInt(100000);  // Sinh số ngẫu nhiên trong phạm vi từ 0 - 99999
