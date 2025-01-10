@@ -17,44 +17,6 @@ angular.module('app', [])
         .catch(function(error) {
             console.log('Error:', error);
         });
-        function checkPermission() {
-            const token = sessionStorage.getItem("jwtToken");
-            if (!token) {
-                alert("Bạn chưa đăng nhập!");
-                window.location.href = "/assets/account/login.html"; // Redirect to login page
-                return false; // Stop if no token
-            }
-    
-            // Decode the token and get the payload
-            const payload = JSON.parse(atob(token.split(".")[1]));
-            const roles = payload.scope ? payload.scope.split(" ") : [];
-    
-           
-            return true; // Continue if has permission
-        }
-    
-        if (!checkPermission()) return; // Check permission before any actions
-    
-        const token = sessionStorage.getItem("jwtToken");
-    
-        // Get the highest role of the user from the token
-        function getHighestRole(scopes) {
-            const roles = scopes ? scopes.split(" ") : [];
-            const rolePriority = {
-                ROLE_ADMIN: 1,
-                ROLE_STAFF: 2,
-                ROLE_USER: 3,
-            };
-    
-            // Filter valid roles and sort by priority
-            const validRoles = roles.filter(role => rolePriority[role]);
-            validRoles.sort((a, b) => rolePriority[a] - rolePriority[b]);
-    
-            return validRoles[0] || null; // Return highest priority role
-        }
-=======
-
-      
     
 
     // Khởi tạo các biến cho modal và sản phẩm đã chọn

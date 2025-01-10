@@ -50,7 +50,11 @@ public enum ErrorCode {
 
     VERIFICATION_CODE_EXPIRED(1021,"Verification code expired", HttpStatus.BAD_REQUEST),  // Lỗi khi mã xác minh hết hạn
 
-    INVALID_VERIFICATION_CODE(1022,"Invalid verification code", HttpStatus.BAD_REQUEST);
+    INVALID_VERIFICATION_CODE(1022,"Invalid verification code", HttpStatus.BAD_REQUEST),
+
+    USERNAME_NOT_EMPTY(404_001,"Username not empty", HttpStatus.BAD_REQUEST),
+
+    PASSWORD_NOT_EMPTY(404_002,"Password not empty", HttpStatus.BAD_REQUEST),
 
     ;
     private int code;

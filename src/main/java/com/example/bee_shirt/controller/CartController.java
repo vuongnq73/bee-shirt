@@ -30,6 +30,12 @@ public class CartController {
         return cartService.getAllCartDetails(codeAccount);
     }
 
+    @GetMapping("/update-invalid-quantity")
+    @ResponseBody
+    public int updateInvalidQuantity(@RequestParam("codeAccount") String codeAccount) {
+        return cartService.updateInvalidQuantity(codeAccount);
+    }
+
     @PostMapping("/cancel-cart-detail")
     @ResponseBody
     public int cancelCartDetail(@RequestParam("codeCartDetail") String codeCartDetail) {
@@ -54,8 +60,10 @@ public class CartController {
         return cartService.changeQuantityCartDetail(codeCartDetail, quantity);
     }
     @PostMapping("/checkout")
-    public ResponseEntity<?> handlePostRequest(@RequestBody Map<String, Object> requestBody) {
-        return cartService.processCheckout(requestBody);
+    public ResponseEntity<?> handlePostRequest(@RequestBody Map<String, Object> requestBody, @RequestParam("accCode") String accCode, @RequestParam("ship") Integer ship, @RequestParam(value = "voucherCode", required = false) String voucherCode) {
+        Map<String, Object> address = (Map<String, Object>) requestBody.get("address");
+        String pm = (String) requestBody.get("pm");
+        return cartService.processCheckout(requestBody, accCode, voucherCode, address, pm, ship);
     }
     @GetMapping("/getIDCart")
     public ResponseEntity<List<Integer>> getMyCartIds() {

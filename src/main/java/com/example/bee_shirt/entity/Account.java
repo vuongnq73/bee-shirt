@@ -53,7 +53,7 @@ public class Account {
     String email;
 
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "account_role",
             joinColumns = @JoinColumn(name = "account_id"),

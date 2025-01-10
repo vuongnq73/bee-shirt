@@ -194,7 +194,7 @@
           <label for="phone">SĐT:</label>
           <input type="text" id="phone" ng-model="user.phone" />
         </div>
-        <div class="form-group">
+        <div class="form-group" ng-if="!isUser()">
           <label for="address">Địa chỉ:</label>
           <input type="text" id="address" ng-model="user.address" />
         </div>
@@ -204,6 +204,7 @@
             id="status"
             ng-model="user.status"
             ng-options="status.value as status.name for status in statuses"
+            ng-disabled="!isAdmin()"
           ></select>
         </div>
         <div class="form-group">
