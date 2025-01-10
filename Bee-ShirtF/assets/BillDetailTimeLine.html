@@ -17,7 +17,7 @@
     #basic-datatables th:nth-child(3),
     /* Sản Phẩm */
     #basic-datatables td:nth-child(3) {
-      width: 50%;
+      width: 30%;
       /* Cột Sản Phẩm rộng nhất */
       text-align: left;
     }
@@ -418,9 +418,9 @@
                           <tr style="background-color: #f9f3e7; text-align: center;">
                             <th style="border: 1px solid #ddd; padding: 8px;">STT</th>
                             <th style="border: 1px solid #ddd; padding: 8px;">Tên Sản Phẩm</th>
-                            <th style="border: 1px solid #ddd; padding: 8px;">Số Lượng</th>
                             <th style="border: 1px solid #ddd; padding: 8px;">Thương Hiệu</th>
                             <th style="border: 1px solid #ddd; padding: 8px;">Size</th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">Số Lượng</th>
                             <th style="border: 1px solid #ddd; padding: 8px;">Giá</th>
                             <th style="border: 1px solid #ddd; padding: 8px;">Tổng Tiền</th>
                           </tr>
@@ -430,9 +430,9 @@
                           <tr ng-repeat="detail in details" style="text-align: center;">
                             <td style="border: 1px solid #ddd; padding: 8px;">{{ $index + 1 }}</td>
                             <td style="border: 1px solid #ddd; padding: 8px;">{{ detail.nameShirt }}</td>
-                            <td style="border: 1px solid #ddd; padding: 8px;">{{ detail.quantity }}</td>
                             <td style="border: 1px solid #ddd; padding: 8px;">{{ detail.nameBrand }}</td>
                             <td style="border: 1px solid #ddd; padding: 8px;">{{ detail.nameSize}}</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">{{ detail.quantity }}</td>
                             <td style="border: 1px solid #ddd; padding: 8px;">{{ formatCurrency(detail.price) }}</td>
                             <td style="border: 1px solid #ddd; padding: 8px;">{{ formatCurrency(detail.total) }}
                             </td>

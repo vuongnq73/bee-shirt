@@ -52,6 +52,7 @@ angular.module("billDetailApp", []).controller("BillDetailController", ["$scope"
             desiredDate: billDetail.desiredDate || "N/A",
             typeBill: billDetail.typeBill || "N/A",
             note: billDetail.note || "N/A",
+            notes: billDetail.notes || "N/A",
             statusBill: billDetail.statusBill || 0,
             moneyReduce: billDetail.moneyReduce || 0,
             totalMoney: billDetail.totalMoney || 0,
@@ -72,6 +73,7 @@ angular.module("billDetailApp", []).controller("BillDetailController", ["$scope"
           $scope.moneyShip = $scope.billInfo.moneyShip;
           $scope.nameVoucher = $scope.billInfo.nameVoucher;
           $scope.note = $scope.billInfo.note;
+          $scope.notes = $scope.billInfo.notes;
           $scope.createAt = $scope.billInfo.createAt;
           $scope.createBy = $scope.billInfo.createBy;
           $scope.customerName = $scope.billInfo.customerName;
