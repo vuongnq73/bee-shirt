@@ -27,16 +27,16 @@ public class CustomJwtDecoder implements JwtDecoder{
     @Override
     public Jwt decode(String token) throws JwtException {
         //Check token xem đã hết hạn ỏ bị logout chưa
-//        try {
-//            var response = authenticationService.introspect(IntrospectRequest.builder()
-//                    .token(token)
-//                    .build());
-//            if(!response.isValid()){
-//                throw new JwtException("Token isvalid");
-//            }
-//        } catch (ParseException | JOSEException e) {
-//            throw new JwtException(e.getMessage());
-//        }
+        try {
+            var response = authenticationService.introspect(IntrospectRequest.builder()
+                    .token(token)
+                    .build());
+            if(!response.isValid()){
+                throw new JwtException("Token isvalid");
+            }
+        } catch (ParseException | JOSEException e) {
+            throw new JwtException(e.getMessage());
+        }
 
         //Get quyền của tài khoản để xét qua token
         if (Objects.isNull(nimbusJwtDecoder)) {

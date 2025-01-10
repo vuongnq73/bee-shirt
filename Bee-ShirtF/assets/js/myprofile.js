@@ -240,6 +240,15 @@ angular
           });
     };
     
+    $scope.isUser = function () {
+      const token = sessionStorage.getItem("jwtToken");
+      if (!token) return false;
+    
+      const payload = JSON.parse(atob(token.split(".")[1])); // Giải mã JWT
+      const roles = payload.scope ? payload.scope.split(" ") : [];
+      return roles.includes("ROLE_USER") && roles.length === 1; // Chỉ có ROLE_USER
+    };
+    
       // Quay lại trang trước
       $scope.goBack = function () {
         $window.history.back();
