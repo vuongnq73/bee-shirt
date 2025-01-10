@@ -494,7 +494,10 @@
                   </div>
                 </div>
                 <div class="info-container">
-                  <br>
+                  <div class="info-item">
+                    <p ng-if="billInfo.statusBill === 7"> Lý Do Hủy: <span
+                        style="color: rgb(214, 73, 18);">{{notes}}</span></p>
+                  </div>
                   <div class="row">
                     <div class="col-md-8">
                       <div class="info-item">
@@ -805,6 +808,7 @@
                   moneyReduce: billDetail.moneyReduce || 0,
                   totalMoney: billDetail.totalMoney || 0,
                   subtotalBeforeDiscount: billDetail.subtotalBeforeDiscount || 0,
+                  notes: billDetail.notes || "N/A",
 
                 };
 
@@ -822,6 +826,7 @@
                 $scope.moneyShip = $scope.billInfo.moneyShip;
                 $scope.nameVoucher = $scope.billInfo.nameVoucher;
                 $scope.note = $scope.billInfo.note;
+                $scope.notes = $scope.billInfo.notes;
                 $scope.createAt = $scope.billInfo.createAt;
                 $scope.createBy = $scope.billInfo.createBy;
                 $scope.customerName = $scope.billInfo.customerName;
@@ -965,77 +970,63 @@
             }
           });
 
-          // Sự kiện để hiển thị lý do vào textarea khi chọn checkbox
-          setTimeout(() => {
-            const checkboxes = document.querySelectorAll('.swal-checkbox');
-            const textarea = document.getElementById('reasonTextarea');
 
-            checkboxes.forEach(checkbox => {
-              checkbox.addEventListener('change', () => {
-                const selectedReasons = Array.from(checkboxes)
-                  .filter(cb => cb.checked)
-                  .map(cb => cb.value);
-
-                textarea.value = selectedReasons.join('\n');
-              });
-            });
-          }, 0);
         };
         //
         $scope.cancelOrder = function (reason) {
-  // Cập nhật trạng thái thành 7 khi nhấn nút Hủy đơn
-  $scope.billInfo.statusBill = 7;
+          // Cập nhật trạng thái thành 7 khi nhấn nút Hủy đơn
+          $scope.billInfo.statusBill = 7;
 
-  const payload = {
-    codeBill: $scope.billInfo.codeBill,
-    statusBill: $scope.billInfo.statusBill,
-    note: reason // Thêm lý do hủy vào payload
-  };
+          const payload = {
+            codeBill: $scope.billInfo.codeBill,
+            statusBill: $scope.billInfo.statusBill,
+            note: reason // Thêm lý do hủy vào payload
+          };
 
-  console.log("Payload gửi API khi hủy đơn:", JSON.stringify(payload));
-  const token = sessionStorage.getItem("jwtToken");
+          console.log("Payload gửi API khi hủy đơn:", JSON.stringify(payload));
+          const token = sessionStorage.getItem("jwtToken");
 
-  $http({
-    method: 'PUT',
-    url: 'http://localhost:8080/bills/updateStatus',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': "Bearer " + token, // Thêm token nếu cần
-    },
-    data: JSON.stringify(payload)
-  })
-    .then(function (response) {
-      if (response.status === 200 || response.status === 204) {
-        // Thông báo thành công
-        Swal.fire({
-          title: 'Thành công!',
-          text: 'Đơn hàng đã được hủy và trạng thái đã được cập nhật.',
-          icon: 'success',
-          confirmButtonText: 'OK'
-        }).then(() => {
-          // Cập nhật giao diện sau khi hủy
-          $scope.updateTimeline($scope.billInfo.statusBill);
-          $scope.currentStatusLabel = $scope.statusLabels[$scope.billInfo.statusBill - 1];
+          $http({
+            method: 'PUT',
+            url: 'http://localhost:8080/bills/updateStatus',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': "Bearer " + token, // Thêm token nếu cần
+            },
+            data: JSON.stringify(payload)
+          })
+            .then(function (response) {
+              if (response.status === 200 || response.status === 204) {
+                // Thông báo thành công
+                Swal.fire({
+                  title: 'Thành công!',
+                  text: 'Đơn hàng đã được hủy và trạng thái đã được cập nhật.',
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                }).then(() => {
+                  // Cập nhật giao diện sau khi hủy
+                  $scope.updateTimeline($scope.billInfo.statusBill);
+                  $scope.currentStatusLabel = $scope.statusLabels[$scope.billInfo.statusBill - 1];
 
-          // Chuyển hướng về trang danh sách đơn hàng
-          window.location.href = "http://127.0.0.1:5500/assets/Bill.html";
-        });
-      } else {
-        console.warn("API trả về trạng thái không mong đợi:", response.status);
-        Swal.fire('Cảnh báo!', 'Không thể hủy đơn hàng. Vui lòng thử lại.', 'warning');
-      }
-    })
-    .catch(function (error) {
-      console.error("Lỗi khi gọi API:", error);
+                  // Chuyển hướng về trang danh sách đơn hàng
+                  window.location.href = "http://127.0.0.1:5500/assets/Bill.html";
+                });
+              } else {
+                console.warn("API trả về trạng thái không mong đợi:", response.status);
+                Swal.fire('Cảnh báo!', 'Không thể hủy đơn hàng. Vui lòng thử lại.', 'warning');
+              }
+            })
+            .catch(function (error) {
+              console.error("Lỗi khi gọi API:", error);
 
-      // Hiển thị chi tiết lỗi nếu có từ API
-      if (error.data && error.data.message) {
-        Swal.fire('Lỗi!', error.data.message, 'error');
-      } else {
-        Swal.fire('Lỗi!', 'Đã xảy ra lỗi khi hủy đơn hàng. Vui lòng thử lại.', 'error');
-      }
-    });
-};
+              // Hiển thị chi tiết lỗi nếu có từ API
+              if (error.data && error.data.message) {
+                Swal.fire('Lỗi!', error.data.message, 'error');
+              } else {
+                Swal.fire('Lỗi!', 'Đã xảy ra lỗi khi hủy đơn hàng. Vui lòng thử lại.', 'error');
+              }
+            });
+        };
 
         $scope.updateTimeline = function (statusBill) {
           console.log("Cập nhật tiến trình với trạng thái:", statusBill);

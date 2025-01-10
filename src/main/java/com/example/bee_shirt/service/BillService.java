@@ -93,7 +93,7 @@ public class BillService {
     }
 
 
-    public boolean updateStatus(String codeBill, int statusBill, String note) {
+    public boolean updateStatus(String codeBill, int statusBill, String notes) {
         // Tìm hóa đơn dựa vào mã codeBill
         Optional<Bill> billOptional = billRepository.findByCodeBill(codeBill);
 
@@ -102,7 +102,7 @@ public class BillService {
 
             // Cập nhật trạng thái hóa đơn
             bill.setStatusBill(statusBill);
-            bill.setNote(note);
+            bill.setNotes(notes);
             // Lưu thay đổi vào cơ sở dữ liệu
             billRepository.save(bill);
             return true;
