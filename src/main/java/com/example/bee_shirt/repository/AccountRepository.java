@@ -65,6 +65,13 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
             INNER JOIN account_role ar ON a.id = ar.account_id
             INNER JOIN role_A r ON ar.role_id = r.id
             WHERE a.deleted = 0 AND r.code_role = 'USER' 
+            AND NOT EXISTS (
+                SELECT 1
+                FROM account_role ar2
+                INNER JOIN role_A r2 ON ar2.role_id = r2.id
+                WHERE ar2.account_id = a.id
+                  AND r2.code_role <> 'USER'
+              )
             ORDER BY a.id DESC; 
              """, nativeQuery = true)
     Page<Account> getAllPagingClient(Pageable pageable);
@@ -75,7 +82,14 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
              FROM account a
              INNER JOIN account_role ar ON a.id = ar.account_id
              INNER JOIN role_A r ON ar.role_id = r.id
-             WHERE a.deleted = 0 AND (r.code_role LIKE 'USER') 
+             WHERE a.deleted = 0 AND (r.code_role LIKE 'USER')
+             AND NOT EXISTS (
+                 SELECT 1
+                 FROM account_role ar2
+                 INNER JOIN role_A r2 ON ar2.role_id = r2.id
+                 WHERE ar2.account_id = a.id
+                   AND r2.code_role <> 'USER'
+               );
             """, nativeQuery = true)
     long getAllTotalPageClient();  // Trả về số lượng bản ghi tổng cộng
 
@@ -85,12 +99,15 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
              INNER JOIN account_role ar ON a.id = ar.account_id
              INNER JOIN role_A r ON ar.role_id = r.id
              WHERE a.deleted = 0 AND r.code_role LIKE 'USER'
+             AND NOT EXISTS (
+                 SELECT 1
+                 FROM account_role ar2
+                 INNER JOIN role_A r2 ON ar2.role_id = r2.id
+                 WHERE ar2.account_id = a.id
+                   AND r2.code_role <> 'USER'
+               )
              ORDER BY a.id DESC;             """, nativeQuery = true)
     List<Account> getAllClient();
-//    @Query(value = """
-//            SELECT new com.example.bee_shirt.dto.response.AccountResponse(a.id, a.code, a.firstName, a.lastName, a.address, a.avatar, a.phone, a.status, a.email, a.username, a.createAt, a.createBy, a.updateAt, a.updateBy)  FROM Account a WHERE a.deleted = false ORDER BY a.id DESC
-//            """)
-//    List<Account> getAll();
 
     @Query(value = """
             SELECT TOP 1 * FROM account ORDER BY id DESC
