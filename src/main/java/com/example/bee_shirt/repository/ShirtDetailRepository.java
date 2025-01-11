@@ -314,8 +314,11 @@ ORDER BY
     ShirtDetail findShirtDetailByCode(@Param("query") String query);
     //
 
-    @Query("SELECT sd FROM ShirtDetail sd WHERE sd.codeShirtDetail LIKE %:query% OR sd.shirt.nameshirt LIKE %:query%")
+    @Query("SELECT sd FROM ShirtDetail sd WHERE (sd.codeShirtDetail LIKE %:query% OR sd.shirt.nameshirt LIKE %:query% )AND sd.deleted = false AND sd.quantity > 0 and sd.shirt.deleted = false and sd.statusshirtdetail = 1 and sd.shirt.statusshirt = 1")
     Page<ShirtDetail> findListShirtDetailByCodeOrName(@Param("query") String query, Pageable pageable);
+
+    @Query("SELECT sd FROM ShirtDetail sd WHERE sd.deleted = false AND sd.quantity > 0 and sd.shirt.deleted = false and sd.statusshirtdetail = 1 and sd.shirt.statusshirt = 1")
+    List<ShirtDetail> findAllAvaiable();
 
 
     @Query("SELECT DISTINCT new com.example.bee_shirt.dto.OnlineShirtDTO(b.codeBrand,b.nameBrand,ca.codeCategory, ca.nameCategory,s.codeshirt, s.nameshirt,s.description) " +
