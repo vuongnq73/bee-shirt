@@ -58,7 +58,7 @@ public class PointOfSaleService {
     }
 
     public List<ShirtDetail> getAllShirtDetail() {
-        return shirtDetailRepository.findAll();
+        return shirtDetailRepository.findAllAvaiable();
     }
 
     public List<BillDetail> getBillDetails(String codeBill) {
@@ -250,10 +250,15 @@ public class PointOfSaleService {
     public String scanBarcode() {
         webcamStat = true;
         webcam.open();
+
+        long startTime = System.currentTimeMillis(); // Lưu thời gian bắt đầu
+        long timeout = 15000; // Thời gian chờ (15 giây)
+
         try {
             while (webcamStat) {
                 BufferedImage image = webcam.getImage();
                 if (image == null) continue;
+
                 LuminanceSource source = new BufferedImageLuminanceSource(image);
                 BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
 
@@ -263,6 +268,12 @@ public class PointOfSaleService {
                         return result.getText();
                     }
                 } catch (NotFoundException ignored) {
+                }
+
+                // Kiểm tra thời gian hiện tại so với thời gian bắt đầu
+                if (System.currentTimeMillis() - startTime > timeout) {
+                    webcamStat = false; // Kết thúc vòng lặp
+                    return "Timeout";
                 }
 
                 try {
@@ -276,8 +287,10 @@ public class PointOfSaleService {
                 webcam.close();
             }
         }
+
         return "Webcam end";
     }
+
 
     public List<Account> getAllCustomer() {
         return accountRepository.getAllCustomer();
