@@ -38,7 +38,7 @@
 		<!-- Header desktop -->
 		<div class="container-menu-desktop">
 			<!-- Topbar -->
-			<div class="top-bar">
+			<!-- <div class="top-bar">
 				<div class="content-topbar flex-sb-m h-full container">
 					<div class="left-top-bar">
 						Free shipping for standard order over $100
@@ -62,7 +62,7 @@
 						</a>
 					</div>
 				</div>
-			</div>
+			</div> -->
 
 			<div class="wrap-menu-desktop how-shadow1">
 				<nav class="limiter-menu-desktop container">
@@ -621,9 +621,9 @@
 						</div>
 
 						<div class="p-t-18">
-							<button class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn2 p-lr-15 trans-04">
+							<a class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn2 p-lr-15 trans-04">
 								Subscribe
-							</button>
+							</a>
 						</div>
 					</form>
 				</div>
@@ -1143,7 +1143,7 @@
 
 					const option = document.createElement("option");
 					option.value = voucher.code_voucher;
-					option.textContent = `${voucher.name_voucher} - Giảm: ${discountValue} VNĐ`;
+					option.textContent = `Đơn tối thiểu: ${voucher.min_bill_value} - Giảm tối đa: ${voucher.maximum_discount}`;
 					voucherSelect.appendChild(option);
 				});
 
