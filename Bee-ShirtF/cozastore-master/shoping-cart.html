@@ -1215,7 +1215,7 @@
 
 			quantity4Change = quantity
 
-			if (quantity <= 0 || quantity %1 !=0 || quantity> 2147483647) {
+			if (quantity <= 0 || quantity % 1 != 0 || quantity > 2147483647) {
 				toastr.error('Số lượng không hợp lệ', 'Lỗi');
 				quantityInput.value = 1; // Đặt lại giá trị tối thiểu
 				quantity4Change = 1;
@@ -1388,6 +1388,11 @@
 
 			if (!allowed) {
 				toastr.error('Giá trị tối đa được cho phép của đơn hàng là 50.000.000 VNĐ');
+				return
+			}
+
+			if (!allowedAddresses) {
+				toastr.error('Đang không có địa chỉ, vui lòng thêm trước khi đặt hàng');
 				return
 			}
 
@@ -1812,9 +1817,9 @@
 			const provinceId = this.value;
 			if (provinceId) {
 				fetchDistricts(provinceId);
-				ship = 0;
-				document.getElementById('ship-money').innerText = `${ship} VNĐ`;
-				document.getElementById('all-the-money').innerText = `${ship + selectedTotal - discount} VNĐ`;
+				// ship = 0;
+				// document.getElementById('ship-money').innerText = `${ship} VNĐ`;
+				// document.getElementById('all-the-money').innerText = `${ship + selectedTotal - discount} VNĐ`;
 			} else {
 				const districtSelect = document.getElementById('districtSelect');
 				districtSelect.innerHTML = '<option value="">-- Chọn quận/huyện --</option>';
@@ -1831,9 +1836,9 @@
 			const districtId = this.value;
 			if (districtId) {
 				fetchWards(districtId);
-				ship = 0;
-				document.getElementById('ship-money').innerText = `${ship} VNĐ`;
-				document.getElementById('all-the-money').innerText = `${ship + selectedTotal - discount} VNĐ`;
+				// ship = 0;
+				// document.getElementById('ship-money').innerText = `${ship} VNĐ`;
+				// document.getElementById('all-the-money').innerText = `${ship + selectedTotal - discount} VNĐ`;
 			} else {
 				const wardSelect = document.getElementById('wardSelect');
 				wardSelect.innerHTML = '<option value="">-- Chọn phường/xã --</option>';
@@ -1846,7 +1851,7 @@
 			const toWardCode = this.value;
 			const toDistrictId = document.getElementById('districtSelect').value;
 			if (toWardCode && toDistrictId) {
-				fetchShippingFee(toDistrictId, toWardCode);
+				// fetchShippingFee(toDistrictId, toWardCode);
 			} else {
 				document.getElementById('shippingFee').textContent = '';
 			}
@@ -1952,7 +1957,7 @@
 				addressList.innerHTML = "<p>Không có địa chỉ nào được tìm thấy.</p>";
 				allowedAddresses = false
 				return;
-			} 
+			}
 			allowedAddresses = true
 
 			// Lấy giá trị đã lưu trong localStorage
@@ -2112,6 +2117,10 @@
 
 
 		function createNewAddress() {
+			if (addresses.length > 10) {
+				toastr.error('Không thể thêm địa chỉ mới, đã đạt giới hạn 10 địa chỉ.');
+				return;
+			}
 			const province = document.getElementById('provinceSelect').value;
 			const district = document.getElementById('districtSelect').value;
 			const ward = document.getElementById('wardSelect').value;
