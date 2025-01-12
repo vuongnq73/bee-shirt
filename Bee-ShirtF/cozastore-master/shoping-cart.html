@@ -157,6 +157,26 @@
 			cursor: pointer;
 			transition: background-color 0.3s ease;
 		}
+
+		.hover-effect {
+			color: #ff0000;
+			/* Màu chữ ban đầu */
+			text-decoration: none;
+			/* Không gạch chân mặc định */
+			cursor: pointer;
+			/* Đổi loại trỏ chuột thành tay */
+			transition: all 0.3s ease;
+			/* Hiệu ứng mượt */
+		}
+
+		.hover-effect:hover {
+			color: #ff6600;
+			/* Màu chữ khi hover */
+			text-decoration: underline;
+			/* Thêm gạch chân khi hover */
+			font-weight: bold;
+			/* Đậm hơn khi hover (tùy chọn) */
+		}
 	</style>
 </head>
 
@@ -486,7 +506,9 @@
 										<input type="checkbox" id="select-all">
 									</th>
 									<th class="column-1">SẢN PHẨM</th>
-									<th class="column-2"></th>
+									<th class="column-21">Tên</th>
+									<th class="column-22">Cỡ</th>
+									<th class="column-23">Màu</th>
 									<th class="column-3">Đơn giá</th>
 									<th class="column-4">Số lượng</th>
 									<th class="column-5">Số tiền</th>
@@ -1020,6 +1042,8 @@
 
 		let allowedAddresses = true
 
+		const formatter = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }); // Định dạng VNĐ
+
 
 		async function miniCart() {
 			const response = await fetch("http://localhost:8080/cart/get-all-cart-details?codeAccount=" + userCode, {
@@ -1044,7 +1068,7 @@
                 </div>
                 <div class="header-cart-item-txt p-t-8">
                     <a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">${item.shirtDetail.shirt.nameshirt}</a>
-                    <span class="header-cart-item-info">${item.quantity} x ${item.shirtDetail.price} VNĐ</span>
+                    <span class="header-cart-item-info">${item.quantity} x ${formatter.format(item.shirtDetail.price)}</span>
                 </div>
             `;
 				cartItemsContainer.appendChild(itemElement);
@@ -1054,7 +1078,7 @@
 
 			// Cập nhật tổng giá trị giỏ hàng
 			const totalElement = document.querySelector('.header-cart-total');
-			totalElement.innerHTML = `Tổng tiền: ${total} VNĐ`;
+			totalElement.innerHTML = `Tổng tiền: ${formatter.format(total)}`;
 
 		}
 
@@ -1107,11 +1131,13 @@
                             </td>
 							<td class="column-1">
 								<div class="how-itemcart1">
-									<img src="img/shop-cart/cp-${item.shirtDetail.image}.jpg" alt="IMG">
+									<img src="${item.shirtDetail.image}" alt="IMG">
 								</div>
 							</td>
-							<td class="column-2">${item.shirtDetail.shirt.nameshirt}</td>
-							<td class="column-3">${item.shirtDetail.price} VNĐ</td>
+							<td class="column-21">${item.shirtDetail.shirt.nameshirt}</td>
+							<td class="column-22">${item.shirtDetail.size.namesize}</td>
+							<td class="column-23">${item.shirtDetail.color.nameColor}</td>
+							<td class="column-3">${formatter.format(item.shirtDetail.price)}</td>
 							<td class="column-4">
 								<div class="wrap-num-product flex-w m-l-auto m-r-0">
 									<div onclick="decreaseQuantity(this)" class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
@@ -1125,9 +1151,9 @@
 											</div>
 								</div>
 							</td>
-							<td class="column-5">${total} VNĐ</td>
+							<td class="column-5">${formatter.format(total)}</td>
 							<td class="column-6">
-								<a onclick="remove('${item.codeCartDetail}')">Xóa</a>
+								<a class="hover-effect" onclick="remove('${item.codeCartDetail}')">Xóa</a>
 							</td>
 						</tr>
 					`;
@@ -1138,10 +1164,10 @@
 
 				// Populate the summary
 				cartSummaryElement.innerHTML = `
-                    <li>Tổng giá trị giỏ hàng: <span>${subtotal} VNĐ</span></li>
-                    <li>Tổng tiền hàng: <span id="selected-total">${selectedTotal} VNĐ</span></li>
-                    <li>Phí ship: <span id="ship-money">${ship} VNĐ</span></li>
-                    <li>Tổng : <span id="all-the-money">${ship + selectedTotal} VNĐ</span></li>
+                    <li>Tổng giá trị giỏ hàng: <span>${formatter.format(subtotal)}</span></li>
+                    <li>Tổng tiền hàng: <span id="selected-total">${formatter.format(selectedTotal)}</span></li>
+                    <li>Phí ship: <span id="ship-money">${formatter.format(ship)}</span></li>
+                    <li>Tổng : <span id="all-the-money">${formatter.format(ship + selectedTotal)}</span></li>
                 `;
 
 				selectedTotal > 50000000 ? allowed = false : allowed = true;
@@ -1319,9 +1345,9 @@
 				// Kiểm tra nếu không có voucher
 				if (vouchers.length === 0) {
 					voucherSelect.innerHTML = "<option value=''>Không có voucher khả dụng</option>";
-					document.getElementById('selected-total').innerText = `${money} VNĐ`;
-					document.getElementById('ship-money').innerText = `${ship} VNĐ`;
-					document.getElementById('all-the-money').innerText = `${ship + money} VNĐ`;
+					document.getElementById('selected-total').innerText = `${formatter.format(money)}`;
+					document.getElementById('ship-money').innerText = `${formatter.format(ship)}`;
+					document.getElementById('all-the-money').innerText = `${formatter.format(ship + money)}`;
 					activeVoucherCode = null;
 					const checkboxes = document.querySelectorAll('.select-item:checked');
 					selectedTotal = 0;
@@ -1362,7 +1388,7 @@
 
 					const option = document.createElement("option");
 					option.value = voucher.code_voucher;
-					option.textContent = `Đơn tối thiểu: ${voucher.min_bill_value} - Giảm tối đa: ${voucher.maximum_discount}`;
+					option.textContent = `Đơn tối thiểu: ${formatter.format(voucher.min_bill_value)} - Giảm tối đa: ${formatter.format(voucher.maximum_discount)}`;
 					voucherSelect.appendChild(option);
 				});
 
@@ -1371,9 +1397,9 @@
 					voucherSelect.value = bestVoucher.code_voucher;
 					// document.getElementById("codeVoucher").value = voucherSelect.value;
 					activeVoucherCode = bestVoucher.code_voucher;
-					document.getElementById('selected-total').innerText = `${lastMoney} VNĐ`;
-					document.getElementById('ship-money').innerText = `${ship} VNĐ`;
-					document.getElementById('all-the-money').innerText = `${ship + selectedTotal - discount} VNĐ`;
+					document.getElementById('selected-total').innerText = `${formatter.format(lastMoney)}`;
+					document.getElementById('ship-money').innerText = `${formatter.format(ship)}`;
+					document.getElementById('all-the-money').innerText = `${formatter.format(ship + selectedTotal - discount)}`;
 				}
 			} catch (error) {
 				console.error("Lỗi khi cập nhật voucher:", error);
@@ -1734,7 +1760,7 @@
 					"from_district_id": 3440,
 					"to_district_id": Number(toDistrictId),
 					"to_ward_code": `${toWardCode}`,
-					"height": selectedQuantity * 3 + 1,
+					"height": selectedQuantity * 2 + 1,
 					"length": 30,
 					"weight": selectedQuantity * 100 + 1,
 					"width": 20
@@ -1756,8 +1782,8 @@
 					const data = await response.json();
 					ship = data.data.total
 					shipToNewAddress = data.data.total
-					document.getElementById('ship-money').innerText = `${ship} VNĐ`;
-					document.getElementById('all-the-money').innerText = `${ship + selectedTotal - discount} VNĐ`;
+					document.getElementById('ship-money').innerText = `${formatter.format(ship)}`;
+					document.getElementById('all-the-money').innerText = `${formatter.format(ship + selectedTotal - discount)}`;
 					console.log(ship)
 					console.log(shipToNewAddress)
 					// displayShippingFee(data.data.total);
@@ -1874,8 +1900,8 @@
 
 			// Reset phí giao hàng
 			ship = 0;
-			document.getElementById('ship-money').innerText = `${ship} VNĐ`;
-			document.getElementById('all-the-money').innerText = `${ship + selectedTotal - discount} VNĐ`;
+			document.getElementById('ship-money').innerText = `${formatter.format(ship)}`;
+			document.getElementById('all-the-money').innerText = `${formatter.format(ship + selectedTotal - discount)}`;
 
 			// Reset phần nhập liệu
 			document.getElementById('detailedAddress').value = "";;
@@ -1894,9 +1920,9 @@
 				// Nếu không có voucher được chọn (giá trị rỗng), cập nhật lại tổng tiền và dừng xử lý
 				if (!activeVoucherCode) {
 					console.log("Không có voucher được chọn");
-					document.getElementById('selected-total').innerText = `${selectedTotal} VNĐ`;
-					document.getElementById('ship-money').innerText = `${ship} VNĐ`;
-					document.getElementById('all-the-money').innerText = `${ship + selectedTotal} VNĐ`;
+					document.getElementById('selected-total').innerText = `${formatter.format(selectedTotal)}`;
+					document.getElementById('ship-money').innerText = `${formatter.format(ship)}`;
+					document.getElementById('all-the-money').innerText = `${formatter.format(ship + selectedTotal)}`;
 					return;
 				}
 
@@ -1919,11 +1945,11 @@
 				discount = discountValue
 
 				// Cập nhật các thông tin hiển thị liên quan
-				document.getElementById('selected-total').innerText = `${lastMoney} VNĐ`;
-				document.getElementById('ship-money').innerText = `${ship} VNĐ`;
-				document.getElementById('all-the-money').innerText = `${ship + lastMoney} VNĐ`;
+				document.getElementById('selected-total').innerText = `${formatter.format(lastMoney)}`;
+				document.getElementById('ship-money').innerText = `${formatter.format(ship)}`;
+				document.getElementById('all-the-money').innerText = `${formatter.format(ship + lastMoney)}`;
 
-				console.log(`Voucher selected: ${activeVoucherCode}, giảm giá: ${discountValue} VNĐ`);
+				console.log(`Voucher selected: ${activeVoucherCode}, giảm giá: ${formatter.format(discountValue)}`);
 			} catch (error) {
 				console.error("Lỗi khi xử lý thay đổi voucher:", error);
 			}
@@ -2127,6 +2153,12 @@
 			const detailedAddress = document.getElementById('detailedAddress').value;
 			const name = document.getElementById('name').value;
 			const phone = document.getElementById('phone').value;
+
+			const phoneRegex = /^0\d{9}$/;
+			if (!phoneRegex.test(phone)) {
+				toastr.error('Số điện thoại phải là 10 chữ số bắt đầu bằng 0.');
+				return;
+			}
 
 			// Lấy phần text của option được chọn trong mỗi select
 			const province2 = document.getElementById('provinceSelect').options[document.getElementById('provinceSelect').selectedIndex].text;

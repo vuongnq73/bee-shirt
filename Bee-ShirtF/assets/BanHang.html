@@ -669,7 +669,7 @@
             <div class="col-md-4">
               <!-- Invoice Section -->
               <div class="col-lg-12">
-                <h3>Hóa Đơn</h3>
+                <h3 style="padding-top: 20px;">Hóa Đơn</h3>
                 <ul class="list-group mb-3" id="product-list">
                   <!-- Sản phẩm sẽ được thêm vào đây -->
                 </ul>
@@ -677,8 +677,6 @@
 
                 <div class="card">
                   <div class="card-body">
-                    <h5 class="card-title">Payment Summary</h5>
-
                     <div class="mb-3">
                       <label hidden for="codeVoucher" class="form-label">Mã voucher</label>
                       <input hidden type="text" id="codeVoucher" class="form-control" placeholder="Nhập mã voucher"
@@ -1072,6 +1070,8 @@
 
     let vouchers = null
 
+    const formatter = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }); // Định dạng VNĐ
+
     const tableBody = document.getElementById("billDetailsTableBody");
 
     const apiUrl = "http://localhost:8080/point-of-sale/get-pending-bill";
@@ -1123,9 +1123,9 @@
       <td>${detail.shirtDetail.shirt.nameshirt}</td>
       <td>${detail.shirtDetail.size.namesize}</td>
       <td>${detail.shirtDetail.color.nameColor}</td>
-      <td>${detail.price}</td>
+      <td>${formatter.format(detail.price)}</td>
       <td>${detail.quantity}</td>
-      <td>${total}</td>
+      <td>${formatter.format(total)}</td>
       <td>
     <!-- Nút "Sửa" -->
 
@@ -2004,9 +2004,9 @@
         validatePayment()
 
         // Hiển thị thông báo thành công
-        feedback.style.display = "block";
-        feedback.style.color = "green";
-        feedback.textContent = `Áp dụng voucher thành công! Giảm giá: ${discount}`;
+        // feedback.style.display = "block";
+        // feedback.style.color = "green";
+        // feedback.textContent = `Áp dụng voucher thành công! Giảm giá: ${discount}`;
       } catch (error) {
         // Hiển thị lỗi nếu có
         feedback.style.display = "block";
@@ -2071,7 +2071,7 @@
       <td>${product.shirt.nameshirt}</td>
       <td>${product.size.namesize}</td>
       <td>${product.color.nameColor}</td>
-      <td>${product.price}</td>
+      <td>${formatter.format(product.price)}</td>
       <td>${product.quantity}</td>
       <td>
         <button class="btn btn-primary btn-sm" onclick="add('${product.codeShirtDetail}')">Chọn</button>
@@ -2449,7 +2449,7 @@
 
           const option = document.createElement("option");
           option.value = voucher.code_voucher;
-          option.textContent = `Đơn tối thiểu: ${voucher.min_bill_value} - Giảm tối đa: ${voucher.maximum_discount} VNĐ`;
+          option.textContent = `Đơn tối thiểu: ${formatter.format(voucher.min_bill_value)} - Giảm tối đa: ${formatter.format(voucher.maximum_discount)} VNĐ`;
           voucherSelect.appendChild(option);
         });
 
