@@ -21,6 +21,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
@@ -107,7 +108,7 @@ public class ShirtDetailService {
                     shirt.getNameshirt(),
                     shirt.getDescription(),
                     colorGroupsList));
-        }
+            }
 
         return result;
     }
@@ -123,7 +124,7 @@ public class ShirtDetailService {
             shirtDetail.setQuantity(dto.getQuantity());
             shirtDetail.setPrice(dto.getPrice());
             shirtDetail.setStatusshirtdetail(dto.getStatusshirtdetail());
-            shirtDetail.setCreateBy(getMyInfo().getUsername());
+            shirtDetail.setCreateBy(dto.getCreateBy());
             shirtDetail.setCreateAt(dto.getCreateAt());
             shirtDetail.setUpdateBy(dto.getUpdateBy());
             shirtDetail.setUpdateAt(dto.getUpdateAt());
@@ -403,7 +404,8 @@ public class ShirtDetailService {
                 (String) result[2],
                 (String) result[3],
                 (String) result[4],
-                (BigDecimal) result[5]
+                (String) result[5],
+                (BigDecimal) result[6]
                 )).collect(Collectors.toList());
     }
 
@@ -417,7 +419,8 @@ public class ShirtDetailService {
                 (String) result[2],
                 (String) result[3],
                 (String) result[4],
-                (BigDecimal) result[5]
+                (String) result[5],
+                (BigDecimal) result[6]
         )).collect(Collectors.toList());
     }
 
@@ -431,7 +434,8 @@ public class ShirtDetailService {
                 (String) result[2],
                 (String) result[3],
                 (String) result[4],
-                (BigDecimal) result[5]
+                (String) result[5],
+                (BigDecimal) result[6]
         )).collect(Collectors.toList());
     }
 
@@ -445,7 +449,8 @@ public class ShirtDetailService {
                 (String) result[2],
                 (String) result[3],
                 (String) result[4],
-                (BigDecimal) result[5]
+                (String) result[5],
+                (BigDecimal) result[6]
         )).collect(Collectors.toList());
     }
 
@@ -459,7 +464,8 @@ public class ShirtDetailService {
                 (String) result[2],
                 (String) result[3],
                 (String) result[4],
-                (BigDecimal) result[5]
+                (String) result[5],
+                (BigDecimal) result[6]
         )).collect(Collectors.toList());
     }
 
@@ -473,13 +479,19 @@ public class ShirtDetailService {
                 (String) result[2],
                 (String) result[3],
                 (String) result[4],
-                (BigDecimal) result[5]
+                (String) result[5],
+                (BigDecimal) result[6]
         )).collect(Collectors.toList());
     }
 
     public Integer countAll(BigDecimal min, BigDecimal max, String color, String brand, String size, Integer category){
         Integer total = shirtDetailRepository.countAll(min, max, color, brand, size, category);
         return total;
+    }
+
+    @Transactional
+    public void updateQuantityByCodeBill(String codeBill) {
+        shirtDetailRepository.updateQuantityByCodeBill(codeBill);
     }
 }
 

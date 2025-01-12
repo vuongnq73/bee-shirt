@@ -222,13 +222,12 @@
             <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
               <div class="input-group">
                 <div class="input-group-prepend">
-                  <button type="submit" class="btn btn-search pe-1"ng-click="filterShirtDetails()">
+                  <button type="submit" class="btn btn-search pe-1">
                     <i class="fa fa-search search-icon"></i>
                   </button>
                 </div>
-                <input type="text" ng-model="filters.searchTerm" placeholder="Nhập mã,tên sản phẩm...." class="form-control" />
+                <input type="text" placeholder="Search ..." class="form-control" />
               </div>
-              
             </nav>
 
             <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
@@ -504,7 +503,10 @@
         <!-- Nút mở modal -->
       <div class="page-inner">
 
-     
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addVariantModal">
+      Thêm Sản Phẩm Chi Tiết
+      </button>
+
       <!-- Modal -->
       <div class="modal fade" id="addVariantModal" tabindex="-1" aria-labelledby="addVariantModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
@@ -572,12 +574,10 @@
       </div>
       <div class="row mb-3">
         <div class="col-md-6">
-          <label for="price" style="padding-bottom: 10px;">Giá:</label>
-          <br>
+          <label for="price">Giá:</label>
           <input type="text" ng-model="newShirtDetail.price" ng-change="generateVariants()"
                  placeholder="Nhập giá" style="width: 250px; height: 30px; border: 1px solid #ddd; border-radius: 5px;" />
-          <br>
-          <p style="color: green;padding-top: 10px;">Giá tiền: {{newShirtDetail.priceFormatted}} VNĐ</p>
+          <p style="color: green;">Giá tiền: {{newShirtDetail.priceFormatted}} VNĐ</p>
           <span class="text-danger" ng-if="errors.price">{{errors.price}}</span>
       </div>
       
@@ -773,6 +773,7 @@
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addVariantModal">
       Thêm Sản Phẩm Chi Tiết
       </button>
+
 
       <h2 class="mt-5">Danh Sách Chi Tiết Áo Thun</h2>
       <table class="table table-bordered">

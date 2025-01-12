@@ -2,8 +2,13 @@ package com.example.bee_shirt.service;
 
 import com.example.bee_shirt.dto.request.*;
 import com.example.bee_shirt.entity.Bill;
+import com.example.bee_shirt.entity.BillDetail;
+import com.example.bee_shirt.entity.ShirtDetail;
+import com.example.bee_shirt.repository.BillDetailRepository;
 import com.example.bee_shirt.repository.BillRepo;
 import com.example.bee_shirt.repository.BillRepository;
+import com.example.bee_shirt.repository.ShirtDetailRepository;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -13,8 +18,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,7 +41,8 @@ public class BillService {
                 result[4] != null ? ((Date) result[4]).toLocalDate() : null,   // desiredDate, convert sql Date to LocalDate
                 (String) result[5],                      // namePaymentMethod
                 (BigDecimal) result[6],                  // totalMoney
-                (Integer) result[7]                      // statusBill
+                (Integer) result[7],                   // statusBill
+                  (String) result[8]
         )).collect(Collectors.toList());
     }
     //listBill có trạng thái là 2
@@ -52,7 +57,8 @@ public class BillService {
                 result[4] != null ? ((Date) result[4]).toLocalDate() : null,   // desiredDate, convert sql Date to LocalDate
                 (String) result[5],                      // namePaymentMethod
                 (BigDecimal) result[6],                  // totalMoney
-                (Integer) result[7]                      // statusBill
+                (Integer) result[7] ,                     // statusBill
+                (String) result[8]
         )).collect(Collectors.toList());
     }
     //ListBill có trạng thái là 3
@@ -67,7 +73,8 @@ public class BillService {
                 result[4] != null ? ((Date) result[4]).toLocalDate() : null,   // desiredDate, convert sql Date to LocalDate
                 (String) result[5],                      // namePaymentMethod
                 (BigDecimal) result[6],                  // totalMoney
-                (Integer) result[7]                      // statusBill
+                (Integer) result[7] ,                     // statusBill
+                (String) result[8]
         )).collect(Collectors.toList());
     }
 
@@ -86,7 +93,7 @@ public class BillService {
     }
 
 
-    public boolean updateStatus(String codeBill, int statusBill) {
+    public boolean updateStatus(String codeBill, int statusBill, String notes) {
         // Tìm hóa đơn dựa vào mã codeBill
         Optional<Bill> billOptional = billRepository.findByCodeBill(codeBill);
 
@@ -95,7 +102,7 @@ public class BillService {
 
             // Cập nhật trạng thái hóa đơn
             bill.setStatusBill(statusBill);
-
+            bill.setNotes(notes);
             // Lưu thay đổi vào cơ sở dữ liệu
             billRepository.save(bill);
             return true;
@@ -104,6 +111,7 @@ public class BillService {
             return false;
         }
     }
+
     public BillSummaryDTO getBillSummary(Date startDate, Date endDate) {
         List<Object[]> results = billRepository.getBillSummaryRaw(startDate, endDate);
         Object[] result = results.get(0); // Assuming there's only one result
@@ -241,6 +249,115 @@ public List<MyOderDTO> getBillsByEmailAndStatus5(String email) {
     )).collect(Collectors.toList());
 }
 //
+@Autowired
+private BillDetailRepository billDetailRepository;
 
+    @Autowired
+    private ShirtDetailRepository shirtDetailRepository;
+
+    @Transactional
+    public boolean updateProductStock(String codeBillDetail, Integer newQuantity) {
+        // Lấy chi tiết hóa đơn
+        BillDetail billDetail = billDetailRepository.findBillDetailByCode(codeBillDetail);
+        if (billDetail == null || billDetail.getBill() == null) {
+            return false; // Không tìm thấy chi tiết hóa đơn hoặc hóa đơn không hợp lệ
+        }
+        // Kiểm tra trạng thái hóa đơn (chỉ xử lý nếu trạng thái là 6)
+        if (billDetail.getBill().getStatusBill() != 6) {
+            return false; // Trạng thái hóa đơn không phù hợp
+        }
+        // Lấy chi tiết áo
+        ShirtDetail shirtDetail = billDetail.getShirtDetail();
+        if (shirtDetail == null) {
+            return false; // Không tìm thấy chi tiết áo
+        }
+        // Lấy số lượng cũ và tồn kho hiện tại
+        Integer oldQuantity = billDetail.getQuantity();
+        Integer stockQuantity = shirtDetail.getQuantity();
+        // Tính chênh lệch số lượng
+        int quantityDelta = newQuantity - oldQuantity;
+        // Kiểm tra tồn kho (đảm bảo không bị âm)
+        if (stockQuantity - quantityDelta < 0) {
+            return false; // Không đủ hàng trong kho
+        }
+        // Cập nhật số lượng trong hóa đơn
+        billDetail.setQuantity(newQuantity);
+        billDetailRepository.save(billDetail);
+        // Cập nhật số lượng trong kho
+        shirtDetail.setQuantity(stockQuantity - quantityDelta);
+        shirtDetailRepository.save(shirtDetail);
+        return true; // Cập nhật thành công
+    }
+
+//    lo theo khoảng thoeif gian
+public List<Map<String, Object>> getBillsByDateRange(String startDate, String endDate) {
+    List<Object[]> results = billRepository.findBillsByDateRange(startDate, endDate);
+
+    // Chuyển đổi kết quả thành danh sách Map
+    List<Map<String, Object>> bills = new ArrayList<>();
+    for (Object[] row : results) {
+        Map<String, Object> bill = new HashMap<>();
+        bill.put("codeBill", row[0]);
+        bill.put("customerName", row[1]);
+        bill.put("phoneNumber", row[2]);
+        bill.put("typeBill", row[3]);
+        bill.put("createAt", row[4]);
+        bill.put("paymentMethod", row[5]);
+        bill.put("totalMoney", row[6]);
+        bill.put("statusBill", row[7]);
+        bill.put("note", row[8]);
+
+        bills.add(bill);
+    }
+
+    return bills;
+}
+//lọc cho tab2
+public List<Map<String, Object>> getBillsByDateRange2(String startDate, String endDate) {
+    List<Object[]> results = billRepository.findBillsByDateRange2(startDate, endDate);
+
+    // Chuyển đổi kết quả thành danh sách Map
+    List<Map<String, Object>> bills = new ArrayList<>();
+    for (Object[] row : results) {
+        Map<String, Object> bill = new HashMap<>();
+        bill.put("codeBill", row[0]);
+        bill.put("customerName", row[1]);
+        bill.put("phoneNumber", row[2]);
+        bill.put("typeBill", row[3]);
+        bill.put("createAt", row[4]);
+        bill.put("paymentMethod", row[5]);
+        bill.put("totalMoney", row[6]);
+        bill.put("statusBill", row[7]);
+        bill.put("note", row[8]);
+
+        bills.add(bill);
+    }
+
+    return bills;
+}
+
+    //lọc cho tab3
+    public List<Map<String, Object>> getBillsByDateRange3(String startDate, String endDate) {
+        List<Object[]> results = billRepository.findBillsByDateRange3(startDate, endDate);
+
+        // Chuyển đổi kết quả thành danh sách Map
+        List<Map<String, Object>> bills = new ArrayList<>();
+        for (Object[] row : results) {
+            Map<String, Object> bill = new HashMap<>();
+            bill.put("codeBill", row[0]);
+            bill.put("customerName", row[1]);
+            bill.put("phoneNumber", row[2]);
+            bill.put("typeBill", row[3]);
+            bill.put("createAt", row[4]);
+            bill.put("paymentMethod", row[5]);
+            bill.put("totalMoney", row[6]);
+            bill.put("statusBill", row[7]);
+            bill.put("note", row[8]);
+
+            bills.add(bill);
+        }
+
+        return bills;
+    }
 
 }

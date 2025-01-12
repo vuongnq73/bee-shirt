@@ -434,15 +434,16 @@
                         onkeyup="performSearch()" autocomplete="off">
                       <ul id="suggestions" class="suggestions-list list-group position-absolute w-100"> </ul>
                     </div>
-                    <button class="btn btn-outline-secondary" type="button" onclick="scanBarcode()" style="margin-left: 5px;">
+                    <button class="btn btn-outline-secondary" type="button" onclick="scanBarcode()"
+                      style="margin-left: 5px;">
                       QR Code <i class="bi bi-upc-scan"></i>
                     </button>
-                    <button class="btn btn-outline-secondary" type="button"  style="margin-left: 5px;">
+                    <button class="btn btn-outline-secondary" type="button" style="margin-left: 5px;">
                       <a href="/assets/ListProducts.html">
-                      <i class="bi bi-plus-square-fill"></i>
+                        <i class="bi bi-plus-square-fill"></i>
 
                       </a>
-          
+
                     </button>
                   </div>
                 </form>
@@ -471,10 +472,6 @@
                             <div class="mb-3">
                               <label for="lastName" class="form-label">Tên:</label>
                               <input type="text" class="form-control" id="lastName" ng-model="user.lastName" required />
-                            </div>
-                            <div class="mb-3">
-                              <label for="address" class="form-label">Địa chỉ:</label>
-                              <input type="text" class="form-control" id="address" ng-model="user.address" required />
                             </div>
                             <div class="mb-3">
                               <label for="email" class="form-label">Email:</label>
@@ -521,7 +518,6 @@
                     <thead>
                       <tr>
                         <th>#</th>
-                        <th>Mã hóa đơn</th>
                         <th>Tên sản phẩm</th>
                         <th>Số lượng</th>
                         <th>Giá</th>
@@ -569,7 +565,8 @@
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
-                      <p id="shirtCodeDetail">Modal body..</p>
+                      <p id="shirtCodeDetail" hidden>Modal body..</p>
+                      <p id="shirtDetailName">Modal body..</p>
                       <div class="mb-3">
                         <label for="quantityInput" class="form-label">Số lượng</label>
                         <input type="number" id="quantityInput" class="form-control" placeholder="Nhập số lượng" min="1"
@@ -596,7 +593,8 @@
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
-                      <p id="shirtCodeDetail2">Modal body..</p>
+                      <p id="shirtCodeDetail2" hidden>Modal body..</p>
+                      <p id="shirtDetailName2">Modal body..</p>
                       <div class="mb-3">
                         <label for="quantityInput" class="form-label">Số lượng</label>
                         <input type="number" id="quantityInput2" class="form-control" placeholder="Nhập số lượng"
@@ -732,7 +730,7 @@
       </div>
     </div>
     <!-- end container -->
- 
+
   </div>
 
   <!-- Custom template | don't include it in your project! -->
@@ -1097,8 +1095,7 @@
 
           row.innerHTML = `
       <td>${index + 1}</td>
-      <td>${detail.codeBillDetail}</td>
-      <td>${detail.shirtDetail.codeShirtDetail}</td>
+      <td>${detail.shirtDetail.shirt.nameshirt}-${detail.shirtDetail.size.namesize}-${detail.shirtDetail.color.nameColor}</td>
       <td>${detail.quantity}</td>
       <td>${detail.price.toFixed(2)}</td>
       <td>${total.toFixed(2)}</td>
@@ -1404,115 +1401,189 @@
       ).catch(error => console.error("Error with canceling", error));
     }
 
-    function scanBarcode() {
-
-      if (activeBillCode == 'none') {
+    async function scanBarcode() {
+      if (activeBillCode === 'none') {
         toastr.error('Chưa chọn hóa đơn', 'Lỗi');
         return;
       }
+
       const codeBill = activeBillCode;
+
       if (camStat) {
-        fetch(`http://localhost:8080/point-of-sale/scanBarcode?billCode=${codeBill}`, {
-          method: 'GET',
-          headers: headers
-        }).then(response => response.text())
-          .then(result => {
-            if (result === "Webcam end") {
-              console.log("Webcam đã kết thúc, không mở modal.");
-              return; // Kết thúc hàm mà không làm gì thêm
-            }
-            // Gán kết quả quét vào phần tử shirtCodeDetail
-            document.getElementById("shirtCodeDetail").innerText = result;
+        try {
+          const response = await fetch(`http://localhost:8080/point-of-sale/scanBarcode?billCode=${encodeURIComponent(codeBill)}`, {
+            method: 'GET',
+            headers: headers
+          });
 
-            // Đặt lại số lượng về 1
-            document.getElementById("quantityInput").value = 1;
+          const result = await response.text();
+          console.log("Kết quả quét mã vạch:", result);
 
-            // Mở modal
-            openModal();
-          })
-          .catch(error => console.error("Lỗi khi quét mã vạch:", error));
+          if (result === "Webcam end") {
+            console.log("Webcam đã kết thúc, không mở modal.");
+            return; // Kết thúc hàm mà không làm gì thêm
+          }
+
+          if (result === "Timeout") {
+            toastr.error("Quá thời gian, đã tự động tắt");
+            return; // Kết thúc hàm mà không làm gì thêm
+          }
+
+          // Gán kết quả quét vào phần tử shirtCodeDetail
+          document.getElementById("shirtCodeDetail").innerText = result;
+
+          const rppp = await fetch(`http://localhost:8080/point-of-sale/get-shirt-detail?codeShirtDetail=${result}`, {
+            method: 'GET',
+            headers: headers
+          });
+          const sd = await rppp.json();
+          console.log(sd.shirt.nameshirt);
+
+          // Kiểm tra dữ liệu trước khi thao tác
+          if (sd && sd.shirt && sd.shirt.nameshirt && sd.size && sd.size.namesize && sd.color && sd.color.nameColor) {
+            document.getElementById("shirtDetailName").innerText =
+              `${sd.shirt.nameshirt} - ${sd.size.namesize} - ${sd.color.nameColor}`;
+          } else {
+            throw new Error("Dữ liệu trả về không đầy đủ");
+          }
+
+          // Đặt lại số lượng về 1
+          document.getElementById("quantityInput").value = 1;
+
+          // Gọi checkScan để kiểm tra sản phẩm
+          const isProductValid = await checkScan(result);
+          if (!isProductValid) {
+            return; // Không mở modal nếu sản phẩm không hợp lệ
+          }
+
+          // Mở modal
+          openModal();
+        } catch (error) {
+          console.error("Lỗi trong scanBarcode:", error);
+          toastr.error("Không tìm thấy sản phẩm");
+        }
+
         camStat = false;
       } else {
-        fetch(`http://localhost:8080/point-of-sale/close`, {
-          method: 'GET',
-          headers: headers
-        }).catch(error => console.error("Error adding item to cart:", error));
+        try {
+          await fetch(`http://localhost:8080/point-of-sale/close`, {
+            method: 'GET',
+            headers: headers
+          });
+        } catch (error) {
+          console.error("Error closing webcam:", error);
+        }
+
         camStat = true;
       }
     }
 
-    function performSearch() {
+    async function checkScan(codeShirtDetail) {
+      const response = await fetch(`http://localhost:8080/point-of-sale/get-shirt-detail?codeShirtDetail=${codeShirtDetail}`, {
+        method: 'GET',
+        headers: headers
+      });
+      const textResponse = await response.text();
+      console.log(textResponse)
+      if (!textResponse) {
+        toastr.error("Không tìm thấy sản phẩm");
+        return false;
+      } else { return true; }
+    }
 
-      const searchInput = document.getElementById("searchInput");
-      const suggestionsList = document.getElementById("suggestions");
+    async function performSearch() {
+    const searchInput = document.getElementById("searchInput");
+    const suggestionsList = document.getElementById("suggestions");
 
-      if (searchInput.value.length < 1) {
+    if (searchInput.value.length < 1) {
         suggestionsList.innerHTML = ''; // Nếu không có từ khóa tìm kiếm, ẩn danh sách
         suggestionsList.style.display = 'none'; // Ẩn hoàn toàn danh sách
         return;
-      }
+    }
 
-      if (searchInput.value.length > 0) {
-        fetch(`http://localhost:8080/point-of-sale/search?query=${searchInput.value}`, {
-          method: 'GET',
-          headers: headers // Thêm headers vào yêu cầu
-        })
-          .then(response => response.json())
-          .then(data => {
+    if (searchInput.value.length > 0) {
+        try {
+            const response = await fetch(`http://localhost:8080/point-of-sale/search?query=${encodeURIComponent(searchInput.value)}`, {
+                method: 'GET',
+                headers: headers // Thêm headers vào yêu cầu
+            });
 
+            const data = await response.json();
             suggestionsList.innerHTML = "";
+
             // Kiểm tra nếu không có kết quả tìm kiếm
             if (data.length === 0) {
-              suggestionsList.style.display = 'none'; // Ẩn danh sách khi không có kết quả
-              return;
+                suggestionsList.style.display = 'none'; // Ẩn danh sách khi không có kết quả
+                return;
             }
 
-            if (data.length > 0) {
-              data.forEach(item => {
+            // Xử lý dữ liệu khi có kết quả tìm kiếm
+            data.forEach(item => {
                 let suggestionItem = document.createElement("li");
-                suggestionItem.innerHTML = item.shirt.nameshirt + " " + item.size.namesize + " " + item.color.nameColor + " " + item.material.nameMaterial;
-                suggestionItem.onclick = function () {
+                suggestionItem.innerHTML = `${item.shirt.nameshirt} ${item.size.namesize} ${item.color.nameColor} ${item.material.nameMaterial}`;
+                
+                suggestionItem.onclick = async function () {
+                    if (activeBillCode == 'none') {
+                        toastr.error('Chưa chọn hóa đơn', 'Lỗi');
+                        return;
+                    }
 
-                  if (activeBillCode == 'none') {
-                    toastr.error('Chưa chọn hóa đơn', 'Lỗi');
-                    return;
-                  }
-                  // Call the /add/ endpoint when a suggestion is clicked
-                  document.getElementById("shirtCodeDetail").innerText = item.codeShirtDetail;
-                  openModal(); // Gọi hàm mở modal
-                  suggestionsList.innerHTML = ""; // Clear suggestions after the click
+                    // Call the /add/ endpoint when a suggestion is clicked
+                    document.getElementById("shirtCodeDetail").innerText = item.codeShirtDetail;
 
-                  searchInput.value = ""; // Clear search input after selection
+                    try {
+                        const shirtResponse = await fetch(`http://localhost:8080/point-of-sale/get-shirt-detail?codeShirtDetail=${item.codeShirtDetail}`, {
+                            method: 'GET',
+                            headers: headers
+                        });
+                        const sd = await shirtResponse.json();
+                        console.log(sd.shirt.nameshirt);
+
+                        // Kiểm tra dữ liệu trước khi thao tác
+                        if (sd && sd.shirt && sd.shirt.nameshirt && sd.size && sd.size.namesize && sd.color && sd.color.nameColor) {
+                            document.getElementById("shirtDetailName").innerText = `${sd.shirt.nameshirt} - ${sd.size.namesize} - ${sd.color.nameColor}`;
+                        } else {
+                            throw new Error("Dữ liệu trả về không đầy đủ");
+                        }
+                    } catch (error) {
+                        console.error("Lỗi khi lấy chi tiết sản phẩm:", error);
+                        toastr.error("Không thể lấy chi tiết sản phẩm.");
+                    }
+
+                    openModal(); // Gọi hàm mở modal
+                    suggestionsList.innerHTML = ""; // Clear suggestions after the click
+                    searchInput.value = ""; // Clear search input after selection
                 };
+
                 suggestionsList.appendChild(suggestionItem);
-              });
-              suggestionsList.style.display = 'block';
-            } else {
-              suggestionsList.innerHTML = "<li>No results found</li>";
-            }
-          })
-          .catch(error => console.error("Error fetching data:", error));
-      } else {
+            });
 
+            suggestionsList.style.display = 'block';
+        } catch (error) {
+            console.error("Lỗi khi tìm kiếm sản phẩm:", error);
+            suggestionsList.innerHTML = "<li>Không thể tìm kiếm. Vui lòng thử lại!</li>";
+        }
+    } else {
         suggestionsList.innerHTML = "";
-      }
+    }
 
-      // Sự kiện blur: khi người dùng rời khỏi ô tìm kiếm
-      searchInput.addEventListener("blur", () => {
+    // Sự kiện blur: khi người dùng rời khỏi ô tìm kiếm
+    searchInput.addEventListener("blur", () => {
         // Đợi một thời gian ngắn trước khi ẩn danh sách để người dùng có thể click vào một mục
         setTimeout(() => {
-          suggestionsList.style.display = 'none'; // Ẩn danh sách khi rời khỏi ô tìm kiếm
+            suggestionsList.style.display = 'none'; // Ẩn danh sách khi rời khỏi ô tìm kiếm
         }, 200);
-      });
+    });
 
-      // Sự kiện focus: khi người dùng quay lại ô tìm kiếm
-      searchInput.addEventListener("focus", () => {
+    // Sự kiện focus: khi người dùng quay lại ô tìm kiếm
+    searchInput.addEventListener("focus", () => {
         const sq = searchInput.value.trim();
         if (sq.length > 0) {
-          suggestionsList.style.display = 'block'; // Hiển thị lại danh sách khi người dùng focus vào ô tìm kiếm
+            suggestionsList.style.display = 'block'; // Hiển thị lại danh sách khi người dùng focus vào ô tìm kiếm
         }
-      });
-    }
+    });
+}
+
 
     // Gọi hàm `performSearch` khi người dùng nhập vào ô tìm kiếm
     document.getElementById("searchInput").addEventListener("input", performSearch);
@@ -1538,7 +1609,7 @@
         headers: headers
       });
       const sd = await response.json();
-      if (0 >= quantity) {
+      if (0 >= quantity || quantity % 1 != 0 || quantity > 2147483647 ) {
         toastr.error('Số lượng không hợp lệ', 'Lỗi');
         document.getElementById("quantityInput").value = 1
         return;
@@ -1570,8 +1641,22 @@
 
 
 
-    function openModal2(codeBillDetail, codeShirtDetail) {
+    async function openModal2(codeBillDetail, codeShirtDetail) {
       document.getElementById("shirtCodeDetail2").innerText = codeShirtDetail;
+      const response = await fetch(`http://localhost:8080/point-of-sale/get-shirt-detail?codeShirtDetail=${codeShirtDetail}`, {
+        method: 'GET',
+        headers: headers
+      });
+      const sd = await response.json();
+      console.log(sd.shirt.nameshirt);
+
+      // Kiểm tra dữ liệu trước khi thao tác
+      if (sd && sd.shirt && sd.shirt.nameshirt && sd.size && sd.size.namesize && sd.color && sd.color.nameColor) {
+        document.getElementById("shirtDetailName2").innerText =
+          `${sd.shirt.nameshirt} - ${sd.size.namesize} - ${sd.color.nameColor}`;
+      } else {
+        throw new Error("Dữ liệu trả về không đầy đủ");
+      }
       document.getElementById("quantityInput2").value = 1;
       currentCodeBillDetail = codeBillDetail
       var myModal = new bootstrap.Modal(document.getElementById('myModal2'), {
@@ -1593,7 +1678,7 @@
       });
       const sd = await response.json();
 
-      if (0 >= quantity) {
+      if (0 >= quantity || 2147483647 < quantity || quantity % 1 != 0) {
         toastr.error('Số lượng không hợp lệ', 'Lỗi');
         document.getElementById("quantityInput2").value = 1
         return;
@@ -1878,10 +1963,10 @@
         //   discount = Math.min(voucher.discount_value, voucher.maximum_discount);
         // }
 
-        if (voucher.typeVoucher === "Percent") {
-          discount = Math.min(totalMoney * (voucher.discountValue / 100), voucher.maximumDiscount);
-        } else if (voucher.typeVoucher === "Amount") {
-          discount = Math.min(voucher.discountValue, voucher.maximumDiscount);
+        if (voucher.type_voucher === "Percent") {
+          discount = Math.min(totalMoney * (voucher.discount_value / 100), voucher.maximum_discount);
+        } else if (voucher.type_voucher === "Amount") {
+          discount = Math.min(voucher.discount_value, voucher.maximum_discount);
         }
 
         // Cập nhật tổng tiền
@@ -1967,12 +2052,28 @@
     }
 
     // Hàm xử lý khi bấm nút
-    function add(codeShirtDetail) {
+    async function add(codeShirtDetail) {
       if (activeBillCode == 'none') {
         toastr.error('Chưa chọn hóa đơn', 'Lỗi');
         return;
       }
       document.getElementById("shirtCodeDetail").innerText = codeShirtDetail;
+
+      const response = await fetch(`http://localhost:8080/point-of-sale/get-shirt-detail?codeShirtDetail=${codeShirtDetail}`, {
+        method: 'GET',
+        headers: headers
+      });
+      const sd = await response.json();
+      console.log(sd.shirt.nameshirt);
+
+      // Kiểm tra dữ liệu trước khi thao tác
+      if (sd && sd.shirt && sd.shirt.nameshirt && sd.size && sd.size.namesize && sd.color && sd.color.nameColor) {
+        document.getElementById("shirtDetailName").innerText =
+          `${sd.shirt.nameshirt} - ${sd.size.namesize} - ${sd.color.nameColor}`;
+      } else {
+        throw new Error("Dữ liệu trả về không đầy đủ");
+      }
+
       openModal(); // Gọi hàm mở modal
     }
 
@@ -2300,9 +2401,9 @@
         let bestVoucher = null;
 
         vouchers.forEach((voucher) => {
-          const discountValue = voucher.typeVoucher === "Percent"
-            ? Math.min(voucher.maximumDiscount, money * (voucher.discountValue / 100))
-            : Math.min(voucher.discountValue, voucher.maximumDiscount);
+          discountValue = voucher.type_voucher === "Percent"
+            ? Math.min(voucher.maximum_discount, money * (voucher.discount_value / 100))
+            : Math.min(voucher.discount_value, voucher.maximum_discount);
 
           if (discountValue > maxDiscount) {
             maxDiscount = discountValue;
@@ -2310,14 +2411,14 @@
           }
 
           const option = document.createElement("option");
-          option.value = voucher.codeVoucher;
-          option.textContent = `${voucher.codeVoucher} - Giảm: ${discountValue.toFixed(2)} VNĐ`;
+          option.value = voucher.code_voucher;
+          option.textContent = `${voucher.name_voucher} - Giảm: ${discountValue} VNĐ`;
           voucherSelect.appendChild(option);
         });
 
         // Tự động chọn voucher giảm nhiều nhất
         if (bestVoucher) {
-          voucherSelect.value = bestVoucher.codeVoucher;
+          voucherSelect.value = bestVoucher.code_voucher;
           document.getElementById("codeVoucher").value = voucherSelect.value;
           applyVoucherOnChange()
         }

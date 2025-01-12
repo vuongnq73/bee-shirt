@@ -11,7 +11,6 @@ import com.example.bee_shirt.repository.CartRepository;
 import com.example.bee_shirt.repository.ShirtDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -23,6 +22,7 @@ public class CartDetailService {
 
     @Autowired
     private CartRepository cartRepository;
+
     @Autowired
     private AccountRepository accountRepository;
     @Autowired

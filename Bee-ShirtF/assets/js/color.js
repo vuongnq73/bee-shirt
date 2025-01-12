@@ -103,6 +103,7 @@ app.controller('colorController', ['$scope', 'colorService', function($scope, co
                     codeColor: item[1],
                     nameColor: item[2],
                     statusColor: item[3],
+
                 };
             });
             $scope.totalPages = response.data.totalPages;
@@ -135,7 +136,7 @@ app.controller('colorController', ['$scope', 'colorService', function($scope, co
         }
     };
 
-    // View color details
+
     $scope.viewColorDetail = function(id) {
         colorService.getColorDetail(id).then(function(response) {
             $scope.color = response.data;
@@ -173,11 +174,13 @@ app.controller('colorController', ['$scope', 'colorService', function($scope, co
     
 
     $scope.saveNewColor = function() {
+
         // Remove '#' if it exists in the color code
         if ($scope.newColor.codeColor.startsWith('#')) {
             $scope.newColor.codeColor = $scope.newColor.codeColor.substring(1);
         }
     
+
         // Check for special characters in name
         if ($scope.containsSpecialCharacters($scope.newColor.nameColor)) {
             alert("Tên màu sắc không được chứa ký tự đặc biệt!");
@@ -214,8 +217,11 @@ app.controller('colorController', ['$scope', 'colorService', function($scope, co
     // Edit a color
     $scope.editColor = function(color) {
         $scope.color = angular.copy(color);
+        console.log($scope.color);  // Kiểm tra xem color.id có được sao chép đúng không
+
         $('#editColorModal').modal('show');
     };
+
 
     // Save edited color
     $scope.saveEditColor = function() {
@@ -224,6 +230,7 @@ app.controller('colorController', ['$scope', 'colorService', function($scope, co
             $scope.color.codeColor = $scope.color.codeColor.substring(1);
         }
     
+
         // Check for special characters in name
         if ($scope.containsSpecialCharacters($scope.color.nameColor)) {
             alert("Tên màu sắc không được chứa ký tự đặc biệt!");
@@ -264,6 +271,7 @@ app.controller('colorController', ['$scope', 'colorService', function($scope, co
     $scope.deleteColor = function(codeColor) {
         $scope.colorToDelete = codeColor;
         $('#confirmDeleteModal').modal('show');
+
     };
 
     // Confirm color deletion
@@ -271,6 +279,7 @@ app.controller('colorController', ['$scope', 'colorService', function($scope, co
         colorService.deleteColor($scope.colorToDelete).then(function(response) {
             $scope.getColors($scope.currentPage);
             $('#confirmDeleteModal').modal('hide');
+
             location.reload();
         });
     };
@@ -278,3 +287,4 @@ app.controller('colorController', ['$scope', 'colorService', function($scope, co
     // Initialize the color list
     $scope.getColors($scope.currentPage);
 }]);
+
