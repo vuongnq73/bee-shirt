@@ -1018,6 +1018,8 @@
 
 		let selectedDiv = null;
 
+		let allowedAddresses = true
+
 
 		async function miniCart() {
 			const response = await fetch("http://localhost:8080/cart/get-all-cart-details?codeAccount=" + userCode, {
@@ -1213,7 +1215,7 @@
 
 			quantity4Change = quantity
 
-			if (quantity <= 0) {
+			if (quantity <= 0 || quantity %1 !=0 || quantity> 2147483647) {
 				toastr.error('Số lượng không hợp lệ', 'Lỗi');
 				quantityInput.value = 1; // Đặt lại giá trị tối thiểu
 				quantity4Change = 1;
@@ -1290,7 +1292,7 @@
 				selectedCartDetails.push(checkbox.dataset.code); // Lấy giá trị thuộc tính name và thêm vào danh sách
 				// selectedTotal > 50000000 ? allowed = false : allowed = true;
 			});
-			const allowed = selectedTotal <= 50000000;
+			allowed = selectedTotal <= 50000000;
 			let selectedAddress = JSON.parse(localStorage.getItem('selectedAddress')) || {};
 			fetchShippingFee(selectedAddress.idHuyen, selectedAddress.idXa)
 			updateVoucherOptions(selectedTotal)
@@ -1948,8 +1950,10 @@
 
 			if (addresses.length === 0) {
 				addressList.innerHTML = "<p>Không có địa chỉ nào được tìm thấy.</p>";
+				allowedAddresses = false
 				return;
-			}
+			} 
+			allowedAddresses = true
 
 			// Lấy giá trị đã lưu trong localStorage
 			let savedCode = JSON.parse(localStorage.getItem('selectedAddressCode'))?.code;
