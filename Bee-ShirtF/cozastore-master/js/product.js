@@ -212,6 +212,7 @@ angular.module("productApp", []).controller("ProductController", [
         url += `category=${$scope.selectedCategory}&`;
       }
 
+      
       // Thêm phân trang vào URL
       url += `offset=${$scope.shirtsPerPage * $scope.currentPage}&limit=${
         $scope.shirtsPerPage

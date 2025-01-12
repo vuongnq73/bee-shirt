@@ -680,6 +680,7 @@ $interval(function() {
         }
     };
 
+    
     $scope.viewDetails = function(codeshirt) {
       // Tìm sản phẩm trong danh sách $scope.shirts theo codeshirt
       const selectedShirt = $scope.shirts.find(shirt => shirt.codeShirt === codeshirt);
