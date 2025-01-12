@@ -69,7 +69,7 @@
 
 					<!-- Logo desktop -->
 					<a href="#" class="logo">
-						<img src="images/icons/logo-01.png" alt="IMG-LOGO">
+						<img src="/assets/img/kaiadmin/logo_dark.png" alt="IMG-LOGO">
 					</a>
 
 					<!-- Menu desktop -->
@@ -488,11 +488,11 @@
 
 						<div class="flex-w flex-t bor12 p-b-13" style="margin-top: 10px;">
 							<!-- <div class="size-208"> -->
-							<!-- <span class="stext-110 cl2"> -->
-							<select id="voucherSelect" style="width: 100%" class="form-select">
-								<!-- Các option sẽ được thêm động -->
-							</select>
-							<!-- </span> -->
+							<span class="stext-110 cl2">
+								<select id="voucherSelect" style="width: 100%" class="form-select" disabled>
+									<!-- Các option sẽ được thêm động -->
+								</select>
+							</span>
 							<!-- </div> -->
 						</div>
 
@@ -822,7 +822,6 @@
 		let activeVoucherCode = null;
 		let pm = 'card';
 		let allowed = true
-		var vouchers;
 
 		async function miniCart() {
 			const response = await fetch("http://localhost:8080/cart/get-all-cart-details?codeAccount=" + userCode, {
@@ -1106,7 +1105,7 @@
 				});
 				if (!response.ok) throw new Error("Không thể lấy danh sách voucher");
 
-				vouchers = await response.json();
+				const vouchers = await response.json();
 
 				// Xóa các tùy chọn cũ
 				voucherSelect.innerHTML = "";
@@ -1144,7 +1143,7 @@
 				}
 
 				vouchers.forEach((voucher) => {
-					discountValue = voucher.type_voucher === "Percent"
+					const discountValue = voucher.type_voucher === "Percent"
 						? Math.min(voucher.maximum_discount, money * (voucher.discount_value / 100))
 						: Math.min(voucher.discount_value, voucher.maximum_discount);
 
@@ -1152,7 +1151,6 @@
 						maxDiscount = discountValue;
 						bestVoucher = voucher;
 						lastMoney = money - discountValue
-						discount = maxDiscount;
 					}
 
 					const option = document.createElement("option");
@@ -1163,12 +1161,13 @@
 
 				// Tự động chọn voucher giảm nhiều nhất
 				if (bestVoucher) {
+					selectedTotal = lastMoney
 					voucherSelect.value = bestVoucher.code_voucher;
 					// document.getElementById("codeVoucher").value = voucherSelect.value;
 					activeVoucherCode = bestVoucher.code_voucher;
 					document.getElementById('selected-total').innerText = `${lastMoney} VNĐ`;
 					document.getElementById('ship-money').innerText = `${ship} VNĐ`;
-					document.getElementById('all-the-money').innerText = `${ship + selectedTotal - discount} VNĐ`;
+					document.getElementById('all-the-money').innerText = `${ship + lastMoney} VNĐ`;
 				}
 			} catch (error) {
 				console.error("Lỗi khi cập nhật voucher:", error);
@@ -1324,7 +1323,7 @@
 			localStorage.setItem('activeVoucherCode', activeVoucherCode);
 
 			const orderData = {
-				amount: money - discount + ship,  // Số tiền (VND)
+				amount: money + ship,  // Số tiền (VND)
 				orderInfo: 'Online Payment'  // Thông tin đơn hàng
 			};
 
@@ -1546,7 +1545,7 @@
 					ship = data.data.total
 					shipToNewAddress = data.data.total
 					document.getElementById('ship-money').innerText = `${ship} VNĐ`;
-					document.getElementById('all-the-money').innerText = `${ship + selectedTotal - discount} VNĐ`;
+					document.getElementById('all-the-money').innerText = `${ship + selectedTotal} VNĐ`;
 					console.log(ship)
 					console.log(shipToNewAddress)
 					// displayShippingFee(data.data.total);
@@ -1608,7 +1607,7 @@
 				fetchDistricts(provinceId);
 				ship = 0;
 				document.getElementById('ship-money').innerText = `${ship} VNĐ`;
-				document.getElementById('all-the-money').innerText = `${ship + selectedTotal - discount} VNĐ`;
+				document.getElementById('all-the-money').innerText = `${ship + selectedTotal} VNĐ`;
 			} else {
 				const districtSelect = document.getElementById('districtSelect');
 				districtSelect.innerHTML = '<option value="">-- Chọn quận/huyện --</option>';
@@ -1627,7 +1626,7 @@
 				fetchWards(districtId);
 				ship = 0;
 				document.getElementById('ship-money').innerText = `${ship} VNĐ`;
-				document.getElementById('all-the-money').innerText = `${ship + selectedTotal - discount} VNĐ`;
+				document.getElementById('all-the-money').innerText = `${ship + selectedTotal} VNĐ`;
 			} else {
 				const wardSelect = document.getElementById('wardSelect');
 				wardSelect.innerHTML = '<option value="">-- Chọn phường/xã --</option>';
@@ -1664,7 +1663,7 @@
 			// Reset phí giao hàng
 			ship = 0;
 			document.getElementById('ship-money').innerText = `${ship} VNĐ`;
-			document.getElementById('all-the-money').innerText = `${ship + selectedTotal - discount} VNĐ`;
+			document.getElementById('all-the-money').innerText = `${ship + selectedTotal} VNĐ`;
 
 			// Reset phần nhập liệu
 			document.getElementById('detailedAddress').value = "";;

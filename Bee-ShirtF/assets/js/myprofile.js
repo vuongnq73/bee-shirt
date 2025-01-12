@@ -53,11 +53,11 @@ angular
           $scope.errorMessage = "Tên và họ không được để trống.";
           return false;
         }
-        if (!$scope.user.phone.match(phoneRegex)) {
+        if (!$scope.user.phone || !$scope.user.phone.match(phoneRegex)) {
           $scope.errorMessage = "Số điện thoại không hợp lệ.";
           return false;
         }
-        if (!$scope.user.email.match(emailRegex)) {
+        if (!$scope.user.email || !$scope.user.email.match(emailRegex)) {
           $scope.errorMessage = "Email không hợp lệ.";
           return false;
         }
@@ -71,19 +71,28 @@ angular
       }
 
           // Hàm lấy quyền cao nhất
-    function getHighestRole(scopes) {
-      const roles = scopes ? scopes.split(" ") : [];
-      const rolePriority = {
-        ROLE_ADMIN: 1,
-        ROLE_STAFF: 2,
-        ROLE_USER: 3,
-      };
-  
-      const validRoles = roles.filter((role) => rolePriority[role]);
-      validRoles.sort((a, b) => rolePriority[a] - rolePriority[b]);
-  
-      return validRoles[0] || null;
-    }
+          function getHighestRole(roles) {
+            if (!roles || roles.length === 0) {
+              return null;
+            }
+          
+            // Quy định độ ưu tiên của quyền
+            const rolePriority = {
+              ADMIN: 1,
+              STAFF: 2,
+              USER: 3,
+            };
+          
+            // Trích xuất mã vai trò
+            const roleCodes = roles.map((role) => role.code);
+          
+            // Lọc ra các vai trò hợp lệ và sắp xếp theo độ ưu tiên
+            const validRoles = roleCodes.filter((code) => rolePriority[code]);
+            validRoles.sort((a, b) => rolePriority[a] - rolePriority[b]);
+          
+            return validRoles[0] || null;
+          }
+          
     
     $scope.isAdmin = function () {
       const token = sessionStorage.getItem("jwtToken");
@@ -238,6 +247,26 @@ angular
               $scope.errorMessage = "Đã có lỗi xảy ra. Vui lòng thử lại.";
             }
           });
+    };
+    
+    $scope.isViewingUserAccount = function () {
+      if (!$scope.user.role || $scope.user.role.length === 0) {
+        return false; // Không có role thì không hiển thị input
+      }
+    
+      const highestRole = getHighestRole($scope.user.role);
+      return highestRole === "USER";
+    };
+    
+    
+    
+    $scope.isUser = function () {
+      const token = sessionStorage.getItem("jwtToken");
+      if (!token) return false;
+    
+      const payload = JSON.parse(atob(token.split(".")[1])); // Giải mã JWT
+      const roles = payload.scope ? payload.scope.split(" ") : [];
+      return roles.includes("ROLE_USER") && roles.length === 1; // Chỉ có ROLE_USER
     };
     
       // Quay lại trang trước

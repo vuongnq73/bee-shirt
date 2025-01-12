@@ -17,12 +17,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/shirt-details")
-@CrossOrigin(origins = "http://127.0.0.1:5501")
+
+
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class ShirtDetailController {
 
     @Autowired
@@ -73,6 +79,13 @@ public class ShirtDetailController {
         Iterable<Shirt> shirts = shirtDetailService.getAllShirts();
         return ResponseEntity.ok(shirts);
     }
+
+    @GetMapping("/api/shirt/byCode/{codeShirt}")
+    public ResponseEntity<Shirt> getShirtByCodeShirt(@PathVariable String codeShirt) {
+        Shirt shirt = shirtDetailService.getShirtByCodeShirt(codeShirt);
+        return shirt != null ? ResponseEntity.ok(shirt) : ResponseEntity.notFound().build();
+    }
+
     // Hiển thị danh sách chi tiết áo thun
     @GetMapping("/api/hienthi")
     public ResponseEntity<List<ShirtDetailDTO>> getShirtDetails(Pageable pageable) {
@@ -136,5 +149,25 @@ public class ShirtDetailController {
         }
     }
 
+    @PostMapping("/api/upload")
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
+        try {
+            // Đường dẫn lưu tệp
+            String uploadDir = "D:\\1a_DATN_2024\\bee-shirt\\Bee-ShirtF\\assets\\img";
+            File directory = new File(uploadDir);
+            if (!directory.exists()) {
+                directory.mkdirs(); // Tạo thư mục nếu chưa tồn tại
+            }
+
+            // Lưu tệp
+            String filePath = uploadDir + File.separator + file.getOriginalFilename();
+            file.transferTo(new File(filePath));
+
+            // Trả về đường dẫn tệp
+            return ResponseEntity.ok(Map.of("filePath", "/assets/img/" + file.getOriginalFilename()));
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi khi lưu tệp");
+        }
+    }
 
 }
