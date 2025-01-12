@@ -5,7 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "dia_chi_giao_hang")
+@Table(name = "delivery_address")
 @Getter
 @Setter
 @Builder
@@ -17,27 +17,30 @@ public class DeliveryAddress {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "delivery_address_code", nullable = false)
+    private String deliveryAddressCode;
+
     @ManyToOne
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
-    @Column(name = "id_thanh_pho", nullable = false)
-    private Integer idThanhPho;
+    @Column(name = "id_province", nullable = false)
+    private Integer idProvince;
 
-    @Column(name = "id_huyen", nullable = false)
-    private Integer idHuyen;
+    @Column(name = "id_district", nullable = false)
+    private Integer idDistrict;
 
-    @Column(name = "id_xa", nullable = false)
-    private Integer idXa;
+    @Column(name = "id_ward", nullable = false)
+    private Integer idWard;
 
-    @Column(name = "ten", nullable = false)
-    private String ten;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @Column(name = "sdt", nullable = false)
-    private String sdt;
+    @Column(name = "phone", nullable = false)
+    private String phone;
 
-    @Column(name = "dia_chi_chi_tiet", nullable = false)
-    private String diaChiChiTiet;
+    @Column(name = "detail_address", nullable = false)
+    private String detailAddress;
 
     @Column(name = "deleted", nullable = false)
     private Boolean deleted;

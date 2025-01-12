@@ -11,4 +11,7 @@ import java.util.List;
 public interface DeliveryAddressRepository extends JpaRepository<DeliveryAddress, Integer> {
     @Query("SELECT da FROM DeliveryAddress da WHERE da.account.code LIKE %:query% AND da.deleted = false")
     List<DeliveryAddress> findDeliveryAddressByAccountCode(@Param("query") String query);
+
+    @Query("SELECT da FROM DeliveryAddress da WHERE da.deliveryAddressCode LIKE %:query% AND da.deleted = false")
+    DeliveryAddress findDeliveryAddressByCode(@Param("query") String query);
 }

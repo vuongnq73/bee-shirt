@@ -102,7 +102,7 @@ public class PointOfSaleService {
         String randomCode = generateRandomCode();
         Bill bill = new Bill();
         bill.setCodeBill("CB" + randomCode);
-
+        bill.setCustomer(accountRepository.findByUsername("khachvanglai").get());
         bill.setCreateAt(LocalDateTime.now());
         bill.setStatusBill(0);
         bill.setDeleted(false);
