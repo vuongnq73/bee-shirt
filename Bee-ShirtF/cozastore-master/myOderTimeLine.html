@@ -103,7 +103,7 @@
 			/* Canh trái nội dung */
 			margin-bottom: 0px !important;
 			/* Khoảng cách xuống thanh timeline */
-			padding-bottom: 20px;
+			padding-bottom: 10px;
 
 
 
@@ -125,7 +125,7 @@
 			background-color: rgb(245, 244, 244);
 			width: 100%;
 			/* Đảm bảo thanh tiến trình rộng toàn bộ màn hình */
-			height: 100px;
+			height: 80px;
 			/* Điều chỉnh chiều cao của container */
 			border-bottom: 3px solid #ada4a4;
 			/* Thêm viền dưới */
@@ -148,10 +148,10 @@
 		}
 
 		.swal2-popup {
-			margin-top: 150px !important;
-			width: 600px !important;
+			margin-top: 180px !important;
+			width: 550px !important;
 			/* Modal width set to 300px for smaller size */
-			height: 300px !important;
+			height: 450px !important;
 			/* Adjust height automatically based on content */
 			flex-direction: column;
 			justify-content: center;
@@ -191,6 +191,28 @@
 			color: #007bff;
 			/* Màu sắc tùy chỉnh khi hover (có thể thay đổi) */
 		}
+	/* Điều chỉnh kích thước và căn giữa icon */
+.step .circle {
+    width: 40px !important; /* Giảm kích thước vòng tròn */
+    height: 40px !important; /* Giảm kích thước vòng tròn */
+    display: flex; /* Kích hoạt flexbox */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    margin: auto; /* Đảm bảo nằm chính giữa */
+}
+
+/* Giảm kích thước icon */
+.step .circle i {
+    font-size: 20px !important; /* Giảm kích thước icon */
+    line-height: 1; /* Điều chỉnh khoảng cách */
+}
+
+/* Điều chỉnh chiều cao và canh giữa dòng kết nối */
+.step .line {
+    height: 2px; /* Điều chỉnh độ dày dòng */
+    margin: auto 0; /* Canh giữa theo chiều dọc */
+}
+
 	</style>
 </head>
 
@@ -221,7 +243,8 @@
 
 					<!-- Logo desktop -->
 					<a href="#" class="logo">
-						<img src="images/icons/logo-01.png" alt="IMG-LOGO">
+						<img src="/assets/img/kaiadmin/logo_dark.png" alt="IMG-LOGO">
+
 					</a>
 					<!-- Menu desktop -->
 					<div class="menu-desktop">
@@ -279,7 +302,7 @@
 				<div class="wrap-timeline">
 					<!-- //TimeLine -->
 					<div class="contai" style="background-color: rgb(255, 255, 255);">
-						<div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+						<div class="bread-crumb flex-w p-l-25 p-r-15 p-lr-0-lg">
 							<a href="index.html" class="stext-109 cl8 hov-cl1 trans-04" style=" text-decoration: none;">
 								Trang chủ
 								<i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
@@ -450,13 +473,18 @@
 	</header>
 
 	<!-- Shoping Cart -->
-	<div class="container" style="margin-top: 150px;">
+	<div class="container" style="margin-top: 100px;">
 
 		<div class="card-header d-flex justify-content-between align-items-center">
 			<h4 class="card-title">Thông Tin Đơn Hàng</h4>
 		</div>
 		<div class="info-container">
+	
 			<br>
+			<div class="info-item">
+				<p ng-if="billInfo.statusBill === 7"> Lý Do Hủy: <span
+					style="color: rgb(214, 73, 18);">{{notes}}</span></p>
+			  </div>
 			<div class="row">
 				<div class="col-md-8">
 					<div class="info-item">

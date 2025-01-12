@@ -12,9 +12,7 @@
     padding: 20px;
     font-family: Arial, sans-serif;
 }
-.color-selection, .size-selection {
-    margin-top: 20px;
-}
+
 .color-option, .size-option {
     display: inline-block;
     margin: 5px;

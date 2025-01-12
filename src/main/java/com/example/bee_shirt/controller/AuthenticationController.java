@@ -5,9 +5,11 @@ import com.example.bee_shirt.dto.request.LogoutRequest;
 import com.example.bee_shirt.dto.response.ApiResponse;
 import com.example.bee_shirt.dto.response.AuthenticationResponse;
 import com.example.bee_shirt.exception.AppException;
+import com.example.bee_shirt.exception.ErrorCode;
 import com.example.bee_shirt.service.AuthenticationService;
 import com.example.bee_shirt.service.SendEmailService;
 import com.nimbusds.jose.JOSEException;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -30,7 +32,7 @@ public class AuthenticationController {
     SendEmailService sendEmailService;
 
     @PostMapping("/login")
-    ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
+    ApiResponse<AuthenticationResponse> authenticate(@Valid @RequestBody AuthenticationRequest request){
         var result = authenticationService.authenticate(request);
         return ApiResponse.<AuthenticationResponse>builder()
                 .result(result)
@@ -38,7 +40,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/forgot-password")
-    public ApiResponse<String> forgotPassword(@RequestParam String email, @RequestParam String username) {
+    public ApiResponse<String> forgotPassword(@RequestParam String email,@Valid @RequestParam String username) {
         return ApiResponse.<String>builder()
                 .result(sendEmailService.forgotPassword(email,username))
                 .build();
@@ -50,13 +52,6 @@ public class AuthenticationController {
         return ApiResponse.<Void>builder()
                 .build();
 
-    }
-    @PostMapping("/send-verification-code")
-    public ApiResponse<String> sendVerificationCode(@RequestBody Map<String, String> payload) {
-        String email = payload.get("email");
-        return ApiResponse.<String>builder()
-                .result(sendEmailService.sendVerificationCode(email))
-                .build();
     }
 
     @PostMapping("/verify-code")

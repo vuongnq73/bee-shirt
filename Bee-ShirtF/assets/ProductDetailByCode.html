@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="beeShirtDetail">
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Bee-Shirt Admin Dashboard</title>
+  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+  <link rel="icon" href="img/kaiadmin/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="ProductDetail.html">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+  <link rel="stylesheet" href="css/productDetail.css">
+  <!-- Bootstrap CSS v5.2.1 -->
+       <link
+           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+           rel="stylesheet"
+           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+           crossorigin="anonymous"
+       />
+       <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+ <script
+ src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+ integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+ crossorigin="anonymous"
+></script>
+
+<script
+ src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+ integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+ crossorigin="anonymous"
+></script>
+  <!-- Fonts and icons -->
+  <script src="js/plugin/webfont/webfont.min.js"></script>
+  <script>
+    WebFont.load({
+      google: { families: ["Public Sans:300,400,500,600,700"] },
+      custom: {
+        families: [
+          "Font Awesome 5 Solid",
+          "Font Awesome 5 Regular",
+          "Font Awesome 5 Brands",
+          "simple-line-icons",
+        ],
+        urls: ["css/fonts.min.css"],
+      },
+      active: function () {
+        sessionStorage.fonts = true;
+      },
+    });
+  </script>
+
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/plugins.min.css" />
+  <link rel="stylesheet" href="css/kaiadmin.min.css" />
+
+  <!-- CSS Just for demo purpose, don't include it in your project -->
+  <link rel="stylesheet" href="css/demo.css" />
+</head>
+
+<body ng-controller="ShirtDetailController">
+  <div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar" data-background-color="dark">
+      <div class="sidebar-logo">
+        <!-- Logo Header -->
+        <div class="logo-header" data-background-color="dark">
+          <a href="BanHang.html" class="logo">
+            <img src="img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="40" />
+          </a>
+          <div class="nav-toggle">
+            <button class="btn btn-toggle toggle-sidebar">
+              <i class="gg-menu-right"></i>
+            </button>
+            <button class="btn btn-toggle sidenav-toggler">
+              <i class="gg-menu-left"></i>
+            </button>
+          </div>
+          <button class="topbar-toggler more">
+            <i class="gg-more-vertical-alt"></i>
+          </button>
+        </div>
+        <!-- End Logo Header -->
+      </div>
+      <div class="sidebar-wrapper scrollbar scrollbar-inner">
+        <div class="sidebar-content">
+          <ul class="nav nav-secondary">
+            <li class="nav-item">
+              <a href="BanHang.html" class="collapsed" aria-expanded="false">
+                <i class="fas fa-home"></i>
+                <p>Bán Hàng</p>
+              </a>
+            </li>
+            <li class="nav-section">
+              <span class="sidebar-mini-icon">
+                <i class="fa fa-ellipsis-h"></i>
+              </span>
+            </li>
+            <li class="nav-item">
+              <a data-bs-toggle="collapse" href="#">
+                <i class="fas fa-layer-group"></i>
+                <p>Quản Lý</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a  href="/assets/Voucher.html">
+                <i class="fas fa-ticket-alt"></i>
+                <p>Voucher</p>
+               
+              </a>
+              
+            </li>
+            <li class="nav-item">
+              <a href="/assets/Bill.html">
+                <i class="fas fa-pen-square"></i>
+                <span class="sub-item">Hóa Đơn</span>
+              </a>
+            </li>
+            <li class="nav-item active submenu">
+              <a data-bs-toggle="collapse" href="#tables">
+                <i class="fas fa-table"></i>
+                <p>Sản Phẩm</p>
+                <span class="caret"></span>
+              </a>
+              <div class="collapse" id="tables">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a href="Products.html">
+                      <span class="sub-item">Danh Mục Sản Phẩm</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="ProductDetail.html">
+                      <span class="sub-item">Danh Sách Sản Phẩm Chi Tiết</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="Category.html">
+                      <span class="sub-item">Danh Sách Thuộc Tính<span>
+                    </a>
+                  </li>
+                 
+                </ul>
+              </div>
+            </li>
+            <li class="nav-item ">
+              <a data-bs-toggle="collapse" href="#account">
+                <i class="fas fa-user"></i>
+                <p>Account</p>
+                <span class="caret"></span>
+              </a>
+              <div class="collapse" id="account">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a href="staff/Staff.html">
+                      <span class="sub-item">Nhân Viên</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="Customer.html">
+                      <span class="sub-item">Khách Hàng</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a  href="statistic.html">
+                <i class="far fa-chart-bar"></i>
+                <p>Thống Kê</p>
+             
+              </a>
+              <!-- <div class="collapse" id="charts">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a href="charts/charts.html">
+                      <span class="sub-item">Chart Js</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="charts/sparkline.html">
+                      <span class="sub-item">Sparkline</span>
+                    </a>
+                  </li>
+                </ul>
+              </div> -->
+            </li>
+
+
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- End Sidebar -->
+
+    <div class="main-panel">
+      <div class="main-header">
+        <div class="main-header-logo">
+          <!-- Logo Header -->
+          <div class="logo-header" data-background-color="dark">
+            <a href="BanHang.html" class="logo">
+              <img src="img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="20" />
+            </a>
+            <div class="nav-toggle">
+              <button class="btn btn-toggle toggle-sidebar">
+                <i class="gg-menu-right"></i>
+              </button>
+              <button class="btn btn-toggle sidenav-toggler">
+                <i class="gg-menu-left"></i>
+              </button>
+            </div>
+            <button class="topbar-toggler more">
+              <i class="gg-more-vertical-alt"></i>
+            </button>
+          </div>
+          <!-- End Logo Header -->
+        </div>
+        <!-- Navbar Header -->
+        <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+          <div class="container-fluid">
+            <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <button type="submit" class="btn btn-search pe-1">
+                    <i class="fa fa-search search-icon"></i>
+                  </button>
+                </div>
+                <input type="text" placeholder="Search ..." class="form-control" />
+              </div>
+            </nav>
+
+            <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+              <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                  aria-expanded="false" aria-haspopup="true">
+                  <i class="fa fa-search"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-search animated fadeIn">
+                  <form class="navbar-left navbar-form nav-search">
+                    <div class="input-group">
+                      <input type="text" placeholder="Search ..." class="form-control" />
+                    </div>
+                  </form>
+                </ul>
+              </li>
+              <li class="nav-item topbar-icon dropdown hidden-caret">
+                <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button"
+                  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-envelope"></i>
+                </a>
+                <ul class="dropdown-menu messages-notif-box animated fadeIn" aria-labelledby="messageDropdown">
+                  <li>
+                    <div class="dropdown-title d-flex justify-content-between align-items-center">
+                      Tin Nhắn
+                      <a href="#" class="small">Đánh dấu tất cả các tin nhắn đã đọc</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="message-notif-scroll scrollbar-outer">
+                      <div class="notif-center">
+                        <a href="#">
+                          <div class="notif-img">
+                            <img src="img/jm_denis.jpg" alt="Img Profile" />
+                          </div>
+                          <div class="notif-content">
+                            <span class="subject">Jimmy Denis</span>
+                            <span class="block"> How are you ? </span>
+                            <span class="time">5 phút trước</span>
+                          </div>
+                        </a>
+                        <a href="#">
+                          <div class="notif-img">
+                            <img src="img/chadengle.jpg" alt="Img Profile" />
+                          </div>
+                          <div class="notif-content">
+                            <span class="subject">Nguyễn Quốc Vượng</span>
+                            <span class="block"> Ok,Cảm ơn Shop nhé ! </span>
+                            <span class="time">12 phút trước</span>
+                          </div>
+                        </a>
+                        <a href="#">
+                          <div class="notif-img">
+                            <img src="img/mlane.jpg" alt="Img Profile" />
+                          </div>
+                          <div class="notif-content">
+                            <span class="subject">Đỗ Trung Đăng</span>
+                            <span class="block">
+                              Xin chào !
+                            </span>
+                            <span class="time">12 phút trước</span>
+                          </div>
+                        </a>
+                        <a href="#">
+                          <div class="notif-img">
+                            <img src="img/talha.jpg" alt="Img Profile" />
+                          </div>
+                          <div class="notif-content">
+                            <span class="subject">Đỗ Trường Giang</span>
+                            <span class="block"> Shop còn mẫu áo này không ? </span>
+                            <span class="time">17 phút trước</span>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <a class="see-all" href="javascript:void(0);">Xem tất cả các tin nhắn<i
+                        class="fa fa-angle-right"></i>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item topbar-icon dropdown hidden-caret">
+                <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-bell"></i>
+                  <span class="notification">4</span>
+                </a>
+                <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
+                  <li>
+                    <div class="dropdown-title">
+                      Bạn có 4 thông báo mới
+                    </div>
+                  </li>
+                  <li>
+                    <div class="notif-scroll scrollbar-outer">
+                      <div class="notif-center">
+                        <a href="#">
+                          <div class="notif-icon notif-primary">
+                            <i class="fa fa-user-plus"></i>
+                          </div>
+                          <div class="notif-content">
+                            <span class="block"> Người dùng mới đăng ký </span>
+                            <span class="time">5 phút trước</span>
+                          </div>
+                        </a>
+                        <a href="#">
+                          <div class="notif-icon notif-success">
+                            <i class="fa fa-comment"></i>
+                          </div>
+                          <div class="notif-content">
+                            <span class="block">
+                              Đỗ Trường Giang đã bình luận
+                            </span>
+                            <span class="time">12 phút trước</span>
+                          </div>
+                        </a>
+                        <a href="#">
+                          <div class="notif-img">
+                            <img src="img/profile2.jpg" alt="Img Profile" />
+                          </div>
+                          <div class="notif-content">
+                            <span class="block">
+                              Đỗ Trung Đăng đã gửi tin nhắn
+                            </span>
+                            <span class="time">12 phút trước</span>
+                          </div>
+                        </a>
+                        <a href="#">
+                          <div class="notif-icon notif-danger">
+                            <i class="fa fa-heart"></i>
+                          </div>
+                          <div class="notif-content">
+                            <span class="block"> Nguyễn Quốc Vượng đã like </span>
+                            <span class="time">17 phút trước</span>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <a class="see-all" href="javascript:void(0);">Xem tất cả các thông báo<i
+                        class="fa fa-angle-right"></i>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <!-- <li class="nav-item topbar-icon dropdown hidden-caret">
+                  <a
+                    class="nav-link"
+                    data-bs-toggle="dropdown"
+                    href="#"
+                    aria-expanded="false"
+                  >
+                    <i class="fas fa-layer-group"></i>
+                  </a>
+                  <div class="dropdown-menu quick-actions animated fadeIn">
+                    <div class="quick-actions-header">
+                      <span class="title mb-1">Quick Actions</span>
+                      <span class="subtitle op-7">Shortcuts</span>
+                    </div>
+                    <div class="quick-actions-scroll scrollbar-outer">
+                      <div class="quick-actions-items">
+                        <div class="row m-0">
+                          <a class="col-6 col-md-4 p-0" href="#">
+                            <div class="quick-actions-item">
+                              <div class="avatar-item bg-danger rounded-circle">
+                                <i class="far fa-calendar-alt"></i>
+                              </div>
+                              <span class="text">Calendar</span>
+                            </div>
+                          </a>
+                          <a class="col-6 col-md-4 p-0" href="#">
+                            <div class="quick-actions-item">
+                              <div
+                                class="avatar-item bg-warning rounded-circle"
+                              >
+                                <i class="fas fa-map"></i>
+                              </div>
+                              <span class="text">Maps</span>
+                            </div>
+                          </a>
+                          <a class="col-6 col-md-4 p-0" href="#">
+                            <div class="quick-actions-item">
+                              <div class="avatar-item bg-info rounded-circle">
+                                <i class="fas fa-file-excel"></i>
+                              </div>
+                              <span class="text">Reports</span>
+                            </div>
+                          </a>
+                          <a class="col-6 col-md-4 p-0" href="#">
+                            <div class="quick-actions-item">
+                              <div
+                                class="avatar-item bg-success rounded-circle"
+                              >
+                                <i class="fas fa-envelope"></i>
+                              </div>
+                              <span class="text">Emails</span>
+                            </div>
+                          </a>
+                          <a class="col-6 col-md-4 p-0" href="#">
+                            <div class="quick-actions-item">
+                              <div
+                                class="avatar-item bg-primary rounded-circle"
+                              >
+                                <i class="fas fa-file-invoice-dollar"></i>
+                              </div>
+                              <span class="text">Invoice</span>
+                            </div>
+                          </a>
+                          <a class="col-6 col-md-4 p-0" href="#">
+                            <div class="quick-actions-item">
+                              <div
+                                class="avatar-item bg-secondary rounded-circle"
+                              >
+                                <i class="fas fa-credit-card"></i>
+                              </div>
+                              <span class="text">Payments</span>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li> -->
+
+              <li class="nav-item topbar-user dropdown hidden-caret">
+                <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
+                  <div class="avatar-sm">
+                    <img src="img/profile.jpg" alt="..." class="avatar-img rounded-circle" />
+                  </div>
+                  <span class="profile-username">
+                    <span class="op-7">Hi,</span>
+                    <span class="fw-bold">Đăng Ngố</span>
+                  </span>
+                </a>
+                <ul class="dropdown-menu dropdown-user animated fadeIn">
+                  <div class="dropdown-user-scroll scrollbar-outer">
+                    <li>
+                      <div class="user-box">
+                        <div class="avatar-lg">
+                          <img src="img/profile.jpg" alt="image profile" class="avatar-img rounded" />
+                        </div>
+                        <div class="u-text">
+                          <h4>Hizrian</h4>
+                          <p class="text-muted">hello@example.com</p>
+                          <a href="profile.html" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">My Profile</a>
+                      <a class="dropdown-item" href="#">My Balance</a>
+                      <a class="dropdown-item" href="#">Inbox</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Account Setting</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Logout</a>
+                    </li>
+                  </div>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <!-- End Navbar -->
+      </div>
+      
+      <!-- container -->
+      <div class="container">
+        <!-- Nút mở modal -->
+      <div class="page-inner">
+
+      
+
+      <!-- Modal -->
+      <div class="modal fade" id="addVariantModal" tabindex="-1" aria-labelledby="addVariantModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addVariantModalLabel">Thêm Sản Phẩm Chi Tiết</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <div class="col-md-6">
+                <label for="shirtName">Tên Áo Thun:</label>
+                <input type="text" id="shirtName" class="form-control" ng-model="newShirtDetail.shirt.nameshirt" disabled>
+                <p>Bạn đã chọn: {{ newShirtDetail.shirt.nameshirt }}</p>
+            </div>
+            </div>
+            <div class="col-md-6">
+                <label for="material" class="form-label">Chất Liệu</label>
+                <select class="form-select" id="material" ng-model="newShirtDetail.material.id" ng-change="updateErrorState('material')" required>
+                    <option value="" disabled selected>Chọn Chất Liệu</option>
+                    <option ng-repeat="material in materials" ng-value="material.id">{{ material.nameMaterial }}</option>
+                </select>
+                <span class="text-danger" ng-if="errors.material">Vui lòng chọn chất liệu.</span>
+            </div>
+        </div>
+        
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="gender" class="form-label">Giới Tính</label>
+                <select class="form-select" id="gender" ng-model="newShirtDetail.gender.id" ng-change="updateErrorState('gender')" required>
+                    <option value="" disabled selected>Chọn Giới Tính</option>
+                    <option ng-repeat="gender in genders" ng-value="gender.id">{{ gender.nameGender }}</option>
+                </select>
+                <span class="text-danger" ng-if="errors.gender">Vui lòng chọn giới tính.</span>
+            </div>
+            <div class="col-md-6">
+                <label for="pattern" class="form-label">Họa Tiết</label>
+                <select class="form-select" id="pattern" ng-model="newShirtDetail.pattern.id" ng-change="updateErrorState('pattern')" required>
+                    <option value="" disabled selected>Chọn Họa Tiết</option>
+                    <option ng-repeat="pattern in patterns" ng-value="pattern.id">{{ pattern.namePattern }}</option>
+                </select>
+                <span class="text-danger" ng-if="errors.pattern">Vui lòng chọn họa tiết.</span>
+            </div>
+        </div>
+        
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="season" class="form-label">Mùa</label>
+                <select class="form-select" id="season" ng-model="newShirtDetail.season.id" ng-change="updateErrorState('season')" required>
+                    <option value="" disabled selected>Chọn Mùa</option>
+                    <option ng-repeat="season in seasons" ng-value="season.id">{{ season.nameSeason }}</option>
+                </select>
+                <span class="text-danger" ng-if="errors.season">Vui lòng chọn mùa.</span>
+            </div>
+            <div class="col-md-6">
+                <label for="origin" class="form-label">Xuất Xứ</label>
+                <select class="form-select" id="origin" ng-model="newShirtDetail.origin.id" ng-change="updateErrorState('origin')" required>
+                    <option value="" disabled selected>Chọn Xuất Xứ</option>
+                    <option ng-repeat="origin in origins" ng-value="origin.id">{{ origin.nameOrigin }}</option>
+                </select>
+                <span class="text-danger" ng-if="errors.origin">Vui lòng chọn xuất xứ.</span>
+            </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="price" style="padding-bottom: 10px;">Giá:</label>
+            <br>
+            <input type="text" ng-model="newShirtDetail.price" ng-change="generateVariants()"
+                   placeholder="Nhập giá" style="width: 250px; height: 30px; border: 1px solid #ddd; border-radius: 5px;" />
+            <br>
+            <p style="color: green;padding-top: 10px;">Giá tiền: {{newShirtDetail.priceFormatted}} VNĐ</p>
+            <span class="text-danger" ng-if="errors.price">{{errors.price}}</span>
+        </div>
+        
+          <div class="col-md-6">
+            <!-- Chọn Size -->
+          <label class="form-label">Chọn Size:</label>
+          <div class="size-selection">
+              <div class="size-option" 
+                  ng-class="{'selected': selectedSizes.indexOf(size.id) !== -1}" 
+                  ng-click="toggleSizeSelection(size.id); updateErrorState('sizes')" 
+                  ng-repeat="size in sizes">{{ size.namesize }}
+              </div>
+          </div>
+          <span class="text-danger" ng-if="errors.sizes">Vui lòng chọn ít nhất một kích thước.</span>
+          </div>
+        </div>
+        
+  
+      <br>
+        <!-- Chọn Màu -->
+        <label>Chọn Màu:</label>
+        <div class="color-selection">
+            <div class="color-option" 
+                 ng-class="{'selected': selectedColors.indexOf(color.id) !== -1}" 
+                 ng-click="toggleColorSelection(color.id); updateErrorState('colors')" 
+                 ng-repeat="color in colors">{{ color.nameColor }}
+            </div>
+        </div>
+        <span class="text-danger" ng-if="errors.colors">Vui lòng chọn ít nhất một màu.</span>
+        <br>
+      
+        <button ng-click="generateVariants()" class="btn btn-primary">Tạo Biến Thể</button>
+  
+          <!-- Hiển thị các biến thể và ô nhập số lượng -->
+          <div class="variant-list" ng-if="variants.length > 0" style="margin-top: 20px;">
+            <h3>Sản Phẩm Chi Tiết Được Tạo:</h3>
+            <div class="variant-item" ng-repeat="variant in variants" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+              <span>
+                  Màu: {{getColorName(variant.colorId)}}, Size: {{getSizeName(variant.sizeId)}}
+              </span>
+          
+              <label for="">Số Lượng:
+                <input type="number" ng-model="variant.quantity" placeholder="Số lượng" min="0" style="width: 80px; padding: 5px; border: 1px solid #ddd; border-radius: 5px;" />
+            </label>
+            <!-- Thông báo lỗi cho số lượng -->
+            <span ng-if="errors.quantity" class="text-danger">
+                {{errors.quantity}}
+            </span>
+            
+            <label>Ảnh 1:</label>
+            <input type="file" ng-files="fileNameChanged($files, $index, 1)" />
+            <!-- Hiển thị ảnh 1 nếu đã được chọn -->
+            <div ng-if="variant.imagePreview">
+                <img ng-src="{{variant.imagePreview}}" alt="Ảnh 1" style="max-width: 100px; max-height: 100px; margin-top: 10px;" />
+            </div>
+            <!-- Thông báo lỗi cho ảnh 1 -->
+            <span ng-if="errors.image" class="text-danger">
+                {{errors.image}}
+            </span>
+            
+            <label>Ảnh 2:</label>
+            <input type="file" ng-files="fileNameChanged($files, $index, 2)" />
+            <!-- Hiển thị ảnh 2 nếu đã được chọn -->
+            <div ng-if="variant.image2Preview">
+                <img ng-src="{{variant.image2Preview}}" alt="Ảnh 2" style="max-width: 100px; max-height: 100px; margin-top: 10px;" />
+            </div>
+            <!-- Thông báo lỗi cho ảnh 2 -->
+            <span ng-if="errors.image2" class="text-danger">
+                {{errors.image2}}
+            </span>
+            
+            <label>Ảnh 3:</label>
+            <input type="file" ng-files="fileNameChanged($files, $index, 3)" />
+            <!-- Hiển thị ảnh 3 nếu đã được chọn -->
+            <div ng-if="variant.image3Preview">
+                <img ng-src="{{variant.image3Preview}}" alt="Ảnh 3" style="max-width: 100px; max-height: 100px; margin-top: 10px;" />
+            </div>
+            <!-- Thông báo lỗi cho ảnh 3 -->
+            <span ng-if="errors.image3" class="text-danger">
+                {{errors.image3}}
+            </span>
+            
+          </div>
+                                          
+            <button ng-click="saveAllVariants()" class="btn btn-success" style="margin-top: 10px; margin-bottom: 20px;">Lưu Vào Danh Sách</button>
+  
+          </div>
+
+      </div>
+      </div>
+      </div>
+      </div>
+      <div>
+        <div class="filter-container">
+          <!-- Bộ lọc -->
+          <div class="filter-column">
+              <label for="productCode">Mã sản phẩm:</label>
+              <select id="shirt" ng-model="filters.shirtId" style="border-radius: 5px;width: 220px;">
+                  <option value="">Tất cả</option>
+                  <option ng-repeat="shirt in shirts" ng-value="{{shirt.id}}">{{shirt.nameshirt}}</option>
+              </select>
+          </div>
+      
+          <div class="filter-column">
+              <label for="color">Màu sắc:</label>
+              <select id="color" ng-model="filters.colorId"style="border-radius: 5px;width: 220px;">
+                  <option value="">Tất cả</option>
+                  <option ng-repeat="color in colors" ng-value="{{color.id}}">{{color.nameColor}}</option>
+              </select>
+          </div>
+      
+          <div class="filter-column">
+              <label for="material">Chất liệu:</label>
+              <select id="material" ng-model="filters.materialId"style="border-radius: 5px;width: 220px;">
+                  <option value="">Tất cả</option>
+                  <option ng-repeat="material in materials" ng-value="{{material.id}}">{{material.nameMaterial}}</option>
+              </select>
+          </div>
+      
+          <div class="filter-column">
+              <label for="size">Kích cỡ:</label>
+              <select id="size" ng-model="filters.sizeId"style="border-radius: 5px;width: 220px;">
+                  <option value="">Tất cả</option>
+                  <option ng-repeat="size in sizes" ng-value="{{size.id}}">{{size.namesize}}</option>
+              </select>
+          </div>
+      </div>
+      
+      <div class="filter-container">
+        <div class="filter-column">
+          <label for="origin">Xuất xứ:</label>
+          <select id="origin" ng-model="filters.originId"style="border-radius: 5px;width: 220px;">
+              <option value="">Tất cả</option>
+              <option ng-repeat="origin in origins" ng-value="{{origin.id}}">{{origin.nameOrigin}}</option>
+          </select>
+      </div>
+        <div class="filter-column">
+          <label for="pattern">Mẫu áo:</label>
+          <select id="pattern" ng-model="filters.patternId"style="border-radius: 5px;width: 220px;">
+              <option value="">Tất cả</option>
+              <option ng-repeat="pattern in patterns" ng-value="{{pattern.id}}">{{pattern.namePattern}}</option>
+          </select>
+      </div>
+      <div class="filter-column">
+        <label for="gender">Giới tính:</label>
+        <select id="gender" ng-model="filters.genderId"style="border-radius: 5px;width: 220px;">
+            <option value="">Tất cả</option>
+            <option ng-repeat="gender in genders" ng-value="{{gender.id}}">{{gender.nameGender}}</option>
+        </select>
+    </div>
+    <div class="filter-column">
+      <label for="season">Mùa:</label>
+      <select id="season" ng-model="filters.seasonId"style="border-radius: 5px;width: 220px;">
+          <option value="">Tất cả</option>
+          <option ng-repeat="season in seasons" ng-value="{{season.id}}">{{season.nameSeason}}</option>
+      </select>
+  </div>  
+      </div>
+      <div class="filter-container">
+        <div class="filter-column col-md-2">
+          <label for="priceFrom">Khoảng giá</label>
+          <input type="number" id="priceFrom" ng-model="filters.priceFrom" placeholder="Giá từ" style="border-radius: 5px;" />
+      </div>
+        <div style="padding-top: 25.5px;text-align: center;padding-right: 10px;">
+          <p>---</p>
+      </div>
+
+      <div class="filter-column col-md-2"style="padding-top:25.5px;">
+          <input type="number" id="priceTo" ng-model="filters.priceTo" placeholder="Giá đến" style="border-radius: 5px;"/>
+      </div>
+      <div class="filter-column" style="padding-top: 22px;padding-left: 50px;">
+        <button style="width: 140px;height: 40px;border-radius: 5px;background-color: #1572e8;color: white;" ng-click="filterShirtDetails()">Lọc</button>
+    </div>
+      </div>
+          
+    </div>
+    <button type="button" class="btn btn-primary " style="float: right;" data-bs-toggle="modal" data-bs-target="#addVariantModal">
+      Thêm Sản Phẩm Chi Tiết
+      </button>
+      <h2 class="mt-5">Danh Sách Chi Tiết Áo Thun</h2>
+      <table class="table table-bordered">
+      <thead>
+      <tr>
+          <th>STT</th>
+          <th>Mã Áo</th>
+          <th>Mã Chi Tiết Áo</th>
+          <th>Tên Áo</th>
+          <th>Giá</th>
+          <th>Số Lượng</th>
+          <th>Màu</th>
+          <th>Kích Cỡ</th>
+          <th>Hình ảnh</th>
+          <th>Trạng thái</th>
+          <th>Hành Động</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="shirtDetail in getShirtDetailsForCurrentPage()">
+          <td>{{getShirtIndex($index)}}</td> <!-- Số thứ tự tính từ trang -->
+          <td>{{shirtDetail.codeShirt}}</td>
+          <td>{{shirtDetail.codeShirtDetail}}</td>
+          <td>{{shirtDetail.nameShirt}}</td>
+          <td>{{shirtDetail.price | currency}}</td>
+          <td>{{shirtDetail.quantity}}</td>
+          <td>{{shirtDetail.nameColor}}</td>
+          <td>{{shirtDetail.nameSize}}</td>
+          <td><img ng-src="{{shirtDetail.image }}" alt="Ảnh sản phẩm" width="100" height="100"></td>
+          <td>
+              <span ng-if="shirtDetail.statusshirtdetail === 0">Đang bán</span>
+              <span ng-if="shirtDetail.statusshirtdetail === 1">Ngừng bán</span>
+          </td>
+          <td>
+              <button type="button" class="btn btn-primary" ng-click="editShirtDetail(shirtDetail)" data-bs-toggle="modal" data-bs-target="#editShirtModal"> <i class="bi bi-table"></i></button>                        
+              <button class="btn btn-danger" ng-click="deleteShirtDetail(shirtDetail.codeShirtDetail)"><i class="bi bi-trash3-fill"></i></button>
+          </td>
+      </tr>
+      </tbody>
+      </table>
+
+<!-- Phân trang -->
+<div class="pagination">
+<button ng-disabled="currentPage == 1" ng-click="currentPage = currentPage - 1">Trang trước</button>
+<span>Trang {{currentPage}}</span>
+<button ng-disabled="currentPage * itemsPerPage >= shirtDetails.length" ng-click="currentPage = currentPage + 1">Trang sau</button>
+</div>
+
+<!-- Modal sửa áo thun -->
+<div class="modal fade" id="editShirtModal" tabindex="-1" aria-labelledby="editShirtModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-lg">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+  <h1 class="modal-title fs-5" id="editShirtModalLabel">Sửa Áo Thun</h1>
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+</div>
+<div class="modal-body">
+  <form ng-submit="updateShirtDetail()">
+    <div class="row">
+        <!-- Mã Áo -->
+        <div class="col-md-6 mb-3">
+            <label for="edit-codeshirtdetail" class="col-form-label">Mã Áo:</label>
+            <input type="text" id="edit-codeshirtdetail" ng-model="editingShirtDetail.codeShirtDetail" readonly class="form-control">
+        </div>
+        <!-- Áo -->
+        <div class="col-md-6 mb-3">
+            <label for="edit-shirt" class="col-form-label">Áo</label>
+            <select id="edit-shirt" ng-model="editingShirtDetail.shirtId" ng-options="shirt.id as shirt.nameshirt for shirt in shirts" required class="form-control"></select>
+        </div>
+        <!-- Giá -->
+        <div class="col-md-6 mb-3">
+            <label for="edit-price" class="col-form-label">Giá:</label>
+            <input type="text" id="edit-price" ng-model="editingShirtDetail.price" class="form-control">
+        </div>
+        <!-- Số lượng -->
+        <div class="col-md-6 mb-3">
+            <label for="edit-quantity" class="col-form-label">Số lượng:</label>
+            <input type="text" id="edit-quantity" ng-model="editingShirtDetail.quantity" class="form-control">
+        </div>
+    </div>
+
+    <!-- Sắp xếp các mục trên cùng một hàng (Giới tính, Màu sắc) -->
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="edit-gender" class="col-form-label">Giới tính</label>
+            <select id="edit-gender" ng-model="editingShirtDetail.genderId" ng-options="gender.id as gender.nameGender for gender in genders" required class="form-control"></select>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="edit-color" class="col-form-label">Màu sắc</label>
+            <select id="edit-color" ng-model="editingShirtDetail.colorId" ng-options="color.id as color.nameColor for color in colors" required class="form-control"></select>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Chất liệu -->
+        <div class="col-md-6 mb-3">
+            <label for="edit-material" class="col-form-label">Chất liệu</label>
+            <select id="edit-material" ng-model="editingShirtDetail.materialId" ng-options="material.id as material.nameMaterial for material in materials" required class="form-control"></select>
+        </div>
+        <!-- Kích cỡ -->
+        <div class="col-md-6 mb-3">
+            <label for="edit-size" class="col-form-label">Kích cỡ</label>
+            <select id="edit-size" ng-model="editingShirtDetail.sizeId" ng-options="size.id as size.namesize for size in sizes" required class="form-control"></select>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Nguồn gốc -->
+        <div class="col-md-6 mb-3">
+            <label for="edit-origin" class="col-form-label">Nguồn gốc</label>
+            <select id="edit-origin" ng-model="editingShirtDetail.originId" ng-options="origin.id as origin.nameOrigin for origin in origins" required class="form-control"></select>
+        </div>
+        <!-- Mẫu áo -->
+        <div class="col-md-6 mb-3">
+            <label for="edit-pattern" class="col-form-label">Mẫu áo</label>
+            <select id="edit-pattern" ng-model="editingShirtDetail.patternId" ng-options="pattern.id as pattern.namePattern for pattern in patterns" required class="form-control"></select>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label for="edit-season" class="col-form-label">Mùa</label>
+        <select id="edit-season" ng-model="editingShirtDetail.seasonId" ng-options="season.id as season.nameSeason for season in seasons" required class="form-control"></select>
+    </div>
+
+    <!-- Tình Trạng -->
+    <div class="row">
+        <div>
+            <label class="col-form-label col-sm-2">Trạng Thái:</label>
+            <div class="col-md-6 mb-3 d-flex">
+                <div class="custom-radio mr-4">
+                    <input type="radio" ng-model="editingShirtDetail.statusshirtdetail" value="0" ng-checked="editingShirtDetail.statusshirtdetail === 0"> Đang Bán
+                </div>
+                <div class="custom-radio">
+                    <input type="radio" ng-model="editingShirtDetail.statusshirtdetail" value="1" ng-checked="editingShirtDetail.statusshirtdetail === 1"> Ngừng Bán
+                </div>
+            </div>
+        </div>
+
+        <!-- Trạng Thái Xóa -->
+        <div>
+            <label class="col-form-label col-sm-2">Trạng Thái:</label>
+            <div class="col-md-6 mb-3 d-flex">
+                <div class="custom-radio mr-4">
+                    <input type="radio" ng-model="editingShirtDetail.deleted" value="false" ng-checked="editingShirtDetail.deleted === false"> Hoạt Động
+                </div>
+                <div class="custom-radio">
+                    <input type="radio" ng-model="editingShirtDetail.deleted" value="true" ng-checked="editingShirtDetail.deleted === true"> Ngừng Hoạt Động
+                </div>
+            </div>
+        </div>
+    </div>
+
+      <!-- Ảnh 1 -->
+    <label>Ảnh 1:</label>
+    <input type="file" onchange="angular.element(this).scope().updateImagePreview(this, 1)" />
+    <!-- Hiển thị ảnh cũ nếu có hoặc ảnh mới nếu chọn -->
+    <img ng-if="editingShirtDetail.image" ng-src="{{editingShirtDetail.image}}" alt="Ảnh 1" style="width: 100px; height: 100px;"/>
+
+    <!-- Ảnh 2 -->
+    <div class="form-group">
+        <label>Ảnh 2:</label>
+        <input type="file" onchange="angular.element(this).scope().updateImagePreview(this, 2)" />
+        <!-- Hiển thị ảnh cũ nếu có hoặc ảnh mới nếu chọn -->
+        <img ng-if="editingShirtDetail.image2" ng-src="{{editingShirtDetail.image2}}" alt="Ảnh 2" style="width: 100px; height: 100px;"/>
+    </div>
+
+    <!-- Ảnh 3 -->
+    <div class="form-group">
+        <label>Ảnh 3:</label>
+        <input type="file" onchange="angular.element(this).scope().updateImagePreview(this, 3)" />
+        <!-- Hiển thị ảnh cũ nếu có hoặc ảnh mới nếu chọn -->
+        <img ng-if="editingShirtDetail.image3" ng-src="{{editingShirtDetail.image3}}" alt="Ảnh 3" style="width: 100px; height: 100px;"/>
+    </div>
+
+
+    <!-- Nút Cập Nhật -->
+    <div class="mb-3">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <button type="submit" class="btn btn-primary">Cập nhật</button>
+    </div>
+</form>
+
+</div>
+</div>
+</div></div>
+</div>
+</div>
+
+
+</div>
+</div>
+   <!-- end container -->
+    
+    </div>
+<script src="js/productDetailByCode.js"></script>
+    <!-- Custom template | don't include it in your project! -->
+    <div class="custom-template">
+      <div class="title">Settings</div>
+      <div class="custom-content">
+        <div class="switcher">
+          <div class="switch-block">
+            <h4>Logo Header</h4>
+            <div class="btnSwitch">
+              <button type="button" class="selected changeLogoHeaderColor" data-color="dark"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="blue"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="purple"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="light-blue"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="green"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="orange"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="red"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="white"></button>
+              <br />
+              <button type="button" class="changeLogoHeaderColor" data-color="dark2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="blue2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="purple2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="light-blue2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="green2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="orange2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="red2"></button>
+            </div>
+          </div>
+          <div class="switch-block">
+            <h4>Navbar Header</h4>
+            <div class="btnSwitch">
+              <button type="button" class="changeTopBarColor" data-color="dark"></button>
+              <button type="button" class="changeTopBarColor" data-color="blue"></button>
+              <button type="button" class="changeTopBarColor" data-color="purple"></button>
+              <button type="button" class="changeTopBarColor" data-color="light-blue"></button>
+              <button type="button" class="changeTopBarColor" data-color="green"></button>
+              <button type="button" class="changeTopBarColor" data-color="orange"></button>
+              <button type="button" class="changeTopBarColor" data-color="red"></button>
+              <button type="button" class="selected changeTopBarColor" data-color="white"></button>
+              <br />
+              <button type="button" class="changeTopBarColor" data-color="dark2"></button>
+              <button type="button" class="changeTopBarColor" data-color="blue2"></button>
+              <button type="button" class="changeTopBarColor" data-color="purple2"></button>
+              <button type="button" class="changeTopBarColor" data-color="light-blue2"></button>
+              <button type="button" class="changeTopBarColor" data-color="green2"></button>
+              <button type="button" class="changeTopBarColor" data-color="orange2"></button>
+              <button type="button" class="changeTopBarColor" data-color="red2"></button>
+            </div>
+          </div>
+          <div class="switch-block">
+            <h4>Sidebar</h4>
+            <div class="btnSwitch">
+              <button type="button" class="changeSideBarColor" data-color="white"></button>
+              <button type="button" class="selected changeSideBarColor" data-color="dark"></button>
+              <button type="button" class="changeSideBarColor" data-color="dark2"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="custom-toggle">
+        <i class="icon-settings"></i>
+      </div>
+    </div>
+    <!-- End Custom template -->
+  </div>
+  <!--   Core JS Files   -->
+  <script src="js/core/jquery-3.7.1.min.js"></script>
+  <script src="js/core/popper.min.js"></script>
+  <script src="js/core/bootstrap.min.js"></script>
+
+  <!-- jQuery Scrollbar -->
+  <script src="js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+  <!-- Chart JS -->
+  <script src="js/plugin/chart.js/chart.min.js"></script>
+
+  <!-- jQuery Sparkline -->
+  <script src="/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+  <!-- Chart Circle -->
+  <script src="js/plugin/chart-circle/circles.min.js"></script>
+
+  <!-- Datatables -->
+  <script src="js/plugin/datatables/datatables.min.js"></script>
+
+  <!-- Bootstrap Notify -->
+  <!-- <script src="js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script> -->
+
+  <!-- jQuery Vector Maps -->
+  <script src="js/plugin/jsvectormap/jsvectormap.min.js"></script>
+  <script src="js/plugin/jsvectormap/world.js"></script>
+
+  <!-- Sweet Alert -->
+  <script src="js/plugin/sweetalert/sweetalert.min.js"></script>
+
+  <!-- Kaiadmin JS -->
+  <script src="js/kaiadmin.min.js"></script>
+
+  <!-- Kaiadmin DEMO methods, don't include it in your project! -->
+  <script src="js/setting-demo.js"></script>
+  <script src="js/demo.js"></script>
+  <script src="js/oders.js"></script>
+
+  <script>
+    $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
+      type: "line",
+      height: "70",
+      width: "100%",
+      lineWidth: "2",
+      lineColor: "#177dff",
+      fillColor: "rgba(23, 125, 255, 0.14)",
+    });
+
+    $("#lineChart2").sparkline([99, 125, 122, 105, 110, 124, 115], {
+      type: "line",
+      height: "70",
+      width: "100%",
+      lineWidth: "2",
+      lineColor: "#f3545d",
+      fillColor: "rgba(243, 84, 93, .14)",
+    });
+
+    $("#lineChart3").sparkline([105, 103, 123, 100, 95, 105, 115], {
+      type: "line",
+      height: "70",
+      width: "100%",
+      lineWidth: "2",
+      lineColor: "#ffa534",
+      fillColor: "rgba(255, 165, 52, .14)",
+    });
+  </script>
+</body>
+
+</html>

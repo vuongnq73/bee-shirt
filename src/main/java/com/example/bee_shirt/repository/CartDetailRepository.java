@@ -16,6 +16,8 @@ import java.util.Optional;
 public interface CartDetailRepository extends JpaRepository<CartDetail,Integer> {
     @Query("SELECT cd FROM CartDetail cd WHERE cd.cart.account.code LIKE :query AND cd.statusCartDetail = :status AND cd.deleted = false")
     List<CartDetail> findCartDetailByAccountCodeAndStatusCartDetail(String query, Integer status);
+    Optional<CartDetail> findByCartAndShirtDetailAndStatusCartDetail(Cart cart, ShirtDetail shirtDetail, int statusCartDetail);
+
 
     @Transactional
     @Modifying
@@ -23,7 +25,6 @@ public interface CartDetailRepository extends JpaRepository<CartDetail,Integer> 
     int updateInvalidQuantity(@Param("query") String query);
 
 
-    Optional<CartDetail> findByCartAndShirtDetail(Cart cart, ShirtDetail shirtDetail);
 
     @Query("SELECT cd FROM CartDetail cd WHERE cd.codeCartDetail LIKE %:query%")
     CartDetail findCartDetailByCode(@Param("query") String query);

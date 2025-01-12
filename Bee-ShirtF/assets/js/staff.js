@@ -443,7 +443,7 @@ angular
       };
 
       $scope.deleteAccount = function (code) {
-        if (confirm("Are you sure you want to delete this account?")) {
+        if (confirm("Bạn có muốn xóa tài khoản này không?")) {
           const token = sessionStorage.getItem("jwtToken");
 
           // Khởi tạo biến trạng thái để tắt nút khi đang xóa
@@ -457,7 +457,7 @@ angular
             },
           })
             .then(function (response) {
-              $scope.successMessage = "Account deleted successfully!";
+              $scope.successMessage = "Xóa tài khoản thành công!";
               $scope.errorMessage = ""; // Xóa thông báo lỗi (nếu có)
               $scope.getStaffs($scope.currentPage); // Cập nhật lại danh sách nhân viên sau khi xóa
               $scope.getTotalPages();
@@ -471,7 +471,7 @@ angular
             })
             .catch(function (error) {
               console.error("Error deleting account:", error);
-              $scope.errorMessage = "Failed to delete account.";
+              $scope.errorMessage = "Xóa thất bại.";
               $scope.successMessage = ""; // Xóa thông báo thành công (nếu có)
               $scope.isDeleting = false; // Kích hoạt lại nút sau khi gặp lỗi
             });

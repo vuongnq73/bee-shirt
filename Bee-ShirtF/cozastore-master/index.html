@@ -949,17 +949,19 @@
             class="col-sm-6 col-md-4 col-lg-3 p-b-35"
             ng-repeat="shirt in filteredShirtList"
           >
+          
             <!-- Block2 -->
             <div class="block2">
               <div class="block2-pic hov-img0">
 
-                <img src="/cozastore-master/images/product-02.jpg" alt="{{ shirt.nameShirt }}" />
-                <a
-                  href="/cozastore-master/product-detail.html"
-                  class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"
+                <img src="/assets/img/arashmil.jpg" alt="{{shirt.nameShirt}}"  ng-click="viewDetails2(shirt.codeShirt)"
                 >
+
+                <a ng-click="viewDetails(shirt.codeShirt)"
+                class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
                   Xem Nhanh
                 </a>
+              </div>
               </div>
 
               <div class="block2-txt flex-w flex-t p-t-14">
@@ -1127,7 +1129,7 @@
           <h3 class="ltext-103 cl5">Sản Phẩm Bán Chạy</h3>
         </div>
 
-        <div class="row">
+        <div class="row"> 
           <div
             class="col-sm-6 col-md-4 col-lg-3 p-b-35"
 
