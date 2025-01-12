@@ -59,7 +59,8 @@ public interface BillDetailrepo extends JpaRepository<BillDetail, Integer> {
         "payment_method.name_paymentmethod AS TypeBill, " +
         "bl.note AS note, " +
         "bl.status_bill AS StatusBill, " +
-        "bl.money_reduce AS moneyReduce " +
+        "bl.money_reduce AS moneyReduce, " +
+        "bl.notes AS notes " +
         "FROM bill_detail bd " +
         "JOIN bill bl ON bd.bill_id = bl.id " +
         "JOIN shirt_detail sd ON bd.shirt_detail_id = sd.id " +

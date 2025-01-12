@@ -479,7 +479,12 @@
 			<h4 class="card-title">Thông Tin Đơn Hàng</h4>
 		</div>
 		<div class="info-container">
+	
 			<br>
+			<div class="info-item">
+				<p ng-if="billInfo.statusBill === 7"> Lý Do Hủy: <span
+					style="color: rgb(214, 73, 18);">{{notes}}</span></p>
+			  </div>
 			<div class="row">
 				<div class="col-md-8">
 					<div class="info-item">
