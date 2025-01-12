@@ -185,30 +185,135 @@ app.controller('ShirtDetailController', ['$scope', 'shirtDetailService', functio
     $scope.newShirtDetail = {};
     $scope.currentPage = 1;
     $scope.itemsPerPage = 10;
+    $scope.filters = {
+        codeShirt: '',
+        colorId: '',
+        materialId: '',
+        sizeId: '',
+        price: null
+    };
+    
+    $scope.shirtDetails = []; // Dữ liệu chi tiết áo thun đã lọc
+    $scope.originalShirtDetails = []; // Dữ liệu chi tiết áo thun gốc (dùng để lọc)
+    $scope.selectedColors = [];
+    $scope.selectedSizes = [];
+    $scope.itemsPerPage = 10; // Số sản phẩm mỗi trang
+    $scope.currentPage = 1;
+    
+    // Lọc dữ liệu
+    $scope.filterShirtDetails = function() {
+        $scope.shirtDetails = $scope.originalShirtDetails.filter(function(shirtDetail) {
+            return $scope.applyFilters(shirtDetail);
+        });
+        $scope.currentPage = 1;  // Đặt lại trang về trang đầu tiên khi lọc
+        $scope.calculateTotalPages();
+    };
+    $scope.applyFilters = function(shirtDetail) {
+        var isMatch = true;
+        
+     // Kiểm tra tìm kiếm theo mã, tên sản phẩm và mã chi tiết
+     if ($scope.filters.searchTerm) {
+        var searchTerm = $scope.filters.searchTerm.toLowerCase();
+        var codeShirtMatch = shirtDetail.codeShirt.toLowerCase().includes(searchTerm);
+        var nameShirtMatch = shirtDetail.nameShirt.toLowerCase().includes(searchTerm);
+        var codeShirtDetailMatch = shirtDetail.codeShirtDetail.toLowerCase().includes(searchTerm);
 
-            
+        if (!codeShirtMatch && !nameShirtMatch && !codeShirtDetailMatch) {
+            isMatch = false;
+        }
+    }
+        //  Lọc theo tên sp
+        if ($scope.filters.shirtId && shirtDetail.shirtId !== $scope.filters.shirtId) {
+            isMatch = false;
+        }
+    
+        // Lọc màu
+        if ($scope.filters.colorId && shirtDetail.colorId !== $scope.filters.colorId) {
+            isMatch = false;
+        }
+    
+        // lọc chất liệu
+        if ($scope.filters.materialId && shirtDetail.materialId !== $scope.filters.materialId) {
+            isMatch = false;
+        }
+    
+        // lọc size
+        if ($scope.filters.sizeId && shirtDetail.sizeId !== $scope.filters.sizeId) {
+            isMatch = false;
+        }
+        // Lọc xuất xứ
+        if ($scope.filters.originId && shirtDetail.originId !== $scope.filters.originId) {
+            isMatch = false;
+        }
+
+        // Lọc theo mẫu áo
+        if ($scope.filters.patternId && shirtDetail.patternId !== $scope.filters.patternId) {
+            isMatch = false;
+        }
+        // Lọc theo mẫu áo
+        if ($scope.filters.genderId && shirtDetail.genderId !== $scope.filters.genderId) {
+            isMatch = false;
+        }
+        // Lọc theo mẫu áo
+        if ($scope.filters.seasonId && shirtDetail.seasonId !== $scope.filters.seasonId) {
+            isMatch = false;
+        }
+         // Kiểm tra giá trị hợp lệ
+        if (
+            ($scope.filters.priceFrom && $scope.filters.priceFrom < 0) || 
+            ($scope.filters.priceTo && $scope.filters.priceTo < 0) || 
+            ($scope.filters.priceFrom && $scope.filters.priceTo && $scope.filters.priceFrom > $scope.filters.priceTo)
+        ) {
+            alert('Giá trị không hợp lệ: Giá bắt đầu phải nhỏ hơn hoặc bằng giá tiếp và lớn hơn hoặc bằng 0.');
+            return false; // Ngăn không áp dụng bộ lọc
+        }
+
+        // Lọc giá trong phạm vi
+        if ($scope.filters.priceFrom && shirtDetail.price < $scope.filters.priceFrom) {
+            isMatch = false;
+        }
+        if ($scope.filters.priceTo && shirtDetail.price > $scope.filters.priceTo) {
+            isMatch = false;
+        }
+        return isMatch;
+    };
+    
     // Hàm gọi API lấy danh sách chi tiết áo thun (tùy theo có codeShirt hay không)
     $scope.getShirtDetails = function() {
         shirtDetailService.getShirtDetailsBasedOnCode().then(function(response) {
-            $scope.shirtDetails = response.data;
-            $scope.currentPage = 1;  // Đặt lại trang về trang đầu tiên mỗi khi gọi API
+            $scope.originalShirtDetails = response.data;
+            $scope.filterShirtDetails(); // Lọc sau khi lấy dữ liệu
+            console.log(response.data);
         }).catch(function(error) {
             console.error('Có lỗi xảy ra:', error);
         });
     };
-
-    // Phương thức phân trang: Lấy danh sách chi tiết áo thun cho trang hiện tại
+    
+    // Phân trang: Lấy danh sách chi tiết áo thun cho trang hiện tại
     $scope.getShirtDetailsForCurrentPage = function() {
         const startIndex = ($scope.currentPage - 1) * $scope.itemsPerPage;
         const endIndex = startIndex + $scope.itemsPerPage;
         return $scope.shirtDetails.slice(startIndex, endIndex);
     };
-
+    
+    // Tính số trang
+    $scope.calculateTotalPages = function() {
+        $scope.totalPages = Math.ceil($scope.shirtDetails.length / $scope.itemsPerPage);
+    };
+    
     // Hàm để tính số thứ tự (STT) cho mỗi mục trên trang hiện tại
     $scope.getShirtIndex = function(index) {
         return ($scope.currentPage - 1) * $scope.itemsPerPage + (index + 1);
     };
-   
+    
+    // Hàm để tính số trang khi nhấn next/prev
+    $scope.changePage = function(page) {
+        if (page > 0 && page <= $scope.totalPages) {
+            $scope.currentPage = page;
+        }
+    };
+    
+    // Hàm toggle để chọn màu sắc và kích cỡ
     $scope.toggleColorSelection = function(colorId) {
         var index = $scope.selectedColors.indexOf(colorId);
         if (index > -1) {
@@ -217,7 +322,7 @@ app.controller('ShirtDetailController', ['$scope', 'shirtDetailService', functio
             $scope.selectedColors.push(colorId);
         }
     };
-
+    
     $scope.toggleSizeSelection = function(sizeId) {
         var index = $scope.selectedSizes.indexOf(sizeId);
         if (index > -1) {
@@ -226,6 +331,7 @@ app.controller('ShirtDetailController', ['$scope', 'shirtDetailService', functio
             $scope.selectedSizes.push(sizeId);
         }
     };
+    
     $scope.loadShirtDetails = function(codeShirt) {
         // Gọi API để lấy chi tiết áo thun
         this.getShirtDetailsByCondition(codeShirt).then(function(response) {

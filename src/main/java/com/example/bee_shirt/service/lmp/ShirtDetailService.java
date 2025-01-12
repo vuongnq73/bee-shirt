@@ -52,8 +52,7 @@ public class ShirtDetailService {
     @Autowired private ShirtRepository shirtRepository;
     @Autowired private CategoryRepository categoryRepository;
     @Autowired private AccountRepository accountRepository;
-
-    private AccountMapper accountMapper;
+    @Autowired private AccountMapper accountMapper;
     @Autowired
     private BrandRepository brandRepository;
 
