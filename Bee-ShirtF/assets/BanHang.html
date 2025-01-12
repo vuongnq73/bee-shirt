@@ -518,11 +518,14 @@
                     <thead>
                       <tr>
                         <th>#</th>
+                        <th>Mã</th>
                         <th>Tên sản phẩm</th>
-                        <th>Số lượng</th>
+                        <th>Cỡ</th>
+                        <th>Màu sắc</th>
                         <th>Giá</th>
+                        <th>Số lượng</th>
                         <th>Tổng</th>
-                        <th>Hành động</th>
+                        <th>Thao tác</th>
                       </tr>
                     </thead>
                     <tbody id="billDetailsTableBody"></tbody>
@@ -536,7 +539,10 @@
                       <thead>
                         <tr>
                           <th>#</th>
+                          <th>Mã</th>
                           <th>Tên sản phẩm</th>
+                          <th>Cỡ</th>
+                          <th>Màu sắc</th>
                           <th>Giá</th>
                           <th>Số lượng</th>
                           <th>Thao tác</th>
@@ -681,7 +687,7 @@
                     </div>
                     <div>
                       <label for="voucherSelect" class="form-label">Voucher khả dụng:</label>
-                      <select id="voucherSelect" class="form-select" disabled>
+                      <select id="voucherSelect" class="form-select">
                         <!-- Các option sẽ được thêm động -->
                       </select>
                     </div>
@@ -699,16 +705,27 @@
                     </div>
                     <div class="mb-3">
                       <label for="paymentInput" class="form-label">Tiền phải trả</label>
-                      <input type="number" id="totalMoney" class="form-control" readonly>
+                      <div class="input-group">
+                        <input type="number" id="totalMoney" class="form-control" readonly>
+                        <span class="input-group-text">VND</span>
+                      </div>
                     </div>
                     <div class="mb-3">
                       <label for="paymentInput" class="form-label">Tiền khách đưa</label>
-                      <input type="number" id="paymentInput" class="form-control" placeholder="Nhập số lượng" min="1"
-                        value="1">
+                      <div class="input-group">
+                        <input type="number" id="paymentInput" class="form-control" placeholder="Nhập số lượng" min="1"
+                          value="1">
+                        <span class="input-group-text">VND</span>
+                      </div>
                     </div>
+
                     <div class="mb-3">
                       <label for="changeMoney" class="form-label">Tiền thừa</label>
+                      <div class="input-group">
                       <input type="text" id="changeMoney" class="form-control" readonly>
+                      <span class="input-group-text">VND</span>
+                    </div>
+
                     </div>
                     <button type="button" class="btn btn-primary" id="confirmButton" onclick="checkoutConfirm()"
                       disabled>Xác
@@ -1039,6 +1056,8 @@
 
     let noVoucher = true;
 
+    const userCode = sessionStorage.getItem("userCode");
+
     let activeBillCode = 'none';
 
     let currentCodeShirtDetail = 'none';
@@ -1047,6 +1066,11 @@
 
     let camStat = true;
 
+    let activeVoucherCode = null
+
+    let subtotal = 0
+
+    let vouchers = null
 
     const tableBody = document.getElementById("billDetailsTableBody");
 
@@ -1095,10 +1119,13 @@
 
           row.innerHTML = `
       <td>${index + 1}</td>
-      <td>${detail.shirtDetail.shirt.nameshirt}-${detail.shirtDetail.size.namesize}-${detail.shirtDetail.color.nameColor}</td>
+      <td>${detail.shirtDetail.codeShirtDetail}</td>
+      <td>${detail.shirtDetail.shirt.nameshirt}</td>
+      <td>${detail.shirtDetail.size.namesize}</td>
+      <td>${detail.shirtDetail.color.nameColor}</td>
+      <td>${detail.price}</td>
       <td>${detail.quantity}</td>
-      <td>${detail.price.toFixed(2)}</td>
-      <td>${total.toFixed(2)}</td>
+      <td>${total}</td>
       <td>
     <!-- Nút "Sửa" -->
 
@@ -1177,9 +1204,9 @@
 
         // // Cập nhật giao diện
         // activeBillCode = codeBill;
-        // document.getElementById('subtotal').innerText = `$${subtotal.toFixed(2)}`;
-        // document.getElementById('tax').innerText = `$${tax.toFixed(2)}`;
-        // document.getElementById('totalPayment').innerText = `$${totalPayment.toFixed(2)}`;
+        // document.getElementById('subtotal').innerText = `$${subtotal}`;
+        // document.getElementById('tax').innerText = `$${tax}`;
+        // document.getElementById('totalPayment').innerText = `$${totalPayment}`;
 
         // Cập nhật trạng thái active cho nút
         const buttons = document.querySelectorAll('#bill-buttons button');
@@ -1366,7 +1393,7 @@
       }
       if (noVoucher) { codeVoucherCheckout = 'none'; }
 
-      fetch(`http://localhost:8080/point-of-sale/checkout?codeBill=${activeBillCode}&codeVoucher=${codeVoucherCheckout}&username=${username}`, {
+      fetch(`http://localhost:8080/point-of-sale/checkout?codeBill=${activeBillCode}&codeVoucher=${activeVoucherCode}&username=${username}&userCode=${userCode}`, {
         method: 'POST',
         headers: headers
       }).then(data => {
@@ -1492,97 +1519,97 @@
     }
 
     async function performSearch() {
-    const searchInput = document.getElementById("searchInput");
-    const suggestionsList = document.getElementById("suggestions");
+      const searchInput = document.getElementById("searchInput");
+      const suggestionsList = document.getElementById("suggestions");
 
-    if (searchInput.value.length < 1) {
+      if (searchInput.value.length < 1) {
         suggestionsList.innerHTML = ''; // Nếu không có từ khóa tìm kiếm, ẩn danh sách
         suggestionsList.style.display = 'none'; // Ẩn hoàn toàn danh sách
         return;
-    }
+      }
 
-    if (searchInput.value.length > 0) {
+      if (searchInput.value.length > 0) {
         try {
-            const response = await fetch(`http://localhost:8080/point-of-sale/search?query=${encodeURIComponent(searchInput.value)}`, {
-                method: 'GET',
-                headers: headers // Thêm headers vào yêu cầu
-            });
+          const response = await fetch(`http://localhost:8080/point-of-sale/search?query=${encodeURIComponent(searchInput.value)}`, {
+            method: 'GET',
+            headers: headers // Thêm headers vào yêu cầu
+          });
 
-            const data = await response.json();
-            suggestionsList.innerHTML = "";
+          const data = await response.json();
+          suggestionsList.innerHTML = "";
 
-            // Kiểm tra nếu không có kết quả tìm kiếm
-            if (data.length === 0) {
-                suggestionsList.style.display = 'none'; // Ẩn danh sách khi không có kết quả
+          // Kiểm tra nếu không có kết quả tìm kiếm
+          if (data.length === 0) {
+            suggestionsList.style.display = 'none'; // Ẩn danh sách khi không có kết quả
+            return;
+          }
+
+          // Xử lý dữ liệu khi có kết quả tìm kiếm
+          data.forEach(item => {
+            let suggestionItem = document.createElement("li");
+            suggestionItem.innerHTML = `${item.shirt.nameshirt} ${item.size.namesize} ${item.color.nameColor} ${item.material.nameMaterial}`;
+
+            suggestionItem.onclick = async function () {
+              if (activeBillCode == 'none') {
+                toastr.error('Chưa chọn hóa đơn', 'Lỗi');
                 return;
-            }
+              }
 
-            // Xử lý dữ liệu khi có kết quả tìm kiếm
-            data.forEach(item => {
-                let suggestionItem = document.createElement("li");
-                suggestionItem.innerHTML = `${item.shirt.nameshirt} ${item.size.namesize} ${item.color.nameColor} ${item.material.nameMaterial}`;
-                
-                suggestionItem.onclick = async function () {
-                    if (activeBillCode == 'none') {
-                        toastr.error('Chưa chọn hóa đơn', 'Lỗi');
-                        return;
-                    }
+              // Call the /add/ endpoint when a suggestion is clicked
+              document.getElementById("shirtCodeDetail").innerText = item.codeShirtDetail;
 
-                    // Call the /add/ endpoint when a suggestion is clicked
-                    document.getElementById("shirtCodeDetail").innerText = item.codeShirtDetail;
+              try {
+                const shirtResponse = await fetch(`http://localhost:8080/point-of-sale/get-shirt-detail?codeShirtDetail=${item.codeShirtDetail}`, {
+                  method: 'GET',
+                  headers: headers
+                });
+                const sd = await shirtResponse.json();
+                console.log(sd.shirt.nameshirt);
 
-                    try {
-                        const shirtResponse = await fetch(`http://localhost:8080/point-of-sale/get-shirt-detail?codeShirtDetail=${item.codeShirtDetail}`, {
-                            method: 'GET',
-                            headers: headers
-                        });
-                        const sd = await shirtResponse.json();
-                        console.log(sd.shirt.nameshirt);
+                // Kiểm tra dữ liệu trước khi thao tác
+                if (sd && sd.shirt && sd.shirt.nameshirt && sd.size && sd.size.namesize && sd.color && sd.color.nameColor) {
+                  document.getElementById("shirtDetailName").innerText = `${sd.shirt.nameshirt} - ${sd.size.namesize} - ${sd.color.nameColor}`;
+                } else {
+                  throw new Error("Dữ liệu trả về không đầy đủ");
+                }
+              } catch (error) {
+                console.error("Lỗi khi lấy chi tiết sản phẩm:", error);
+                toastr.error("Không thể lấy chi tiết sản phẩm.");
+              }
 
-                        // Kiểm tra dữ liệu trước khi thao tác
-                        if (sd && sd.shirt && sd.shirt.nameshirt && sd.size && sd.size.namesize && sd.color && sd.color.nameColor) {
-                            document.getElementById("shirtDetailName").innerText = `${sd.shirt.nameshirt} - ${sd.size.namesize} - ${sd.color.nameColor}`;
-                        } else {
-                            throw new Error("Dữ liệu trả về không đầy đủ");
-                        }
-                    } catch (error) {
-                        console.error("Lỗi khi lấy chi tiết sản phẩm:", error);
-                        toastr.error("Không thể lấy chi tiết sản phẩm.");
-                    }
+              openModal(); // Gọi hàm mở modal
+              suggestionsList.innerHTML = ""; // Clear suggestions after the click
+              searchInput.value = ""; // Clear search input after selection
+            };
 
-                    openModal(); // Gọi hàm mở modal
-                    suggestionsList.innerHTML = ""; // Clear suggestions after the click
-                    searchInput.value = ""; // Clear search input after selection
-                };
+            suggestionsList.appendChild(suggestionItem);
+          });
 
-                suggestionsList.appendChild(suggestionItem);
-            });
-
-            suggestionsList.style.display = 'block';
+          suggestionsList.style.display = 'block';
         } catch (error) {
-            console.error("Lỗi khi tìm kiếm sản phẩm:", error);
-            suggestionsList.innerHTML = "<li>Không thể tìm kiếm. Vui lòng thử lại!</li>";
+          console.error("Lỗi khi tìm kiếm sản phẩm:", error);
+          suggestionsList.innerHTML = "<li>Không thể tìm kiếm. Vui lòng thử lại!</li>";
         }
-    } else {
+      } else {
         suggestionsList.innerHTML = "";
-    }
+      }
 
-    // Sự kiện blur: khi người dùng rời khỏi ô tìm kiếm
-    searchInput.addEventListener("blur", () => {
+      // Sự kiện blur: khi người dùng rời khỏi ô tìm kiếm
+      searchInput.addEventListener("blur", () => {
         // Đợi một thời gian ngắn trước khi ẩn danh sách để người dùng có thể click vào một mục
         setTimeout(() => {
-            suggestionsList.style.display = 'none'; // Ẩn danh sách khi rời khỏi ô tìm kiếm
+          suggestionsList.style.display = 'none'; // Ẩn danh sách khi rời khỏi ô tìm kiếm
         }, 200);
-    });
+      });
 
-    // Sự kiện focus: khi người dùng quay lại ô tìm kiếm
-    searchInput.addEventListener("focus", () => {
+      // Sự kiện focus: khi người dùng quay lại ô tìm kiếm
+      searchInput.addEventListener("focus", () => {
         const sq = searchInput.value.trim();
         if (sq.length > 0) {
-            suggestionsList.style.display = 'block'; // Hiển thị lại danh sách khi người dùng focus vào ô tìm kiếm
+          suggestionsList.style.display = 'block'; // Hiển thị lại danh sách khi người dùng focus vào ô tìm kiếm
         }
-    });
-}
+      });
+    }
 
 
     // Gọi hàm `performSearch` khi người dùng nhập vào ô tìm kiếm
@@ -1609,7 +1636,7 @@
         headers: headers
       });
       const sd = await response.json();
-      if (0 >= quantity || quantity % 1 != 0 || quantity > 2147483647 ) {
+      if (0 >= quantity || quantity % 1 != 0 || quantity > 2147483647) {
         toastr.error('Số lượng không hợp lệ', 'Lỗi');
         document.getElementById("quantityInput").value = 1
         return;
@@ -1723,7 +1750,7 @@
         const data = await response.json();
 
         // Tính tổng tiền
-        let subtotal = 0;
+        subtotal = 0;
         data.forEach(item => {
           subtotal += item.price * item.quantity;
         });
@@ -1731,7 +1758,7 @@
         updateVoucherOptions(subtotal)
 
         // Hiển thị tổng tiền vào ô input
-        document.getElementById('totalMoney').value = subtotal.toFixed(2);
+        document.getElementById('totalMoney').value = subtotal;
 
         // Reset các ô nhập liệu
         document.getElementById('codeVoucher').value = ''; // Xóa mã voucher
@@ -1757,7 +1784,7 @@
 
       // Hiển thị tiền thừa
       const changeMoneyInput = document.getElementById('changeMoney');
-      changeMoneyInput.value = changeMoney > 0 ? changeMoney.toFixed(2) : 0;
+      changeMoneyInput.value = changeMoney > 0 ? changeMoney : 0;
 
       // Bật/tắt nút Xác nhận
       const confirmButton = document.getElementById('confirmButton');
@@ -1807,7 +1834,7 @@
           // feedback.style.display = "block";
           // feedback.textContent = "";
 
-          totalMoneyInput.value = totalMoney.toFixed(2);
+          totalMoneyInput.value = totalMoney;
           validatePayment()
           applyVoucherOnChange()
           return;
@@ -1852,7 +1879,7 @@
         codeVoucherInput.disabled = true; // Vô hiệu hóa ô nhập mã voucher
         codeVoucherInput.value = ""; // Xóa mã voucher
 
-        totalMoneyInput.value = totalMoney.toFixed(2);
+        totalMoneyInput.value = totalMoney;
         validatePayment()
         return;
 
@@ -1903,7 +1930,7 @@
 
         // Nếu không có mã voucher, giữ nguyên tổng tiền
         if (!codeVoucher) {
-          totalMoneyInput.value = totalMoney.toFixed(2);
+          totalMoneyInput.value = totalMoney;
           validatePayment()
           return;
         }
@@ -1923,7 +1950,7 @@
         if (voucherData == '') {
           feedback.style.display = "block";
           feedback.textContent = "";
-          totalMoneyInput.value = totalMoney.toFixed(2); // Giữ nguyên tổng tiền
+          totalMoneyInput.value = totalMoney; // Giữ nguyên tổng tiền
           validatePayment()
           return;
         }
@@ -1934,7 +1961,7 @@
         if (!voucher) {
           feedback.style.display = "block";
           feedback.textContent = "Mã voucher không hợp lệ hoặc đã hết hạn!";
-          totalMoneyInput.value = totalMoney.toFixed(2); // Giữ nguyên tổng tiền
+          totalMoneyInput.value = totalMoney; // Giữ nguyên tổng tiền
 
           noVoucher = true
           validatePayment()
@@ -1945,10 +1972,10 @@
         if (voucher.min_bill_value > totalMoney) {
           feedback.style.display = "block";
           feedback.style.color = "red";
-          feedback.textContent = `Hóa đơn phải từ ${voucher.min_bill_value.toFixed(2)} mới áp dụng được voucher này.`;
+          feedback.textContent = `Hóa đơn phải từ ${voucher.min_bill_value} mới áp dụng được voucher này.`;
 
           noVoucher = true
-          totalMoneyInput.value = totalMoney.toFixed(2); // Giữ nguyên tổng tiền
+          totalMoneyInput.value = totalMoney; // Giữ nguyên tổng tiền
           validatePayment()
           return;
         }
@@ -1973,13 +2000,13 @@
         const newTotal = totalMoney - discount;
 
 
-        totalMoneyInput.value = newTotal > 0 ? newTotal.toFixed(2) : 0;
+        totalMoneyInput.value = newTotal > 0 ? newTotal : 0;
         validatePayment()
 
         // Hiển thị thông báo thành công
         feedback.style.display = "block";
         feedback.style.color = "green";
-        feedback.textContent = `Áp dụng voucher thành công! Giảm giá: ${discount.toFixed(2)}`;
+        feedback.textContent = `Áp dụng voucher thành công! Giảm giá: ${discount}`;
       } catch (error) {
         // Hiển thị lỗi nếu có
         feedback.style.display = "block";
@@ -2040,8 +2067,11 @@
         const row = document.createElement("tr");
         row.innerHTML = `
       <td>${startIndex + index + 1}</td>
-      <td>${product.shirt.nameshirt}-${product.size.namesize}-${product.color.nameColor}</td>
-      <td>${product.price.toFixed(2)}</td>
+      <td>${product.codeShirtDetail}</td>
+      <td>${product.shirt.nameshirt}</td>
+      <td>${product.size.namesize}</td>
+      <td>${product.color.nameColor}</td>
+      <td>${product.price}</td>
       <td>${product.quantity}</td>
       <td>
         <button class="btn btn-primary btn-sm" onclick="add('${product.codeShirtDetail}')">Chọn</button>
@@ -2385,7 +2415,7 @@
         });
         if (!response.ok) throw new Error("Không thể lấy danh sách voucher");
 
-        const vouchers = await response.json();
+        vouchers = await response.json();
 
         // Xóa các tùy chọn cũ
         voucherSelect.innerHTML = "";
@@ -2400,6 +2430,13 @@
         let maxDiscount = 0;
         let bestVoucher = null;
 
+        if (vouchers.length > 0) {
+          const defaultOption = document.createElement("option");
+          defaultOption.value = "";
+          defaultOption.textContent = "Không chọn voucher";
+          voucherSelect.appendChild(defaultOption);
+        }
+
         vouchers.forEach((voucher) => {
           discountValue = voucher.type_voucher === "Percent"
             ? Math.min(voucher.maximum_discount, money * (voucher.discount_value / 100))
@@ -2412,7 +2449,7 @@
 
           const option = document.createElement("option");
           option.value = voucher.code_voucher;
-          option.textContent = `${voucher.name_voucher} - Giảm: ${discountValue} VNĐ`;
+          option.textContent = `Đơn tối thiểu: ${voucher.min_bill_value} - Giảm tối đa: ${voucher.maximum_discount} VNĐ`;
           voucherSelect.appendChild(option);
         });
 
@@ -2426,6 +2463,50 @@
         console.error("Lỗi khi cập nhật voucher:", error);
       }
     }
+
+    const vs = document.getElementById('voucherSelect');
+
+    vs.addEventListener('change', async function () {
+      try {
+        // Lấy mã voucher được chọn
+        activeVoucherCode = this.value;
+
+        // Nếu không có voucher được chọn (giá trị rỗng), cập nhật lại tổng tiền và dừng xử lý
+        if (!activeVoucherCode) {
+          console.log("Không có voucher được chọn");
+          document.getElementById('totalMoney').value = subtotal;
+          return;
+        }
+
+
+        // Tìm thông tin voucher từ danh sách đã tải
+        const selectedVoucher = vouchers.find(voucher => voucher.code_voucher === activeVoucherCode);
+
+        if (!selectedVoucher) {
+          console.warn("Voucher không tồn tại trong danh sách đã tải.");
+          return;
+        }
+
+        // Tính giá trị giảm giá
+        const discountValue = selectedVoucher.type_voucher === "Percent"
+          ? Math.min(selectedVoucher.maximum_discount, subtotal * (selectedVoucher.discount_value / 100))
+          : Math.min(selectedVoucher.discount_value, selectedVoucher.maximum_discount);
+
+        const lastMoney = subtotal - discountValue;
+
+        discount = discountValue
+
+        // Cập nhật các thông tin hiển thị liên quan
+        document.getElementById('totalMoney').value = lastMoney
+        // document.getElementById('selected-total').innerText = `${lastMoney} VNĐ`;
+        // document.getElementById('ship-money').innerText = `${ship} VNĐ`;
+        // document.getElementById('all-the-money').innerText = `${ship + lastMoney} VNĐ`;
+
+        // console.log(`Voucher selected: ${activeVoucherCode}, giảm giá: ${discountValue} VNĐ`);
+      } catch (error) {
+        console.error("Lỗi khi xử lý thay đổi voucher:", error);
+      }
+    });
 
     function checkoutConfirm() {
       Swal.fire({

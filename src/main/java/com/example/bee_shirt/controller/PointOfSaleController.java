@@ -133,8 +133,8 @@ public class PointOfSaleController {
     }
 
     @PostMapping("checkout")
-    public ResponseEntity<String> checkout(@RequestParam String codeBill, @RequestParam(required = false) String codeVoucher, @RequestParam(required = false) String username) {
-        return ResponseEntity.ok(pointOfSaleService.checkout(codeBill, codeVoucher, username));
+    public ResponseEntity<String> checkout(@RequestParam String codeBill, @RequestParam(required = false) String codeVoucher, @RequestParam(required = false) String username, @RequestParam(required = false) String userCode) {
+        return ResponseEntity.ok(pointOfSaleService.checkout(codeBill, codeVoucher, username, userCode));
     }
 
     @GetMapping("/close")
