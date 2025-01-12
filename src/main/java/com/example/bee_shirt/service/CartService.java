@@ -65,6 +65,7 @@ public class CartService {
     }
 
     public int updateInvalidQuantity(String codeAccount) {
+        System.out.println(cartDetailRepository.updateInvalidCartDetails());
         return cartDetailRepository.updateInvalidQuantity(codeAccount);
     }
 
