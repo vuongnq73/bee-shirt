@@ -75,6 +75,88 @@
 		.hidden {
 			display: none;
 		}
+
+		/* Style cho phần thông tin địa chỉ đã chọn */
+		#selectedAddressInfo {
+			background-color: #f4f4f4;
+			padding: 20px;
+			border-radius: 8px;
+			margin-top: 20px;
+			border: 1px solid #ccc;
+			width: 100%;
+			max-width: 600px;
+			box-sizing: border-box;
+		}
+
+		/* Tiêu đề của thông tin địa chỉ */
+		#selectedAddressInfo h3 {
+			color: #333;
+			font-size: 18px;
+			font-weight: bold;
+			margin-bottom: 15px;
+		}
+
+		/* Các dòng thông tin địa chỉ */
+		#selectedAddressInfo p {
+			font-size: 14px;
+			color: #555;
+			margin: 5px 0;
+		}
+
+		/* Định dạng cho các nhãn trong thông tin địa chỉ */
+		#selectedAddressInfo p strong {
+			font-weight: bold;
+			color: #000;
+		}
+
+		/* Style cho phần thông tin địa chỉ đã chọn khi có sự kiện hover */
+		#selectedAddressInfo:hover {
+			background-color: #e9e9e9;
+			transition: background-color 0.3s ease;
+		}
+
+		/* Style cho toàn bộ phần tóm tắt giỏ hàng */
+		#cart-summary {
+			background-color: #fff;
+			padding: 20px;
+			border-radius: 10px;
+			border: 1px solid #ddd;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+			width: 100%;
+			max-width: 500px;
+			margin: 20px auto;
+			box-sizing: border-box;
+		}
+
+		/* Style cho mỗi item trong giỏ hàng */
+		#cart-summary li {
+			font-size: 16px;
+			color: #333;
+			margin: 10px 0;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		/* Style cho các phần span hiển thị giá trị */
+		#cart-summary span {
+			font-weight: bold;
+			color: #2c3e50;
+		}
+
+		/* Style cho tổng giá trị giỏ hàng và tổng tiền */
+		#cart-summary li:last-child span {
+			font-size: 18px;
+			color: #e74c3c;
+			font-weight: bold;
+		}
+
+		/* Style cho các thông tin phụ khi người dùng di chuột qua */
+		#cart-summary li:hover {
+			background-color: #f8f8f8;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
 	</style>
 </head>
 
@@ -502,6 +584,7 @@
 						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
 							Chọn địa chỉ
 						</button>
+						<div id="selectedAddressInfo"></div>
 
 						<!-- Lựa chọn kiểu địa chỉ
 						<label>
@@ -1106,6 +1189,7 @@
 				headers: headers // Thêm headers vào yêu cầu
 			});
 			setTimeout(function () {
+				selectedCartDetails = []
 				loadCartDetails()
 			}, 100);
 
@@ -1145,6 +1229,7 @@
 				method: 'POST',
 				headers: headers // Thêm headers vào yêu cầu
 			});
+			selectedCartDetails = []
 			loadCartDetails()
 		}
 
@@ -1937,6 +2022,44 @@
 
 			// Gọi fetchShippingFee hoặc xử lý logic khác
 			fetchShippingFee(selectedAddress.idHuyen, selectedAddress.idXa);
+
+			// Hiển thị thông tin người nhận, số điện thoại và địa chỉ chi tiết vào một div
+			const selectedAddressContainer = document.getElementById('selectedAddressInfo');
+			const selectedAddressData = addresses.find(address => address.deliveryAddressCode === selectedAddressCode);
+
+			// Cập nhật nội dung của div
+			selectedAddressContainer.innerHTML = `
+        <h5>Thông tin địa chỉ đã chọn:</h5>
+        <p><strong>Người nhận:</strong> ${selectedAddressData.name}</p>
+        <p><strong>Số điện thoại:</strong> ${selectedAddressData.phone}</p>
+        <p><strong>Địa chỉ chi tiết:</strong> ${selectedAddressData.detailAddress}</p>
+    `;
+		}
+
+
+		// Hàm hiển thị thông tin địa chỉ vào một div
+		function displaySelectedAddressInfo(selectedAddress) {
+			const selectedAddressInfoDiv = document.getElementById("selectedAddressInfo");
+
+			// Kiểm tra xem div đã tồn tại chưa, nếu chưa thì tạo mới
+			if (!selectedAddressInfoDiv) {
+				const newDiv = document.createElement("div");
+				newDiv.id = "selectedAddressInfo";
+				document.body.appendChild(newDiv);
+			}
+
+			// Lấy div để cập nhật nội dung
+			const div = document.getElementById("selectedAddressInfo");
+
+			// Cập nhật nội dung của div với thông tin địa chỉ
+			div.innerHTML = `
+        <h3>Thông tin địa chỉ được chọn:</h3>
+        <p><strong>Người nhận:</strong> ${selectedAddress.name}</p>
+        <p><strong>Số điện thoại:</strong> ${selectedAddress.phone}</p>
+        <p><strong>Địa chỉ chi tiết:</strong> ${selectedAddress.detailAddress}</p>
+        <p><strong>Quận/Huyện:</strong> ${selectedAddress.idHuyen}</p>
+        <p><strong>Xã/Phường:</strong> ${selectedAddress.idXa}</p>
+    `;
 		}
 
 		function deleteAddress(event, addressCode) {
