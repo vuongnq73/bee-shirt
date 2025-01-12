@@ -813,6 +813,7 @@
 		const userCode = sessionStorage.getItem("userCode");
 		let selectedCartDetails = [];
 		let selectedTotal = 0;
+		let selectedQuantity= 0;
 		let discount = 0;
 		let ship = 0;
 		let shipToOldAddress = 30000;
@@ -1074,21 +1075,25 @@
 			}
 		}
 
-		function updateSelectedTotal() {
-			const checkboxes = document.querySelectorAll('.select-item:checked');
-			selectedTotal = 0;
-			selectedCartDetails = [];
+			function updateSelectedTotal() {
+				const checkboxes = document.querySelectorAll('.select-item:checked');
+				selectedTotal = 0;
+				selectedQuantity = 0;
+				selectedCartDetails = [];
 
-			checkboxes.forEach(checkbox => {
-				selectedTotal += parseFloat(checkbox.dataset.total);
-				selectedCartDetails.push(checkbox.dataset.code); // Lấy giá trị thuộc tính name và thêm vào danh sách
-				selectedTotal > 50000000 ? allowed = false : allowed = true;
-			});
+				checkboxes.forEach(checkbox => {
+					selectedTotal += parseFloat(checkbox.dataset.total);
+					selectedQuantity += parseInt(document.querySelector(`input.num-product[data-code="${checkbox.dataset.code}"]`).value); // Cộng số lượng
+					console.log((document.querySelector(`input.num-product[data-code="${checkbox.dataset.code}"]`)))
+					selectedCartDetails.push(checkbox.dataset.code); // Lấy giá trị thuộc tính name và thêm vào danh sách
+					// selectedTotal > 50000000 ? allowed = false : allowed = true;
+				});
+				allowed = selectedTotal <= 50000000;
 
-
-			updateVoucherOptions(selectedTotal)
-			console.log(selectedTotal)
-		}
+				console.log(selectedTotal, selectedQuantity)
+				updateVoucherOptions(selectedTotal)
+				console.log(selectedTotal)
+			}
 
 		async function updateVoucherOptions(money) {
 			const voucherSelect = document.getElementById("voucherSelect");
@@ -1518,9 +1523,9 @@
 					"from_district_id": 3440,
 					"to_district_id": Number(toDistrictId),
 					"to_ward_code": `${toWardCode}`,
-					"height": 10,
+					"height": selectedQuantity * 5,
 					"length": 30,
-					"weight": 1000,
+					"weight": selectedQuantity * 100,
 					"width": 20
 				};
 
