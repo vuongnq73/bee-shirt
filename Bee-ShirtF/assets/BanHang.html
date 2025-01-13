@@ -621,7 +621,8 @@
                     <!-- Modal Footer -->
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                      <button type="button" class="btn btn-primary" onclick="generateSelectedProducts()">Tạo mới</button>
+                      <button type="button" class="btn btn-primary" onclick="generateSelectedProducts()">Tạo
+                        mới</button>
                       <button type="button" class="btn btn-success" onclick="logSelectedProducts()">Thêm</button>
                     </div>
 
@@ -1206,30 +1207,44 @@
           const row = document.createElement("tr");
           const total = detail.price * detail.quantity;
 
+          // Fetch dữ liệu để lấy thêm thông tin từ URL
+          const fetchShirtDetail = async () => {
+            const response = await fetch(`http://localhost:8080/point-of-sale/get-shirt-detail?codeShirtDetail=${detail.shirtDetail.codeShirtDetail}`, {
+              method: 'GET',
+              headers: headers
+            });
+            const shirtDetail = await response.json();
+
+            // Cập nhật tooltip
+            row.setAttribute('title', `${shirtDetail.shirt.nameshirt}, ${shirtDetail.size.namesize}, ${shirtDetail.color.nameColor}, ${shirtDetail.material.nameMaterial}, ${shirtDetail.pattern.namePattern}, ${shirtDetail.gender.nameGender}, ${shirtDetail.origin.nameOrigin}, ${shirtDetail.season.nameSeason}`);
+          };
+
+          fetchShirtDetail();
+
           row.innerHTML = `
-      <td>${index + 1}</td>
-      <td>${detail.shirtDetail.codeShirtDetail}</td>
-      <td>${detail.shirtDetail.shirt.nameshirt}</td>
-      <td>${detail.shirtDetail.size.namesize}</td>
-      <td>${detail.shirtDetail.color.nameColor}</td>
-      <td>${formatter.format(detail.price)}</td>
-      <td>${detail.quantity}</td>
-      <td>${formatter.format(total)}</td>
-      <td>
-    <!-- Nút "Sửa" -->
+          <td>${index + 1}</td>
+          <td>${detail.shirtDetail.codeShirtDetail}</td>
+          <td>${detail.shirtDetail.shirt.nameshirt}</td>
+          <td>${detail.shirtDetail.size.namesize}</td>
+          <td>${detail.shirtDetail.color.nameColor}</td>
+          <td>${formatter.format(detail.price)}</td>
+          <td>${detail.quantity}</td>
+          <td>${formatter.format(total)}</td>
+          <td>
+            <!-- Nút "Sửa" -->
+            <button type="button" class="btn btn-primary btn-sm" onclick="openModal2('${detail.codeBillDetail}','${detail.shirtDetail.codeShirtDetail}')">
+              <i class="fas fa-pen"></i> Sửa
+            </button>
+            <!-- Nút "Xóa" -->
+            <button type="button" class="btn btn-danger btn-sm" onclick="remove('${detail.codeBillDetail}')">
+              <i class="fas fa-trash"></i> Xóa
+            </button>
+          </td>
+        `;
 
-    <button type="button" class="btn btn-primary btn-sm" onclick="openModal2('${detail.codeBillDetail}','${detail.shirtDetail.codeShirtDetail}')">
-        <i class="fas fa-pen"></i> Sửa
-    </button>
-    <!-- Nút "Xóa" -->
-
-    <button type="button" class="btn btn-danger btn-sm" onclick="remove('${detail.codeBillDetail}')">
-        <i class="fas fa-trash"></i> Xóa
-    </button>
-</td>
-    `;
           tableBody.appendChild(row);
         });
+
 
         // // Lấy phần tử danh sách
         // const productList = document.getElementById('product-list');
