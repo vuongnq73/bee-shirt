@@ -187,9 +187,7 @@ public class AccountService {
             }
             account.setEmail(request.getEmail());
         }
-        if (request.getAddress() != null) {
-            account.setAddress(request.getAddress());
-        }
+
         if (request.getStatus() != null) {
             account.setStatus(request.getStatus());
         }

@@ -191,7 +191,6 @@ public class CartService {
         bill2.setTypeBill("Online");
         bill2.setCustomerName(account.getFirstName() + account.getLastName());
         bill2.setPhoneNumber(account.getPhone());
-        bill2.setAddressCustomer(account.getAddress());
         bill2.setMoneyShip(BigDecimal.valueOf(ship));
         double subtotalBeforeDiscount = 0.0;
         double moneyReduce = 0.0;

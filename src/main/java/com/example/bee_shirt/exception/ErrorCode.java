@@ -56,6 +56,8 @@ public enum ErrorCode {
 
     PASSWORD_NOT_EMPTY(404_002,"Password not empty", HttpStatus.BAD_REQUEST),
 
+    VOUCHER_NOT_FOUND(404_003,"Voucher not empty", HttpStatus.NOT_FOUND),
+
     ;
     private int code;
 

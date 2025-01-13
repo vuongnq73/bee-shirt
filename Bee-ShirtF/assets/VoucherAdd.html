@@ -379,9 +379,9 @@
                         <div>
                             <label for="startdate">Ngày bắt đầu:</label>
                             <input type="datetime-local" id="startdate" class="form-control"
-                                ng-model="newVoucher.startdate" required min="{{today}}">
+                                   ng-model="newVoucher.startdate" required min="{{today}}">
                             <div ng-show="voucherForm.$submitted && voucherForm.startdate.$error.required"
-                                style="color: red;">
+                                 style="color: red;">
                                 <small>Ngày bắt đầu không được sớm hơn ngày hiện tại!</small>
                             </div>
                         </div>
