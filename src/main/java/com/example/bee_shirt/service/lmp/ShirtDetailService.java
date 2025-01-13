@@ -123,7 +123,7 @@ public class ShirtDetailService {
             // Gán các giá trị từ DTO vào entity
             shirtDetail.setQuantity(dto.getQuantity());
             shirtDetail.setPrice(dto.getPrice());
-            shirtDetail.setStatusshirtdetail(dto.getStatusshirtdetail());
+            shirtDetail.setStatusshirtdetail(1);
             shirtDetail.setCreateBy(dto.getCreateBy());
             shirtDetail.setCreateAt(dto.getCreateAt());
             shirtDetail.setUpdateBy(dto.getUpdateBy());
