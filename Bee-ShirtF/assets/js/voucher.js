@@ -33,9 +33,13 @@ angular.module("voucherApp", []).controller("voucherController1", [
               const currentDate = new Date();
               let status = 0; // Ngưng hoạt động
 
-              const startDate = voucher.startdate ? new Date(voucher.startdate) : null;
-              const endDate = voucher.enddate ? new Date(voucher.enddate) : null;
-              
+              const startDate = voucher.startdate
+                ? new Date(voucher.startdate)
+                : null;
+              const endDate = voucher.enddate
+                ? new Date(voucher.enddate)
+                : null;
+
               if (startDate && endDate) {
                 if (startDate > currentDate) {
                   status = 2; // Sắp hoạt động
@@ -45,7 +49,10 @@ angular.module("voucherApp", []).controller("voucherController1", [
                   status = 0; // Ngưng hoạt động
                 }
               } else {
-                console.warn("Ngày bắt đầu hoặc ngày kết thúc không hợp lệ:", voucher);
+                console.warn(
+                  "Ngày bắt đầu hoặc ngày kết thúc không hợp lệ:",
+                  voucher
+                );
               }
               return {
                 id: voucher.id,
@@ -58,7 +65,7 @@ angular.module("voucherApp", []).controller("voucherController1", [
                 maximum_discount: voucher.maximum_discount,
                 startdate: voucher.startdate,
                 enddate: voucher.enddate,
-                status_voucher: status,  // Cập nhật trạng thái mới
+                status_voucher: status, // Cập nhật trạng thái mới
                 description_voucher: voucher.description_voucher,
                 createby: voucher.createby,
                 createAt: voucher.createAt,
@@ -69,7 +76,8 @@ angular.module("voucherApp", []).controller("voucherController1", [
             $scope.totalPages = responseData.totalPages || 1;
           } else {
             console.error("Dữ liệu không hợp lệ:", responseData);
-            $scope.errorMessage = "Dữ liệu không hợp lệ: Không phải là một mảng.";
+            $scope.errorMessage =
+              "Dữ liệu không hợp lệ: Không phải là một mảng.";
           }
         })
         .catch(function (error) {
@@ -78,18 +86,15 @@ angular.module("voucherApp", []).controller("voucherController1", [
         });
     };
 
-
-
-
-
-
     $scope.globalSearch = function () {
       const token = sessionStorage.getItem("jwtToken");
       const keyword = $scope.searchKeyword.trim(); // Loại bỏ khoảng trắng thừa
 
       $http({
         method: "GET",
-        url: `http://localhost:8080/voucher/search?keyword=${encodeURIComponent(keyword)}`,
+        url: `http://localhost:8080/voucher/search?keyword=${encodeURIComponent(
+          keyword
+        )}`,
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -103,11 +108,13 @@ angular.module("voucherApp", []).controller("voucherController1", [
         });
     };
 
-
     $scope.searchByDateRange = function () {
       const token = sessionStorage.getItem("jwtToken");
-      const batdau = $scope.search.batdau || ""; // Lấy giá trị ngày bắt đầu
-      const ketthuc = $scope.search.ketthuc || ""; // Lấy giá trị ngày kết thúc
+      // Lấy giá trị ngày bắt đầu và kết thúc từ người dùng
+      const batdau = $scope.search.batdau ? new Date($scope.search.batdau) : "";
+      const ketthuc = $scope.search.ketthuc
+        ? new Date($scope.search.ketthuc)
+        : "";
 
       // Kiểm tra xem ngày bắt đầu có lớn hơn ngày kết thúc không
       if (batdau && ketthuc && new Date(batdau) > new Date(ketthuc)) {
@@ -116,8 +123,26 @@ angular.module("voucherApp", []).controller("voucherController1", [
       }
 
       // Chuyển đổi định dạng ngày theo yêu cầu của backend (ISO 8601: yyyy-MM-dd)
-      const formattedBatdau = batdau ? new Date(batdau).toISOString().split('T')[0] : '';
-      const formattedKetthuc = ketthuc ? new Date(ketthuc).toISOString().split('T')[0] : '';
+
+      // Chuyển đổi thành định dạng yyyy-MM-dd
+      const formattedBatdau = batdau
+        ? batdau.getFullYear() +
+          "-" +
+          ("0" + (batdau.getMonth() + 1)).slice(-2) +
+          "-" +
+          ("0" + batdau.getDate()).slice(-2)
+        : "";
+      const formattedKetthuc = ketthuc
+        ? ketthuc.getFullYear() +
+          "-" +
+          ("0" + (ketthuc.getMonth() + 1)).slice(-2) +
+          "-" +
+          ("0" + ketthuc.getDate()).slice(-2)
+        : "";
+
+      console.log(formattedBatdau);
+
+      console.log(formattedKetthuc);
 
       // Gửi yêu cầu tìm kiếm với ngày đã định dạng
       $http({
@@ -137,13 +162,7 @@ angular.module("voucherApp", []).controller("voucherController1", [
         });
     };
 
-
-
-
-
-
-    // cập nhật trạng thái hết hạn 
-
+    // cập nhật trạng thái hết hạn
 
     // // Gọi hàm này sau mỗi 5 phút để kiểm tra và cập nhật trạng thái voucher hết hạn
     // function updateExpiredVouchers() {
@@ -154,7 +173,6 @@ angular.module("voucherApp", []).controller("voucherController1", [
 
     // // Gọi lần đầu tiên ngay sau khi tải trang
     // $timeout(updateExpiredVouchers, 5 * 60 * 1000);
-
 
     $scope.getVoucherDetail = function (id) {
       const token = sessionStorage.getItem("jwtToken");
@@ -173,9 +191,12 @@ angular.module("voucherApp", []).controller("voucherController1", [
         },
       })
         .then(function (response) {
-          sessionStorage.setItem("voucherDetail", JSON.stringify(response.data));
+          sessionStorage.setItem(
+            "voucherDetail",
+            JSON.stringify(response.data)
+          );
           $scope.successMessage = "Voucher details loaded successfully.";
-          console.log(response.data)
+          console.log(response.data);
           window.location.href = "/assets/VoucherDetail.html";
         })
         .catch(function (error) {
@@ -184,40 +205,50 @@ angular.module("voucherApp", []).controller("voucherController1", [
         });
     };
 
-    window.onload = function() {
+    window.onload = function () {
       const voucherDetail = JSON.parse(sessionStorage.getItem("voucherDetail"));
-  
+
       if (voucherDetail) {
-          // Gán giá trị vào form
-          document.getElementById("id").value = voucherDetail.id;
-          document.getElementById("code_voucher").value = voucherDetail.code_voucher;
-          document.getElementById("type_voucher").value = voucherDetail.type_voucher;
-          document.getElementById("name_voucher").value = voucherDetail.name_voucher;
-          document.getElementById("discount_value").value = voucherDetail.discount_value;
-          document.getElementById("quantity").value = voucherDetail.quantity;
-          document.getElementById("min_bill_value").value = voucherDetail.min_bill_value;
-          document.getElementById("maximum_discount").value = voucherDetail.maximum_discount;
-          
-          // Chuyển đổi thời gian startdate và enddate thành định dạng YYYY-MM-DD
-          const startDate = new Date(voucherDetail.startdate);
-          const endDate = new Date(voucherDetail.enddate);
-  
-          // Gán giá trị vào các input type="date"
-          document.getElementById("startDate").value = startDate.toISOString().split("T")[0];
-          document.getElementById("endDate").value = endDate.toISOString().split("T")[0];
-          console.log(voucherDetail.status_voucher)
-          // Set the status
-          if (voucherDetail.status_voucher === 0) {
-              document.getElementById("statusActive").checked = true;
-          } else if (voucherDetail.status_voucher === 1) {
-              document.getElementById("statusInactive").checked = true;
-          } else if (voucherDetail.status_voucher === 2) {
-              document.getElementById("statusPending").checked = true;
-          }
+        // Gán giá trị vào form
+        document.getElementById("id").value = voucherDetail.id;
+        document.getElementById("code_voucher").value =
+          voucherDetail.code_voucher;
+        document.getElementById("type_voucher").value =
+          voucherDetail.type_voucher;
+        document.getElementById("name_voucher").value =
+          voucherDetail.name_voucher;
+        document.getElementById("discount_value").value =
+          voucherDetail.discount_value;
+        document.getElementById("quantity").value = voucherDetail.quantity;
+        document.getElementById("min_bill_value").value =
+          voucherDetail.min_bill_value;
+        document.getElementById("maximum_discount").value =
+          voucherDetail.maximum_discount;
+
+        // Chuyển đổi thời gian startdate và enddate thành định dạng YYYY-MM-DD
+        const startDate = new Date(voucherDetail.startdate);
+        const endDate = new Date(voucherDetail.enddate);
+
+        // Gán giá trị vào các input type="date"
+        document.getElementById("startDate").value = startDate
+          .toISOString()
+          .split("T")[0];
+        document.getElementById("endDate").value = endDate
+          .toISOString()
+          .split("T")[0];
+        console.log(voucherDetail.status_voucher);
+        // Set the status
+        if (voucherDetail.status_voucher === 0) {
+          document.getElementById("statusActive").checked = true;
+        } else if (voucherDetail.status_voucher === 1) {
+          document.getElementById("statusInactive").checked = true;
+        } else if (voucherDetail.status_voucher === 2) {
+          document.getElementById("statusPending").checked = true;
+        }
       } else {
-          console.error("Voucher detail not found in sessionStorage.");
+        console.error("Voucher detail not found in sessionStorage.");
       }
-  };
+    };
 
     $scope.addVoucher = function (newVoucher) {
       const token = sessionStorage.getItem("jwtToken");
@@ -241,17 +272,24 @@ angular.module("voucherApp", []).controller("voucherController1", [
         return;
       }
 
-      if (newVoucher.type_voucher === '%' && (newVoucher.discount_value < 1 || newVoucher.discount_value > 100)) {
+      if (
+        newVoucher.type_voucher === "%" &&
+        (newVoucher.discount_value < 1 || newVoucher.discount_value > 100)
+      ) {
         $scope.errorMessage = "Phần trăm giảm giá phải từ 1 đến 100!";
         return;
       }
 
-      if (newVoucher.type_voucher === 'Số tiền' && newVoucher.discount_value <= 0) {
-        $scope.errorMessage = "Giá trị giảm giá phải lớn hơn 0 khi chọn loại 'Số tiền'!";
+      if (
+        newVoucher.type_voucher === "Số tiền" &&
+        newVoucher.discount_value <= 0
+      ) {
+        $scope.errorMessage =
+          "Giá trị giảm giá phải lớn hơn 0 khi chọn loại 'Số tiền'!";
         return;
       }
 
-      if ($scope.newVoucher.type_voucher === '%') {
+      if ($scope.newVoucher.type_voucher === "%") {
         $scope.newVoucher.maximum_discount = null; // Reset maximum_discount
       }
 
@@ -267,13 +305,12 @@ angular.module("voucherApp", []).controller("voucherController1", [
         $scope.errorMessage = "Giá trị hóa đơn tối thiểu phải lớn hơn 0!";
         return;
       }
-      if (newVoucher.type_voucher === 'Số tiền') {
+      if (newVoucher.type_voucher === "Số tiền") {
         if (!newVoucher.maximum_discount || newVoucher.maximum_discount <= 0) {
           $scope.errorMessage = "Giảm giá tối đa phải lớn hơn 0!";
           return;
         }
       }
-
 
       // Chuyển đổi startdate và enddate thành chuỗi ISO cho cả ngày và giờ
       const now = new Date().toISOString();
@@ -283,16 +320,17 @@ angular.module("voucherApp", []).controller("voucherController1", [
 
       // Check if startDateTime is in the past
       if (startDateTime < now) {
-        $scope.errorMessage = "Ngày giờ bắt đầu không được sớm hơn ngày giờ hiện tại!";
+        $scope.errorMessage =
+          "Ngày giờ bắt đầu không được sớm hơn ngày giờ hiện tại!";
         return;
       }
 
       // Check if endDateTime is earlier than startDateTime
       if (endDateTime < startDateTime) {
-        $scope.errorMessage = "Ngày giờ kết thúc không được sớm hơn ngày giờ bắt đầu!";
+        $scope.errorMessage =
+          "Ngày giờ kết thúc không được sớm hơn ngày giờ bắt đầu!";
         return;
       }
-
 
       // Optional description check
       newVoucher.description_voucher = newVoucher.description_voucher || ""; // If empty, set it as an empty string
@@ -303,7 +341,7 @@ angular.module("voucherApp", []).controller("voucherController1", [
         url: "http://localhost:8080/voucher/add",
         headers: {
           Authorization: "Bearer " + token,
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         data: {
           // code_voucher: newVoucher.code_voucher,
@@ -316,14 +354,13 @@ angular.module("voucherApp", []).controller("voucherController1", [
           startdate: newVoucher.startdate,
           enddate: newVoucher.enddate,
           description_voucher: newVoucher.description_voucher,
-
-        }
+        },
       })
         .then(function (response) {
           $scope.successMessage = "Voucher đã được thêm thành công!";
           // Refresh the list of vouchers after successful addition
 
-          $scope.voucherList.unshift(response.data);  // Dùng unshift để thêm vào đầu mảng
+          $scope.voucherList.unshift(response.data); // Dùng unshift để thêm vào đầu mảng
 
           // $scope.getVouchers();
           // Optionally redirect to the voucher list page
@@ -335,57 +372,53 @@ angular.module("voucherApp", []).controller("voucherController1", [
         });
     };
 
-
     $scope.deleteVoucher = function (voucherId) {
       const token = sessionStorage.getItem("jwtToken");
-  
+
       // Kiểm tra nếu người dùng chưa đăng nhập
       if (!token) {
-          $scope.errorMessage = "Bạn chưa đăng nhập!";
-          return;
+        $scope.errorMessage = "Bạn chưa đăng nhập!";
+        return;
       }
       $scope.errorMessage = "";
       $scope.successMessage = "";
-  
+
       // Xác nhận người dùng muốn xóa voucher
       if (!confirm("Bạn có chắc chắn muốn xóa voucher này?")) {
-          return;
+        return;
       }
-  
+
       // Hiển thị thông báo đang xử lý và vô hiệu hóa nút xóa
       $scope.isDeleting = true;
       $scope.deleteButtonText = "Đang xóa...";
-  
+
       // Gửi yêu cầu xóa voucher tới server
       $http({
-          method: "DELETE",
-          url: "http://localhost:8080/voucher/delete/" + voucherId,
-          headers: {
-              Authorization: "Bearer " + token,
+        method: "DELETE",
+        url: "http://localhost:8080/voucher/delete/" + voucherId,
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+        .then(function (response) {
+          if (response.status === 200) {
+            $scope.successMessage = response.data.message;
+            $scope.errorMessage = "";
+            $scope.getVouchers(); // Cập nhật lại danh sách voucher
+          } else {
+            $scope.errorMessage = "Có lỗi xảy ra khi xóa voucher!";
           }
-      })
-      .then(function (response) {
-        if (response.status === 200) {
-          $scope.successMessage = response.data.message;
-          $scope.errorMessage = ""; 
-          $scope.getVouchers(); // Cập nhật lại danh sách voucher
-      } else {
-          $scope.errorMessage = "Có lỗi xảy ra khi xóa voucher!";
-      }
-      
-      $scope.isDeleting = false; // Kích hoạt lại nút sau khi hoàn tất
-       
-      })
-      .catch(function (error) {
-        console.error("Error deleting voucher:", error);
-        console.log(error.response); // In ra thông tin phản hồi nếu có
-        $scope.errorMessage = "Xóa thất bại.";
-        $scope.successMessage = "";
-        $scope.isDeleting = false; // Kích hoạt lại nút sau khi gặp lỗi
-    });
-  };
-  
 
+          $scope.isDeleting = false; // Kích hoạt lại nút sau khi hoàn tất
+        })
+        .catch(function (error) {
+          console.error("Error deleting voucher:", error);
+          console.log(error.response); // In ra thông tin phản hồi nếu có
+          $scope.errorMessage = "Xóa thất bại.";
+          $scope.successMessage = "";
+          $scope.isDeleting = false; // Kích hoạt lại nút sau khi gặp lỗi
+        });
+    };
 
     // $scope.updateVoucher = function (voucherDetail) {
     //   const token = sessionStorage.getItem("jwtToken");
@@ -440,135 +473,129 @@ angular.module("voucherApp", []).controller("voucherController1", [
     //       $scope.errorMessage = "Failed to update voucher.";
     //     });
     // };
-// Hàm xem profile
-$scope.viewProfile = function () {
-  const token = sessionStorage.getItem("jwtToken");
+    // Hàm xem profile
+    $scope.viewProfile = function () {
+      const token = sessionStorage.getItem("jwtToken");
 
-  if (!token || token.split(".").length !== 3) {
-    console.log("Token không hợp lệ hoặc không tồn tại");
-    return;
-  }
-
-  const payload = JSON.parse(atob(token.split(".")[1]));
-  if (payload && payload["user Code"]) {
-    const userCode = payload["user Code"];
-    sessionStorage.setItem("userCode", userCode);
-    console.log("userCode đã được lưu vào sessionStorage:", userCode);
-  } else {
-    console.log("Không tìm thấy userCode trong payload");
-  }
-
-  $window.location.href = "/assets/staff/Profile.html";
-};
-
-$scope.deleteAccount = function (code) {
-  if (confirm("Are you sure you want to delete this account?")) {
-    const token = sessionStorage.getItem("jwtToken");
-
-    // Khởi tạo biến trạng thái để tắt nút khi đang xóa
-    $scope.isDeleting = true;
-
-    $http({
-      method: "DELETE",
-      url: `http://localhost:8080/admin/delete/${code}`, // URL API cho chức năng xóa
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    })
-      .then(function (response) {
-        $scope.successMessage = "Account deleted successfully!";
-        $scope.errorMessage = ""; // Xóa thông báo lỗi (nếu có)
-        $scope.getCustomers(); // Cập nhật lại danh sách nhân viên sau khi xóa
-        $scope.isDeleting = false; // Kích hoạt lại nút sau khi hoàn tất
-
-        // Tự động ẩn thông báo sau 3 giây
-        setTimeout(function () {
-          $scope.successMessage = "";
-          $scope.$apply();
-        }, 3000);
-      })
-      .catch(function (error) {
-        console.error("Error deleting account:", error);
-        $scope.errorMessage = "Failed to delete account.";
-        $scope.successMessage = ""; // Xóa thông báo thành công (nếu có)
-        $scope.isDeleting = false; // Kích hoạt lại nút sau khi gặp lỗi
-      });
-  }
-};
-
-
-
-
-// Hàm tìm kiếm
-$scope.searchCustomer = function () {
-  if (!$scope.searchQuery) {
-    $scope.filteredCustomerList = $scope.customerList;
-  } else {
-    $scope.filteredCustomerList = $scope.customerList.filter(function (
-      customer
-    ) {
-      return (
-        customer.code
-          .toLowerCase()
-          .includes($scope.searchQuery.toLowerCase()) ||
-        customer.username
-          .toLowerCase()
-          .includes($scope.searchQuery.toLowerCase()) ||
-        customer.email
-          .toLowerCase()
-          .includes($scope.searchQuery.toLowerCase()) ||
-        customer.phone.includes($scope.searchQuery) ||
-        customer.address
-          .toLowerCase()
-          .includes($scope.searchQuery.toLowerCase())
-      );
-    });
-  }
-};
-
-//Lấy thông tin của tài khoản đang đăng nhập
-$scope.getMyProfile = function () {
-  const token = sessionStorage.getItem("jwtToken");
-  $http({
-    method: "GET",
-    url: `http://localhost:8080/admin/myProfile`, // Đảm bảo URL đúng
-    headers: {
-      Authorization: "Bearer " + token, // Kiểm tra xem token có hợp lệ không
-    },
-  })
-    .then(function (response) {
-      console.log("Response:", response); // Log toàn bộ response để kiểm tra
-
-      if (response.data && response.data.result) {
-        $scope.myProfile = response.data.result;
-        console.log("My Profile:", $scope.myProfile); // Kiểm tra giá trị gán vào myProfile
-      } else {
-        $scope.errorMessage = "Không thể lấy thông tin người dùng.";
-        console.log($scope.errorMessage);
+      if (!token || token.split(".").length !== 3) {
+        console.log("Token không hợp lệ hoặc không tồn tại");
+        return;
       }
-    })
-    .catch(function (error) {
-      console.error("Lỗi khi lấy thông tin người dùng:", error);
-      $scope.errorMessage = "Có lỗi xảy ra khi lấy dữ liệu.";
-    })
-    .finally(function () {
-      $scope.loading = false; // Tắt trạng thái loading sau khi nhận được phản hồi
-    });
-};
-// Hàm xem profile
-$scope.goToUpdateProfile = function (userCode) {
-  // Lưu thông tin người dùng vào sessionStorage để chuyển trang
-  sessionStorage.setItem("userCode", userCode);
 
-  // Sử dụng $location để điều hướng trong AngularJS
-  window.location.href = "/assets/staff/Profile.html";
-};
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      if (payload && payload["user Code"]) {
+        const userCode = payload["user Code"];
+        sessionStorage.setItem("userCode", userCode);
+        console.log("userCode đã được lưu vào sessionStorage:", userCode);
+      } else {
+        console.log("Không tìm thấy userCode trong payload");
+      }
 
-$scope.getMyProfile();
+      $window.location.href = "/assets/staff/Profile.html";
+    };
+
+    $scope.deleteAccount = function (code) {
+      if (confirm("Are you sure you want to delete this account?")) {
+        const token = sessionStorage.getItem("jwtToken");
+
+        // Khởi tạo biến trạng thái để tắt nút khi đang xóa
+        $scope.isDeleting = true;
+
+        $http({
+          method: "DELETE",
+          url: `http://localhost:8080/admin/delete/${code}`, // URL API cho chức năng xóa
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        })
+          .then(function (response) {
+            $scope.successMessage = "Account deleted successfully!";
+            $scope.errorMessage = ""; // Xóa thông báo lỗi (nếu có)
+            $scope.getCustomers(); // Cập nhật lại danh sách nhân viên sau khi xóa
+            $scope.isDeleting = false; // Kích hoạt lại nút sau khi hoàn tất
+
+            // Tự động ẩn thông báo sau 3 giây
+            setTimeout(function () {
+              $scope.successMessage = "";
+              $scope.$apply();
+            }, 3000);
+          })
+          .catch(function (error) {
+            console.error("Error deleting account:", error);
+            $scope.errorMessage = "Failed to delete account.";
+            $scope.successMessage = ""; // Xóa thông báo thành công (nếu có)
+            $scope.isDeleting = false; // Kích hoạt lại nút sau khi gặp lỗi
+          });
+      }
+    };
+
+    // Hàm tìm kiếm
+    $scope.searchCustomer = function () {
+      if (!$scope.searchQuery) {
+        $scope.filteredCustomerList = $scope.customerList;
+      } else {
+        $scope.filteredCustomerList = $scope.customerList.filter(function (
+          customer
+        ) {
+          return (
+            customer.code
+              .toLowerCase()
+              .includes($scope.searchQuery.toLowerCase()) ||
+            customer.username
+              .toLowerCase()
+              .includes($scope.searchQuery.toLowerCase()) ||
+            customer.email
+              .toLowerCase()
+              .includes($scope.searchQuery.toLowerCase()) ||
+            customer.phone.includes($scope.searchQuery) ||
+            customer.address
+              .toLowerCase()
+              .includes($scope.searchQuery.toLowerCase())
+          );
+        });
+      }
+    };
+
+    //Lấy thông tin của tài khoản đang đăng nhập
+    $scope.getMyProfile = function () {
+      const token = sessionStorage.getItem("jwtToken");
+      $http({
+        method: "GET",
+        url: `http://localhost:8080/admin/myProfile`, // Đảm bảo URL đúng
+        headers: {
+          Authorization: "Bearer " + token, // Kiểm tra xem token có hợp lệ không
+        },
+      })
+        .then(function (response) {
+          console.log("Response:", response); // Log toàn bộ response để kiểm tra
+
+          if (response.data && response.data.result) {
+            $scope.myProfile = response.data.result;
+            console.log("My Profile:", $scope.myProfile); // Kiểm tra giá trị gán vào myProfile
+          } else {
+            $scope.errorMessage = "Không thể lấy thông tin người dùng.";
+            console.log($scope.errorMessage);
+          }
+        })
+        .catch(function (error) {
+          console.error("Lỗi khi lấy thông tin người dùng:", error);
+          $scope.errorMessage = "Có lỗi xảy ra khi lấy dữ liệu.";
+        })
+        .finally(function () {
+          $scope.loading = false; // Tắt trạng thái loading sau khi nhận được phản hồi
+        });
+    };
+    // Hàm xem profile
+    $scope.goToUpdateProfile = function (userCode) {
+      // Lưu thông tin người dùng vào sessionStorage để chuyển trang
+      sessionStorage.setItem("userCode", userCode);
+
+      // Sử dụng $location để điều hướng trong AngularJS
+      window.location.href = "/assets/staff/Profile.html";
+    };
+
+    $scope.getMyProfile();
 
     $scope.getVouchers();
   },
-
-
-
 ]);
