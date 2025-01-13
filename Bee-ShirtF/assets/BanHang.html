@@ -1402,7 +1402,7 @@
         fetchBills()
         document.getElementById('closeModal3').click()
         toastr.success('Đã hoàn tất thanh toán!', 'Thành công');
-
+        
       }
       ).catch(error => console.error("Error with checkout", error));
     }
@@ -2422,6 +2422,7 @@
 
         // Kiểm tra nếu không có voucher
         if (vouchers.length === 0) {
+          activeVoucherCode=null;
           voucherSelect.innerHTML = "<option value=''>Không có voucher khả dụng</option>";
           return;
         }
@@ -2455,6 +2456,7 @@
 
         // Tự động chọn voucher giảm nhiều nhất
         if (bestVoucher) {
+          activeVoucherCode = bestVoucher.code_voucher
           voucherSelect.value = bestVoucher.code_voucher;
           document.getElementById("codeVoucher").value = voucherSelect.value;
           applyVoucherOnChange()
