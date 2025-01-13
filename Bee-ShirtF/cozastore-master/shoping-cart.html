@@ -1590,6 +1590,8 @@
 		function handlePaymentResponse() {
 			const params = new URLSearchParams(window.location.search);
 			if (!params.toString()) {
+				selectedCartDetails = []
+				localStorage.removeItem('selectedCartDetails');
 				return;
 			}
 
