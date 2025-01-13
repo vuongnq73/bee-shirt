@@ -78,6 +78,50 @@ public class ApplicationConfig {
                 accountRepository.save(account);
                 log.warn("admin was has beem created with default username: admin, password: admin, please change it");
             }
+<<<<<<< Updated upstream
+=======
+            // Tạo tài khoản khách vãng lai nếu chưa có
+            if (accountRepository.findByUsername("khachvanglai").isEmpty()) {
+                Account guestAccount = Account.builder()
+                        .username("khachvanglai")
+                        .pass(passwordEncoder.encode("khachvanglai")) // Mật khẩu mặc định cho khách
+                        .status(0) // Có thể đặt trạng thái là 1 để biểu thị tài khoản đang hoạt động
+                        .avatar("https://asset.cloudinary.com/dbshkldsj/default_guest_avatar.png") // Avatar mặc định
+                        .email("guest@example.com")
+                        .phone("0000000000")
+                        .firstName("khach")
+                        .lastName("vanglai")
+                        .createBy("ad")
+                        .createAt(LocalDate.now())
+                        .updateBy("ad")
+                        .deleted(false)
+                        .updateAt(LocalDate.now())
+                        .code("ACC0000")
+                        .build();
+
+                Set<Role> guestRoles = new HashSet<>();
+                guestRoles.add(roleRepository.findRoleByCode("USER").orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND)));
+
+                guestAccount.setRole(guestRoles);
+
+                // Tạo mã tài khoản cho khách
+                if (accountRepository.getTop1() == null) {
+                    guestAccount.setCode("ACC00000");
+                } else {
+                    String lastCode = accountRepository.getTop1().getCode();
+                    if (lastCode.length() > 3) {
+                        String prefix = lastCode.substring(0, 3);
+                        int number = Integer.parseInt(lastCode.substring(3));
+                        guestAccount.setCode(prefix + (number + 1));
+                    } else {
+                        guestAccount.setCode("ACC00000");
+                    }
+                }
+
+                accountRepository.save(guestAccount);
+                log.warn("Guest account created with default username: guest, password: guest.");
+            }
+>>>>>>> Stashed changes
         };
     }
 }

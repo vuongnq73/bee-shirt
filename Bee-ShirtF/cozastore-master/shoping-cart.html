@@ -859,6 +859,8 @@
 		}
 
 		async function loadCartDetails() {
+			console.log(selectedCartDetails);
+
 			try {
 				// Gửi yêu cầu cập nhật invalid quantity và chờ hoàn thành
 				const updateResponse = await fetch("http://localhost:8080/cart/update-invalid-quantity?codeAccount=" + userCode, {
@@ -877,7 +879,7 @@
 				const data = await response.json();
 				const cartDetailsElement = document.getElementById('cart-details');
 				const cartSummaryElement = document.getElementById('cart-summary');
-
+		console.log(selectedCartDetails);
 				// Clear existing data
 				cartDetailsElement.innerHTML = '';
 				cartSummaryElement.innerHTML = '';
@@ -1411,11 +1413,17 @@
 			miniCart()
 			// Lấy selectedCartDetails từ localStorage
 			const savedCartDetails = localStorage.getItem('selectedCartDetails');
+			console.log(selectedCartDetails);
+			console.log(123);
+			console.log(savedCartDetails);
+
 			if (savedCartDetails) {
+				
 				selectedCartDetails = JSON.parse(savedCartDetails);
 				activeVoucherCode = localStorage.getItem('activeVoucherCode');
-				console.log(activeVoucherCode)
+				console.log(selectedCartDetails)
 			}
+			
 			localStorage.removeItem('district')
 			localStorage.removeItem('address_1_saved')
 			localStorage.removeItem('address_2_saved')

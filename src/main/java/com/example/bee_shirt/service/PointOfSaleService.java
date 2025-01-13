@@ -193,7 +193,7 @@ public class PointOfSaleService {
         bill.setTypeBill("In-Store");
         bill.setCustomerName(account.getFirstName() + account.getLastName());
         bill.setPhoneNumber(account.getPhone());
-        bill.setAddressCustomer(account.getAddress());
+        bill.setAddressCustomer("hanoi");
         bill.setMoneyShip(BigDecimal.ZERO);
         double subtotalBeforeDiscount = 0.0;
         double moneyReduce = 0.0;
