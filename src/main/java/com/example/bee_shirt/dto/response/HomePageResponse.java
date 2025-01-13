@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class HomePageResponse {
     String codeShirt;
-    String nameImage;
+    String image;
     String nameShirt;
     String branch;
     String size;
