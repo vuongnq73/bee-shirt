@@ -531,143 +531,121 @@
             </li>
             
           </ul>
-            <h2>Danh sách Mùa</h2>
-
-<!-- Bảng hiển thị danh sách Season -->
-<table class="table table-bordered">
-    <thead>
-        <tr>
-          <th>STT</th>
-            <th>Mã</th>
-            <th>Mùa
-              <button class="btn btn-link" ng-click="sortSeason('nameSeason')">
-                <i class="bi bi-arrow-down-up"></i>
-            </button>
-            </th>
-            <th>Trạng Thái</th>
-            <th>Hành động</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr ng-repeat="season in seasons">
-          <td>{{$index + 1 }}</td>
-            <td>{{ season.codeSeason }}</td>
-            <td>{{ season.nameSeason }}</td>
-            <td>{{ season.statusSeason == 1 ? 'Active' : 'Inactive' }}</td>
-            <td>
-                <button class="btn btn-warning" ng-click="editSeason(season)">Xem Chi Tiết</button>
-                <button class="btn btn-danger" ng-click="deleteSeason(season.codeSeason)">Xóa</button>
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-<div class="d-flex justify-content-center mt-4">
-    <ul class="pagination">
-        <!-- Nút Đầu -->
-        <li class="page-item" ng-class="{'disabled': currentPage === 0}">
-            <button class="page-link" ng-click="goToPage(0)">Đầu</button>
-        </li>
+          <select ng-model="statusFilter" ng-change="filterByStatus(statusFilter)">
+            <option value="">Tất cả</option>
+            <option value="0">Không hoạt động</option>
+            <option value="1">Hoạt động</option>
+        </select>
         
-        <!-- Nút Previous -->
-        <li class="page-item" ng-class="{'disabled': currentPage === 0}">
-            <button class="page-link" ng-click="goToPage(currentPage - 1)">Previous</button>
-        </li>
-
-        <!-- Các trang giữa -->
-        <li class="page-item" ng-repeat="page in pages" ng-class="{'active': currentPage === page}">
-            <button class="page-link" ng-click="goToPage(page)">{{ page + 1 }}</button>
-        </li>
-
-        <!-- Nút Next -->
-        <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
-            <button class="page-link" ng-click="goToPage(currentPage + 1)">Next</button>
-        </li>
-
-        <!-- Nút Cuối -->
-        <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
-            <button class="page-link" ng-click="goToPage(totalPages - 1)">Cuối</button>
-        </li>
-    </ul>
-</div>
-
-<!-- Nút Mở Modal Thêm Season -->
-<button class="btn btn-success" ng-click="openAddSeasonModal()" data-bs-toggle="modal" data-bs-target="#addSeasonModal">Thêm Season</button>
-
-<!-- Modal Thêm Season -->
-<div class="modal fade" id="addSeasonModal" tabindex="-1" aria-labelledby="addSeasonModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addSeasonModalLabel">Thêm Season</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form ng-submit="saveNewSeason()">
-            
-                    <div class="mb-3">
-                        <label for="nameSeason" class="form-label">Tên Season:</label>
-                        <input type="text" id="nameSeason" ng-model="newSeason.nameSeason" class="form-control" required>
+        <button style="float: right;" class="btn btn-success" ng-click="openAddSeasonModal()" data-bs-toggle="modal" data-bs-target="#addSeasonModal">Thêm Mùa Sản Phẩm</button>
+        <h2>Mùa Sản Phẩm</h2>
+        
+        <!-- Bảng hiển thị danh sách Season -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã</th>
+                    <th>Mùa 
+                        <button class="btn btn-link" ng-click="sortSeasons('nameSeason')">
+                            <i class="bi bi-arrow-down-up"></i>
+                        </button>
+                    </th>
+                    <th>Trạng Thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="season in currentPageItems">
+                    <td>{{ (currentPage * itemsPerPage) + $index + 1 }}</td>
+                    <td>{{ season.codeSeason }}</td>
+                    <td>{{ season.nameSeason }}</td>
+                    <td>{{ season.statusSeason == 1 ? 'Hoạt động' : 'Ngừng hoạt động' }}</td>
+                    <td>
+                        <button class="btn btn-warning" ng-click="editSeason(season)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                                <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                            </svg>
+                        </button>
+                        <button class="btn btn-danger" ng-click="deleteSeason(season.codeSeason)">
+                            <i class="bi bi-trash3-fill"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Phân trang -->
+        <div>
+            <button ng-disabled="currentPage === 0" ng-click="goToPage(currentPage - 1)">Trang trước</button>
+            <span>Trang {{ currentPage + 1 }} trên {{ totalPages }}</span>
+            <button ng-disabled="currentPage === totalPages - 1" ng-click="goToPage(currentPage + 1)">Trang tiếp</button>
+        </div>
+        
+        <!-- Modal Thêm Season -->
+        <div class="modal fade" id="addSeasonModal" tabindex="-1" aria-labelledby="addSeasonModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addSeasonModalLabel">Thêm Mùa</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="mb-3">
-                        <label for="statusSeason" class="form-label">Trạng Thái:</label>
-                        <div>
-                            <label>
-                                <input type="radio" ng-model="newSeason.statusSeason" value="1"> Active
-                            </label>
-                            <label>
-                                <input type="radio" ng-model="newSeason.statusSeason" value="0"> Inactive
-                            </label>
-                        </div>
+                    <div class="modal-body">
+                        <form ng-submit="saveNewSeason()">
+                            <div class="mb-3">
+                                <label for="nameSeason" class="form-label">Tên Mùa:</label>
+                                <input type="text" id="nameSeason" ng-model="newSeason.nameSeason" class="form-control" required>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                <button type="submit" class="btn btn-primary ms-2">Thêm Mùa</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                        <button type="submit" class="btn btn-primary ms-2">Thêm Season</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-
-<!-- Modal Sửa Season -->
-<div class="modal fade" id="editSeasonModal" tabindex="-1" aria-labelledby="editSeasonModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editSeasonModalLabel">Sửa Season</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form ng-submit="saveEditSeason()">
-                    <div class="mb-3">
-                        <label for="codeSeason" class="form-label"disable>Mã Season:</label>
-                        <input type="text" id="codeSeason" ng-model="season.codeSeason" class="form-control" disabled>
+        
+        <!-- Modal Sửa Season -->
+        <div class="modal fade" id="editSeasonModal" tabindex="-1" aria-labelledby="editSeasonModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editSeasonModalLabel">Sửa Mùa</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="mb-3">
-                        <label for="nameSeason" class="form-label">Tên Season:</label>
-                        <input type="text" id="nameSeason" ng-model="season.nameSeason" class="form-control" required>
+                    <div class="modal-body">
+                        <form ng-submit="saveEditSeason()">
+                            <div class="mb-3">
+                                <label for="codeSeason" class="form-label">Mã Mùa:</label>
+                                <input type="text" id="codeSeason" ng-model="season.codeSeason" class="form-control" disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label for="nameSeason" class="form-label">Tên Mùa:</label>
+                                <input type="text" id="nameSeason" ng-model="season.nameSeason" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="statusSeason" class="form-label">Trạng Thái:</label>
+                                <div>
+                                    <label>
+                                        <input type="radio" ng-model="season.statusSeason" value="1" ng-checked="season.statusSeason === 1"> Hoạt Động
+                                    </label>
+                                    <label>
+                                        <input type="radio" ng-model="season.statusSeason" value="0" ng-checked="season.statusSeason === 0"> Ngừng Hoạt Động
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                <button type="submit" class="btn btn-primary ms-2">Cập nhật Mùa</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="mb-3">
-                        <label for="statusSeason" class="form-label">Trạng Thái:</label>
-                        <div>
-                            <label>
-                                <input type="radio" ng-model="season.statusSeason" value="1" ng-checked="season.statusSeason === 1"> Hoạt Động
-                            </label>
-                            <label>
-                                <input type="radio" ng-model="season.statusSeason" value="0" ng-checked="season.statusSeason === 0"> Ngừng Hoạt Động
-                            </label>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                        <button type="submit" class="btn btn-primary ms-2">Cập nhật Season</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+        
 
 
     </div>

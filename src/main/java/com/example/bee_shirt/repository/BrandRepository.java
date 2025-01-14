@@ -10,8 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface BrandRepository extends JpaRepository<Brand, Integer> {
-    @Query("SELECT b.codeBrand, b.nameBrand,b.statusBrand FROM Brand b WHERE b.deleted=false")
-    Page<Brand> findAllBrand(Pageable pageable);
+    List<Brand>findAll();
     Brand findByCodeBrand(String codeBrand);
 
 }

@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/shirts")
-@CrossOrigin(origins = "http://127.0.0.1:5501")
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class ShirtController {
 
     @Autowired
@@ -49,13 +50,25 @@ public class ShirtController {
         Page<ShirtResponseDTO> results = shirtService.getAllShirts(pageable);
         return ResponseEntity.ok(results.getContent());
     }
-
     @PostMapping("/add")
     public ResponseEntity<Shirt> addShirt(@RequestBody Shirt shirt) {
         // Kiểm tra trùng tên
         boolean existsByName = shirtRepository.existsByNameshirt(shirt.getNameshirt());
         if (existsByName) {
             throw new IllegalArgumentException("Tên áo thun đã tồn tại!");
+        }
+
+        // Kiểm tra mã áo thun, nếu trùng thì tạo mã mới
+        if (shirt.getCodeshirt() == null || shirt.getCodeshirt().isEmpty()) {
+            String generatedCode = "S" + generateRandomNumber(6);
+            shirt.setCodeshirt(generatedCode);
+        } else {
+            boolean existsByCode = shirtRepository.existsByCodeshirt(shirt.getCodeshirt());
+            if (existsByCode) {
+                // Nếu mã trùng, tạo mã mới và trả lại cho frontend
+                String generatedCode = "S" + generateRandomNumber(6);
+                shirt.setCodeshirt(generatedCode);
+            }
         }
 
         // Kiểm tra trùng thương hiệu
@@ -76,14 +89,29 @@ public class ShirtController {
     }
 
 
+
     @PutMapping("/update/{codeshirt}")
-    public ResponseEntity<Shirt> updateShirt(@PathVariable String codeshirt, @RequestBody Shirt updatedShirt) {
-        Shirt shirt = shirtService.updateShirt(codeshirt, updatedShirt);
-        if (shirt == null) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> updateShirt(@PathVariable String codeshirt, @RequestBody Shirt updatedShirt) {
+        // Lấy áo thun hiện tại dựa trên mã
+        Shirt existingShirt = shirtService.getShirtByCode(codeshirt);
+
+        if (existingShirt == null) {
+            return ResponseEntity.notFound().build(); // Không tìm thấy áo thun
         }
+
+        // Kiểm tra trùng tên
+        boolean existsByName = shirtRepository.existsByNameshirt(updatedShirt.getNameshirt());
+
+        // Nếu tên đã tồn tại và không phải là tên của sản phẩm hiện tại
+        if (existsByName && !updatedShirt.getNameshirt().equalsIgnoreCase(existingShirt.getNameshirt())) {
+            return ResponseEntity.badRequest().body("Tên áo thun đã tồn tại!");
+        }
+
+        // Cập nhật áo thun
+        Shirt shirt = shirtService.updateShirt(codeshirt, updatedShirt);
         return ResponseEntity.ok(shirt);
     }
+
 
 
     @DeleteMapping("/delete/{codeshirt}")
@@ -95,5 +123,14 @@ public class ShirtController {
             return ResponseEntity.notFound().build();
         }
     }
+    private String generateRandomNumber(int length) {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
 
+        for (int i = 0; i < length; i++) {
+            sb.append(random.nextInt(10));  // Lấy ngẫu nhiên một số từ 0 đến 9
+        }
+
+        return sb.toString();
+    }
 }

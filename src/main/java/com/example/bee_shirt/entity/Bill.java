@@ -81,4 +81,6 @@ public class Bill {
 
     @Column(name = "deleted")
     private Boolean deleted;
+    @Column(name = "notes", columnDefinition = "TEXT")
+    private String notes;
 }

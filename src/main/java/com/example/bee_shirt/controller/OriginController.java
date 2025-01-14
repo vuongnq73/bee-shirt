@@ -1,5 +1,6 @@
 package com.example.bee_shirt.controller;
 
+import com.example.bee_shirt.EntityThuocTinh.Material;
 import com.example.bee_shirt.EntityThuocTinh.Origin;
 import com.example.bee_shirt.repository.OriginRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +10,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Random;
 
 @RestController
 @RequestMapping("/api/origins")
-@CrossOrigin(origins = "http://127.0.0.1:5501") // Cấu hình CORS cho endpoint này
+@CrossOrigin(origins = "http://127.0.0.1:5500") // Cấu hình CORS cho endpoint này
 
 public class OriginController {
 
@@ -22,10 +24,9 @@ public class OriginController {
 
     // Hiển thị danh sách nguồn gốc với phân trang 5 phần tử
     @GetMapping("/list")
-    public ResponseEntity<Page<Origin>> getOrigins(@RequestParam(defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 5);
-        Page<Origin> origins = originRepository.findAllOrigins(pageable);
-        return ResponseEntity.ok(origins);
+    public ResponseEntity<List<Origin>> getAllBrands() {
+        List<Origin> categories = originRepository.findAll(); // Lấy tất cả các danh mục
+        return ResponseEntity.ok(categories);
     }
 
     // Thêm nguồn gốc

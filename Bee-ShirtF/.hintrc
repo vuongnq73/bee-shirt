@@ -10,6 +10,12 @@
         "link-name": "off"
       }
     ],
-    "axe/structure": "off"
+    "axe/structure": "off",
+    "axe/forms": [
+      "default",
+      {
+        "label": "off"
+      }
+    ]
   }
 }

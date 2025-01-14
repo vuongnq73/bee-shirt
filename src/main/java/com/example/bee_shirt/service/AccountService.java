@@ -218,6 +218,7 @@ public class AccountService {
             }
             account.setEmail(request.getEmail());
         }
+
         if (request.getStatus() != null) {
             account.setStatus(request.getStatus());
         }

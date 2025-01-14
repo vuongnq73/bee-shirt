@@ -4,6 +4,7 @@ import com.example.bee_shirt.dto.OnlineColorDTO;
 import com.example.bee_shirt.dto.OnlineShirtDTO;
 import com.example.bee_shirt.dto.ShirtDetailDTO;
 import com.example.bee_shirt.dto.response.HomePageResponse;
+import com.example.bee_shirt.entity.Shirt;
 import com.example.bee_shirt.entity.ShirtDetail;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -72,7 +73,6 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
             "WHERE ss.codeshirt = :codeshirt " +
             "ORDER BY sdt.id DESC")
     List<ShirtDetailDTO> findAllShirtDetailByCodeShirt(@Param("codeshirt") String codeshirt);
-
 
 
     @Query(value = """
@@ -314,8 +314,11 @@ ORDER BY
     ShirtDetail findShirtDetailByCode(@Param("query") String query);
     //
 
-    @Query("SELECT sd FROM ShirtDetail sd WHERE sd.codeShirtDetail LIKE %:query% OR sd.shirt.nameshirt LIKE %:query%")
+    @Query("SELECT sd FROM ShirtDetail sd WHERE (sd.codeShirtDetail LIKE %:query% OR sd.shirt.nameshirt LIKE %:query% OR sd.color.nameColor LIKE %:query% OR sd.size.namesize LIKE %:query% OR sd.pattern.namePattern LIKE %:query% )AND sd.deleted = false AND sd.quantity > 0 and sd.shirt.deleted = false and sd.statusshirtdetail = 1 and sd.shirt.statusshirt = 1")
     Page<ShirtDetail> findListShirtDetailByCodeOrName(@Param("query") String query, Pageable pageable);
+
+    @Query("SELECT sd FROM ShirtDetail sd WHERE sd.deleted = false AND sd.quantity > 0 and sd.shirt.deleted = false and sd.statusshirtdetail = 1 and sd.shirt.statusshirt = 1")
+    List<ShirtDetail> findAllAvaiable();
 
 
     @Query("SELECT DISTINCT new com.example.bee_shirt.dto.OnlineShirtDTO(b.codeBrand,b.nameBrand,ca.codeCategory, ca.nameCategory,s.codeshirt, s.nameshirt,s.description) " +
@@ -345,5 +348,33 @@ ORDER BY
         nativeQuery = true)
 void updateQuantityByCodeBill(@Param("codeBill") String codeBill);
 
+    @Query("SELECT s FROM ShirtDetail s " +
+            "WHERE s.shirt.id = :shirtId " +
+            "AND s.pattern.id = :patternId " +
+            "AND s.gender.id = :genderId " +
+            "AND s.origin.id = :originId " +
+            "AND s.season.id = :seasonId " +
+            "AND s.size.id IN :sizeIds " +
+            "AND s.material.id = :materialId " +
+            "AND s.color.id IN :colorIds")
+    List<ShirtDetail> findExistingShirtDetails(
+            @Param("shirtId") int shirtId,
+            @Param("patternId") int patternId,
+            @Param("genderId") int genderId,
+            @Param("originId") int originId,
+            @Param("seasonId") int seasonId,
+            @Param("sizeIds") List<Integer> sizeIds,
+            @Param("materialId") int materialId,
+            @Param("colorIds") List<Integer> colorIds
+    );
+//kiểm tra số lượng sản phâm trong kho
+    @Modifying
+    @Query(value = "SELECT sd.code_shirt_detail, sd.quantity " +
+            "FROM shirt_detail sd " +
+            "JOIN bill_detail bd ON sd.id = bd.shirt_detail_id " +
+            "JOIN bill b ON bd.bill_id = b.id " +
+            "WHERE b.code_bill = :codeBill",
+            nativeQuery = true)
+    List<Object[]> findShirtDetailsByBillCode(@Param("codeBill") String codeBill);
 
 }
