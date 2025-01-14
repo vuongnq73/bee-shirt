@@ -837,6 +837,7 @@
             <label for="edit-codeshirtdetail" class="col-form-label">Mã Áo:</label>
             <input type="text" id="edit-codeshirtdetail" ng-model="editingShirtDetail.codeShirtDetail" readonly class="form-control">
         </div>
+
         <!-- Áo -->
         <div class="col-md-6 mb-3">
             <label for="edit-shirt" class="col-form-label">Áo</label>
@@ -852,6 +853,11 @@
             <label for="edit-quantity" class="col-form-label">Số lượng:</label>
             <input type="text" id="edit-quantity" ng-model="editingShirtDetail.quantity" class="form-control">
         </div>
+        <div class="col-md-4 mb-3">
+          <label for="edit-quantity" class="col-form-label">Số lượng</label>
+          <input type="number" id="edit-quantity" ng-model="editingShirtDetail.quantity"  class="form-control">
+          <span ng-show="!editingShirtDetail.quantity || isNaN(editingShirtDetail.quantity)" class="text-danger">Giá phải là một số và không để trống</span>
+      </div>
     </div>
 
     <!-- Sắp xếp các mục trên cùng một hàng (Giới tính, Màu sắc) -->

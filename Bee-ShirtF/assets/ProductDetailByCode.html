@@ -746,13 +746,14 @@
         <button style="width: 140px;height: 40px;border-radius: 5px;background-color: #1572e8;color: white;" ng-click="filterShirtDetails()">Lọc</button>
     </div>
       </div>
-          
+
     </div>
     <button type="button" class="btn btn-primary " style="float: right;" data-bs-toggle="modal" data-bs-target="#addVariantModal">
       Thêm Sản Phẩm Chi Tiết
       </button>
-      <h2 class="mt-5">Danh Sách Chi Tiết Áo Thun</h2>
-      <table class="table table-bordered">
+      <h2 class="mt-5" >Danh Sách Chi Tiết Áo Thun: <strong>{{ newShirtDetail.shirt.nameshirt }}</strong></h2>
+
+    <table class="table table-bordered">
       <thead>
       <tr>
           <th>STT</th>
@@ -932,6 +933,7 @@
         <button type="submit" class="btn btn-primary">Cập nhật</button>
     </div>
 </form>
+
 
 </div>
 </div>

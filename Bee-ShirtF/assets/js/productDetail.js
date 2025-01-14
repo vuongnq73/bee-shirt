@@ -564,6 +564,96 @@ app.controller('ShirtDetailController', ['$scope', 'shirtDetailService', functio
         }
     };
     
+
+    $scope.updateShirtDetail = function() {
+        // Xóa thông báo lỗi trước khi kiểm tra
+        $scope.errorMessage = '';
+        
+        // Sao chép dữ liệu từ đối tượng editingShirtDetail
+        let updateShirtDetailed = angular.copy($scope.editingShirtDetail);
+    
+        // Kiểm tra giá trị của giá
+        if (!updateShirtDetailed.price) {
+            $scope.errorMessage = "Vui lòng nhập giá.";
+            return;
+        } 
+        // Giá phải là số và không có ký tự đặc biệt
+        if (isNaN(updateShirtDetailed.price)) {
+            $scope.errorMessage = "Giá phải là một số hợp lệ.";
+            return;
+        }
+        // Giá phải lớn hơn 0
+        if (updateShirtDetailed.price <= 0) {
+            $scope.errorMessage = "Giá phải lớn hơn 0.";
+            return;
+        }
+        // Giá không được vượt quá 999999999
+        if (updateShirtDetailed.price > 999999999) {
+            $scope.errorMessage = "Giá không được vượt quá 999999999.";
+            return;
+        }
+    
+        // Kiểm tra giá trị của số lượng
+        if (!updateShirtDetailed.quantity) {
+            $scope.errorMessage = "Vui lòng nhập số lượng.";
+            return;
+        }
+        // Số lượng phải là số nguyên và không có ký tự đặc biệt
+        if (!Number.isInteger(updateShirtDetailed.quantity)) {
+            $scope.errorMessage = "Số lượng phải là một số nguyên hợp lệ.";
+            return;
+        }
+        // Số lượng phải lớn hơn 0
+        if (updateShirtDetailed.quantity <= 0) {
+            $scope.errorMessage = "Số lượng phải lớn hơn 0.";
+            return;
+        }
+        // Số lượng không được vượt quá 999999999
+        if (updateShirtDetailed.quantity > 999999999) {
+            $scope.errorMessage = "Số lượng không được vượt quá 999999999.";
+            return;
+        }
+    
+        // Kiểm tra ảnh (nếu có ảnh thì phải hợp lệ)
+        if (updateShirtDetailed.image && !updateShirtDetailed.image.match(/\.(jpg|jpeg|png|gif)$/)) {
+            $scope.errorMessage = "Vui lòng tải lên ảnh hợp lệ (JPEG, PNG, GIF).";
+            return;
+        }
+        if (updateShirtDetailed.image2 && !updateShirtDetailed.image2.match(/\.(jpg|jpeg|png|gif)$/)) {
+            $scope.errorMessage = "Vui lòng tải lên ảnh hợp lệ (JPEG, PNG, GIF).";
+            return;
+        }
+        if (updateShirtDetailed.image3 && !updateShirtDetailed.image3.match(/\.(jpg|jpeg|png|gif)$/)) {
+            $scope.errorMessage = "Vui lòng tải lên ảnh hợp lệ (JPEG, PNG, GIF).";
+            return;
+        }
+    
+        // Chuyển các ID thuộc tính thành đối tượng
+        updateShirtDetailed.color = { id: updateShirtDetailed.colorId };
+        updateShirtDetailed.gender = { id: updateShirtDetailed.genderId };
+        updateShirtDetailed.material = { id: updateShirtDetailed.materialId };
+        updateShirtDetailed.origin = { id: updateShirtDetailed.originId };
+        updateShirtDetailed.shirt = { id: updateShirtDetailed.shirtId };
+        updateShirtDetailed.pattern = { id: updateShirtDetailed.patternId };
+        updateShirtDetailed.season = { id: updateShirtDetailed.seasonId };
+        updateShirtDetailed.size = { id: updateShirtDetailed.sizeId };
+    
+        // Cập nhật trạng thái và đã xóa
+        updateShirtDetailed.statusshirtdetail = updateShirtDetailed.statusshirtdetail;
+        updateShirtDetailed.deleted = updateShirtDetailed.deleted;
+    
+        // Gửi yêu cầu cập nhật chi tiết áo thun
+        shirtDetailService.updateShirtDetail(updateShirtDetailed.codeShirtDetail, updateShirtDetailed).then(function() {
+            // Sau khi cập nhật thành công, reset đối tượng đang sửa và tải lại danh sách
+            $scope.editingShirtDetail = null;
+            $scope.getShirtDetails();
+            location.reload();
+        }, function(error) {
+            console.error("Error updating shirt detail", error);
+        });
+    };
+    
+    
   
     $scope.removeVariant = function(index) {
         // Xóa phần tử tại chỉ số `index` trong mảng `variants`
@@ -725,6 +815,7 @@ $scope.updateImagePreview = function(element, imageNumber) {
             console.error("Error updating shirt detail", error);
         });
     };
+
     
 
     $scope.deleteShirtDetail = function(codeShirtDetail) {
