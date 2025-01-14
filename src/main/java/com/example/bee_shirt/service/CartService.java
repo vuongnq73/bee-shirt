@@ -14,6 +14,7 @@ import com.example.bee_shirt.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,6 +43,8 @@ public class CartService {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
+    private DeliveryAddressRepository deliveryAddressRepository;
 
     @Autowired
     private BillDetailRepository billDetailRepository;
@@ -57,7 +60,12 @@ public class CartService {
         return cartDetailRepository.findCartDetailByAccountCodeAndStatusCartDetail(codeAccount, 0);
     }
 
+    public List<DeliveryAddress> getDeliveryAddress(String accCode) {
+        return deliveryAddressRepository.findDeliveryAddressByAccountCode(accCode);
+    }
+
     public int updateInvalidQuantity(String codeAccount) {
+        System.out.println(cartDetailRepository.updateInvalidCartDetails());
         return cartDetailRepository.updateInvalidQuantity(codeAccount);
     }
 
@@ -77,6 +85,12 @@ public class CartService {
         return cartDetailRepository.cancelCartDetail(codeCartDetail);
     }
 
+    public DeliveryAddress deteteAddress(String addressCode) {
+        DeliveryAddress da = deliveryAddressRepository.findDeliveryAddressByCode(addressCode);
+        da.setDeleted(true);
+        return deliveryAddressRepository.save(da);
+    }
+
     public int changeQuantityCartDetail(String codeCartDetail, Integer quantity) {
         return cartDetailRepository.changeQuantityCartDetail(codeCartDetail, quantity);
     }
@@ -87,6 +101,24 @@ public class CartService {
 
     public CartDetail getCartDetail(String codeCartDetail) {
         return cartDetailRepository.findCartDetailByCode(codeCartDetail);
+    }
+
+    public DeliveryAddress createDeliveryAddress(String accCode, Integer idProvince, Integer idDistrict, String idWard, String name, String phone, String detailAddress, String province2, String district2, String ward2) {
+        String randomCode = generateRandomCode();
+        DeliveryAddress da = new DeliveryAddress();
+        da.setDeliveryAddressCode("DA" + randomCode);
+        da.setAccount(accountRepository.findByCode(accCode).get());
+        da.setDetailAddress(detailAddress);
+        da.setName(name);
+        da.setPhone(phone);
+        da.setIdDistrict(idDistrict);
+        da.setIdWard(idWard);
+        da.setWard(ward2);
+        da.setProvince(province2);
+        da.setDistrict(district2);
+        da.setDeleted(false);
+        da.setIdProvince(idProvince);
+        return deliveryAddressRepository.save(da);
     }
 
     public static String generateRandomCode() {
@@ -106,7 +138,7 @@ public class CartService {
         return randomCode.toString();
     }
 
-    public ResponseEntity<?> processCheckout(Map<String, Object> requestBody, String accCode, String voucherCode, Map<String, Object> address, String pm, Integer ship) {
+    public ResponseEntity<?> processCheckout(Map<String, Object> requestBody, String accCode, String voucherCode, String selectedAddressCode, String pm, Integer ship) {
         // Lấy danh sách từ request body
         Object listObject = requestBody.get("list");
 
@@ -163,8 +195,12 @@ public class CartService {
         bill2.setTypeBill("Online");
         bill2.setCustomerName(account.getFirstName() + account.getLastName());
         bill2.setPhoneNumber(account.getPhone());
+
+
         bill2.setAddressCustomer("ha noi");
+
         bill2.setMoneyShip(BigDecimal.valueOf(ship));
+
         double subtotalBeforeDiscount = 0.0;
         double moneyReduce = 0.0;
         for (BillDetail bd : billDetailRepository.findBillDetailByBillCodeAndStatusBillDetail(bill.getCodeBill(), 0)) {
@@ -196,11 +232,16 @@ public class CartService {
             voucher.setQuantity(voucher.getQuantity() - 1);
             voucherRepository.save(voucher);
         }
-        if (address != null) {
-            bill2.setCustomerName((String) address.get("name"));
-            bill2.setPhoneNumber((String) address.get("phone"));
-            bill2.setAddressCustomer((String) address.get("fullAddress"));
-        }
+//        if (address != null) {
+//            bill2.setCustomerName((String) address.get("name"));
+//            bill2.setPhoneNumber((String) address.get("phone"));
+//            bill2.setAddressCustomer((String) address.get("fullAddress"));
+//        }
+        DeliveryAddress deliveryAddress = deliveryAddressRepository.findDeliveryAddressByCode(selectedAddressCode);
+        System.out.println();
+        bill2.setCustomerName(deliveryAddress.getName());
+        bill2.setPhoneNumber(deliveryAddress.getPhone());
+        bill2.setAddressCustomer(deliveryAddress.getDetailAddress());
 
         BillPayment bp = new BillPayment();
         bp.setBill(bill2);

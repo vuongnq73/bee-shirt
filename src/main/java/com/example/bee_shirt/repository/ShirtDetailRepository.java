@@ -314,7 +314,7 @@ ORDER BY
     ShirtDetail findShirtDetailByCode(@Param("query") String query);
     //
 
-    @Query("SELECT sd FROM ShirtDetail sd WHERE (sd.codeShirtDetail LIKE %:query% OR sd.shirt.nameshirt LIKE %:query% )AND sd.deleted = false AND sd.quantity > 0 and sd.shirt.deleted = false and sd.statusshirtdetail = 1 and sd.shirt.statusshirt = 1")
+    @Query("SELECT sd FROM ShirtDetail sd WHERE (sd.codeShirtDetail LIKE %:query% OR sd.shirt.nameshirt LIKE %:query% OR sd.color.nameColor LIKE %:query% OR sd.size.namesize LIKE %:query% OR sd.pattern.namePattern LIKE %:query% )AND sd.deleted = false AND sd.quantity > 0 and sd.shirt.deleted = false and sd.statusshirtdetail = 1 and sd.shirt.statusshirt = 1")
     Page<ShirtDetail> findListShirtDetailByCodeOrName(@Param("query") String query, Pageable pageable);
 
     @Query("SELECT sd FROM ShirtDetail sd WHERE sd.deleted = false AND sd.quantity > 0 and sd.shirt.deleted = false and sd.statusshirtdetail = 1 and sd.shirt.statusshirt = 1")
@@ -367,5 +367,14 @@ void updateQuantityByCodeBill(@Param("codeBill") String codeBill);
             @Param("materialId") int materialId,
             @Param("colorIds") List<Integer> colorIds
     );
+//kiểm tra số lượng sản phâm trong kho
+    @Modifying
+    @Query(value = "SELECT sd.code_shirt_detail, sd.quantity " +
+            "FROM shirt_detail sd " +
+            "JOIN bill_detail bd ON sd.id = bd.shirt_detail_id " +
+            "JOIN bill b ON bd.bill_id = b.id " +
+            "WHERE b.code_bill = :codeBill",
+            nativeQuery = true)
+    List<Object[]> findShirtDetailsByBillCode(@Param("codeBill") String codeBill);
 
 }

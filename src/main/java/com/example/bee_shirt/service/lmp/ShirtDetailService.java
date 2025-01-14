@@ -494,7 +494,11 @@ public class ShirtDetailService {
         shirtDetailRepository.updateQuantityByCodeBill(codeBill);
     }
 
-    //check trung
+//Kểm tra số lwuongj sẩn phâ có ở triong kho
+public List<Object[]> getShirtDetailsByBillCode(String codeBill) {
+    return shirtDetailRepository.findShirtDetailsByBillCode(codeBill);
+}
+
 
 }
 

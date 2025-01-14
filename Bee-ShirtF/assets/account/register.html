@@ -17,6 +17,7 @@
           ng-submit="register()"
           enctype="multipart/form-data"
         >
+          <!-- Tên và họ -->
           <div class="input-group">
             <input
               type="text"
@@ -33,6 +34,7 @@
               required
             />
           </div>
+          <!-- Số điện thoại và email -->
           <div class="input-group">
             <input
               type="text"
@@ -49,6 +51,7 @@
               required
             />
           </div>
+          <!-- Tên đăng nhập và mật khẩu -->
           <div class="input-group">
             <input
               type="text"
@@ -66,17 +69,79 @@
             />
           </div>
 
+          <!-- Địa chỉ -->
+          <div id="newAddressSection">
+            <select
+              ng-model="address.provinceId"
+              ng-change="onProvinceChange()"
+              id="provinceSelect"
+            >
+              <option value="">-- Chọn tỉnh/thành phố --</option>
+              <option
+                ng-repeat="province in provinces"
+                value="{{province.ProvinceID}}"
+              >
+                {{province.ProvinceName}}
+              </option>
+            </select>
+
+            <select
+              id="districtSelect"
+              class="form-select"
+              ng-model="address.districtId"
+              ng-change="onDistrictChange()"
+              required
+              ng-disabled="!address.provinceId"
+            >
+              <option value="">-- Chọn quận/huyện --</option>
+              <option
+                ng-repeat="district in districts"
+                value="{{district.DistrictID}}"
+              >
+                {{district.DistrictName}}
+              </option>
+            </select>
+
+            <select
+              id="wardSelect"
+              class="form-select"
+              ng-model="address.wardId"
+              ng-change="onWardChange()"
+              required
+              ng-disabled="!address.districtId"
+            >
+              <option value="">-- Chọn phường/xã --</option>
+              <option ng-repeat="ward in wards" value="{{ward.WardCode}}">
+                {{ward.WardName}}
+              </option>
+            </select>
+            <input
+              type="text"
+              ng-model="address.detailAddress"
+              placeholder="Tên đường - Số nhà"
+              class="form-control"
+              required
+            />
+          </div>
+
+          <!-- Ảnh đại diện -->
           <div class="input-group">
             <label for="avatar">Chọn ảnh đại diện:</label>
             <input type="file" id="avatar" file-input="user.avatarFile" />
           </div>
+
+          <!-- Thông báo lỗi và thành công -->
           <div class="error" ng-show="errorMessage">{{ errorMessage }}</div>
           <div class="success" ng-show="successMessage">
             {{ successMessage }}
           </div>
-          <button type="submit" ng-disabled="isSubmitting" class="login-btn">Đăng Ký</button>
+          <!-- Nút đăng ký -->
+          <button type="submit" ng-disabled="isSubmitting" class="login-btn">
+            Đăng Ký
+          </button>
         </form>
 
+        <!-- Liên kết đăng nhập -->
         <div class="register-link">
           <p>
             Đã có tài khoản?
@@ -85,6 +150,7 @@
         </div>
       </div>
     </div>
+
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="/assets/js/register.js"></script>
   </body>

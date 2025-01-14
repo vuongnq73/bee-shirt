@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -78,8 +79,6 @@ public class ApplicationConfig {
                 accountRepository.save(account);
                 log.warn("admin was has beem created with default username: admin, password: admin, please change it");
             }
-<<<<<<< Updated upstream
-=======
             // Tạo tài khoản khách vãng lai nếu chưa có
             if (accountRepository.findByUsername("khachvanglai").isEmpty()) {
                 Account guestAccount = Account.builder()
@@ -121,7 +120,6 @@ public class ApplicationConfig {
                 accountRepository.save(guestAccount);
                 log.warn("Guest account created with default username: guest, password: guest.");
             }
->>>>>>> Stashed changes
         };
     }
 }

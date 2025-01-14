@@ -45,11 +45,11 @@ public class Voucher1 {
     private Double maximum_discount;
 
     @Column(name = "startdate")
-    private LocalDate startdate;
+    private LocalDateTime startdate;
     @Column(name = "enddate")
-    private LocalDate enddate;
-    public LocalDate getEnddate() {
-        return enddate == null ? LocalDate.MAX : enddate;  // Trả về ngày tối đa nếu enddate là null
+    private LocalDateTime enddate;
+    public LocalDateTime getEnddate() {
+        return enddate == null ? LocalDateTime.MAX : enddate;  // Trả về ngày tối đa nếu enddate là null
     }
     @Column(name = "status_voucher")
     private int status_voucher;
@@ -61,4 +61,6 @@ public class Voucher1 {
     private LocalDateTime createAt;
     @Column(name = "update_at")
     private LocalDateTime updateAt;
+    @Column(name = "deleted")
+    private boolean deleted = false;
 }

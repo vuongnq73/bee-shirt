@@ -194,10 +194,34 @@
           <label for="phone">SĐT:</label>
           <input type="text" id="phone" ng-model="user.phone" />
         </div>
-        <div class="form-group" ng-if="!isUser() && !isViewingUserAccount()">
-          <label for="address">Địa chỉ:</label>
-          <input type="text" id="address" ng-model="user.address" />
-        </div>
+
+       <!-- Địa chỉ -->
+       <div id="newAddressSection" ng-init="onProvinceChange()">
+        <select ng-model="address.provinceId" ng-change="onProvinceChange()" id="provinceSelect">
+          <option value="">-- Chọn tỉnh/thành phố --</option>
+          <option ng-repeat="province in provinces" value="{{province.ProvinceID}}">
+            {{province.ProvinceName}}
+          </option>
+        </select>
+      
+        <select id="districtSelect" class="form-select" ng-model="address.districtId" ng-change="onDistrictChange()" required ng-disabled="!address.provinceId">
+          <option value="">-- Chọn quận/huyện --</option>
+          <option ng-repeat="district in districts" value="{{district.DistrictID}}">
+            {{district.DistrictName}}
+          </option>
+        </select>
+      
+        <select id="wardSelect" class="form-select" ng-model="address.wardId" ng-change="onWardChange()" required ng-disabled="!address.districtId">
+          <option value="">-- Chọn phường/xã --</option>
+          <option ng-repeat="ward in wards" value="{{ward.WardCode}}">
+            {{ward.WardName}}
+          </option>
+        </select>
+        
+        <input type="text" ng-model="address.detailAddress" placeholder="Tên đường - Số nhà" class="form-control" required />
+      </div>
+      
+
         <div class="form-group">
           <label for="status">Trạng thái:</label>
           <select
