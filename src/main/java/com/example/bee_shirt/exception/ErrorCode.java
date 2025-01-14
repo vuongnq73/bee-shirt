@@ -58,6 +58,8 @@ public enum ErrorCode {
 
     ADDRESS_NOT_FOUND(404_001,"Address not found", HttpStatus.BAD_REQUEST),
 
+    VOUCHER_NOT_FOUND(404_003,"Voucher not empty", HttpStatus.NOT_FOUND),
+
     ;
     private int code;
 

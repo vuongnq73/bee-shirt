@@ -195,6 +195,7 @@ public class PointOfSaleService {
         bill.setCustomerName(account.getFirstName() + account.getLastName());
         bill.setPhoneNumber(account.getPhone());
 
+
         bill.setAddressCustomer("hanoi");
 
         bill.setMoneyShip(BigDecimal.ZERO);
