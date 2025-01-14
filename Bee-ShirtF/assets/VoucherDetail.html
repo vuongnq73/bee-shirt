@@ -260,94 +260,97 @@
             <!-- container -->
             <div class="container">
                 <h1 style="margin-left: 700px;">Voucher Details</h1>
-                <form class="mx-auto" style="width: 700px;">
+                <form class="mx-auto" style="width: 700px" name="voucherForm">
                     <!-- Voucher ID -->
                     <div class="form-group">
                         <label for="voucherId">ID</label>
-                        <input type="text" id="id" class="form-control" disabled>
+                        <input type="text" id="id" class="form-control" ng-model="voucher.id" disabled>
                     </div>
-
+            
                     <!-- Code Voucher -->
                     <div class="form-group">
                         <label for="codeVoucher">Mã Voucher</label>
-                        <input type="text" id="code_voucher" class="form-control" disabled>
+                        <input type="text" id="code_voucher" class="form-control" ng-model="voucher.code_voucher" disabled>
                     </div>
-
+            
                     <!-- Type Voucher -->
                     <div class="form-group">
                         <label for="typeVoucher">Hình thức Voucher</label>
-                        <input type="text" id="type_voucher" class="form-control" disabled>
+                        <input type="text" id="type_voucher" class="form-control" ng-model="voucher.type_voucher" disabled>
                     </div>
-
+            
                     <!-- Name Voucher -->
                     <div class="form-group">
                         <label for="nameVoucher">Tên Voucher</label>
-                        <input type="text" id="name_voucher" class="form-control">
+                        <input type="text" id="name_voucher" class="form-control" ng-model="voucher.name_voucher" required>
                     </div>
-
+            
                     <!-- Discount Value -->
                     <div class="form-group">
-                        <label for="discountValue">Giá trị giảm giá </label>
-                        <input type="number" id="discount_value" class="form-control">
+                        <label for="discountValue">Giá trị giảm giá</label>
+                        <input type="number" id="discount_value" class="form-control" ng-model="voucher.discount_value" required>
                     </div>
-
+            
                     <!-- Quantity -->
                     <div class="form-group">
                         <label for="quantity">Số lượng</label>
-                        <input type="number" id="quantity" class="form-control">
+                        <input type="number" id="quantity" class="form-control" ng-model="voucher.quantity" required>
                     </div>
-
+            
                     <!-- Min Bill Value -->
                     <div class="form-group">
                         <label for="minBillValue">Giá trị tối thiểu</label>
-                        <input type="number" id="min_bill_value" class="form-control">
+                        <input type="number" id="min_bill_value" class="form-control" ng-model="voucher.min_bill_value" required>
                     </div>
-
+            
                     <!-- Maximum Discount -->
                     <div class="form-group">
                         <label for="maximumDiscount">Giá trị tối đa</label>
-                        <input type="number" id="maximum_discount" class="form-control">
+                        <input type="number" id="maximum_discount" class="form-control" ng-model="voucher.maximum_discount">
                     </div>
-
+            
                     <!-- Start Date -->
                     <div class="form-group">
                         <label for="startDate">Ngày bắt đầu</label>
-                        <input type="datetime-local" id="startDate" class="form-control styled-input" placeholder="Ngày bắt đầu">
+                        <input type="datetime-local" id="startDate" class="form-control" ng-model="voucher.startdate" required>
                     </div>
-
+            
                     <!-- End Date -->
                     <div class="form-group">
                         <label for="endDate">Ngày kết thúc</label>
-                        <input type="datetime-local" id="endDate" class="form-control styled-input" placeholder="Ngày kết thúc">
+                        <input type="datetime-local" id="endDate" class="form-control" ng-model="voucher.enddate" required>
                     </div>
-
+            
                     <!-- Status Voucher -->
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="statusVoucher" id="statusActive" value="1">
+                        <input class="form-check-input" type="radio" name="statusVoucher" id="statusActive" value="1" ng-model="voucher.status_voucher">
                         <label class="form-check-label" for="statusActive">Hoạt động</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="statusVoucher" id="statusInactive" value="0">
+                        <input class="form-check-input" type="radio" name="statusVoucher" id="statusInactive" value="0" ng-model="voucher.status_voucher">
                         <label class="form-check-label" for="statusInactive">Ngưng hoạt động</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="statusVoucher" id="statusPending" value="2">
+                        <input class="form-check-input" type="radio" name="statusVoucher" id="statusPending" value="2" ng-model="voucher.status_voucher">
                         <label class="form-check-label" for="statusPending">Sắp hoạt động</label>
                     </div>
-
-
-                    <!-- Submit Button -->
-
                 </form>
+            
                 <div style="text-align: center; display: flex; justify-content: center; gap: 10px;">
-                    <button type="submit" class="btn btn-warning mt-4">Sửa</button>
+                    <!-- Update Button -->
+                    <button type="button" ng-click="updateVoucher(voucher)" class="btn btn-warning mt-4">Sửa</button>
                     <a class="btn btn-secondary mt-4" href="/assets/Voucher.html">Quay lại</a>
                 </div>
-                <!-- Back Button -->
-
+            
                 <!-- Display success or error message -->
-
+                <div ng-if="errorMessage" style="color: red; text-align: center;">
+                    <strong>{{ errorMessage }}</strong>
+                </div>
+                <div ng-if="successMessage" style="color: green; text-align: center;">
+                    <strong>{{ successMessage }}</strong>
+                </div>
             </div>
+            
 
             <!-- end container -->
          

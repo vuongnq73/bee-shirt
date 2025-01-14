@@ -14,6 +14,7 @@ angular.module("voucherApp", []).controller("voucherController1", [
     $scope.totalPages = 0;
     $scope.searchKeyword = ""; // Lưu từ khóa tìm kiếm
 
+
     $scope.getVouchers = function () {
       const token = sessionStorage.getItem("jwtToken");
 
@@ -196,6 +197,8 @@ angular.module("voucherApp", []).controller("voucherController1", [
             "voucherDetail",
             JSON.stringify(response.data)
           );
+          sessionStorage.setItem("voucherId", response.data.id);
+          console.log(response.data.id);
           $scope.successMessage = "Voucher details loaded successfully.";
           window.location.href = "/assets/VoucherDetail.html";
         })
@@ -421,7 +424,7 @@ angular.module("voucherApp", []).controller("voucherController1", [
         });
     };
 
-    $scope.updateVoucher = function (newVoucher, id) {
+    $scope.updateVoucher = function (voucherDetail) {
       const token = sessionStorage.getItem("jwtToken");
 
       // Check if user is logged in
@@ -432,55 +435,34 @@ angular.module("voucherApp", []).controller("voucherController1", [
       $scope.errorMessage = "";
       $scope.successMessage = "";
 
-      if (!newVoucher.quantity || newVoucher.quantity <= 0) {
-        $scope.errorMessage = "Số lượng phải lớn hơn 0!";
-        return;
-      }
-
-      // Chuyển đổi startdate và enddate thành chuỗi ISO cho cả ngày và giờ
-      const now = new Date().toISOString();
-
-      const startDateTime = new Date(newVoucher.startdate).toISOString();
-      const endDateTime = new Date(newVoucher.enddate).toISOString();
-      // Check if startDateTime is in the past
-      if (startDateTime < now) {
-        $scope.errorMessage =
-          "Ngày giờ bắt đầu không được sớm hơn ngày giờ hiện tại!";
-        return;
-      }
-
-      // Check if endDateTime is earlier than startDateTime
-      if (endDateTime < startDateTime) {
-        $scope.errorMessage =
-          "Ngày giờ kết thúc không được sớm hơn ngày giờ bắt đầu!";
-        return;
-      }
-
-      // Optional description check
-      newVoucher.description_voucher = newVoucher.description_voucher || ""; // If empty, set it as an empty string
+      const id = sessionStorage.getItem("voucherId")
+      
 
       // Send data to server
-      $http({
-        method: "PUT",
-        url: `http://localhost:8080/voucher/update/${id}`,
-        headers: {
-          Authorization: "Bearer " + token,
-          "Content-Type": "application/json",
-        },
-        data: {
-          code_voucher: newVoucher.code_voucher,
-          type_voucher: newVoucher.type_voucher,
-          name_voucher: newVoucher.name_voucher,
-          discount_value: newVoucher.discount_value,
-          quantity: newVoucher.quantity,
-          min_bill_value: newVoucher.min_bill_value,
-          maximum_discount: newVoucher.maximum_discount,
-          startdate: newVoucher.startdate,
-          enddate: newVoucher.enddate,
-          description_voucher: newVoucher.description_voucher,
-        },
-      })
+      if(confirm("Bạn chắc chắn muốn sửa voucher này chứ?")){
+        $http({
+          method: "PUT",
+          url: `http://localhost:8080/voucher/update/${id}`,
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+          data: {
+            code_voucher: voucherDetail.code_voucher,
+            type_voucher: voucherDetail.type_voucher,
+            name_voucher: voucherDetail.name_voucher,
+            discount_value: voucherDetail.discount_value,
+            quantity: voucherDetail.quantity,
+            min_bill_value: voucherDetail.min_bill_value,
+            maximum_discount: voucherDetail.maximum_discount,
+            startdate: voucherDetail.startdate,
+            enddate: voucherDetail.enddate,
+            description_voucher: voucherDetail.description_voucher,
+            status_voucher: voucherDetail.status_voucher,
+          },
+        })
         .then(function (response) {
+
           $scope.successMessage = "Voucher đã được thêm thành công!";
           // Refresh the list of vouchers after successful addition
 
@@ -494,6 +476,7 @@ angular.module("voucherApp", []).controller("voucherController1", [
           console.error("Lỗi khi thêm voucher:", error);
           $scope.errorMessage = "Không thể thêm voucher.";
         });
+      }
     };
 
     // Hàm xem profile
