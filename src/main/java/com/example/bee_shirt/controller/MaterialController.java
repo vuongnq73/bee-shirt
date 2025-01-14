@@ -32,7 +32,7 @@ public class MaterialController {
     @PostMapping("/add")
     public ResponseEntity<Material> addMaterial(@RequestBody Material material) {
         String codeCategory = generateMaterialCode();
-
+        material.setStatusMaterial(1);
         // Cập nhật mã codeCategory vào đối tượng Category
         material.setCodeMaterial(codeCategory);
 
