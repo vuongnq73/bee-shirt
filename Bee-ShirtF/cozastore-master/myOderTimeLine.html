@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Chi tiết đơn hàng</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="images/icons/favicon.png" />
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/iconic/css/material-design-iconic-font.min.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/linearicons-v1.0.0/icon-font.min.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/perfect-scrollbar/perfect-scrollbar.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" href="/assets/css/timeline.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+	<!-- Load AngularJS first -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+	<!-- Your custom AngularJS script -->
+	<script src="js/myOderTimeline.js"></script>
+	<!-- SweetAlert2 CDN -->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+	<style>
+		/* Custom CSS to set the height of SweetAlert2 */
+		/* CSS cho timeline */
+
+		/* Thanh Timeline */
+		.wrap-timeline {
+			position: fixed;
+			/* Cố định thanh timeline */
+			z-index: 1099;
+			/* Dưới header một lớp */
+			background-color: transparent;
+			width: 100%;
+			height: 90px;
+			/* Chiều cao thanh timeline */
+			top: 70px;
+			/* Ngay dưới header: chiều cao header = 84px */
+			left: 0;
+
+			-webkit-transition: height 0.3s, background-color 0.3s;
+			-o-transition: height 0.3s, background-color 0.3s;
+			-moz-transition: height 0.3s, background-color 0.3s;
+			transition: height 0.3s, background-color 0.3s;
+		}
+
+		/* Khi scroll xuống */
+		.fix-timeline .wrap-timeline {
+			position: fixed;
+			/* Giữ thanh timeline cố định */
+			top: 40px;
+			/* Bằng với chiều cao của header */
+			left: 0;
+			z-index: 1099;
+			/* Đảm bảo nằm trên các thành phần khác */
+			height: 50px;
+			background-color: rgb(245, 245, 245);
+			box-shadow: 0 2px 3px 0px rgba(0, 0, 0, 0.1);
+		}
+
+
+		/* Nội dung chính */
+
+		.wrap-menu-desktop {
+			top: 0 !important;
+			/* Ghi đè bất kỳ giá trị nào */
+		}
+
+		.progress-container {
+			font-size: small;
+			display: flex;
+			/* Kích hoạt flexbox */
+			flex-direction: row;
+			/* Các phần tử xếp dọc theo cột */
+		}
+
+		.contai {
+			padding-left: 170px;
+			width: 100%;
+			/* Chiếm toàn bộ chiều rộng */
+			text-align: left;
+			/* Canh trái nội dung */
+			margin-bottom: 0px !important;
+			/* Khoảng cách xuống thanh timeline */
+			padding-bottom: 10px;
+
+
+
+		}
+
+		.timeline-container {
+			display: flex;
+			/* Sử dụng flexbox cho timeline */
+			justify-content: space-between;
+			/* Các bước cách đều nhau */
+			align-items: center;
+			/* Căn giữa theo chiều dọc */
+			width: 100%;
+			/* Chiếm toàn bộ chiều rộng */
+		}
+
+		.progress-container {
+			margin: 0px !important;
+			background-color: rgb(245, 244, 244);
+			width: 100%;
+			/* Đảm bảo thanh tiến trình rộng toàn bộ màn hình */
+			height: 80px;
+			/* Điều chỉnh chiều cao của container */
+			border-bottom: 3px solid #ada4a4;
+			/* Thêm viền dưới */
+		}
+
+		/* Custom CSS to ensure SweetAlert2 modal is centered and small */
+		.my-swal-container {
+			/* Ensure modal is centered in the viewport */
+			display: flex !important;
+			justify-content: center !important;
+			/* Center horizontally */
+			align-items: center !important;
+			/* Center vertically */
+			height: 100vh !important;
+			/* Full viewport height */
+			padding: 0 !important;
+			/* Remove default padding */
+			margin: 0 !important;
+			/* Ensure no margin */
+		}
+
+		.swal2-popup {
+			margin-top: 180px !important;
+			width: 550px !important;
+			/* Modal width set to 300px for smaller size */
+			height: 450px !important;
+			/* Adjust height automatically based on content */
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+		}
+
+		.swal2-title {
+			margin-bottom: 10px;
+			/* Space between title and text */
+		}
+
+		.swal2-actions {
+			margin-top: 20px;
+			/* Space between buttons */
+		}
+
+		.step.cancelled .line {
+			background-color: #dc3545;
+			/* Màu đỏ */
+		}
+
+		.step.cancelled .circle {
+			background-color: #dc3545;
+			/* Màu đỏ */
+		}
+
+		.menu-desktop .main-menu li a {
+			text-decoration: none;
+			/* Xóa gạch chân */
+		}
+
+		/* Thêm hiệu ứng khi hover nếu muốn */
+		.menu-desktop .main-menu li a:hover {
+			text-decoration: none;
+			/* Đảm bảo không có gạch chân khi hover */
+			color: #007bff;
+			/* Màu sắc tùy chỉnh khi hover (có thể thay đổi) */
+		}
+	/* Điều chỉnh kích thước và căn giữa icon */
+.step .circle {
+    width: 40px !important; /* Giảm kích thước vòng tròn */
+    height: 40px !important; /* Giảm kích thước vòng tròn */
+    display: flex; /* Kích hoạt flexbox */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    margin: auto; /* Đảm bảo nằm chính giữa */
+}
+
+/* Giảm kích thước icon */
+.step .circle i {
+    font-size: 20px !important; /* Giảm kích thước icon */
+    line-height: 1; /* Điều chỉnh khoảng cách */
+}
+
+/* Điều chỉnh chiều cao và canh giữa dòng kết nối */
+.step .line {
+    height: 2px; /* Điều chỉnh độ dày dòng */
+    margin: auto 0; /* Canh giữa theo chiều dọc */
+}
+
+	</style>
+</head>
+
+<body class="animsition" ng-app="billDetailApp" ng-controller="BillDetailController">
+	<!-- Header -->
+	<header class="header-v4">
+		<!-- Header desktop -->
+		<div class="container-menu-desktop">
+			<!-- Topbar -->
+			<div class="top-bar">
+				<div class="content-topbar flex-sb-m h-full container">
+					<div class="left-top-bar">
+						Nhanh tay mua sắm để nhận đưuọc nhiều ưu đãi lên đến 50%
+					</div>
+					<div class="right-top-bar flex-w h-full">
+						<a href="#" class="flex-c-m trans-04 p-lr-25">
+							Tài Khoản
+						</a>
+						<a href="#" class="flex-c-m trans-04 p-lr-25">
+							Đăng Xuất
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="wrap-menu-desktop how-shadow1">
+				<nav class="limiter-menu-desktop container">
+
+					<!-- Logo desktop -->
+					<a href="#" class="logo">
+						<img src="/assets/img/kaiadmin/logo_dark.png" alt="IMG-LOGO">
+
+					</a>
+					<!-- Menu desktop -->
+					<div class="menu-desktop">
+						<ul class="main-menu">
+							<li>
+								<a href="index.html">Trang Chủ</a>
+
+							</li>
+
+							<li>
+								<a href="product.html">Cửa Hàng</a>
+							</li>
+							<li>
+								<a href="blog.html">Blog</a>
+							</li>
+
+							<li>
+								<a href="about.html">Giới Thiệu</a>
+							</li>
+
+							<li>
+								<a href="contact.html">Liên Hệ</a>
+							</li>
+						</ul>
+					</div>
+
+					<!-- Icon header -->
+					<div class="wrap-icon-header flex-w flex-r-m">
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
+							<i class="zmdi zmdi-search"></i>
+						</div>
+
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart"
+							data-notify="2">
+							<i class="zmdi zmdi-shopping-cart"></i>
+						</div>
+
+						<a href="#" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti"
+							data-notify="0">
+							<i class="zmdi zmdi-favorite-outline"></i>
+						</a>
+					</div>
+
+				</nav>
+
+				<div class="wrap-timeline">
+					<!-- //TimeLine -->
+					<div class="contai" style="background-color: rgb(255, 255, 255);">
+						<div class="bread-crumb flex-w p-l-25 p-r-15 p-lr-0-lg">
+							<a href="index.html" class="stext-109 cl8 hov-cl1 trans-04" style=" text-decoration: none;">
+								Trang chủ
+								<i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+							</a>
+							<a href="myOder.html" class="stext-109 cl8 hov-cl1 trans-04" style=" text-decoration: none;">
+								Đơn hàng của tôi
+								<i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+							</a>
+							<span class="stext-109 cl4">
+								Chi tiết đơn hàng
+							</span>
+						</div>
+
+					</div>
+					<div class="progress-container" style="background-color: rgb(255, 255, 255);">
+
+						<div class="step" id="step1">
+							<div class="circle"><i class="fa-solid fa-clock"></i></div>
+							<div class="line"></div>
+							<div class="label">Chờ Xử lý</div>
+						</div>
+						<div class="step" id="step2">
+							<div class="circle">
+								<i class="fa-solid fa-box"></i>
+
+							</div>
+							<div class="line"></div>
+							<div class="label">Đang Đóng Gói</div>
+						</div>
+						<div class="step" id="step3">
+							<div class="circle"><i class="fa-solid fa-truck-moving"></i></div>
+							<div class="line"></div>
+							<div class="label">Chờ Giao Hàng</div>
+						</div>
+						<div class="step" id="step4">
+							<div class="circle"><i class="fa-solid fa-truck-fast"></i></div>
+							<div class="line"></div>
+							<div class="label">Đang Giao Hàng</div>
+						</div>
+						<div class="step" id="step5">
+							<div class="circle"><i class="fa-solid fa-check"></i></div>
+							<div class="line"></div>
+							<div class="label">Đã Hoàn Thành</div>
+						</div>
+						<div class="step" id="step6">
+							<div class="circle">
+								<i class="fa-solid fa-circle-xmark"></i>
+
+							</div>
+							<div class="line"></div>
+							<div class="label">Đã hủy</div>
+						</div>
+
+					</div>
+					<!-- end TimeLine -->
+				</div>
+			</div>
+
+			<!-- Header Mobile -->
+			<div class="wrap-header-mobile">
+				<!-- Logo moblie -->
+				<div class="logo-mobile">
+					<a href="index.html">						<img src="/assets/img/kaiadmin/logo_dark.png" alt="IMG-LOGO">
+					</a>
+				</div>
+				<!-- Icon header -->
+				<div class="wrap-icon-header flex-w flex-r-m m-r-15">
+					<div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 js-show-modal-search">
+						<i class="zmdi zmdi-search"></i>
+					</div>
+
+					<div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart"
+						data-notify="2">
+						<i class="zmdi zmdi-shopping-cart"></i>
+					</div>
+
+					<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti"
+						data-notify="0">
+						<i class="zmdi zmdi-favorite-outline"></i>
+					</a>
+				</div>
+
+				<!-- Button show menu -->
+				<div class="btn-show-menu-mobile hamburger hamburger--squeeze">
+					<span class="hamburger-box">
+						<span class="hamburger-inner"></span>
+					</span>
+				</div>
+			</div>
+			<!-- Menu Mobile -->
+			<div class="menu-mobile">
+				<ul class="topbar-mobile">
+					<li>
+						<div class="left-top-bar">
+							Nhanh tay mua sắm để nhận đưuọc nhiều ưu đãi lên đến 50%
+						</div>
+					</li>
+
+					<li>
+						<div class="right-top-bar flex-w h-full">
+							<a href="#" class="flex-c-m p-lr-10 trans-04">
+								Help & FAQs
+							</a>
+
+							<a href="#" class="flex-c-m p-lr-10 trans-04">
+								My Account
+							</a>
+
+							<a href="#" class="flex-c-m p-lr-10 trans-04">
+								EN
+							</a>
+
+							<a href="#" class="flex-c-m p-lr-10 trans-04">
+								USD
+							</a>
+						</div>
+					</li>
+				</ul>
+
+				<ul class="main-menu-m">
+					<li>
+						<a href="index.html">Home</a>
+						<ul class="sub-menu-m">
+							<li><a href="index.html">Homepage 1</a></li>
+							<li><a href="home-02.html">Homepage 2</a></li>
+							<li><a href="home-03.html">Homepage 3</a></li>
+						</ul>
+						<span class="arrow-main-menu-m">
+							<i class="fa fa-angle-right" aria-hidden="true"></i>
+						</span>
+					</li>
+
+					<li>
+						<a href="product.html">Shop</a>
+					</li>
+
+					<li>
+						<a href="shoping-cart.html" class="label1 rs1" data-label1="hot">Features</a>
+					</li>
+
+					<li>
+						<a href="blog.html">Blog</a>
+					</li>
+
+					<li>
+						<a href="about.html">About</a>
+					</li>
+
+					<li>
+						<a href="contact.html">Contact</a>
+					</li>
+				</ul>
+			</div>
+			<!-- Modal Search -->
+			<div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
+				<div class="container-search-header">
+					<button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
+						<img src="images/icons/icon-close2.png" alt="CLOSE">
+					</button>
+
+					<form class="wrap-search-header flex-w p-l-15">
+						<button class="flex-c-m trans-04">
+							<i class="zmdi zmdi-search"></i>
+						</button>
+						<input class="plh3" type="text" name="search" placeholder="Search...">
+					</form>
+				</div>
+			</div>
+	</header>
+
+	<!-- Shoping Cart -->
+	<div class="container" style="margin-top: 100px;">
+
+		<div class="card-header d-flex justify-content-between align-items-center">
+			<h4 class="card-title">Thông Tin Đơn Hàng</h4>
+		</div>
+		<div class="info-container">
+	
+			<br>
+			<div class="info-item">
+				<p ng-if="billInfo.statusBill === 7"> Lý Do Hủy: <span
+					style="color: rgb(214, 73, 18);">{{notes}}</span></p>
+			  </div>
+			<div class="row">
+				<div class="col-md-8">
+					<div class="info-item">
+						<label for=""><span>Mã đơn hàng: {{ codeBill }}</span></label>
+					</div>
+					<div class="info-item">
+						<label for=""> Ngày đặt hàng: <span style="color: rgb(214, 73, 18);">{{ createAt
+								}}</span></label>
+					</div>
+					<div class="info-item">
+						<label for="">Ngày giao dự kiến:<span style="color: rgb(214, 73, 18);"> {{ desiredDate
+								}}</span></label>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="info-item">
+						<label for="">Địa Chỉ:<span style="color: rgb(214, 73, 18);">{{ address }}</span> </label>
+					</div>
+					<div class="info-item">
+						<label for="">Người Nhận: <span style="color: rgb(214, 73, 18);">{{ customerName
+								}}</span></label>
+					</div>
+					<div class="info-item">
+						<label for="">Số Điện Thoại: <span style="color: rgb(214, 73, 18);">{{ phoneNumber
+								}}</span></label>
+					</div>
+				</div>
+			</div>
+			<br>
+			<div class="info-item">
+				<strong>Thông Tin Sản Phẩm</strong>
+			</div>
+			<hr>
+			<div class="card-body">
+				<div class="table-responsive">
+					<table id="basic-datatables" class="display table table-striped table-hover">
+						<thead>
+							<tr>
+								<th>STT</th>
+								<th></th>
+								<th>Sản Phẩm</th>
+								<th>Số Lượng</th>
+								<th>Giá</th>
+								<th>Tổng Tiền</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in details">
+								<td>{{ $index + 1 }}</td>
+								<td> <!-- Hiển thị ảnh sản phẩm nếu nameImage là URL hợp lệ -->
+									<img ng-if="item.nameImage && item.nameImage !== 'N/A'"
+										ng-src="{{ item.nameImage }}" alt="{{ item.nameShirt }}"
+										style="width: 50px; height: 50px; object-fit: cover;">
+									<span ng-if="!item.nameImage || item.nameImage === 'N/A'">No Image</span>
+								</td>
+								<td>
+
+									<!-- Hiển thị thông tin sản phẩm nếu có -->
+									{{ item.nameShirt }} / {{ item.nameBrand }} / {{ item.nameSize }}
+								</td>
+								<td>{{ item.quantity }}</td>
+								<td>{{ formatCurrency(item.price) }}</td>
+								<td>{{ formatCurrency(item.total) }}</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<hr>
+					<div class="row">
+						<div class="col-md-9">
+							<label for="">Đơn vị vận chuyển:</label>
+						</div>
+						<div class="col-md-3"> Giao hàng tiết kiệm: {{ formatCurrency(moneyShip) }}</div>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="col-md-8">
+							<div class="voucher-name"
+								style="text-align: left; margin-top: 20px; font-weight: bold; font-size: 13px;">
+								<i class="fa-solid fa-ticket"></i>
+								Tên Voucher: <span style="color: rgb(81, 18, 214);">{{ nameVoucher }}</span>
+							</div>
+							<div class="voucher-name"
+								style="text-align: left; margin-top: 20px; font-weight: bold; font-size: 13px;">
+								Ghi Chú: <span style="color: rgb(81, 18, 214);">{{ note }}</span>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="total-money"
+								style="text-align: left; margin-top: 20px; font-weight: bold; font-size: 16px;">
+								Phí Ship: <span style="color: rgb(214, 18, 18);">{{ formatCurrency(moneyShip) }}</span>
+							</div>
+							<div class="total-money"
+								style="text-align: left; margin-top: 20px; font-weight: bold; font-size: 16px;">
+								Tổng tiền hóa đơn: <span style="color: rgb(214, 18, 18);">{{ formatCurrency(totalMoney)
+									}}</span>
+							</div>
+						</div>
+					</div>
+					<hr>
+					<strong>Thông Tin Khách Hàng</strong>
+					<div class="row">
+						<div class="col-md-8">
+							<div>
+								<label for="">Phương thức Thanh Toán: {{ typeBill }}</label>
+							</div>
+							<div>
+								<label for="">Trạng thái: {{ currentStatusLabel }}</label>
+							</div>
+							<div>
+								<label for="">Tên khách hàng: {{ customerName }}</label>
+							</div>
+							<div>
+								<label for="">Số điện thoại: {{ phoneNumber }}</label>
+							</div>
+							<div>
+								<label for="">Địa Chỉ: {{ address }}</label>
+							</div>
+							<!-- <div>
+					<label for="">Email: {{ email || 'N/A' }}</label>
+				  </div> -->
+							<br>
+						</div>
+						<div class="col-md-4">
+							<div>
+								<label for="">Tổng Tiền Hàng: {{ formatCurrency(subtotalBeforeDiscount) }}</label>
+							</div>
+							<div>
+								<label for="">Tổng Giảm Giá:
+									{{ formatCurrency(moneyReduce) }}
+								</label>
+							</div>
+							<div>
+								<label for="">Tổng Phí Vận Chuyển: {{ formatCurrency(moneyShip) }}</label>
+							</div>
+							<div>
+								<label for="">Tổng Tiền Thanh Toán: {{ formatCurrency(totalMoney) }}</label>
+							</div>
+
+
+						</div>
+
+					</div>
+
+					<div class="btn btn-danger d-inline-flex align-items-center container-btn-file"
+						ng-click="confirmCancelOrder()" ng-class="{'disabled': billInfo.statusBill !== 1}"
+						style="margin-bottom: 100px;float: right;">
+						Hủy đơn
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+
+	</div>
+	<!-- Footer -->
+	<footer class="bg3 p-t-75 p-b-32">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 ">
+					<h4 class="stext-301 cl0 p-b-30">
+					Website bán áo phông Bee-Shirt
+					</h4>
+	
+				<p style="color: azure;">
+					Website bán áo phông Bee-Shirt
+					</p>
+					<p style="color: azure;">
+					Bắt đầu lên ý tưởng và xây dựng từ ngày 15/10/2024
+					
+					</p>
+					<p style="color: azure;">
+					Địa chỉ trụ sở tại số 688 Đường Quang Trung, Phường La Khê, Quận Hà Đông, Thành phố Hà Nội.
+					
+					</p>
+					<p style="color: azure;">
+					Địa chỉ liên hệ:  số 170 La Thành, Phường Ô Chợ Dừa, Quận Đống Đa, Thành Phố Hà Nội.
+					</p>
+					<p style="color: azure;">
+					Điện thoại: +84363652758
+					</p>
+					<p style="color: azure;">
+					Email: nguyenquocvuong27042002@gmail.com</p>
+				</div>
+	
+				<div class="col-md-4  ">
+					<h4 class="stext-301 cl0 p-b-30">
+						Hỗ Trợ
+					</h4>
+	
+					<ul>
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04" style="text-decoration: none;">
+								Theo dõi đơn hàng
+							</a>
+						</li>
+	
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04" style="text-decoration: none;">
+								Vận chuyển
+							</a>
+						</li>
+	
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04" style="text-decoration: none;">
+								Câu hỏi thường gặp
+							</a>
+						</li>
+					</ul>
+				</div>
+	
+				<div class="col-md-4 ">
+					<h4 class="stext-301 cl0 p-b-30">
+						Liên Hệ
+					</h4>
+	
+					<p class="stext-107 cl7 size-201">
+						Có câu hỏi nào? Hãy liên hệ với chúng tôi tại cửa hàng số 170 La Thành, Phường Ô Chợ Dừa, Quận Đống Đa, Thành Phố Hà Nội.Hoặc Liên hệ đến sđt:0363652758
+
+					</p>
+	
+					<div class="p-t-27">
+						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16" style="text-decoration: none;">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+								<path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/>
+							  </svg>
+						</a>
+	
+						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16" style="text-decoration: none;">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-at-fill" viewBox="0 0 16 16">
+								<path d="M2 2A2 2 0 0 0 .05 3.555L8 8.414l7.95-4.859A2 2 0 0 0 14 2zm-2 9.8V4.698l5.803 3.546zm6.761-2.97-6.57 4.026A2 2 0 0 0 2 14h6.256A4.5 4.5 0 0 1 8 12.5a4.49 4.49 0 0 1 1.606-3.446l-.367-.225L8 9.586zM16 9.671V4.697l-5.803 3.546.338.208A4.5 4.5 0 0 1 12.5 8c1.414 0 2.675.652 3.5 1.671"/>
+								<path d="M15.834 12.244c0 1.168-.577 2.025-1.587 2.025-.503 0-1.002-.228-1.12-.648h-.043c-.118.416-.543.643-1.015.643-.77 0-1.259-.542-1.259-1.434v-.529c0-.844.481-1.4 1.26-1.4.585 0 .87.333.953.63h.03v-.568h.905v2.19c0 .272.18.42.411.42.315 0 .639-.415.639-1.39v-.118c0-1.277-.95-2.326-2.484-2.326h-.04c-1.582 0-2.64 1.067-2.64 2.724v.157c0 1.867 1.237 2.654 2.57 2.654h.045c.507 0 .935-.07 1.18-.18v.731c-.219.1-.643.175-1.237.175h-.044C10.438 16 9 14.82 9 12.646v-.214C9 10.36 10.421 9 12.485 9h.035c2.12 0 3.314 1.43 3.314 3.034zm-4.04.21v.227c0 .586.227.8.581.8.31 0 .564-.17.564-.743v-.367c0-.516-.275-.708-.572-.708-.346 0-.573.245-.573.791"/>
+							  </svg>
+						</a>
+	
+						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16" style="text-decoration: none;">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
+								<path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/>
+							  </svg>
+						</a>
+					</div>
+				</div>
+	
+				
+			</div>
+	
+			<div class="p-t-40">
+				<div class="flex-c-m flex-w p-b-18">
+					<a href="#" class="m-all-1">
+						<img src="images/icons/icon-pay-01.png" alt="ICON-PAY">
+					</a>
+	
+					<a href="#" class="m-all-1">
+						<img src="images/icons/icon-pay-02.png" alt="ICON-PAY">
+					</a>
+	
+					<a href="#" class="m-all-1">
+						<img src="images/icons/icon-pay-03.png" alt="ICON-PAY">
+					</a>
+	
+					<a href="#" class="m-all-1">
+						<img src="images/icons/icon-pay-04.png" alt="ICON-PAY">
+					</a>
+	
+					<a href="#" class="m-all-1">
+						<img src="images/icons/icon-pay-05.png" alt="ICON-PAY">
+					</a>
+				</div>
+	
+			
+			</div>
+		</div>
+	</footer>
+	
+
+
+	<!-- Back to top -->
+	<div class="btn-back-to-top" id="myBtn">
+		<span class="symbol-btn-back-to-top">
+			<i class="zmdi zmdi-chevron-up"></i>
+		</span>
+	</div>
+
+	<!--===============================================================================================-->
+	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+	<!--===============================================================================================-->
+	<script src="vendor/animsition/js/animsition.min.js"></script>
+	<!--===============================================================================================-->
+	<script src="vendor/bootstrap/js/popper.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+	<!--===============================================================================================-->
+	<script src="vendor/select2/select2.min.js"></script>
+	<script>
+		$(".js-select2").each(function () {
+			$(this).select2({
+				minimumResultsForSearch: 20,
+				dropdownParent: $(this).next('.dropDownSelect2')
+			});
+		})
+	</script>
+	<!--===============================================================================================-->
+	<script src="vendor/MagnificPopup/jquery.magnific-popup.min.js"></script>
+	<!--===============================================================================================-->
+	<script src="vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+	<script>
+		$('.js-pscroll').each(function () {
+			$(this).css('position', 'relative');
+			$(this).css('overflow', 'hidden');
+			var ps = new PerfectScrollbar(this, {
+				wheelSpeed: 1,
+				scrollingThreshold: 1000,
+				wheelPropagation: false,
+			});
+
+			$(window).on('resize', function () {
+				ps.update();
+			})
+		});
+	</script>
+	<!--===============================================================================================-->
+	<script src="js/main.js"></script>
+	<script>
+
+	</script>
+
+</body>
+
+
+</html>
