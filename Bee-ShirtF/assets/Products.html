@@ -238,7 +238,46 @@
           <!-- End Logo Header -->
         </div>
         <!-- Navbar Header -->
-      
+        <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+          <div class="container-fluid">
+            <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+              <li class="nav-item topbar-user dropdown hidden-caret" ng-if="myProfile">
+                <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
+                  <div class="avatar-sm">
+                    <!-- Hiển thị avatar của người dùng hoặc ảnh mặc định -->
+                    <img ng-src="{{ myProfile.avatar }}" alt="..." class="avatar-img rounded-circle" />
+                  </div>
+                  <span class="profile-username">
+                    <span class="op-7">Hi,</span>
+                    <span class="fw-bold">{{ myProfile.firstName }}</span> <!-- Hiển thị tên người dùng -->
+                  </span>
+                </a>
+                <ul class="dropdown-menu dropdown-user animated fadeIn">
+                  <div class="dropdown-user-scroll scrollbar-outer">
+                    <li ng-if="myProfile"> <!-- Ngăn lỗi nếu myProfile chưa tải xong -->
+                      <div class="user-box">
+                        <div class="avatar-lg">
+                          <img ng-src="{{ myProfile.avatar }}" alt="image profile" class="avatar-img rounded" />
+                        </div>
+                        <div class="u-text">
+                          <h4>{{ myProfile.firstName }} {{ myProfile.lastName }}</h4>
+                          <p class="text-muted">{{ myProfile.email }}</p>
+                          <a href="/assets/staff/Profile.html" ng-click="viewProfile()"
+                            class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="/assets/account/login.html" ng-click="logout()">Logout</a>
+                    </li>
+                  </div>
+                </ul>
+              </li>
+
+            </ul>
+          </div>
+        </nav>
         <!-- End Navbar -->
       </div>
       <!-- container -->
