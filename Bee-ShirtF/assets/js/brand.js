@@ -183,6 +183,7 @@ app.controller('brandController', ['$scope', 'brandService', function($scope, br
                 }
                 return 0;
             });
+            
             $scope.sortOrder = 'asc';  // Sau khi sắp xếp xong, đổi sang tăng dần
         }
     };

@@ -286,6 +286,7 @@ app.controller('seasonController', ['$scope', 'seasonService', function($scope, 
             return; // Dừng lại nếu trùng tên
         }
     
+        
         seasonService.updateSeason($scope.season.codeSeason, $scope.season).then(function(response) {
             alert("Cập nhật mùa thành công!");
             $('#editSeasonModal').modal('hide');

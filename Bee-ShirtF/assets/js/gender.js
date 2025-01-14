@@ -313,6 +313,7 @@ app.controller('genderController', ['$scope', 'genderService', function($scope, 
             alert("Có lỗi xảy ra khi cập nhật gender.");
         });
     };
+    
 
     $scope.deleteGender = function(codeGender) {
         $scope.genderToDelete = codeGender;
