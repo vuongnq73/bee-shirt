@@ -872,7 +872,7 @@
 
 				<!-- Modal footer -->
 				<div class="modal-footer">
-					<button onclick="createNewAddress()" type="button" class="btn btn-danger">Thêm mới</button>
+					<button id="addNewAddressBtn" onclick="createNewAddress()" type="button" class="btn btn-primary">Thêm mới</button>
 				</div>
 
 			</div>
@@ -2145,10 +2145,16 @@
 
 
 		function createNewAddress() {
+			// Lấy nút "Thêm mới"
+			const addNewAddressBtn = document.getElementById('addNewAddressBtn');
+			addNewAddressBtn.disabled = true; // Disable nút ngay lập tức
+
 			if (addresses.length > 10) {
 				toastr.error('Không thể thêm địa chỉ mới, đã đạt giới hạn 10 địa chỉ.');
+				addNewAddressBtn.disabled = false; // Enable lại nếu lỗi
 				return;
 			}
+
 			const province = document.getElementById('provinceSelect').value;
 			const district = document.getElementById('districtSelect').value;
 			const ward = document.getElementById('wardSelect').value;
@@ -2159,10 +2165,10 @@
 			const phoneRegex = /^0\d{9}$/;
 			if (!phoneRegex.test(phone)) {
 				toastr.error('Số điện thoại phải là 10 chữ số bắt đầu bằng 0.');
+				addNewAddressBtn.disabled = false; // Enable lại nếu lỗi
 				return;
 			}
 
-			// Lấy phần text của option được chọn trong mỗi select
 			const province2 = document.getElementById('provinceSelect').options[document.getElementById('provinceSelect').selectedIndex].text;
 			const district2 = document.getElementById('districtSelect').options[document.getElementById('districtSelect').selectedIndex].text;
 			const ward2 = document.getElementById('wardSelect').options[document.getElementById('wardSelect').selectedIndex].text;
@@ -2171,20 +2177,19 @@
 
 			if (!province || !district || !ward || !detailedAddress || !name || !phone) {
 				toastr.error('Vui lòng điền đầy đủ thông tin địa chỉ, tên và số điện thoại.');
+				addNewAddressBtn.disabled = false; // Enable lại nếu lỗi
 				return;
 			}
 
 			const isDuplicate = addresses.some(address => address.idWard == ward && address.phone == phone && address.detailAddress == fullAddress);
-			console.log(123)
-			console.log(addresses)
-			console.log(123)
 
 			if (isDuplicate) {
 				toastr.error('Địa chỉ này đã tồn tại.');
+				addNewAddressBtn.disabled = false; // Enable lại nếu lỗi
 				return;
 			}
 
-			addressData = {
+			const addressData = {
 				accCode: userCode,
 				idProvince: province,
 				idDistrict: district,
@@ -2192,16 +2197,27 @@
 				name: name,
 				phone: phone,
 				detailAddress: fullAddress
-			}
+			};
 
-			const response = fetch("http://localhost:8080/cart/create-address", {
-				method: 'POST', // Sử dụng POST để gửi dữ liệu
+			fetch("http://localhost:8080/cart/create-address", {
+				method: 'POST',
 				headers: headers,
-				body: JSON.stringify(addressData) // Gửi danh sách dưới dạng JSON
+				body: JSON.stringify(addressData)
+			}).then(response => {
+				if (response.ok) {
+					// Gọi lại danh sách địa chỉ sau khi thêm
+					setTimeout(() => {
+						getDeliveryAddresses();
+						addNewAddressBtn.disabled = false; // Enable lại nút sau khi cập nhật thành công
+					}, 100);
+				} else {
+					toastr.error('Đã xảy ra lỗi khi thêm địa chỉ.');
+					addNewAddressBtn.disabled = false; // Enable lại nếu lỗi
+				}
+			}).catch(error => {
+				toastr.error('Không thể kết nối đến máy chủ.');
+				addNewAddressBtn.disabled = false; // Enable lại nếu lỗi
 			});
-			setTimeout(() => {
-				getDeliveryAddresses()
-			}, 100);
 		}
 
 
