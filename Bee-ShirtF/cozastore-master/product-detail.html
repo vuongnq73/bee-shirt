@@ -52,6 +52,7 @@
     display: inline-block;
 }
 
+
 .option-button.selected {
     background-color: #007bff;
     color: #fff;
@@ -480,30 +481,27 @@
 			<!-- Thông tin sản phẩm -->
 			<div class="product-info">
 				<hr>
-
-			  <h1>{{shirt.nameShirt}}</h1>
-			  <p><strong>Mã SP:</strong> {{shirt.codeShirt}}</p>
-			  <br>
-			  <p><strong>Chất liệu:</strong> {{shirt.selectedVariant.nameMaterial}}</p>
-			  <p style="font-size: 28px;"><strong> {{shirt.selectedVariant.price | currency}}</strong></p>
-			  <p><strong>Số lượng:</strong> {{shirt.selectedVariant.quantity}}</p>
-			  <div>
-				<label >Màu sắc:</label>
+				<h1>{{shirt.nameShirt}}</h1>
+				<p><strong>Mã SP:</strong> {{shirt.codeShirt}}</p>
+				<p><strong>Chất liệu:</strong> {{shirt.selectedVariant.nameMaterial}}</p>
+				<p><strong>Giá:</strong> {{shirt.selectedVariant.price | currency}}</p>
+				<p><strong>Số lượng:</strong> {{shirt.selectedVariant.quantity}}</p>
+				
+				<label>Màu sắc:</label>
 				<div ng-repeat="colorGroup in shirt.colorGroups" 
 					 class="color-box" 
 					 ng-style="{'background-color': '#' + colorGroup.codeColor}" 
 					 ng-class="{'selected': colorGroup === shirt.selectedColorGroup}" 
 					 ng-click="changeColor(shirt, colorGroup)">
 				</div>
-			  </div>
-			  <br>
-			  <p>Kích thước:<strong> {{shirt.selectedVariant.namesize}}</strong></p>
-			  <div ng-repeat="variant in shirt.selectedColorGroup.variants" 
-				   class="option-button" 
-				   ng-class="{'selected': variant === shirt.selectedVariant}" 
-				   ng-click="changeSize(shirt, variant)">
-				{{variant.namesize}}
-			  </div>
+				
+				<p>Kích thước: <strong>{{shirt.selectedVariant.namesize}}</strong></p>
+				<div ng-repeat="variant in shirt.selectedColorGroup.variants" 
+					 class="option-button" 
+					 ng-class="{'selected': variant === shirt.selectedVariant}" 
+					 ng-click="changeSize(shirt, variant)">
+					{{variant.namesize}}
+				</div>
 			  <br>
 			  <button class="btn btn-primary" style="background-color: red ;" ng-click="addToCart(shirt.selectedVariant.id)">Thêm vào giỏ hàng</button>
 			  <br>
@@ -890,6 +888,19 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 			$scope.changeSize = function(shirt, variant) {
 				shirt.selectedVariant = variant;
 			};
+			$scope.initializeShirtDefaults = function(shirt) {
+    if (shirt.colorGroups && shirt.colorGroups.length > 0) {
+        // Chọn nhóm màu đầu tiên
+        shirt.selectedColorGroup = shirt.colorGroups[0];
+
+        // Chọn kích thước đầu tiên trong nhóm màu đầu tiên
+        if (shirt.selectedColorGroup.variants && shirt.selectedColorGroup.variants.length > 0) {
+            shirt.selectedVariant = shirt.selectedColorGroup.variants[0];
+        }
+    }
+};
+
+
 
 	$scope.addToCart = function(shirtDetailId) {
     if (!shirtDetailId) {
