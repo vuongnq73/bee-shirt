@@ -7,8 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface ColorRepository extends JpaRepository<Color, Integer> {
-    @Query("SELECT c.id,c.codeColor, c.nameColor,c.statusColor FROM Color c WHERE c.deleted=false")
-    Page<Color> findAllByColor(Pageable pageable);
+    @Override
+    List<Color> findAll();
+
     Color findByCodeColor(String codeBrand);
 }

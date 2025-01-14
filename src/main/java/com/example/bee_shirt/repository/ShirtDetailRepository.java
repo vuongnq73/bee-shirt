@@ -347,6 +347,26 @@ ORDER BY
         "WHERE b.code_bill = :codeBill",
         nativeQuery = true)
 void updateQuantityByCodeBill(@Param("codeBill") String codeBill);
+
+    @Query("SELECT s FROM ShirtDetail s " +
+            "WHERE s.shirt.id = :shirtId " +
+            "AND s.pattern.id = :patternId " +
+            "AND s.gender.id = :genderId " +
+            "AND s.origin.id = :originId " +
+            "AND s.season.id = :seasonId " +
+            "AND s.size.id IN :sizeIds " +
+            "AND s.material.id = :materialId " +
+            "AND s.color.id IN :colorIds")
+    List<ShirtDetail> findExistingShirtDetails(
+            @Param("shirtId") int shirtId,
+            @Param("patternId") int patternId,
+            @Param("genderId") int genderId,
+            @Param("originId") int originId,
+            @Param("seasonId") int seasonId,
+            @Param("sizeIds") List<Integer> sizeIds,
+            @Param("materialId") int materialId,
+            @Param("colorIds") List<Integer> colorIds
+    );
 //kiểm tra số lượng sản phâm trong kho
     @Modifying
     @Query(value = "SELECT sd.code_shirt_detail, sd.quantity " +

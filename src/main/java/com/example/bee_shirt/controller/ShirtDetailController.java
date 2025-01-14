@@ -10,6 +10,7 @@ import com.example.bee_shirt.dto.response.ApiResponse;
 import com.example.bee_shirt.dto.response.HomePageResponse;
 import com.example.bee_shirt.entity.Shirt;
 import com.example.bee_shirt.entity.ShirtDetail;
+import com.example.bee_shirt.repository.ShirtDetailRepository;
 import com.example.bee_shirt.service.lmp.ShirtDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,8 +22,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/shirt-details")
@@ -33,6 +37,8 @@ public class ShirtDetailController {
 
     @Autowired
     private ShirtDetailService shirtDetailService;
+    @Autowired
+    private ShirtDetailRepository shirtDetailRepository;
 
     @GetMapping("/api/colors")
     public ResponseEntity<Iterable<Color>> getAllColors() {
@@ -84,6 +90,47 @@ public class ShirtDetailController {
     public ResponseEntity<Shirt> getShirtByCodeShirt(@PathVariable String codeShirt) {
         Shirt shirt = shirtDetailService.getShirtByCodeShirt(codeShirt);
         return shirt != null ? ResponseEntity.ok(shirt) : ResponseEntity.notFound().build();
+    }
+    //check trung san pham
+    @GetMapping("/check-duplicate")
+    public ResponseEntity<Map<String, Object>> checkDuplicate(
+            @RequestParam int shirtId,
+            @RequestParam int patternId,
+            @RequestParam int genderId,
+            @RequestParam int originId,
+            @RequestParam int seasonId,
+            @RequestParam List<Integer> sizeIds,
+            @RequestParam int materialId,
+            @RequestParam List<Integer> colorIds) {
+
+        // Tìm kiếm các biến thể áo thun đã tồn tại với các tham số đã truyền
+        List<ShirtDetail> existingShirts = shirtDetailRepository.findExistingShirtDetails(
+                shirtId, patternId, genderId, originId, seasonId, sizeIds, materialId, colorIds);
+
+        Map<String, Object> response = new HashMap<>();
+
+        // Kiểm tra nếu có biến thể tồn tại
+        if (!existingShirts.isEmpty()) {
+            // Tạo danh sách các pair (sizeId, colorId) đã tồn tại
+            List<Map<String, Integer>> existingVariants = existingShirts.stream()
+                    .map(shirt -> {
+                        Map<String, Integer> variant = new HashMap<>();
+                        variant.put("sizeId", shirt.getSize().getId());  // Lấy sizeId từ ShirtDetail
+                        variant.put("colorId", shirt.getColor().getId());  // Lấy colorId từ ShirtDetail
+
+                        return variant;
+                    })
+                    .collect(Collectors.toList());
+
+            // Đưa vào response để trả về các biến thể đã tồn tại
+            response.put("existingVariants", existingVariants);
+            response.put("message", "Có sản phẩm đã tồn tại");
+        } else {
+            response.put("message", "Không có sản phẩm nào tồn tại.");
+        }
+
+        // Trả về response
+        return ResponseEntity.ok(response);
     }
 
     // Hiển thị danh sách chi tiết áo thun

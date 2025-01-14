@@ -1,5 +1,6 @@
 package com.example.bee_shirt.controller;
 
+import com.example.bee_shirt.EntityThuocTinh.Material;
 import com.example.bee_shirt.EntityThuocTinh.Size;
 import com.example.bee_shirt.repository.SizeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Random;
 
 @RestController
@@ -22,10 +24,9 @@ public class SizeController {
 
     // Hiển thị danh sách kích thước với phân trang 5 phần tử
     @GetMapping("/list")
-    public ResponseEntity<Page<Size>> getSizes(@RequestParam(defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 5);
-        Page<Size> sizes = sizeRepository.findAllSizes(pageable);
-        return ResponseEntity.ok(sizes);
+    public ResponseEntity<List<Size>> getAllBrands() {
+        List<Size> categories = sizeRepository.findAll(); // Lấy tất cả các danh mục
+        return ResponseEntity.ok(categories);
     }
 
     // Thêm kích thước
