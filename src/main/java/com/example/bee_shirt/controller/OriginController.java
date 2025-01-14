@@ -33,7 +33,7 @@ public class OriginController {
     @PostMapping("/add")
     public ResponseEntity<Origin> addOrigin(@RequestBody Origin origin) {
         String codeCategory = generateOriginCode();
-
+    origin.setStatusOrigin(1);
         // Cập nhật mã codeCategory vào đối tượng Category
         origin.setCodeOrigin(codeCategory);
 

@@ -33,7 +33,7 @@ public class SeasonController {
     @PostMapping("/add")
     public ResponseEntity<Season> addSeason(@RequestBody Season season) {
         String codeCategory = generateSizeCode();
-
+season.setStatusSeason(1);
         // Cập nhật mã codeCategory vào đối tượng Category
         season.setCodeSeason(codeCategory);
 

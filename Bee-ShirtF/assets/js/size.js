@@ -250,6 +250,7 @@ app.controller('sizeController', ['$scope', 'sizeService', function($scope, size
             alert("Thêm kích thước thành công!");
             $scope.getSizes(); // Cập nhật danh sách kích thước
             $('#addSizeModal').modal('hide');
+            location.reload();
         }, function(error) {
             alert("Có lỗi xảy ra khi thêm kích thước.");
         });
@@ -295,6 +296,7 @@ app.controller('sizeController', ['$scope', 'sizeService', function($scope, size
                 alert("Sửa kích thước thành công!");
                 $scope.getSizes($scope.currentPage); // Cập nhật danh sách kích thước
                 $('#editSizeModal').modal('hide');
+                location.reload();  // Vào trang reload để hiển thị sự thay đ��i
             }, function(error) {
                 alert("Có lỗi xảy ra khi sửa kích thước.");
             });

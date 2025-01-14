@@ -249,6 +249,7 @@ app.controller('seasonController', ['$scope', 'seasonService', function($scope, 
             alert("Thêm mùa thành công!");
             $('#addSeasonModal').modal('hide');
             $scope.getSeasons(); // Cập nhật danh sách mùa sau khi thêm
+            location.reload();
         }).catch(function(error) {
             alert("Lỗi khi thêm mùa!");
         });
@@ -289,6 +290,7 @@ app.controller('seasonController', ['$scope', 'seasonService', function($scope, 
             alert("Cập nhật mùa thành công!");
             $('#editSeasonModal').modal('hide');
             $scope.getSeasons(); // Cập nhật danh sách mùa sau khi sửa
+            location.reload();
         }).catch(function(error) {
             alert("Lỗi khi cập nhật mùa!");
         });

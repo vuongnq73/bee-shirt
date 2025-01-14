@@ -219,6 +219,7 @@ app.controller('materialController', ['$scope', 'materialService', function($sco
             alert("Thêm material thành công!");
             $('#addMaterialModal').modal('hide');
             $scope.getMaterials();
+            location.reload();
         }).catch(function() {
             alert("Có lỗi xảy ra khi thêm material.");
         });
@@ -259,6 +260,7 @@ app.controller('materialController', ['$scope', 'materialService', function($sco
             alert("Cập nhật material thành công!");
             $('#editMaterialModal').modal('hide');
             $scope.getMaterials();
+            location.reload();
         }).catch(function() {
             alert("Có lỗi xảy ra khi cập nhật material.");
         });

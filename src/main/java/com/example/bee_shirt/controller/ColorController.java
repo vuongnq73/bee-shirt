@@ -33,7 +33,7 @@ public class ColorController {
     // Thêm Color
     @PostMapping("/add")
     public ResponseEntity<Color> addColor(@RequestBody Color color) {
-
+        color.setStatusColor(1);
         Color savedColor = colorRepository.save(color);
         return ResponseEntity.ok(savedColor);
     }

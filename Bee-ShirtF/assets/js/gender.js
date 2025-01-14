@@ -209,72 +209,62 @@ app.controller('genderController', ['$scope', 'genderService', function($scope, 
         $('#editGenderModal').modal('show');
     };
 
-    $scope.saveNewColor = function() {
-        const colorName = $scope.newColor.nameColor;
-        const colorCode = $scope.newColor.codeColor;
+    $scope.saveNewGender = function() {
+        const genderName = $scope.newGender.nameGender;
+        const genderCode = $scope.newGender.codeGender;
     
         // Kiểm tra nếu tên màu trống hoặc chỉ chứa khoảng trắng
-        if (!colorName || colorName.trim() === "") {
-            alert("Tên màu không được để trống!");
+        if (!genderName || genderName.trim() === "") {
+            alert("Tên giới tính không được để trống!");
             return;
         }
     
         // Kiểm tra độ dài tên màu
-        if (colorName.length > 250) {
-            alert("Tên màu không được quá 250 ký tự!");
+        if (genderName.length > 250) {
+            alert("Tên giới tính không được quá 250 ký tự!");
             return;
         }
     
         // Kiểm tra tên màu không chỉ chứa khoảng trắng
-        const trimmedName = colorName.trim();
+        const trimmedName = genderName.trim();
         if (trimmedName.length === 0) {
-            alert("Tên màu không được chỉ chứa khoảng trắng!");
+            alert("Tên giới tính không được chỉ chứa khoảng trắng!");
             return;
         }
     
         // Kiểm tra nếu tên màu chứa số
         const containsNumberRegex = /[0-9]/;
         if (containsNumberRegex.test(trimmedName)) {
-            alert("Tên màu không được chứa số!");
+            alert("Tên giới tính không được chứa số!");
             return;
         }
     
         // Kiểm tra nếu tên màu chứa ký tự đặc biệt
         const specialCharAndNumberRegex = /[0-9@#$%^&*()_+={}[\]:;"'<>,.?/\\|~`!]/;
         if (specialCharAndNumberRegex.test(trimmedName)) {
-            alert("Tên màu không được chứa ký tự đặc biệt!");
+            alert("Tên giới tính không được chứa ký tự đặc biệt!");
             return;
         }
     
         // Kiểm tra không trùng tên màu
-        if ($scope.colors.some(c => c.nameColor === colorName)) {
-            alert("Tên màu này đã tồn tại!");
+        if ($scope.genders.some(g => g.nameGender === genderName)) {
+            alert("Tên giới tính này đã tồn tại!");
             return;
         }
     
-        // Kiểm tra nếu mã màu trống hoặc chỉ chứa khoảng trắng
-        if (!colorCode || colorCode.trim() === "") {
-            alert("Mã màu không được để trống!");
-            return;
-        }
-    
-        // Kiểm tra độ dài mã màu
-        if (colorCode.length > 50) {
-            alert("Mã màu không được quá 50 ký tự!");
-            return;
-        }
-    
+       
         // Kiểm tra không trùng mã màu
-        if ($scope.colors.some(c => c.codeColor === colorCode)) {
-            alert("Mã màu này đã tồn tại!");
+        if ($scope.genders.some(g => g.codeGender === genderCode)) {
+            alert("Mã giới tính này đã tồn tại!");
             return;
         }
     
         // Thêm màu mới nếu hợp lệ
-        colorService.addColor($scope.newColor).then(function() {
-            alert("Thêm màu thành công!");
-            $('#addColorModal').modal('hide');
-            $scope.getColors();
+        genderService.addGender($scope.newGender).then(function() {
+            alert("Thêm giới tính thành công!");
+            $('#addGenderModal').modal('hide');
+            $scope.getGenders();
+            location.reload();
         }).catch(function() {
             alert("Có lỗi xảy ra khi thêm màu.");
         });
@@ -318,6 +308,7 @@ app.controller('genderController', ['$scope', 'genderService', function($scope, 
             alert("Cập nhật gender thành công!");
             $('#editGenderModal').modal('hide');
             $scope.getGenders();
+            location.reload();
         }).catch(function() {
             alert("Có lỗi xảy ra khi cập nhật gender.");
         });
