@@ -2,9 +2,11 @@ package com.example.bee_shirt.controller;
 
 import com.example.bee_shirt.dto.request.AccountCreationRequest;
 import com.example.bee_shirt.dto.request.AccountUpdateRequest;
+import com.example.bee_shirt.dto.request.DeliveryAddressRequest;
 import com.example.bee_shirt.dto.response.AccountResponse;
 import com.example.bee_shirt.dto.response.ApiResponse;
 import com.example.bee_shirt.dto.response.RoleResponse;
+import com.example.bee_shirt.entity.DeliveryAddressGiang;
 import com.example.bee_shirt.exception.AppException;
 import com.example.bee_shirt.service.AccountService;
 import com.example.bee_shirt.service.RoleService;
@@ -116,36 +118,26 @@ public class AdminController {
     //thêm @Valid để create chạy validate
     @PostMapping(value = "/create", consumes = "multipart/form-data")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ApiResponse<AccountResponse> createUser(
-            @Valid
-            @RequestParam("firstName") String firstName,
-            @RequestParam("lastName") String lastName,
-            @RequestParam("phone") String phone,
-            @RequestParam("email") String email,
-            @RequestParam("username") String username,
-            @RequestParam("pass") String pass,
-            @RequestParam("address") String address,
-            @RequestParam(value = "avatarFile", required = false) MultipartFile avatarFile,
-            @RequestParam("role") List<String> roles) {
+    public ResponseEntity<ApiResponse<AccountResponse>> register(
+            @Valid @ModelAttribute AccountCreationRequest request, @Valid @ModelAttribute DeliveryAddressRequest addressRequest,
+            @RequestParam(value = "avatarFile", required = false) MultipartFile avatarFile) {
 
-        // Tạo một đối tượng AccountCreationRequest từ các tham số
-        AccountCreationRequest request = new AccountCreationRequest();
-        request.setFirstName(firstName);
-        request.setLastName(lastName);
-        request.setPhone(phone);
-        request.setEmail(email);
-        request.setUsername(username);
-        request.setPass(pass);
-        request.setAddress(address);
-        request.setAvatarFile(avatarFile); // Đảm bảo rằng avatarFile được lưu trữ đúng cách
-        request.setRole(roles); // Đặt các vai trò
+        // Kiểm tra avatarFile trong request
+        if (request.getAvatarFile() != null && !request.getAvatarFile().isEmpty()) {
+            request.setAvatarFile(avatarFile);
+        } else {
+            // Nếu không có, có thể gán một giá trị mặc định
+            request.setAvatarFile(null); // hoặc không cần gán gì
+        }
 
-        log.info("Received account creation request: {}", request);
+        // Tạo tài khoản
+        AccountResponse accountResponse = accountService.createAccount(request, false, addressRequest);
 
-        return ApiResponse.<AccountResponse>builder()
+        ApiResponse<AccountResponse> response = ApiResponse.<AccountResponse>builder()
                 .code(1000)
-                .result(accountService.createAccount(request, true))
+                .result(accountResponse)
                 .build();
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     // Endpoint để xoá tài khoản theo mã code
@@ -179,34 +171,21 @@ public class AdminController {
     public ApiResponse<AccountResponse> updateUser(
             @Valid
             @PathVariable("code") String code,
-            @RequestParam(value = "firstName", required = false) String firstName,
-            @RequestParam(value = "lastName", required = false) String lastName,
-            @RequestParam(value = "phone", required = false) String phone,
-            @RequestParam(value = "email", required = false) String email,
-            @RequestParam(value = "pass", required = false) String pass,
-            @RequestParam(value = "oldPassword", required = false) String oldPassword,
-            @RequestParam(value = "address", required = false) String address,
-            @RequestParam(value = "avatarFile", required = false) MultipartFile avatarFile,
-            @RequestParam(value = "status", required = false) Integer status,
-            @RequestParam(value = "deleted", required = false) Boolean deleted) {
+            @Valid @ModelAttribute AccountUpdateRequest request, @Valid @ModelAttribute DeliveryAddressRequest addressRequest,
+            @RequestParam(value = "avatarFile", required = false) MultipartFile avatarFile) {
 
         log.info("Received account update request for user: {}", code);
 
-        // Tạo đối tượng yêu cầu cập nhật tài khoản
-        AccountUpdateRequest request = new AccountUpdateRequest();
-        request.setFirstName(firstName);
-        request.setLastName(lastName);
-        request.setPhone(phone);
-        request.setEmail(email);
-        request.setOldPassword(oldPassword);
-        request.setPass(pass);
-        request.setAddress(address);
-        request.setAvatarFile(avatarFile);
-        request.setStatus(status);
-        request.setDeleted(deleted);
+        // Kiểm tra avatarFile trong request
+        if (request.getAvatarFile() != null && !request.getAvatarFile().isEmpty()) {
+            request.setAvatarFile(avatarFile);
+        } else {
+            // Nếu không có, có thể gán một giá trị mặc định
+            request.setAvatarFile(null); // hoặc không cần gán gì
+        }
 
         // Gọi service để thực hiện cập nhật
-        AccountResponse accountResponse = accountService.updateAccount(request, code);
+        AccountResponse accountResponse = accountService.updateAccount(request, code, addressRequest);
 
         // Trả về kết quả
         return ApiResponse.<AccountResponse>builder()
@@ -235,5 +214,14 @@ public class AdminController {
                 .build();
     }
 
+    @GetMapping("/address/{code}")
+    public ApiResponse<DeliveryAddressGiang> getAllByAccountCode(
+            @PathVariable("code") String code
+    ) {
+        return ApiResponse.<DeliveryAddressGiang>builder()
+                .code(1000)
+                .result(accountService.findAllByAccountCode(code))
+                .build();
+    }
 
 }

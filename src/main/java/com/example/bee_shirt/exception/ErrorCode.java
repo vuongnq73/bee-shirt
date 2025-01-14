@@ -52,9 +52,11 @@ public enum ErrorCode {
 
     INVALID_VERIFICATION_CODE(1022,"Invalid verification code", HttpStatus.BAD_REQUEST),
 
-    USERNAME_NOT_EMPTY(404_001,"Username not empty", HttpStatus.BAD_REQUEST),
+    USERNAME_NOT_EMPTY(400_001,"Username not empty", HttpStatus.BAD_REQUEST),
 
-    PASSWORD_NOT_EMPTY(404_002,"Password not empty", HttpStatus.BAD_REQUEST),
+    PASSWORD_NOT_EMPTY(400_002,"Password not empty", HttpStatus.BAD_REQUEST),
+
+    ADDRESS_NOT_FOUND(404_001,"Address not found", HttpStatus.BAD_REQUEST),
 
     ;
     private int code;
