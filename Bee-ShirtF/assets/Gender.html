@@ -609,16 +609,18 @@
                         <label for="nameGender" class="form-label">Tên Giới Tính:</label>
                         <input type="text" id="nameGender" ng-model="newGender.nameGender" class="form-control" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="statusGender" class="form-label">Trạng Thái:</label>
-                        <div>
-                            <label>
-                                <input type="radio" ng-model="newGender.statusGender" value="1"> Active
-                            </label>
-                            <label>
-                                <input type="radio" ng-model="newGender.statusGender" value="0"> Inactive
-                            </label>
-                        </div>
+                    <div class="modal-body">
+                        <form ng-submit="saveNewGender()">
+                            <div class="mb-3">
+                                <label for="nameGender" class="form-label">Tên Giới Tính:</label>
+                                <input type="text" id="nameGender" ng-model="newGender.nameGender" class="form-control" required>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                <button type="submit" class="btn btn-primary ms-2">Thêm Giới Tính</button>
+                            </div>
+                        </form>
+
                     </div>
                     <div class="d-flex justify-content-end">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>

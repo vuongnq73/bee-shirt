@@ -32,7 +32,7 @@ public class GenderController {
     @PostMapping("/add")
     public ResponseEntity<Gender> addGender(@RequestBody Gender gender) {
         String codeCategory = generateGenderCode();
-
+        gender.setStatusGender(1);
         // Cập nhật mã codeCategory vào đối tượng Category
         gender.setCodeGender(codeCategory);
 

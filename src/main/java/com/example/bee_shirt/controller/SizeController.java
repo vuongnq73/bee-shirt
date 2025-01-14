@@ -32,7 +32,7 @@ public class SizeController {
     @PostMapping("/add")
     public ResponseEntity<Size> addSize(@RequestBody Size size) {
         String codeCategory = generateSizeCode();
-
+        size.setStatussize(1);
         // Cập nhật mã codeCategory vào đối tượng Category
         size.setCodeSize(codeCategory);
 
