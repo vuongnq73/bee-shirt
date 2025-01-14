@@ -41,14 +41,14 @@ function getHighestRole(scopes) {
     // Trả về vai trò có độ ưu tiên cao nhất
     return validRoles[0] || null;
 }
+this.getCategories = function() {
+    return $http.get('http://localhost:8080/api/categories/list', {
+        headers: {
+            Authorization: "Bearer " + token,
+        }
+    });
+};
 
-    this.getCategories = function(page) {
-        return $http.get(`http://localhost:8080/api/categories/list?page=${page}`, {
-            headers: {
-                Authorization: "Bearer " + token,
-            }
-        });
-    };
 
     this.getCategoryDetail = function(codeCategory) {
         return $http.get(`http://localhost:8080/api/categories/detail/${codeCategory}`, {
@@ -84,30 +84,104 @@ function getHighestRole(scopes) {
     
 }]);
 app.controller('categoryController', ['$scope', 'categoryService', function($scope, categoryService) {
-    $scope.categories = [];
-    $scope.currentPage = 0;
-    $scope.totalPages = 0;
-    $scope.pages = [];
     $scope.category = {};
     $scope.newCategory = {};
     $scope.confirmDelete = false;
     $scope.categoryToDelete = null;
 
-    $scope.getCategories = function(page) {
-        categoryService.getCategories(page).then(function(response) {
-            $scope.categories = response.data.content.map(function(item) {
-                return {
-                    codeCategory: item[0],
-                    nameCategory: item[1],
-                    statusCategory: item[2]
-                };
+    // Thêm các biến lọc và tìm kiếm
+    $scope.statusFilter = ''; // Trạng thái lọc (0 hoặc 1)
+    $scope.searchText = '';   // Chuỗi tìm kiếm theo tên danh mục
+    $scope.itemsPerPage = 5;  // Số phần tử mỗi trang
+    $scope.totalPages = 0;    // Tổng số trang
+    $scope.currentPage = 0;   // Trang hiện tại
+    $scope.pages = [];        // Dãy số trang
+
+    $scope.filterByStatus = function(status) {
+        $scope.statusFilter = status; // Cập nhật trạng thái lọc
+        $scope.getCategories(); // Gọi lại getCategories để lọc và cập nhật danh mục
+    };
+    
+    $scope.getCategories = function() {
+        categoryService.getCategories().then(function(response) {
+            $scope.categories = response.data;  // Lấy tất cả danh mục từ API
+    
+            // Lọc theo trạng thái nếu có filter
+            $scope.filteredCategories = $scope.categories.filter(function(category) {
+                if ($scope.statusFilter !== '') {
+                    return category.statusCategory === parseInt($scope.statusFilter, 10);
+                }
+                return true;  // Nếu không có filter, hiển thị tất cả
             });
-            $scope.totalPages = response.data.totalPages;
-            $scope.pages = new Array($scope.totalPages);
+    
+            // Tìm kiếm theo tên nếu có
+            if ($scope.searchText) {
+                $scope.filteredCategories = $scope.filteredCategories.filter(function(category) {
+                    return category.nameCategory.toLowerCase().includes($scope.searchText.toLowerCase());
+                });
+            }
+    
+            // Tính tổng số trang dựa trên filteredCategories
+            $scope.totalPages = Math.ceil($scope.filteredCategories.length / $scope.itemsPerPage);
+    
+            // Gọi hàm phân trang với trang đầu tiên sau khi lọc
+            $scope.paginate(0);
         });
     };
     
-    $scope.sortOrder = 'asc';  // Biến lưu trữ thứ tự sắp xếp, 'asc' là tăng dần, 'desc' là giảm dần
+    $scope.paginate = function(page) {
+        $scope.currentPage = page;
+    
+        // Sử dụng filteredCategories thay vì categories để phân trang
+        const dataToPaginate = $scope.filteredCategories || $scope.categories; // Dùng filteredCategories nếu có, nếu không dùng tất cả categories
+    
+        // Tính toán vị trí bắt đầu và kết thúc của các phần tử cho trang hiện tại
+        const start = page * $scope.itemsPerPage;
+        const end = start + $scope.itemsPerPage;
+    
+        // Cập nhật lại danh sách phần tử cho trang hiện tại
+        $scope.currentPageItems = dataToPaginate.slice(start, end);
+    
+        // Cập nhật dãy số trang
+        $scope.pages = [];
+        for (let i = 0; i < $scope.totalPages; i++) {
+            $scope.pages.push(i + 1); // Tạo dãy số trang (1, 2, 3, ...)
+        }
+    };
+    
+    
+    $scope.searchCategory = function() {
+        if ($scope.searchText) {
+            // Tìm kiếm theo tên hoặc mã
+            $scope.currentPageItems = $scope.categories.filter(function(category) {
+                return category.nameCategory.toLowerCase().includes($scope.searchText.toLowerCase()) || 
+                       category.codeCategory.toLowerCase().includes($scope.searchText.toLowerCase());
+            });
+    
+            // Tính lại tổng số trang sau khi tìm kiếm
+            $scope.totalPages = Math.ceil($scope.currentPageItems.length / $scope.itemsPerPage);
+            $scope.paginate($scope.currentPage);
+        } else {
+            // Nếu không có từ khóa tìm kiếm, hiển thị tất cả danh mục
+            $scope.paginate($scope.currentPage);
+        }
+    };
+    
+        
+
+    // Chuyển đến trang được chọn
+    $scope.goToPage = function(page) {
+        if (page >= 0 && page < $scope.totalPages) {
+            $scope.paginate(page);
+        }
+    };
+
+
+
+
+
+    // Các hàm khác như trước
+    $scope.sortOrder = $scope.sortOrder === 'asc' ? 'desc' : 'asc';
 
     // Hàm sắp xếp
     $scope.sortCategories = function(field) {
@@ -136,14 +210,7 @@ app.controller('categoryController', ['$scope', 'categoryService', function($sco
         }
     };
 
-    // Chuyển đến trang mới
-    $scope.goToPage = function(page) {
-        if (page >= 0 && page < $scope.totalPages) {
-            $scope.currentPage = page;
-            $scope.getCategories($scope.currentPage);
-        }
-    };
-
+    // Các hàm khác không thay đổi
     $scope.viewCategoryDetail = function(codeCategory) {
         categoryService.getCategoryDetail(codeCategory).then(function(response) {
             $scope.category = response.data;
@@ -159,148 +226,45 @@ app.controller('categoryController', ['$scope', 'categoryService', function($sco
     $scope.openAddCategoryModal = function() {
         $scope.newCategory = {};
     };
-   
-    $scope.saveNewCategory = function() {
-    const categoryName = $scope.newCategory.nameCategory;
-    const categoryCode = $scope.newCategory.codeCategory;
-
-    // Kiểm tra nếu tên trống hoặc chỉ chứa khoảng trắng
-    if (!categoryName || categoryName.trim() === "") {
-        alert("Tên danh mục không được để trống!");
-        return;
-    }
-
-    // Kiểm tra tên không chỉ chứa khoảng trắng
-    const trimmedName = categoryName.trim();
-    if (trimmedName.length === 0) {
-        alert("Tên danh mục không được chỉ chứa khoảng trắng!");
-        return;
-    }
-
-    // Kiểm tra có ít nhất một ký tự là chữ (bao gồm ký tự tiếng Việt)
-    const regex = /[a-zA-Zàáạảãạâầấẩẫàáăắằẳẵắâầçćèéêẹẻẽìíîĩìíòóôỗốồỏỏồúùûủũưứừửữùủỳýỹỵý]/;
-    // Kiểm tra độ dài tên
-    if (categoryName.length > 250) {
-        alert("Tên danh mục không được quá 250 ký tự!");
-        return;
-    }
-    // Kiểm tra độ dài tên
-    if (categoryName.length < 10) {
-        alert("Tên danh mục phải lớn hơn 10 kí tự");
-        return;
-    }
-    if (!regex.test(trimmedName)) {
-        alert("Tên danh mục phải có ít nhất một ký tự là chữ!");
-        return;
-    }
-
-    // Kiểm tra trùng tên và mã khi thêm
-    let isDuplicate = $scope.categories.some(function(item) {
-        return item.nameCategory.toLowerCase() === categoryName.toLowerCase() || item.codeCategory === categoryCode;
-    });
-
-    if (isDuplicate) {
-        alert("Tên danh mục hoặc mã danh mục này đã tồn tại!");
-        return; // Dừng lại nếu tên hoặc mã đã tồn tại
-    }
-
-    if (confirm("Bạn có chắc chắn muốn thêm danh mục này?")) {
-        categoryService.addCategory($scope.newCategory).then(function(response) {
-            alert("Thêm danh mục thành công!");
-            $scope.getCategories($scope.currentPage);
-            $('#addCategoryModal').modal('hide');
-        }, function(error) {
-            alert("Có lỗi xảy ra khi thêm danh mục.");
-        });
-    }
-};
-
-$scope.saveEditCategory = function() {
-    const categoryName = $scope.category.nameCategory;
-
-    // Kiểm tra nếu tên trống hoặc chỉ chứa khoảng trắng
-    if (!categoryName || categoryName.trim() === "") {
-        alert("Tên danh mục không được để trống!");
-        return;
-    }
-
-    // Kiểm tra tên không chỉ chứa khoảng trắng
-    const trimmedName = categoryName.trim();
-    if (trimmedName.length === 0) {
-        alert("Tên danh mục không được chỉ chứa khoảng trắng!");
-        return;
-    }
-
-    // Kiểm tra có ít nhất một ký tự là chữ (bao gồm ký tự tiếng Việt)
-    const regex = /[a-zA-Zàáạảãạâầấẩẫàáăắằẳẵắâầçćèéêẹẻẽìíîĩìíòóôỗốồỏỏồúùûủũưứừửữùủỳýỹỵý]/;
-    if (!regex.test(trimmedName)) {
-        alert("Tên danh mục phải có ít nhất một ký tự là chữ!");
-        return;
-    }
-
-    // Kiểm tra độ dài tên
-    if (categoryName.length > 120) {
-        alert("Tên danh mục không được quá 120 ký tự!");
-        return;
-    }
-
-    // Khi sửa, không cần kiểm tra mã, chỉ kiểm tra tên
-    let isDuplicate = $scope.categories.some(function(item) {
-        return item.nameCategory.toLowerCase() === categoryName.toLowerCase() && item.codeCategory !== $scope.category.codeCategory;
-    });
-
-    if (isDuplicate) {
-        alert("Tên danh mục này đã tồn tại!");
-        return; // Dừng lại nếu tên đã tồn tại với danh mục khác
-    }
-
-    if (confirm("Bạn có chắc chắn muốn sửa danh mục này?")) {
-        categoryService.updateCategory($scope.category.codeCategory, $scope.category).then(function(response) {
-            alert("Cập nhật danh mục thành công!");
-            $scope.getCategories($scope.currentPage);
-            $('#editCategoryModal').modal('hide');
-            location.reload();
-        }, function(error) {
-            alert("Có lỗi xảy ra khi cập nhật danh mục.");
-        });
-    }
-};
-
 
     $scope.editCategory = function(category) {
         $scope.category = angular.copy(category);
         $('#editCategoryModal').modal('show');
     };
 
+
     $scope.saveNewCategory = function() {
         const categoryName = $scope.newCategory.nameCategory;
         const categoryCode = $scope.newCategory.codeCategory;
     
-        // Kiểm tra nếu tên trống hoặc chỉ chứa khoảng trắng
-        if (!categoryName || categoryName.trim() === "") {
-            alert("Tên danh mục không được để trống!");
-            return;
+       // Kiểm tra nếu tên trống hoặc chỉ chứa khoảng trắng
+       if (!categoryName || categoryName.trim() === "") {
+        alert("Tên danh mục không được để trống!");
+        return;
         }
-    
-        // Kiểm tra tên không chỉ chứa khoảng trắng
-        const trimmedName = categoryName.trim();
-        if (trimmedName.length === 0) {
-            alert("Tên danh mục không được chỉ chứa khoảng trắng!");
-            return;
-        }
-    
-        // Kiểm tra có ít nhất một ký tự là chữ (bao gồm ký tự tiếng Việt)
-        const regex = /[a-zA-Zàáạảãạâầấẩẫàáăắằẳẵắâầçćèéêẹẻẽìíîĩìíòóôỗốồỏỏồúùûủũưứừửữùủỳýỹỵý]/;
-        if (!regex.test(trimmedName)) {
-            alert("Tên danh mục phải có ít nhất một ký tự là chữ!");
-            return;
-        }
-    
         // Kiểm tra độ dài tên
-        if (categoryName.length > 120) {
-            alert("Tên danh mục không được quá 120 ký tự!");
+        if (categoryName.length > 250) {
+            alert("Tên danh mục không được quá 250 ký tự!");
             return;
         }
+            // Kiểm tra tên không chỉ chứa khoảng trắng
+            const trimmedName = categoryName.trim();
+            if (trimmedName.length === 0) {
+                alert("Tên danh mục không được chỉ chứa khoảng trắng!");
+                return;
+            }
+            const containsNumberRegex = /[0-9]/;
+            if (containsNumberRegex.test(trimmedName)) {
+                alert("Tên danh mục không được chứa số!");
+                return;
+            }
+
+            const specialCharAndNumberRegex = /[0-9@#$%^&*()_+={}[\]:;"'<>,.?/\\|~`!]/;
+            if (specialCharAndNumberRegex.test(trimmedName)) {
+                alert("Tên danh mục không được chứa ký tự đặc biệt!");
+                return;
+            }
+
     
         // Kiểm tra trùng tên và mã khi thêm
         let isDuplicate = $scope.categories.some(function(item) {
@@ -317,6 +281,7 @@ $scope.saveEditCategory = function() {
                 alert("Thêm danh mục thành công!");
                 $scope.getCategories($scope.currentPage);
                 $('#addCategoryModal').modal('hide');
+                location.reload();
             }, function(error) {
                 alert("Có lỗi xảy ra khi thêm danh mục.");
             });
@@ -331,28 +296,28 @@ $scope.saveEditCategory = function() {
             alert("Tên danh mục không được để trống!");
             return;
         }
-    
+     // Kiểm tra độ dài tên
+     if (categoryName.length > 250) {
+        alert("Tên danh mục không được quá 250 ký tự!");
+        return;
+    }
         // Kiểm tra tên không chỉ chứa khoảng trắng
         const trimmedName = categoryName.trim();
         if (trimmedName.length === 0) {
             alert("Tên danh mục không được chỉ chứa khoảng trắng!");
             return;
         }
-        
-    
-        // Kiểm tra có ít nhất một ký tự là chữ (bao gồm ký tự tiếng Việt)
-        const regex = /[a-zA-Zàáạảãạâầấẩẫàáăắằẳẵắâầçćèéêẹẻẽìíîĩìíòóôỗốồỏỏồúùûủũưứừửữùủỳýỹỵý]/;
-        if (!regex.test(trimmedName)) {
-            alert("Tên danh mục phải có ít nhất một ký tự là chữ!");
-            return;
-        }
-    
-        // Kiểm tra độ dài tên
-        if (categoryName.length > 120) {
-            alert("Tên danh mục không được quá 120 ký tự!");
-            return;
-        }
-    
+        const containsNumberRegex = /[0-9]/;
+            if (containsNumberRegex.test(trimmedName)) {
+                alert("Tên danh mục không được chứa số!");
+                return;
+            }
+
+            const specialCharAndNumberRegex = /[0-9@#$%^&*()_+={}[\]:;"'<>,.?/\\|~`!]/;
+            if (specialCharAndNumberRegex.test(trimmedName)) {
+                alert("Tên danh mục không được chứa ký tự đặc biệt!");
+                return;
+            }
         // Khi sửa, không cần kiểm tra mã, chỉ kiểm tra tên
         let isDuplicate = $scope.categories.some(function(item) {
             return item.nameCategory.toLowerCase() === categoryName.toLowerCase() && item.codeCategory !== $scope.category.codeCategory;
@@ -362,7 +327,8 @@ $scope.saveEditCategory = function() {
             alert("Tên danh mục này đã tồn tại!");
             return; // Dừng lại nếu tên đã tồn tại với danh mục khác
         }
-    
+        console.log($scope.category); // Kiểm tra xem status có tồn tại trong đối tượng này không
+
         if (confirm("Bạn có chắc chắn muốn sửa danh mục này?")) {
             categoryService.updateCategory($scope.category.codeCategory, $scope.category).then(function(response) {
                 alert("Cập nhật danh mục thành công!");
@@ -388,6 +354,8 @@ $scope.saveEditCategory = function() {
         }
     };
     
+
     // Load categories initially
-    $scope.getCategories($scope.currentPage);
+    $scope.getCategories();
 }]);
+
