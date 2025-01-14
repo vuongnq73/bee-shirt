@@ -44,7 +44,7 @@ app.service('colorService', ['$http', function($http) {
 
     // Service functions to interact with API
     this.getColors = function(page) {
-        return $http.get(`http://localhost:8080/api/colors/list`, {
+        return $http.get(`http://localhost:8080/api/colors/list?page=${page}`, {
             headers: {
                 Authorization: "Bearer " + token,
             }
@@ -86,43 +86,57 @@ app.service('colorService', ['$http', function($http) {
 
 app.controller('colorController', ['$scope', 'colorService', function($scope, colorService) {
     $scope.colors = [];
-$scope.currentPage = 0;
-$scope.totalPages = 0;
-$scope.itemsPerPage = 5;  // Số lượng item mỗi trang
-$scope.pages = [];
+    $scope.currentPage = 0;
+    $scope.totalPages = 0;
+    $scope.pages = [];
+    $scope.color = {};
+    $scope.newColor = {};
+    $scope.confirmDelete = false;
+    $scope.colorToDelete = null;
 
-// Fetch color data without pagination from API
-$scope.getColors = function() {
-    colorService.getColors().then(function(response) {
-        // Lấy toàn bộ dữ liệu
-        $scope.colors = response.data;
-        
-        // Tính toán tổng số trang
-        $scope.totalPages = Math.ceil($scope.colors.length / $scope.itemsPerPage);
-        $scope.pages = new Array($scope.totalPages);
-        
-        // Chuyển đến trang đầu tiên
-        $scope.goToPage($scope.currentPage);
-    });
-};
+    // Fetch color data
+    $scope.getColors = function(page) {
+        colorService.getColors(page).then(function(response) {
+            $scope.colors = response.data.content.map(function(item) {
+                return {
+                    id: item[0],
+                    codeColor: item[1],
+                    nameColor: item[2],
+                    statusColor: item[3],
 
-// Navigate to a specific page
-$scope.goToPage = function(page) {
-    if (page >= 0 && page < $scope.totalPages) {
-        $scope.currentPage = page;
-        
-        // Tính toán chỉ mục của các item hiện tại trên trang
-        let startIndex = $scope.currentPage * $scope.itemsPerPage;
-        let endIndex = startIndex + $scope.itemsPerPage;
-        
-        // Cập nhật danh sách màu sắc hiện tại cho trang này
-        $scope.currentPageItems = $scope.colors.slice(startIndex, endIndex);
-    }
-};
+                };
+            });
+            $scope.totalPages = response.data.totalPages;
+            $scope.pages = new Array($scope.totalPages);
+        });
+    };
 
-    
-    // Initialize colors
-    
+    $scope.sortOrder = 'asc';  // Sorting order: 'asc' (ascending) or 'desc' (descending)
+
+    // Sorting function
+    $scope.sortColor = function(field) {
+        if ($scope.sortOrder === 'asc') {
+            $scope.colors = $scope.colors.sort(function(a, b) {
+                return a[field].localeCompare(b[field]);
+            });
+            $scope.sortOrder = 'desc';
+        } else {
+            $scope.colors = $scope.colors.sort(function(a, b) {
+                return b[field].localeCompare(a[field]);
+            });
+            $scope.sortOrder = 'asc';
+        }
+    };
+
+    // Navigate to a specific page
+    $scope.goToPage = function(page) {
+        if (page >= 0 && page < $scope.totalPages) {
+            $scope.currentPage = page;
+            $scope.getColors($scope.currentPage);
+        }
+    };
+
+
     $scope.viewColorDetail = function(id) {
         colorService.getColorDetail(id).then(function(response) {
             $scope.color = response.data;
@@ -153,62 +167,53 @@ $scope.goToPage = function(page) {
             return color.codeColor.toLowerCase() === codeColor.toLowerCase();
         });
     };
-    $scope.saveNewColor = function() {
-        // Kiểm tra xem mã màu có được chọn hay không
-        if (!$scope.newColor.codeColor || $scope.newColor.codeColor.trim() === "") {
-            alert("Vui lòng chọn mã màu!");
-            return;
-        }
+    $scope.containsSpecialCharacters = function(value) {
+        const specialCharRegex = /[^a-zA-Z0-9\s]/; // Chỉ cho phép chữ, số, và khoảng trắng
+        return specialCharRegex.test(value);
+    };
     
+
+    $scope.saveNewColor = function() {
+
         // Remove '#' if it exists in the color code
         if ($scope.newColor.codeColor.startsWith('#')) {
             $scope.newColor.codeColor = $scope.newColor.codeColor.substring(1);
         }
     
-        // Kiểm tra tên màu sắc không quá 250 ký tự
-        if ($scope.newColor.nameColor.length > 250) {
-            alert("Tên màu sắc không được quá 250 ký tự!");
-            return;
-        }
-    // Kiểm tra tên màu sắc không chứa số
-    const containsNumberRegex = /[0-9]/;  // Kiểm tra chứa số
-    if (containsNumberRegex.test($scope.newColor.nameColor)) {
-        alert("Tên màu sắc không được chứa số!");
-        return;
-    }
 
-        // Kiểm tra tên màu sắc không chứa ký tự đặc biệt
-        const specialCharRegex =  /[0-9@#$%^&*()_+={}[\]:;"'<>,.?/\\|~`!]/;  // Kiểm tra ký tự đặc biệt
-        if (specialCharRegex.test($scope.newColor.nameColor)) {
+        // Check for special characters in name
+        if ($scope.containsSpecialCharacters($scope.newColor.nameColor)) {
             alert("Tên màu sắc không được chứa ký tự đặc biệt!");
             return;
         }
     
-        
-        // Kiểm tra trùng tên
-        if ($scope.colors.some(function(color) {
-            return color.nameColor.toLowerCase() === $scope.newColor.nameColor.toLowerCase();
-        })) {
+        // Check for special characters in code
+        if ($scope.containsSpecialCharacters($scope.newColor.codeColor)) {
+            alert("Mã màu sắc không được chứa ký tự đặc biệt!");
+            return;
+        }
+    
+        // Check for duplicate name
+        if ($scope.isDuplicateName($scope.newColor.nameColor)) {
             alert("Tên màu sắc đã tồn tại!");
             return;
         }
     
-        // Kiểm tra trùng mã
-        if ($scope.colors.some(function(color) {
-            return color.codeColor.toLowerCase() === $scope.newColor.codeColor.toLowerCase();
-        })) {
+        // Check for duplicate code
+        if ($scope.isDuplicateCode($scope.newColor.codeColor)) {
             alert("Mã màu sắc đã tồn tại!");
             return;
         }
     
-        // Thêm màu mới nếu không có lỗi
+        // Add new color if no duplicates
         colorService.addColor($scope.newColor).then(function(response) {
-            $scope.getColors();
+            $scope.getColors($scope.currentPage);
             $('#addColorModal').modal('hide');
             location.reload();
         });
     };
     
+
     // Edit a color
     $scope.editColor = function(color) {
         $scope.color = angular.copy(color);
@@ -217,33 +222,28 @@ $scope.goToPage = function(page) {
         $('#editColorModal').modal('show');
     };
 
+
+    // Save edited color
     $scope.saveEditColor = function() {
         // Remove '#' if it exists in the color code
         if ($scope.color.codeColor.startsWith('#')) {
             $scope.color.codeColor = $scope.color.codeColor.substring(1);
         }
     
-        // Kiểm tra tên màu sắc không quá 250 ký tự
-        if ($scope.color.nameColor.length > 250) {
-            alert("Tên màu sắc không được quá 250 ký tự!");
-            return;
-        }
-    
-        // Kiểm tra tên màu sắc không chứa ký tự đặc biệt
-        const specialCharRegex = /[^\w\s]/;  // Kiểm tra ký tự đặc biệt
-        if (specialCharRegex.test($scope.color.nameColor)) {
+
+        // Check for special characters in name
+        if ($scope.containsSpecialCharacters($scope.color.nameColor)) {
             alert("Tên màu sắc không được chứa ký tự đặc biệt!");
             return;
         }
     
-        // Kiểm tra tên màu sắc không chứa số
-        const containsNumberRegex = /\d/;  // Kiểm tra chứa số
-        if (containsNumberRegex.test($scope.color.nameColor)) {
-            alert("Tên màu sắc không được chứa số!");
+        // Check for special characters in code
+        if ($scope.containsSpecialCharacters($scope.color.codeColor)) {
+            alert("Mã màu sắc không được chứa ký tự đặc biệt!");
             return;
         }
     
-        // Kiểm tra trùng tên (ngoại trừ màu sắc hiện tại)
+        // Check for duplicate name (exclude current color)
         if ($scope.colors.some(function(color) {
             return color.nameColor.toLowerCase() === $scope.color.nameColor.toLowerCase() && color.id !== $scope.color.id;
         })) {
@@ -251,7 +251,7 @@ $scope.goToPage = function(page) {
             return;
         }
     
-        // Kiểm tra trùng mã màu (ngoại trừ mã hiện tại)
+        // Check for duplicate code (exclude current color)
         if ($scope.colors.some(function(color) {
             return color.codeColor.toLowerCase() === $scope.color.codeColor.toLowerCase() && color.id !== $scope.color.id;
         })) {
@@ -259,15 +259,13 @@ $scope.goToPage = function(page) {
             return;
         }
     
-        // Cập nhật màu sắc nếu không có lỗi
+        // Update color if no duplicates
         colorService.updateColor($scope.color.id, $scope.color).then(function(response) {
-            $scope.getColors();
+            $scope.getColors($scope.currentPage);
             $('#editColorModal').modal('hide');
             location.reload();
         });
     };
-    
-    
     
     // Delete a color
     $scope.deleteColor = function(codeColor) {
@@ -279,7 +277,7 @@ $scope.goToPage = function(page) {
     // Confirm color deletion
     $scope.confirmDeleteColor = function() {
         colorService.deleteColor($scope.colorToDelete).then(function(response) {
-            $scope.getColors();
+            $scope.getColors($scope.currentPage);
             $('#confirmDeleteModal').modal('hide');
 
             location.reload();
@@ -287,7 +285,6 @@ $scope.goToPage = function(page) {
     };
 
     // Initialize the color list
-    $scope.getColors();
-
+    $scope.getColors($scope.currentPage);
 }]);
 

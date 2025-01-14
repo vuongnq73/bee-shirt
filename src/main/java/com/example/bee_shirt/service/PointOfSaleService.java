@@ -301,6 +301,7 @@ public class PointOfSaleService {
     }
 
     public List<Voucher1> findAvailableVoucher(Integer money) {
+
         return voucherRepository.findAvailableVoucher(money, LocalDateTime.now());
     }
 }

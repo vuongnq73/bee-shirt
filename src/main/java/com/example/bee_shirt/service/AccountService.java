@@ -118,14 +118,15 @@ public class AccountService {
 
         validateEmail(request.getEmail());
 
-        // Tạo mã tài khoản tự động
-        String generatedCode = generateAccountCode();
-        request.setCode(generatedCode);
+
 
         // Kiểm tra xem tài khoản đã tồn tại chưa
         if (accountRepository.existsByCode(request.getCode())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
+        // Tạo mã tài khoản tự động
+        String generatedCode = generateAccountCode();
+        request.setCode(generatedCode);
 
         Account account = accountMapper.toUser(request);
         log.info("Mã tài khoản mới: {}", account.getCode());

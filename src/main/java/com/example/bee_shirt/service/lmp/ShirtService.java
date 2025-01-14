@@ -49,7 +49,8 @@ public class ShirtService {
             throw new IllegalArgumentException("Danh mục không tồn tại!");
         }
         // Tạo mã sản phẩm ngẫu nhiên
-
+        String generatedCode = "S" + generateRandomNumber(6);
+        shirt.setCodeshirt(generatedCode);
         shirt.setStatusshirt(1);
         // Lưu vào cơ sở dữ liệu
         return shirtRepository.save(shirt);
@@ -90,11 +91,6 @@ public class ShirtService {
         }
         return null; // Nếu không tìm thấy áo thun theo mã
     }
-    public Shirt getShirtByCode(String codeshirt) {
-        // Tìm áo thun theo mã, trả về null nếu không tìm thấy
-        return shirtRepository.findByCodeshirt(codeshirt);
-    }
-
 
 
     public Shirt deleteShirt(String codeshirt) {

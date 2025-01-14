@@ -773,31 +773,8 @@ $scope.updateImagePreview = function(element, imageNumber) {
         $scope.editingShirtDetail.deleted = $scope.editingShirtDetail.deleted;
     };
     
-    $scope.editShirtDetail = function(shirtdetail) {
-        // Sao chép đối tượng chi tiết áo thun để tránh thay đổi trực tiếp
-        $scope.editingShirtDetail = angular.copy(shirtdetail);
-        
-        // Chuyển dữ liệu các dropdown thuộc tính
-        $scope.editingShirtDetail.colorId = $scope.editingShirtDetail.color.id;
-        $scope.editingShirtDetail.genderId = $scope.editingShirtDetail.gender.id;
-        $scope.editingShirtDetail.materialId = $scope.editingShirtDetail.material.id;
-        $scope.editingShirtDetail.originId = $scope.editingShirtDetail.origin.id;
-        $scope.editingShirtDetail.shirtId = $scope.editingShirtDetail.shirt.id;
-        $scope.editingShirtDetail.patternId = $scope.editingShirtDetail.pattern.id;
-        $scope.editingShirtDetail.seasonId = $scope.editingShirtDetail.season.id;
-        $scope.editingShirtDetail.sizeId = $scope.editingShirtDetail.size.id;
-        
-        // Các ảnh
-        $scope.editingShirtDetail.image = $scope.editingShirtDetail.image;   // Ảnh 1
-        $scope.editingShirtDetail.image2 = $scope.editingShirtDetail.image2; // Ảnh 2
-        $scope.editingShirtDetail.image3 = $scope.editingShirtDetail.image3; // Ảnh 3
-    
-        // Trạng thái và đã xóa
-        $scope.editingShirtDetail.statusshirtdetail = $scope.editingShirtDetail.statusshirtdetail;
-        $scope.editingShirtDetail.deleted = $scope.editingShirtDetail.deleted;
-    };
-    
     $scope.updateShirtDetail = function() {
+
         // Xóa thông báo lỗi trước khi kiểm tra
         $scope.errorMessage = '';
         
