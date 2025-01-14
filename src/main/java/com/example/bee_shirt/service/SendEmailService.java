@@ -13,7 +13,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -23,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -41,6 +39,7 @@ public class SendEmailService {
 
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
+    VerificationTokenRepository verificationTokenRepository;
 
 
     public void sendEmail(String to, String subject, String text) {
@@ -111,42 +110,26 @@ public class SendEmailService {
     public void deleteExpiredTokens() {
         passwordResetRepository.deleteExpiredTokens();
     }
-    // Gửi mã qua mail
-    VerificationTokenRepository verificationTokenRepository;
-    public String sendVerificationCode(String email) {
-        log.info("Sending verification code to email: {}", email);  // Logging
 
-        // Tạo mã xác minh ngẫu nhiên
-        String token = UUID.randomUUID().toString();
-        VerificationToken verificationToken = new VerificationToken();
-        verificationToken.setToken(token);
-        verificationToken.setEmail(email);
-        verificationToken.setExpiryDate(LocalDateTime.now().plusMinutes(30));  // Mã có hiệu lực trong 30 phút
 
-        // Lưu mã xác minh vào cơ sở dữ liệu
-        verificationTokenRepository.save(verificationToken);
 
-        // Gửi email với mã xác minh
-        sendEmail(email, "BeeShirt - Mã xác minh tài khoản", "Dùng mã này để xác minh tài khoản của bạn: " + token);
-
-        return "Verification code sent.";
-    }
-    //Kiểm tra max
+    //Kiểm tra token
     public String verifyVerificationCode(String email, String token) {
-        log.info("Verifying code for email: {}", email);
+    log.info("Verifying code for email: {}", email);
 
-        // Lấy mã xác minh mới nhất từ database cho email
-        VerificationToken verificationToken = verificationTokenRepository.findByEmail(email).stream()
-                .findFirst()  // Lấy mã xác minh đầu tiên trong danh sách đã được sắp xếp
-                .orElseThrow(() -> new AppException(ErrorCode.VERIFICATION_TOKEN_NOT_FOUND));  // Nếu không tìm thấy mã xác minh
+    // Lấy mã xác minh mới nhất từ database cho email
+    VerificationToken verificationToken = verificationTokenRepository.findByEmail(email).stream()
+            .findFirst()  // Lấy mã xác minh đầu tiên trong danh sách đã được sắp xếp
+            .orElseThrow(() -> new AppException(ErrorCode.VERIFICATION_TOKEN_NOT_FOUND));  // Nếu không tìm thấy mã xác minh
 
-        // Kiểm tra mã xác minh
-        if (!verificationToken.getToken().equals(token)) {
-            throw new AppException(ErrorCode.INVALID_VERIFICATION_CODE);  // Nếu mã không khớp
-        }
+    // Kiểm tra mã xác minh
+    if (!verificationToken.getToken().equals(token)) {
+        throw new AppException(ErrorCode.INVALID_VERIFICATION_CODE);  // Nếu mã không khớp
+    }
 
-        // Nếu mã hợp lệ, trả về thông báo thành công
-        return "Verification code is valid.";
+    // Nếu mã hợp lệ, trả về thông báo thành công
+    return "Verification code is valid.";
+
     }
 
 }

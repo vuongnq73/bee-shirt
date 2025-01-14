@@ -520,7 +520,7 @@
             >
               <!-- Lọc theo hãng -->
               <div class="filter-col4 p-b-27">
-                <div class="mtext-102 cl2 p-b-15">Branchs</div>
+                <div class="mtext-102 cl2 p-b-15">Hãng</div>
                 <ul>
                   <li
                     class="p-b-6"
@@ -541,66 +541,66 @@
               <!-- Thêm các input để lưu min và max price -->
               <!-- Lọc theo giá -->
               <div class="filter-col4 p-r-15 p-b-27">
-                <div class="mtext-102 cl2 p-b-15">Price</div>
+                <div class="mtext-102 cl2 p-b-15">Giá Tiền</div>
                 <ul>
                   <li
                     class="p-b-6"
-                    ng-class="{'active': isPriceSelected('0', '50')}"
+                    ng-class="{'active': isPriceSelected('0', '150000')}"
                   >
                     <a
                       href="#"
                       class="filter-link stext-106 trans-04"
-                      ng-click="fetchShirtsByFilter('0', '50')"
+                      ng-click="fetchShirtsByFilter('0', '150000')"
                     >
-                      $0.00 - $50.00
+                      0.00 - 150.000 VND
                     </a>
                   </li>
                   <li
                     class="p-b-6"
-                    ng-class="{'active': isPriceSelected('50', '100')}"
+                    ng-class="{'active': isPriceSelected('150000', '300000')}"
                   >
                     <a
                       href="#"
                       class="filter-link stext-106 trans-04"
-                      ng-click="fetchShirtsByFilter('50', '100')"
+                      ng-click="fetchShirtsByFilter('150000', '300000')"
                     >
-                      $50.00 - $100.00
+                      150.000 - 300.000 VND
                     </a>
                   </li>
                   <li
                     class="p-b-6"
-                    ng-class="{'active': isPriceSelected('100', '150')}"
+                    ng-class="{'active': isPriceSelected('300000', '500000')}"
                   >
                     <a
                       href="#"
                       class="filter-link stext-106 trans-04"
-                      ng-click="fetchShirtsByFilter('100', '150')"
+                      ng-click="fetchShirtsByFilter('300000', '500000')"
                     >
-                      $100.00 - $150.00
+                      300.000 - 500.000 VND
                     </a>
                   </li>
                   <li
                     class="p-b-6"
-                    ng-class="{'active': isPriceSelected('150', '200')}"
+                    ng-class="{'active': isPriceSelected('500000', '1000000')}"
                   >
                     <a
                       href="#"
                       class="filter-link stext-106 trans-04"
-                      ng-click="fetchShirtsByFilter('150', '200')"
+                      ng-click="fetchShirtsByFilter('500000', '1000000')"
                     >
-                      $150.00 - $200.00
+                      500.000 - 1000.000 VND
                     </a>
                   </li>
                   <li
                     class="p-b-6"
-                    ng-class="{'active': isPriceSelected('200', 'max')}"
+                    ng-class="{'active': isPriceSelected('1000000', 'max')}"
                   >
                     <a
                       href="#"
                       class="filter-link stext-106 trans-04"
-                      ng-click="fetchShirtsByFilter('200', 'max')"
+                      ng-click="fetchShirtsByFilter('1000000', 'max')"
                     >
-                      $200.00+
+                      1000.000+
                     </a>
                   </li>
                 </ul>
@@ -608,7 +608,7 @@
 
               <!-- Lọc theo màu -->
               <div class="filter-col4 p-r-15 p-b-27">
-                <div class="mtext-102 cl2 p-b-15">Color</div>
+                <div class="mtext-102 cl2 p-b-15">Màu Sắc</div>
 
                 <ul>
                   <li
@@ -638,7 +638,7 @@
 
               <!-- Lọc theo size -->
               <div class="filter-col1 p-r-15 p-b-27">
-                <div class="mtext-102 cl2 p-b-15">Size</div>
+                <div class="mtext-102 cl2 p-b-15">Kích Cỡ</div>
 
                 <ul>
                   <li
@@ -668,8 +668,9 @@
             <!-- Block2 -->
             <div class="block2">
               <div class="block2-pic hov-img0">
+
                 <img ng-src="{{shirt.image}}" alt="{{shirt.nameShirt}}"  ng-click="viewDetails2(shirt.codeShirt)"
-                >
+
 
                 <a ng-click="viewDetails(shirt.codeShirt)"
                 class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
@@ -1228,6 +1229,54 @@
           ps.update();
         });
       });
+    </script>
+    <script>
+      const token = sessionStorage.getItem("jwtToken");
+      const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      };
+      const userCode = sessionStorage.getItem("userCode");
+      async function miniCart() {
+        const response = await fetch("http://localhost:8080/cart/get-all-cart-details?codeAccount=" + userCode, {
+          method: 'GET',
+          headers: headers // Thêm headers vào yêu cầu
+        });
+  
+        const data = await response.json();
+  
+        const cartItemsContainer = document.querySelector('.header-cart-wrapitem');
+        cartItemsContainer.innerHTML = ''; // Xóa các phần tử cũ trong giỏ hàng
+  
+        // Duyệt qua danh sách các món hàng và thêm vào HTML
+        let total = 0;
+        console.log(data);
+        data.forEach(item => {
+          const itemElement = document.createElement('li');
+          itemElement.classList.add('header-cart-item', 'flex-w', 'flex-t', 'm-b-12');
+          itemElement.innerHTML = `
+                  <div class="header-cart-item-img">
+                      <img src="${item.shirtDetail.image}" alt="IMG">
+                  </div>
+                  <div class="header-cart-item-txt p-t-8">
+                      <a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">${item.shirtDetail.shirt.nameshirt}</a>
+                      <span class="header-cart-item-info">${item.quantity} x ${item.shirtDetail.price} VNĐ</span>
+                  </div>
+              `;
+          cartItemsContainer.appendChild(itemElement);
+  
+          total += item.quantity * item.shirtDetail.price;
+        });
+  
+        // Cập nhật tổng giá trị giỏ hàng
+        const totalElement = document.querySelector('.header-cart-total');
+        totalElement.innerHTML = `Tổng tiền: ${total} VNĐ`;
+  
+      }
+  
+      window.onload = function () {
+        miniCart()
+      }
     </script>
     <!--===============================================================================================-->
     <script src="js/main.js"></script>

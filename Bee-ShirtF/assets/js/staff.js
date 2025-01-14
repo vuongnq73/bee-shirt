@@ -38,7 +38,6 @@ angular
         email: "",
         username: "",
         pass: "",
-        address: "",
         avatarFile: null, // File ảnh đại diện từ input
         role: [],
       };
@@ -47,7 +46,7 @@ angular
       $scope.totalPages = 0;
       $scope.pageSize = 5; // Số lượng nhân viên trên mỗi trang
 
-      $scope.availableRoles = ["ADMIN", "STAFF", "USER"]; // Danh sách role có sẵn
+      $scope.availableRoles = ["ADMIN", "STAFF"]; // Danh sách role có sẵn
 
       //set role
       function getHighestRole(scopes) {

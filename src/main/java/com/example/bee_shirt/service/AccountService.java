@@ -4,15 +4,18 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.bee_shirt.dto.request.AccountCreationRequest;
 import com.example.bee_shirt.dto.request.AccountUpdateRequest;
+import com.example.bee_shirt.dto.request.DeliveryAddressRequest;
 import com.example.bee_shirt.dto.response.AccountResponse;
 import com.example.bee_shirt.entity.Account;
 import com.example.bee_shirt.entity.Cart;
+import com.example.bee_shirt.entity.DeliveryAddressGiang;
 import com.example.bee_shirt.entity.Role;
 import com.example.bee_shirt.exception.AppException;
 import com.example.bee_shirt.exception.ErrorCode;
 import com.example.bee_shirt.mapper.AccountMapper;
 import com.example.bee_shirt.repository.AccountRepository;
 import com.example.bee_shirt.repository.CartRepository;
+import com.example.bee_shirt.repository.DeliveryAddressGiangRepository;
 import com.example.bee_shirt.repository.RoleRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +44,7 @@ public class AccountService {
     RoleRepository roleRepository;
     Cloudinary cloudinary;
     CartRepository cartRepository;
+    DeliveryAddressGiangRepository deliveryAddressGiangRepository;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
@@ -109,7 +113,7 @@ public class AccountService {
         return accountMapper.toUserResponse(accountRepository.save(account));
     }
 
-    public AccountResponse createAccount(AccountCreationRequest request, boolean isAdmin) {
+    public AccountResponse createAccount(AccountCreationRequest request, boolean isAdmin, DeliveryAddressRequest deliveryAddressRequest) {
         validateUsername(request.getUsername());
 
         validateEmail(request.getEmail());
@@ -139,6 +143,22 @@ public class AccountService {
 
         System.out.println(addAccount.getRole());
 
+        DeliveryAddressGiang deliveryAddressGiang = new DeliveryAddressGiang();
+        deliveryAddressGiang.setAccount(addAccount);
+        deliveryAddressGiang.setDeliveryAddressCode(this.generateAddressCode());
+        deliveryAddressGiang.setDetailAddress(deliveryAddressRequest.getDetailAddress());
+        deliveryAddressGiang.setDistrict(deliveryAddressRequest.getDistrict());
+        deliveryAddressGiang.setDeleted(false);
+        deliveryAddressGiang.setDistrictId(deliveryAddressRequest.getDistrictId());
+        deliveryAddressGiang.setProvinceId(deliveryAddressRequest.getProvinceId());
+        deliveryAddressGiang.setProvince(deliveryAddressRequest.getProvince());
+        deliveryAddressGiang.setWard(deliveryAddressRequest.getWard());
+        deliveryAddressGiang.setWardId(deliveryAddressRequest.getWardId());
+        deliveryAddressGiang.setPhone(request.getPhone());
+        deliveryAddressGiang.setName(request.getLastName());
+        deliveryAddressGiangRepository.save(deliveryAddressGiang);
+
+
         //Tạo giỏ hàng cho account
         if (hasUserRole(getRolesFromRequest(request.getRole()))) {
             String cartCode = generateCartCode();
@@ -164,8 +184,19 @@ public class AccountService {
         return false;
     }
 
+    public  DeliveryAddressGiang findAllByAccountCode(String code){
+        Account account = accountRepository.findByCode(code)
+                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
 
-    public AccountResponse updateAccount(AccountUpdateRequest request, String code) {
+        DeliveryAddressGiang addressGiang = deliveryAddressGiangRepository.findByAccountId(account.getId());
+
+        if(addressGiang == null){
+            throw new AppException(ErrorCode.ADDRESS_NOT_FOUND);
+        }
+        return addressGiang;
+    }
+
+    public AccountResponse updateAccount(AccountUpdateRequest request, String code,DeliveryAddressRequest deliveryAddressRequest) {
 
         Account account = accountRepository.findByCode(code)
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
@@ -187,7 +218,7 @@ public class AccountService {
             }
             account.setEmail(request.getEmail());
         }
-     
+
         if (request.getStatus() != null) {
             account.setStatus(request.getStatus());
         }
@@ -209,6 +240,24 @@ public class AccountService {
 
         account.setUpdateBy(this.getMyInfo().getCode());
         account.setUpdateAt(LocalDate.now());
+
+        DeliveryAddressGiang addressGiang = deliveryAddressGiangRepository.findByAccountId(account.getId());
+
+        if(addressGiang == null){
+            throw new AppException(ErrorCode.ADDRESS_NOT_FOUND);
+        }
+
+        addressGiang.setAccount(account);
+        addressGiang.setDetailAddress(deliveryAddressRequest.getDetailAddress());
+        addressGiang.setDistrict(deliveryAddressRequest.getDistrict());
+        addressGiang.setDistrictId(deliveryAddressRequest.getDistrictId());
+        addressGiang.setProvinceId(deliveryAddressRequest.getProvinceId());
+        addressGiang.setProvince(deliveryAddressRequest.getProvince());
+        addressGiang.setWard(deliveryAddressRequest.getWard());
+        addressGiang.setWardId(deliveryAddressRequest.getWardId());
+        addressGiang.setPhone(account.getPhone());
+        addressGiang.setName(account.getLastName());
+        deliveryAddressGiangRepository.save(addressGiang);
 
         return accountMapper.toUserResponse(accountRepository.save(account));
     }
@@ -265,6 +314,20 @@ public class AccountService {
             return prefix + (number + 1);
         } else {
             return "ACC1";
+        }
+    }
+
+    private String generateAddressCode() {
+        String lastCode = Optional.ofNullable(deliveryAddressGiangRepository.getTop1())
+                .map(DeliveryAddressGiang::getDeliveryAddressCode)
+                .orElse("ADDRESS0");
+
+        if (lastCode.length() > 7) {
+            String prefix = lastCode.substring(0, 7);
+            int number = Integer.parseInt(lastCode.substring(7));
+            return prefix + (number + 1);
+        } else {
+            return "ADDRESS1";
         }
     }
 

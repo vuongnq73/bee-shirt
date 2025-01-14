@@ -51,13 +51,6 @@ public class AuthenticationController {
                 .build();
 
     }
-    @PostMapping("/send-verification-code")
-    public ApiResponse<String> sendVerificationCode(@RequestBody Map<String, String> payload) {
-        String email = payload.get("email");
-        return ApiResponse.<String>builder()
-                .result(sendEmailService.sendVerificationCode(email))
-                .build();
-    }
 
     @PostMapping("/verify-code")
     public ApiResponse<String> verifyVerificationCode(@RequestParam String email, @RequestParam String token) {
