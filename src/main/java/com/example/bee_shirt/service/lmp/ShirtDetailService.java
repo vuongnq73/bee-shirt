@@ -493,5 +493,10 @@ public class ShirtDetailService {
     public void updateQuantityByCodeBill(String codeBill) {
         shirtDetailRepository.updateQuantityByCodeBill(codeBill);
     }
+//Kểm tra số lwuongj sẩn phâ có ở triong kho
+public List<Object[]> getShirtDetailsByBillCode(String codeBill) {
+    return shirtDetailRepository.findShirtDetailsByBillCode(codeBill);
+}
+
 }
 
