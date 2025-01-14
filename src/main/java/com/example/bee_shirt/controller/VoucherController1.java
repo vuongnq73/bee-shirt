@@ -98,38 +98,10 @@ public class VoucherController1 {
         // Khi gửi yêu cầu, code_voucher sẽ tự động được tạo ra ở phía server.
         return voucherService.saveVoucher(voucher);
     }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<Voucher1> updateVoucher(@PathVariable Long id, @RequestBody Voucher1 voucherDetails) {
-        // Tìm voucher theo ID
-        Optional<Voucher1> voucherOpt = voucherService.getVoucherById(id);
-
-        if (voucherOpt.isPresent()) {
-            // Lấy voucher cũ từ cơ sở dữ liệu
-            Voucher1 existingVoucher = voucherOpt.get();
-
-            // Cập nhật các trường của voucher
-            existingVoucher.setCode_voucher(voucherDetails.getCode_voucher());
-            existingVoucher.setName_voucher(voucherDetails.getName_voucher());
-            existingVoucher.setType_voucher(voucherDetails.getType_voucher());
-            existingVoucher.setDiscount_value(voucherDetails.getDiscount_value());
-            existingVoucher.setQuantity(voucherDetails.getQuantity());
-            existingVoucher.setMin_bill_value(voucherDetails.getMin_bill_value());
-            existingVoucher.setMaximum_discount(voucherDetails.getMaximum_discount());
-            existingVoucher.setStartdate(voucherDetails.getStartdate());
-            existingVoucher.setEnddate(voucherDetails.getEnddate());
-            existingVoucher.setStatus_voucher(voucherDetails.getStatus_voucher());
-            existingVoucher.setDescription_voucher(voucherDetails.getDescription_voucher());
-            existingVoucher.setUpdateAt(voucherDetails.getUpdateAt());
-
-            // Lưu voucher đã cập nhật
-            Voucher1 updatedVoucher = voucherService.saveVoucher(existingVoucher);
-
-            // Trả về voucher đã cập nhật
-            return ResponseEntity.ok(updatedVoucher);
-        }
-
-        // Nếu không tìm thấy voucher, trả về lỗi 404
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.ok(voucherService.updateVoucher(voucherDetails,id));
     }
 
 

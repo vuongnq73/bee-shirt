@@ -49,7 +49,7 @@ public class Voucher1 {
     @Column(name = "enddate")
     private LocalDateTime enddate;
     public LocalDateTime getEnddate() {
-        return enddate == null ? LocalDateTime.MAX : enddate;  // Trả về ngày tối đa nếu enddate là null
+        return enddate == null ? LocalDateTime.now() : enddate;  // Trả về ngày tối đa nếu enddate là null
     }
     @Column(name = "status_voucher")
     private int status_voucher;

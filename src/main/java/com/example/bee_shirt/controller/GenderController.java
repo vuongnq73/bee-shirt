@@ -24,10 +24,8 @@ public class GenderController {
     // Hiển thị danh sách Gender với phân trang 5 phần tử
     @GetMapping("/list")
     public ResponseEntity<List<Gender>> getAllBrands() {
-
         List<Gender> categories = genderRepository.findAll(); // Lấy tất cả các danh mục
         return ResponseEntity.ok(categories);
-
     }
 
     // Thêm Gender
