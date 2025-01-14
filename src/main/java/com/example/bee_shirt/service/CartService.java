@@ -228,10 +228,10 @@ public class CartService {
         bill2.setStatusBill(1);
         bill2.setUpdateAt(LocalDate.now());
         bill2.setNote("None");
-        if (voucher != null) {
-            voucher.setQuantity(voucher.getQuantity() - 1);
-            voucherRepository.save(voucher);
-        }
+//        if (voucher != null) {
+//            voucher.setQuantity(voucher.getQuantity() - 1);
+//            voucherRepository.save(voucher);
+//        }
 //        if (address != null) {
 //            bill2.setCustomerName((String) address.get("name"));
 //            bill2.setPhoneNumber((String) address.get("phone"));
