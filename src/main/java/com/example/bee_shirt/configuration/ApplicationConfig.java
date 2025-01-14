@@ -90,7 +90,6 @@ public class ApplicationConfig {
                         .phone("0000000000")
                         .firstName("khach")
                         .lastName("vanglai")
-                        .address("khong")
                         .createBy("ad")
                         .createAt(LocalDate.now())
                         .updateBy("ad")

@@ -179,14 +179,18 @@ app.controller('categoryController', ['$scope', 'categoryService', function($sco
 
     // Kiểm tra có ít nhất một ký tự là chữ (bao gồm ký tự tiếng Việt)
     const regex = /[a-zA-Zàáạảãạâầấẩẫàáăắằẳẵắâầçćèéêẹẻẽìíîĩìíòóôỗốồỏỏồúùûủũưứừửữùủỳýỹỵý]/;
-    if (!regex.test(trimmedName)) {
-        alert("Tên danh mục phải có ít nhất một ký tự là chữ!");
+    // Kiểm tra độ dài tên
+    if (categoryName.length > 250) {
+        alert("Tên danh mục không được quá 250 ký tự!");
         return;
     }
-
     // Kiểm tra độ dài tên
-    if (categoryName.length > 120) {
-        alert("Tên danh mục không được quá 120 ký tự!");
+    if (categoryName.length < 10) {
+        alert("Tên danh mục phải lớn hơn 10 kí tự");
+        return;
+    }
+    if (!regex.test(trimmedName)) {
+        alert("Tên danh mục phải có ít nhất một ký tự là chữ!");
         return;
     }
 

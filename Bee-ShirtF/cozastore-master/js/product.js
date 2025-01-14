@@ -31,8 +31,8 @@ angular.module("productApp", []).controller("ProductController", [
           if (response.data && response.data.code === 1000) {
             $scope.shirtDetails = response.data.result;
             // Giới hạn chỉ hiển thị 8 sản phẩm
+            
             $scope.filteredShirtList = $scope.shirtDetails.slice(0, 8);
-
             // Gọi API để lấy tổng số sản phẩm
             $http
               .get("http://localhost:8080/homepage/countall")
@@ -272,37 +272,7 @@ angular.module("productApp", []).controller("ProductController", [
       $scope.fetchShirtsByFilter(null, null, null, null, null, null);
     };
 
-    $scope.logout = function () {
-      // Lấy token từ sessionStorage
-      const token = sessionStorage.getItem("jwtToken");
-      if (!token) {
-        alert("Không tìm thấy token, vui lòng đăng nhập lại.");
-        window.location.href = "/assets/account/login.html";
-        return;
-      }
 
-      // Tạo payload cho API logout
-      const logoutRequest = {
-        token: token, // Gửi token của người dùng hiện tại
-      };
-
-      // Gửi yêu cầu logout đến backend
-      $http
-        .post("http://localhost:8080/auth/logout", logoutRequest)
-        .then(function (response) {
-          // Xóa token khỏi sessionStorage
-          sessionStorage.removeItem("jwtToken");
-
-          // Chuyển hướng về trang đăng nhập
-          alert("Đăng xuất thành công!");
-          window.location.href = "/assets/account/login.html";
-        })
-        .catch(function (error) {
-          // Xử lý lỗi khi không logout được
-          console.error("Lỗi khi đăng xuất:", error);
-          alert("Có lỗi xảy ra khi đăng xuất. Vui lòng thử lại!");
-        });
-    };
 
     // Hàm kiểm tra xem giá đã chọn có phải là giá này không
     $scope.isPriceSelected = function (min, max) {
@@ -414,6 +384,38 @@ angular.module("productApp", []).controller("ProductController", [
           console.error("Error while fetching gender data:", error);
           $scope.errorMessage =
             "An error occurred. Please check the console for more details.";
+        });
+    };
+    
+    $scope.logout = function () {
+      // Lấy token từ sessionStorage
+      const token = sessionStorage.getItem("jwtToken");
+      if (!token) {
+        alert("Không tìm thấy token, vui lòng đăng nhập lại.");
+        window.location.href = "/assets/account/login.html";
+        return;
+      }
+
+      // Tạo payload cho API logout
+      const logoutRequest = {
+        token: token, // Gửi token của người dùng hiện tại
+      };
+
+      // Gửi yêu cầu logout đến backend
+      $http
+        .post("http://localhost:8080/auth/logout", logoutRequest)
+        .then(function (response) {
+          // Xóa token khỏi sessionStorage
+          sessionStorage.removeItem("jwtToken");
+
+          // Chuyển hướng về trang đăng nhập
+          alert("Đăng xuất thành công!");
+          window.location.href = "/assets/account/login.html";
+        })
+        .catch(function (error) {
+          // Xử lý lỗi khi không logout được
+          console.error("Lỗi khi đăng xuất:", error);
+          alert("Có lỗi xảy ra khi đăng xuất. Vui lòng thử lại!");
         });
     };
 

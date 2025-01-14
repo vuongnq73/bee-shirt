@@ -123,7 +123,7 @@ public class ShirtDetailService {
             // Gán các giá trị từ DTO vào entity
             shirtDetail.setQuantity(dto.getQuantity());
             shirtDetail.setPrice(dto.getPrice());
-            shirtDetail.setStatusshirtdetail(dto.getStatusshirtdetail());
+            shirtDetail.setStatusshirtdetail(1);
             shirtDetail.setCreateBy(dto.getCreateBy());
             shirtDetail.setCreateAt(dto.getCreateAt());
             shirtDetail.setUpdateBy(dto.getUpdateBy());
@@ -493,5 +493,10 @@ public class ShirtDetailService {
     public void updateQuantityByCodeBill(String codeBill) {
         shirtDetailRepository.updateQuantityByCodeBill(codeBill);
     }
+//Kểm tra số lwuongj sẩn phâ có ở triong kho
+public List<Object[]> getShirtDetailsByBillCode(String codeBill) {
+    return shirtDetailRepository.findShirtDetailsByBillCode(codeBill);
+}
+
 }
 
