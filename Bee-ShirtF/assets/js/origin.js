@@ -152,6 +152,7 @@ app.controller('originController', ['$scope', 'originService', function($scope, 
         }
     };
 
+    
     $scope.goToPage = function(page) {
         if (page >= 0 && page < $scope.totalPages) {
             $scope.paginate(page);

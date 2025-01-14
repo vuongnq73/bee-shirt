@@ -210,6 +210,7 @@ $scope.goToPage = function(page) {
         });
     };
     
+    
     // Edit a color
     $scope.editColor = function(color) {
         $scope.color = angular.copy(color);

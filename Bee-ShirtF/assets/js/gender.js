@@ -313,7 +313,7 @@ app.controller('genderController', ['$scope', 'genderService', function($scope, 
             alert("Có lỗi xảy ra khi cập nhật gender.");
         });
     };
-    
+
 
     $scope.deleteGender = function(codeGender) {
         $scope.genderToDelete = codeGender;
@@ -328,6 +328,7 @@ app.controller('genderController', ['$scope', 'genderService', function($scope, 
             alert("Có lỗi xảy ra khi xóa gender.");
         });
 
+        
         // Đóng modal xác nhận
         $('#confirmDeleteModal').modal('hide');
     };
