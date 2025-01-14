@@ -110,7 +110,10 @@ public List<Voucher1> findByDateRange(LocalDateTime batdau, LocalDateTime ketthu
         if (voucher.getEnddate() != null) {
             voucher.setEnddate(voucher.getEnddate().atZone(ZoneOffset.ofHours(-7)).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime());
         }
-
+        if (voucher.getType_voucher().equals("Amount") ) {
+            voucher.setMaximum_discount(voucher.getDiscount_value());
+        }
+        voucher.setStatus_voucher(1);
         // Lưu đối tượng voucher vào cơ sở dữ liệu
         return voucherRepository.save(voucher);
     }

@@ -23,7 +23,7 @@ public class DeliveryAddressRequest {
     Integer districtId;
 
 
-    Integer wardId;
+    String wardId;
 
 
     String province;

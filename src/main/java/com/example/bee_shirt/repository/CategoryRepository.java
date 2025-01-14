@@ -6,12 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
-
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
-    // Truy vấn danh mục không bị xóa
-    List<Category> findAll();
+    @Query("SELECT c.codeCategory, c.nameCategory, c.statusCategory FROM Category c WHERE c.deleted = false")
+    Page<Category> findAllCategory(Pageable pageable);
 
     Category findByCodeCategory(String codeCategory);
 

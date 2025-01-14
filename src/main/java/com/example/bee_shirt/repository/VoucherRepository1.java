@@ -45,7 +45,7 @@ public interface VoucherRepository1 extends JpaRepository<Voucher1, Long> {
     Optional<Voucher1> findVoucherByCode(String query);
 
 
-    @Query("SELECT v FROM Voucher1 v WHERE v.min_bill_value < :money AND v.quantity > 0 AND v.status_voucher = 1 AND CURRENT_DATE >= v.startdate AND CURRENT_DATE <=v.enddate")
-    List<Voucher1> findAvailableVoucher(Integer money);
+    @Query("SELECT v FROM Voucher1 v WHERE v.min_bill_value < :money AND v.quantity > 0 AND v.status_voucher = 1 AND :now >= v.startdate AND :now <=v.enddate")
+    List<Voucher1> findAvailableVoucher(Integer money, LocalDateTime now);
 
 }

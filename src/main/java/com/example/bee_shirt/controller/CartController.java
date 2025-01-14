@@ -85,13 +85,16 @@ public class CartController {
         String accCode = (String) addressData.get("accCode");
         Integer idProvince = Integer.parseInt(addressData.get("idProvince").toString());
         Integer idDistrict = Integer.parseInt(addressData.get("idDistrict").toString());
-        Integer idWard = Integer.parseInt(addressData.get("idWard").toString());
+        String idWard = (String) addressData.get("idWard");
 //        Integer idDistrict = (Integer) addressData.get("idDistrict");
 //        Integer idWard = (Integer) addressData.get("idWard");
+        String province2 = (String) addressData.get("province2");
+        String district2 = (String) addressData.get("district2");
+        String ward2 = (String) addressData.get("ward2");
         String name = (String) addressData.get("name");
         String phone = (String) addressData.get("phone");
         String detailAddress = (String) addressData.get("detailAddress");
-        return cartService.createDeliveryAddress(accCode, idProvince, idDistrict, idWard, name, phone, detailAddress);
+        return cartService.createDeliveryAddress(accCode, idProvince, idDistrict, idWard, name, phone, detailAddress,province2, district2, ward2);
     }
 
     @PostMapping("/checkout")

@@ -20,10 +20,12 @@ public class BrandController {
     @Autowired
     private BrandRepository brandRepository;
 
+    // Hiển thị danh sách Brand với phân trang 5 phần tử
     @GetMapping("/list")
-    public ResponseEntity<List<Brand>> getAllBrands() {
-        List<Brand> categories = brandRepository.findAll(); // Lấy tất cả các danh mục
-        return ResponseEntity.ok(categories);
+    public ResponseEntity<Page<Brand>> getBrands(@RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 5);
+        Page<Brand> brands = brandRepository.findAll(pageable);
+        return ResponseEntity.ok(brands);
     }
 
     // Thêm Brand
