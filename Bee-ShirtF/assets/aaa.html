@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Upload</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-controller="ProductController">
+
+    <div>
+        <h2>Upload Product Image</h2>
+
+        <!-- Form Upload -->
+        <form id="productForm" ng-submit="addProduct()">
+            <label for="fileInput">Choose Image:</label>
+            <input type="file" id="fileInput" ng-model="product.file" />
+            <br><br>
+            <button type="submit">Add Product</button>
+        </form>
+
+        <div id="responseMessage" style="margin-top: 20px;">
+            <p ng-if="responseMessage" ng-bind="responseMessage"></p>
+        </div>
+    </div>
+
+    <script>
+        angular.module('app', []).controller('ProductController', function($scope, $http) {
+            // Hàm gửi tệp lên backend
+            $scope.addProduct = function() {
+    var file = document.getElementById("fileInput").files[0];
+    
+    // Kiểm tra nếu không có tệp
+    if (!file) {
+        $scope.responseMessage = "Please select a file.";
+        return;
+    }
+
+    var formData = new FormData();
+    formData.append("file", file);
+
+    // Gửi POST request với FormData
+    $http.post('http://localhost:8080/api/products/add', formData, {
+        headers: {
+            'Content-Type': undefined // Quan trọng để trình duyệt tự động thiết lập Content-Type
+        },
+        transformRequest: angular.identity
+    }).then(function(response) {
+        $scope.responseMessage = "File uploaded successfully!";
+    }, function(error) {
+        $scope.responseMessage = "Error uploading file: " + error.data;
+    });
+};
+
+        });
+    </script>
+
+</body>
+</html>

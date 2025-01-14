@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Hóa Đơn - Bee-Shirt</title>
+  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+  <link rel="icon" href="../assets/img/kaiadmin/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+  <!-- Example: Ensure AngularJS is included only once -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="../assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+  <script src="../assets/js/kaiadmin.min.js"></script>
+  
+  <style>
+    #basic-datatables2 {
+      width: 100% !important;
+      /* Ghi đè bất kỳ giá trị nào từ thư viện */
+    }
+
+    #basic-datatables1 {
+      width: 100% !important;
+      /* Ghi đè bất kỳ giá trị nào từ thư viện */
+    }
+
+    #basic-datatables3 {
+      width: 100% !important;
+      /* Ghi đè bất kỳ giá trị nào từ thư viện */
+    }
+  </style>
+
+  <!-- Fonts and icons -->
+  <script src="../assets/js/plugin/webfont/webfont.min.js"></script>
+  <script>
+    WebFont.load({
+      google: { families: ["Public Sans:300,400,500,600,700"] },
+      custom: {
+        families: [
+          "Font Awesome 5 Solid",
+          "Font Awesome 5 Regular",
+          "Font Awesome 5 Brands",
+          "simple-line-icons",
+        ],
+        urls: ["../assets/css/fonts.min.css"],
+      },
+      active: function () {
+        sessionStorage.fonts = true;
+      },
+    });
+  </script>
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="../assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="../assets/css/plugins.min.css" />
+  <link rel="stylesheet" href="../assets/css/kaiadmin.min.css" />
+
+  <!-- CSS Just for demo purpose, don't include it in your project -->
+  <link rel="stylesheet" href="../assets/css/demo.css" />
+</head>
+
+<body ng-app="billApp" ng-controller="BillController">
+  <div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar" data-background-color="dark">
+      <div class="sidebar-logo">
+        <!-- Logo Header -->
+        <div class="logo-header" data-background-color="dark">
+          <a href="/assets/BanHang.html" class="logo">
+            <img src="/assets/img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="40" />
+          </a>
+          <div class="nav-toggle">
+            <button class="btn btn-toggle toggle-sidebar">
+              <i class="gg-menu-right"></i>
+            </button>
+            <button class="btn btn-toggle sidenav-toggler">
+              <i class="gg-menu-left"></i>
+            </button>
+          </div>
+          <button class="topbar-toggler more">
+            <i class="gg-more-vertical-alt"></i>
+          </button>
+        </div>
+        <!-- End Logo Header -->
+      </div>
+      <div class="sidebar-wrapper scrollbar scrollbar-inner">
+        <div class="sidebar-content">
+          <ul class="nav nav-secondary">
+            <li class="nav-item">
+              <a href="BanHang.html" class="collapsed" aria-expanded="false">
+                <i class="fas fa-home"></i>
+                <p>Bán Hàng</p>
+              </a>
+            </li>
+            <li class="nav-section">
+              <span class="sidebar-mini-icon">
+                <i class="fa fa-ellipsis-h"></i>
+              </span>
+            </li>
+            <li class="nav-item">
+              <a data-bs-toggle="collapse" href="#">
+                <i class="fas fa-layer-group"></i>
+                <p>Quản Lý</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/assets/Voucher.html">
+                <i class="fas fa-ticket-alt"></i>
+                <p>Voucher</p>
+              </a>
+
+            </li>
+            <li class="nav-item active submenu">
+              <a href="/assets/Bill.html">
+                <i class="fas fa-pen-square"></i>
+                <span class="sub-item">Hóa Đơn</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a data-bs-toggle="collapse" href="#tables">
+                <i class="fas fa-table"></i>
+                <p>Sản Phẩm</p>
+                <span class="caret"></span>
+              </a>
+              <div class="collapse" id="tables">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a href="Products.html">
+                      <span class="sub-item">Danh Sách Sản Phẩm</span>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="ProductDetail.html">
+                      <span class="sub-item">Danh Sách Sản Phẩm Chi Tiết</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="Category.html">
+                      <span class="sub-item">Danh Sách Thuộc Tính<span>
+                    </a>
+                  </li>
+
+                </ul>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a data-bs-toggle="collapse" href="#account">
+                <i class="fas fa-user"></i>
+                <p>Account</p>
+                <span class="caret"></span>
+              </a>
+              <div class="collapse" id="account">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a href="staff/Staff.html">
+                      <span class="sub-item">Nhân Viên</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <span class="sub-item">Khách Hàng</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a href="statistic.html">
+                <i class="far fa-chart-bar"></i>
+                <p>Thống Kê</p>
+
+              </a>
+              <!-- <div class="collapse" id="charts">
+                  <ul class="nav nav-collapse">
+                    <li>
+                      <a href="charts/charts.html">
+                        <span class="sub-item">Chart Js</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="charts/sparkline.html">
+                        <span class="sub-item">Sparkline</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div> -->
+            </li>
+
+
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- End Sidebar -->
+
+    <div class="main-panel">
+      <div class="main-header">
+        <div class="main-header-logo">
+          <!-- Logo Header -->
+          <div class="logo-header" data-background-color="dark">
+            <a href="../statistic.html" class="logo">
+              <img src="../assets/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20" />
+            </a>
+            <div class="nav-toggle">
+              <button class="btn btn-toggle toggle-sidebar">
+                <i class="gg-menu-right"></i>
+              </button>
+              <button class="btn btn-toggle sidenav-toggler">
+                <i class="gg-menu-left"></i>
+              </button>
+            </div>
+            <button class="topbar-toggler more">
+              <i class="gg-more-vertical-alt"></i>
+            </button>
+          </div>
+          <!-- End Logo Header -->
+        </div>
+        <!-- Navbar Header -->
+        <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+          <div class="container-fluid">
+            <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+              <li class="nav-item topbar-user dropdown hidden-caret" ng-if="myProfile">
+                <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
+                  <div class="avatar-sm">
+                    <!-- Hiển thị avatar của người dùng hoặc ảnh mặc định -->
+                    <img ng-src="{{ myProfile.avatar }}" alt="..." class="avatar-img rounded-circle" />
+                  </div>
+                  <span class="profile-username">
+                    <span class="op-7">Hi,</span>
+                    <span class="fw-bold">{{ myProfile.firstName }}</span> <!-- Hiển thị tên người dùng -->
+                  </span>
+                </a>
+                <ul class="dropdown-menu dropdown-user animated fadeIn">
+                  <div class="dropdown-user-scroll scrollbar-outer">
+                    <li ng-if="myProfile"> <!-- Ngăn lỗi nếu myProfile chưa tải xong -->
+                      <div class="user-box">
+                        <div class="avatar-lg">
+                          <img ng-src="{{ myProfile.avatar }}" alt="image profile" class="avatar-img rounded" />
+                        </div>
+                        <div class="u-text">
+                          <h4>{{ myProfile.firstName }} {{ myProfile.lastName }}</h4>
+                          <p class="text-muted">{{ myProfile.email }}</p>
+                          <a href="/assets/staff/Profile.html" ng-click="viewProfile()"
+                            class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="/assets/account/login.html" ng-click="logout()">Logout</a>
+                    </li>
+                  </div>
+                </ul>
+              </li>
+
+            </ul>
+          </div>
+        </nav>
+        <!-- End Navbar -->
+      </div>
+
+      <div class="container">
+        <div class="page-inner">
+          <div class="page-header">
+            <h3 class="fw-bold mb-3">Hóa Đơn</h3>
+            <ul class="breadcrumbs mb-3">
+              <li class="nav-home">
+                <a href="/statistic.html">
+                  <i class="fas fa-layer-group"></i>
+                </a>
+              </li>
+              <li class="separator">
+                <i class="icon-arrow-right"></i>
+              </li>
+              <li class="nav-item">
+                <a href="/assets/Bill.html">Hóa Đơn</a>
+              </li>
+
+            </ul>
+            <div class="ms-md-auto py-2 py-md-0">
+              <!-- <a href="#" class="btn btn-label-info btn-round me-2">Quản Lý</a> -->
+              <a href="BanHang.html" class="btn btn-primary btn-round">Thêm Hóa Đơn</a>
+            </div>
+          </div>
+          <!-- tab -->
+          <ul class="nav nav-tabs" id="group1" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="tab1-1" data-bs-toggle="tab" data-bs-target="#content1-1"
+                type="button" role="tab" aria-controls="content1-1" aria-selected="true"> Chờ Xử Lý</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="tab1-2" data-bs-toggle="tab" data-bs-target="#content1-2" type="button"
+                role="tab" aria-controls="content1-2" aria-selected="false">Đã Hoàn Tất</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="tab2-3" data-bs-toggle="tab" data-bs-target="#content2-3" type="button"
+                role="tab" aria-controls="content2-3" aria-selected="false">Đã Hủy </button>
+            </li>
+          </ul>
+          <div class="tab-content" id="group1Content">
+            <div class="tab-pane fade show active" id="content1-1" role="tabpanel" aria-labelledby="tab1-1">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card">
+                    <div class="card-header">
+                      <h4 class="card-title">Danh Sách Hóa Đơn</h4>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <div
+                          style="display: flex; align-items: center; gap: 5px; font-size: 0.9em; margin-bottom: 10px;">
+                          <label for="startDateTab1" style="margin-right: 5px;">Từ ngày:</label>
+                          <input type="date" id="startDateTab1" ng-model="startDateTab1" class="form-control"
+                            style="width: 150px; padding: 2px 5px;" />
+                          <label for="endDateTab1" style="margin-left: 10px; margin-right: 5px;">Đến ngày:</label>
+                          <input type="date" id="endDateTab1" ng-model="endDateTab1" class="form-control"
+                            style="width: 150px; padding: 2px 5px;" />
+                          <button ng-click="applyDateFilterTab1()" class="btn btn-primary"
+                            style="padding: 3px 10px; font-size: 0.9em;">
+                            Lọc
+                          </button>
+                        </div>
+
+                        <table id="basic-datatables1" class="display table table-striped table-hover">
+                          <thead>
+                            <tr>
+                              <th>STT</th>
+                              <th>Mã Hóa Đơn</th>
+                              <th>Tên Khách Hàng</th>
+                              <th>SĐT</th>
+                              <th>Loại Hóa Đơn</th>
+                              <th>Ngày Thanh Toán</th>
+                              <th>Hình Thức Thanh Toán</th>
+                              <th>Tổng Tiền</th>
+                              <th>Trạng Thái</th>
+                              <!-- <th>Ghi Chú</th> -->
+
+                            </tr>
+                          </thead>
+                          <tbody>
+                          </tbody>
+                        </table>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- trang hai  -->
+            <div class="tab-pane fade" id="content1-2" role="tabpanel" aria-labelledby="tab1-2">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card">
+                    <div class="card-header">
+                      <h4 class="card-title">Danh Sách Hóa Đơn</h4>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <div
+                          style="display: flex; align-items: center; gap: 5px; font-size: 0.9em; margin-bottom: 10px;">
+                          <label for="startDateTab2" style="margin-right: 5px;">Từ ngày:</label>
+                          <input type="date" id="startDateTab2" ng-model="startDateTab2" class="form-control"
+                            style="width: 150px; padding: 2px 5px;" />
+                          <label for="endDateTab1" style="margin-left: 10px; margin-right: 5px;">Đến ngày:</label>
+                          <input type="date" id="endDateTab2" ng-model="endDateTab2" class="form-control"
+                            style="width: 150px; padding: 2px 5px;" />
+                          <button ng-click="applyDateFilterTab2()" class="btn btn-primary"
+                            style="padding: 3px 10px; font-size: 0.9em;">
+                            Lọc
+                          </button>
+                        </div>
+                        <table id="basic-datatables2" class="display table table-striped table-hover">
+                          <thead>
+                            <tr>
+                              <th>STT</th>
+                              <th>Mã Hóa Đơn</th>
+                              <th>Tên Khách Hàng</th>
+                              <th>SĐT</th>
+                              <th>Loại Hóa Đơn</th>
+                              <th>Ngày Thanh Toán</th>
+                              <th>Hình Thức Thanh Toán</th>
+                              <th>Tổng Tiền</th>
+                              <th>Trạng Thái</th>
+                              <!-- <th>Ghi Chú</th> -->
+
+
+                            </tr>
+                          </thead>
+                          <tbody>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- trang 3 -->
+            <div class="tab-pane fade" id="content2-3" role="tabpanel" aria-labelledby="tab2-3">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card">
+                    <div class="card-header">
+                      <h4 class="card-title">Danh Sách Hóa Đơn</h4>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <div
+                        style="display: flex; align-items: center; gap: 5px; font-size: 0.9em; margin-bottom: 10px;">
+                        <label for="startDateTab3" style="margin-right: 5px;">Từ ngày:</label>
+                        <input type="date" id="startDateTab3" ng-model="startDateTab3" class="form-control"
+                          style="width: 150px; padding: 2px 5px;" />
+                        <label for="endDateTab3" style="margin-left: 10px; margin-right: 5px;">Đến ngày:</label>
+                        <input type="date" id="endDateTab3" ng-model="endDateTab3" class="form-control"
+                          style="width: 150px; padding: 2px 5px;" />
+                        <button ng-click="applyDateFilterTab3()" class="btn btn-primary"
+                          style="padding: 3px 10px; font-size: 0.9em;">
+                          Lọc
+                        </button>
+                      </div>
+                        <table id="basic-datatables3" class="display table table-striped table-hover">
+                          <thead>
+                            <tr>
+                              <th>STT</th>
+                              <th>Mã Hóa Đơn</th>
+                              <th>Tên Khách Hàng</th>
+                              <th>SĐT</th>
+                              <th>Loại Hóa Đơn</th>
+                              <th>Ngày Thanh Toán</th>
+                              <th>Hình Thức Thanh Toán</th>
+                              <th>Tổng Tiền</th>
+                              <th>Trạng Thái</th>
+                              <!-- <th>Ghi Chú</th> -->
+                            </tr>
+                          </thead>
+                          <tbody>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+          <!-- end tab -->
+        </div>
+      </div>
+
+
+    </div>
+
+    <!-- Custom template | don't include it in your project! -->
+    <div class="custom-template">
+      <div class="title">Settings</div>
+      <div class="custom-content">
+        <div class="switcher">
+          <div class="switch-block">
+            <h4>Logo Header</h4>
+            <div class="btnSwitch">
+              <button type="button" class="selected changeLogoHeaderColor" data-color="dark"></button>
+              <button type="button" class="selected changeLogoHeaderColor" data-color="blue"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="purple"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="light-blue"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="green"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="orange"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="red"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="white"></button>
+              <br />
+              <button type="button" class="changeLogoHeaderColor" data-color="dark2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="blue2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="purple2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="light-blue2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="green2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="orange2"></button>
+              <button type="button" class="changeLogoHeaderColor" data-color="red2"></button>
+            </div>
+          </div>
+          <div class="switch-block">
+            <h4>Navbar Header</h4>
+            <div class="btnSwitch">
+              <button type="button" class="changeTopBarColor" data-color="dark"></button>
+              <button type="button" class="changeTopBarColor" data-color="blue"></button>
+              <button type="button" class="changeTopBarColor" data-color="purple"></button>
+              <button type="button" class="changeTopBarColor" data-color="light-blue"></button>
+              <button type="button" class="changeTopBarColor" data-color="green"></button>
+              <button type="button" class="changeTopBarColor" data-color="orange"></button>
+              <button type="button" class="changeTopBarColor" data-color="red"></button>
+              <button type="button" class="changeTopBarColor" data-color="white"></button>
+              <br />
+              <button type="button" class="changeTopBarColor" data-color="dark2"></button>
+              <button type="button" class="selected changeTopBarColor" data-color="blue2"></button>
+              <button type="button" class="changeTopBarColor" data-color="purple2"></button>
+              <button type="button" class="changeTopBarColor" data-color="light-blue2"></button>
+              <button type="button" class="changeTopBarColor" data-color="green2"></button>
+              <button type="button" class="changeTopBarColor" data-color="orange2"></button>
+              <button type="button" class="changeTopBarColor" data-color="red2"></button>
+            </div>
+          </div>
+          <div class="switch-block">
+            <h4>Sidebar</h4>
+            <div class="btnSwitch">
+              <button type="button" class="selected changeSideBarColor" data-color="white"></button>
+              <button type="button" class="changeSideBarColor" data-color="dark"></button>
+              <button type="button" class="changeSideBarColor" data-color="dark2"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="custom-toggle">
+        <i class="icon-settings"></i>
+      </div>
+    </div>
+    <!-- End Custom template -->
+  </div>
+  <!--   Core JS Files   -->
+  <!-- <script src="/assets/js/core/jquery-3.7.1.min.js"></script> -->
+  <script src="../assets/js/core/popper.min.js"></script>
+  <script src="../assets/js/core/bootstrap.min.js"></script>
+  <!-- <script src="/assets/js/kaiadmin.min.js"></script> -->
+
+
+  <!-- jQuery Scrollbar -->
+  <!-- <script src="../assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script> -->
+
+
+  <!-- Datatables -->
+  <script src="../assets/js/plugin/datatables/datatables.min.js"></script>
+  <!-- Kaiadmin JS -->
+  <script src="../assets/js/kaiadmin.min.js"></script>
+  <!-- Kaiadmin DEMO methods, don't include it in your project! -->
+  <script src="../assets/js/setting-demo2.js"></script>
+
+
+  <!-- //cdn -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+  <!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
+  <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+  <!-- dataTable -->
+  <script>
+    // Định nghĩa module AngularJS
+    angular.module("billApp", [])
+      .controller("BillController", function ($scope, $timeout, $window) {
+        // Hàm định dạng ngày tháng
+        $scope.formatDate = function (date) {
+          if (!date) return ""; // Nếu không có ngày, trả về chuỗi trống
+          const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+          return new Date(date).toLocaleDateString("vi-VN", options);
+        };
+
+        $scope.loadDataOrder = function (url, tableId) {
+  const token = sessionStorage.getItem("jwtToken");
+
+  if (!token) {
+    alert("Bạn cần đăng nhập để tải dữ liệu.");
+    return;
+  }
+
+  $.ajax({
+    type: "GET",
+    url: url,
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+    success: function (response) {
+      console.log(`Phản hồi từ server (${url}):`, response);
+
+      // Kiểm tra cấu trúc dữ liệu nhận được
+      if (!response || !response.result) {
+        alert("Dữ liệu không hợp lệ, không có trường 'result'.");
+        console.log('Dữ liệu trả về không có trường "result":', response);
+        return;
+      }
+
+      if (!Array.isArray(response.result)) {
+        alert("Trường 'result' không phải là mảng.");
+        console.log('Trường "result" không phải là mảng:', response.result);
+        return;
+      }
+
+      // if (response.result.length === 0) {
+      //   // alert("Không có dữ liệu.");
+      //   console.log('Dữ liệu trả về là mảng rỗng:', response.result);
+      //   return;
+      // }
+
+      // Dữ liệu hợp lệ, tiếp tục xử lý
+      const ordersData = response.result.map((order, index) => ({
+        stt: index + 1,
+        codeBill: order.codeBill || 'không có',
+        customerName: order.customerName || 'không có',
+        phoneNumber: order.phoneNumber || 'không có',
+        typeBill: order.typeBill || 'không có',
+        createAt: $scope.formatDate(order.createAt),
+        paymentMethod: order.namePaymentMethod || 'không có',
+        totalMoney: (order.totalMoney || 0).toLocaleString("vi-VN", { style: "currency", currency: "VND" }),
+        statusBill: `
+          <span class="status-text text-${order.statusBill === 5 ? "success"
+                    : order.statusBill === 1 ? "primary"
+                      : order.statusBill === 7 ? "danger"
+                        : "primary"}">
+            ${order.statusBill === 6 ? "Hoàn Tất"
+                    : order.statusBill === 1 ? "Chờ Xử Lý"
+                      : order.statusBill === 2 ? "Đã Xác Nhận"
+                        : order.statusBill === 3 ? "Chờ Giao Hàng"
+                          : order.statusBill === 4 ? "Đang Giao Hàng"
+                            : order.statusBill === 5 ? "Đã Thanh Toán"
+                              : order.statusBill === 7 ? "Đã Hủy"
+                                : "Không Xác Định"}
+          </span>
+        `,
+        note : order.note ||'Không có',
+      }));
+
+      console.log('Mapped Orders:', ordersData);
+
+      // Xóa dữ liệu cũ của DataTable nếu đã khởi tạo
+      if ($.fn.DataTable.isDataTable(tableId)) {
+        $(tableId).DataTable().clear().destroy();
+      }
+
+      // Tái khởi tạo lại DataTable với dữ liệu mới
+      $timeout(() => {
+        $scope.initializeDataTable(tableId, ordersData);
+      }, 0);
+    },
+    error: function () {
+      alert("Không thể tải dữ liệu hóa đơn. Vui lòng thử lại sau.");
+    },
+  });
+};
+
+        // Hàm khởi tạo DataTable
+        $scope.initializeDataTable = function (tableId, ordersData) {
+          $(tableId).DataTable({
+            paging: true,
+            searching: true,
+            ordering: true,
+            pageLength: 5,
+            data: ordersData,  // Dữ liệu mới được truyền vào
+            columns: [
+              { title: "STT", data: "stt" },
+              { title: "Mã Hóa Đơn", data: "codeBill" },
+              { title: "Tên Khách Hàng", data: "customerName" },
+              { title: "SĐT", data: "phoneNumber" },
+              { title: "Loại Hóa Đơn", data: "typeBill" },
+              { title: "Ngày Tạo HĐ", data: "createAt" },
+              { title: "Hình Thức Thanh Toán", data: "paymentMethod" },
+              { title: "Tổng Tiền", data: "totalMoney" },
+              { title: "Trạng Thái", data: "statusBill", orderable: false },
+              // { title: "Ghi Chú", data: "note" },
+
+            ],
+            language: {
+              search: "Tìm kiếm:",
+              lengthMenu: "Hiện _MENU_ mục",
+              info: "Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ mục",
+              paginate: {
+                first: "Đầu",
+                last: "Cuối",
+                next: "Tiếp",
+                previous: "Trước",
+              },
+            },
+          });
+
+          // Xử lý sự kiện click vào dòng của DataTable
+          $(tableId + " tbody").on("click", "tr", function () {
+            const rowData = $(tableId).DataTable().row(this).data();
+            const codeBill = rowData.codeBill;
+
+            if (rowData.typeBill === "Online") {
+              window.location.href = `/assets/BillDetailTimeLine.html?codeBill=${encodeURIComponent(codeBill)}`;
+            } else if (rowData.typeBill === "In-Store") {
+              window.location.href = `/assets/BillDetail.html?codeBill=${encodeURIComponent(codeBill)}`;
+            } else {
+              alert("Loại hóa đơn không xác định. Không thể chuyển hướng.");
+            }
+          });
+        };
+
+        // Hàm lấy thông tin tài khoản
+        $scope.getMyProfile = function () {
+          const token = sessionStorage.getItem("jwtToken");
+
+          if (!token) {
+            alert("Bạn cần đăng nhập để xem thông tin cá nhân.");
+            return;
+          }
+
+          $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/admin/myProfile",
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+            success: function (response) {
+              if (response && response.result) {
+                $scope.myProfile = response.result;
+                $scope.$apply();
+              } else {
+                alert("Không thể lấy thông tin người dùng.");
+              }
+            },
+            error: function () {
+              alert("Có lỗi xảy ra khi lấy thông tin người dùng.");
+            },
+          });
+        };
+        // 
+        $scope.applyDateFilterTab1 = function () {
+          if (!$scope.startDateTab1 || !$scope.endDateTab1) {
+            alert("Vui lòng chọn cả ngày bắt đầu và ngày kết thúc cho Tab 1.");
+            return;
+          }
+
+          const formattedStartDate = new Date($scope.startDateTab1).toISOString();
+          const formattedEndDate = new Date($scope.endDateTab1).toISOString();
+
+          const url = `http://localhost:8080/bills/date-range?startDate=${encodeURIComponent(formattedStartDate)}&endDate=${encodeURIComponent(formattedEndDate)}`;
+
+          // Xóa dữ liệu cũ của bảng Tab 1
+          const tableId = "#basic-datatables1"; // Corrected ID for Tab 1
+          if ($.fn.DataTable.isDataTable(tableId)) {
+            $(tableId).DataTable().clear().draw();
+          }
+
+          $scope.loadDataOrder(url, tableId);
+        };
+
+        $scope.applyDateFilterTab2 = function () {
+          if (!$scope.startDateTab2 || !$scope.endDateTab2) {
+            alert("Vui lòng chọn cả ngày bắt đầu và ngày kết thúc cho Tab 2.");
+            return;
+          }
+
+          const formattedStartDate = new Date($scope.startDateTab2).toISOString();
+          const formattedEndDate = new Date($scope.endDateTab2).toISOString();
+
+          const url = `http://localhost:8080/bills/date-range2?startDate=${encodeURIComponent(formattedStartDate)}&endDate=${encodeURIComponent(formattedEndDate)}`;
+          
+          // Xóa dữ liệu cũ của bảng Tab 2
+          const tableId = "#basic-datatables2";
+          if ($.fn.DataTable.isDataTable(tableId)) {
+            $(tableId).DataTable().clear().draw();
+          }
+
+          $scope.loadDataOrder(url, tableId);
+        };
+
+        // Tương tự cho Tab 3
+        $scope.applyDateFilterTab3 = function () {
+          if (!$scope.startDateTab3 || !$scope.endDateTab3) {
+            alert("Vui lòng chọn cả ngày bắt đầu và ngày kết thúc cho Tab 3.");
+            return;
+          }
+
+          const formattedStartDate = new Date($scope.startDateTab3).toISOString();
+          const formattedEndDate = new Date($scope.endDateTab3).toISOString();
+
+          const url = `http://localhost:8080/bills/date-range3?startDate=${encodeURIComponent(formattedStartDate)}&endDate=${encodeURIComponent(formattedEndDate)}`;
+          
+
+          // Xóa dữ liệu cũ của bảng Tab 3
+          const tableId = "#basic-datatables3";
+          if ($.fn.DataTable.isDataTable(tableId)) {
+            $(tableId).DataTable().clear().draw();
+          }
+
+          $scope.loadDataOrder(url, tableId);
+        };
+
+        // Khi tài liệu sẵn sàng
+        angular.element(document).ready(function () {
+          $scope.getMyProfile();
+          $scope.loadDataOrder("http://localhost:8080/bills/list", "#basic-datatables2");
+          $scope.loadDataOrder("http://localhost:8080/bills/list2", "#basic-datatables1");
+          $scope.loadDataOrder("http://localhost:8080/bills/list3", "#basic-datatables3");
+
+          // Tự động tải lại dữ liệu mỗi 10 giây
+          setInterval(function () {
+            // $scope.loadDataOrder("http://localhost:8080/bills/list", "#basic-datatables");
+            // $scope.loadDataOrder("http://localhost:8080/bills/list2", "#basic-datatables2");
+            // $scope.loadDataOrder("http://localhost:8080/bills/list3", "#basic-datatables3");
+          }, 1000); // 10000ms = 10 giây
+        });
+      });
+
+      $(document).ready(function () {
+  console.log('jQuery version:', $().jquery); // Kiểm tra phiên bản jQuery
+  console.log('Scrollbar Plugin:', typeof $.fn.scrollbar); // Kiểm tra plugin scrollbar
+
+  if ($.fn.scrollbar) {
+    console.log('Plugin Scrollbar đã được tải.');
+    $('.scrollbar-inner').scrollbar();
+  } else {
+    console.error('Plugin Scrollbar chưa được tải.');
+  }
+});
+
+  </script>
+</body>
+
+</html>
