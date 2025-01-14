@@ -31,10 +31,16 @@ public class DeliveryAddress {
     private Integer idDistrict;
 
     @Column(name = "id_ward", nullable = false)
-    private Integer idWard;
+    private String idWard;
 
     @Column(name = "name", nullable = false)
     private String name;
+    @Column(name = "province", nullable = false)
+    private String province;
+    @Column(name = "district", nullable = false)
+    private String district;
+    @Column(name = "ward", nullable = false)
+    private String ward;
 
     @Column(name = "phone", nullable = false)
     private String phone;
