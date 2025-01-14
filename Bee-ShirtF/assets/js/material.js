@@ -188,30 +188,30 @@ app.controller('materialController', ['$scope', 'materialService', function($sco
         }
 
         if (materialName.length > 250) {
-            alert("Tên material không được quá 250 ký tự!");
+            alert("Tên chất liệu không được quá 250 ký tự!");
             return;
         }
 
         const trimmedName = materialName.trim();
         if (trimmedName.length === 0) {
-            alert("Tên material không được chỉ chứa khoảng trắng!");
+            alert("Tên chất liệu không được chỉ chứa khoảng trắng!");
             return;
         }
 
         const containsNumberRegex = /[0-9]/;
         if (containsNumberRegex.test(trimmedName)) {
-            alert("Tên material không được chứa số!");
+            alert("Tên chất liệu không được chứa số!");
             return;
         }
         const specialCharAndNumberRegex = /[0-9@#$%^&*()_+={}[\]:;"'<>,.?/\\|~`!]/;
         if (specialCharAndNumberRegex.test(trimmedName)) {
-            alert("Tên danh mục không được chứa ký tự đặc biệt!");
+            alert("Tên chất liệu không được chứa ký tự đặc biệt!");
             return;
         }
 
 
         if ($scope.materials.some(m => m.nameMaterial === $scope.newMaterial.nameMaterial)) {
-            alert("Tên material này đã tồn tại!");
+            alert("Tên chất liệu này đã tồn tại!");
             return;
         }
 
@@ -219,8 +219,10 @@ app.controller('materialController', ['$scope', 'materialService', function($sco
             alert("Thêm material thành công!");
             $('#addMaterialModal').modal('hide');
             $scope.getMaterials();
+            location.reload();
+
         }).catch(function() {
-            alert("Có lỗi xảy ra khi thêm material.");
+            alert("Có lỗi xảy ra khi thêm chất liệu.");
         });
     };
 
@@ -228,24 +230,24 @@ app.controller('materialController', ['$scope', 'materialService', function($sco
         const materialName = $scope.material.nameMaterial;
 
         if (!materialName || materialName.trim() === "") {
-            alert("Tên material không được để trống!");
+            alert("Tên chất liệu không được để trống!");
             return;
         }
 
         if (materialName.length > 250) {
-            alert("Tên material không được quá 250 ký tự!");
+            alert("Tên chất liệu không được quá 250 ký tự!");
             return;
         }
 
         const trimmedName = materialName.trim();
         if (trimmedName.length === 0) {
-            alert("Tên material không được chỉ chứa khoảng trắng!");
+            alert("Tên chất liệu không được chỉ chứa khoảng trắng!");
             return;
         }
 
         const containsNumberRegex = /[0-9]/;
         if (containsNumberRegex.test(trimmedName)) {
-            alert("Tên material không được chứa số!");
+            alert("Tên chất liệu không được chứa số!");
             return;
         }
         const specialCharAndNumberRegex = /[0-9@#$%^&*()_+={}[\]:;"'<>,.?/\\|~`!]/;
@@ -254,13 +256,16 @@ app.controller('materialController', ['$scope', 'materialService', function($sco
             return;
         }
         
+        if (confirm('Bạn có chắc chắn muốn sửa chất liệu này không?')) {
 
         materialService.updateMaterial($scope.material.codeMaterial, $scope.material).then(function() {
-            alert("Cập nhật material thành công!");
+            alert("Cập nhật chất liệu thành công!");
             $('#editMaterialModal').modal('hide');
             $scope.getMaterials();
+            location.reload();
+
         }).catch(function() {
-            alert("Có lỗi xảy ra khi cập nhật material.");
+            alert("Có lỗi xảy ra khi cập nhật chất liệu.");
         });
     };
 
@@ -271,14 +276,15 @@ app.controller('materialController', ['$scope', 'materialService', function($sco
 
     $scope.confirmDeleteMaterial = function() {
         materialService.deleteMaterial($scope.materialToDelete).then(function() {
-            alert("Xóa material thành công!");
+            alert("Xóa chất liệu thành công!");
             $scope.getMaterials();
         }).catch(function() {
-            alert("Có lỗi xảy ra khi xóa material.");
+            alert("Có lỗi xảy ra khi xóa chất liệu.");
         });
 
         $('#confirmDeleteModal').modal('hide');
     };
-
+}
     $scope.getMaterials();
+    
 }]);

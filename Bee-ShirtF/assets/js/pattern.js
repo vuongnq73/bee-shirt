@@ -251,7 +251,7 @@ app.controller('patternController', ['$scope', 'patternService', function($scope
             return; // Dừng lại nếu tên hoặc mã đã tồn tại
         }
     
-        if (confirm("Bạn có chắc chắn muốn thêm mẫu này?")) {
+        if (confirm("Bạn có chắc chắn muốn thêm mẫu áo này?")) {
             patternService.addPattern($scope.newPattern).then(function(response) {
                 alert("Thêm mẫu thành công!");
                 $scope.getPatterns($scope.currentPage);
@@ -290,7 +290,7 @@ app.controller('patternController', ['$scope', 'patternService', function($scope
     
         const specialCharAndNumberRegex = /[0-9@#$%^&*()_+={}[\]:;"'<>,.?/\\|~`!]/;
             if (specialCharAndNumberRegex.test(trimmedName)) {
-                alert("Tên danh mục không được chứa ký tự đặc biệt!");
+                alert("Tên mẫu áo không được chứa ký tự đặc biệt!");
                 return;
             }
 

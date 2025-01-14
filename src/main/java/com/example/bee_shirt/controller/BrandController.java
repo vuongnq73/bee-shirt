@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/api/brands")
@@ -28,6 +29,7 @@ public class BrandController {
     // Thêm Brand
     @PostMapping("/add")
     public ResponseEntity<Brand> addBrand(@RequestBody Brand brand) {
+        brand.setCodeBrand(generateOriginCode());
         Brand savedBrand = brandRepository.save(brand);
         return ResponseEntity.ok(savedBrand);
     }
@@ -65,5 +67,10 @@ public class BrandController {
         Brand brand = brandRepository.findByCodeBrand(codeBrand);
         return ResponseEntity.ok(brand);
     }
-
+    // Hàm tạo mã ngẫu nhiên cho Origin
+    private String generateOriginCode() {
+        Random random = new Random();
+        int randomCode = random.nextInt(100000);  // Sinh số ngẫu nhiên trong phạm vi từ 0 - 99999
+        return "B" + String.format("%05d", randomCode);  // Đảm bảo mã luôn có 5 chữ số
+    }
 }

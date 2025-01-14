@@ -215,32 +215,32 @@ app.controller('brandController', ['$scope', 'brandService', function($scope, br
 
         // Kiểm tra nếu tên trống hoặc chỉ chứa khoảng trắng
         if (!brandName || brandName.trim() === "") {
-            alert("Tên brand không được để trống!");
+            alert("Tên thương hiệu không được để trống!");
             return;
         }
 
         // Kiểm tra độ dài tên
         if (brandName.length > 250) {
-            alert("Tên brand không được quá 250 ký tự!");
+            alert("Tên thương hiệu không được quá 250 ký tự!");
             return;
         }
 
         // Kiểm tra tên không chỉ chứa khoảng trắng
         const trimmedName = brandName.trim();
         if (trimmedName.length === 0) {
-            alert("Tên brand không được chỉ chứa khoảng trắng!");
+            alert("Tên thương hiệu không được chỉ chứa khoảng trắng!");
             return;
         }
 
         const containsNumberRegex = /[0-9]/;
             if (containsNumberRegex.test(trimmedName)) {
-                alert("Tên danh mục không được chứa số!");
+                alert("Tên thương hiệu không được chứa số!");
                 return;
             }
 
             const specialCharAndNumberRegex = /[0-9@#$%^&*()_+={}[\]:;"'<>,.?/\\|~`!]/;
             if (specialCharAndNumberRegex.test(trimmedName)) {
-                alert("Tên danh mục không được chứa ký tự đặc biệt!");
+                alert("Tên thương hiệu không được chứa ký tự đặc biệt!");
                 return;
             }
 
@@ -250,23 +250,18 @@ app.controller('brandController', ['$scope', 'brandService', function($scope, br
         });
 
         if (isDuplicate) {
-            alert("Tên brand này đã tồn tại!");
+            alert("Tên thương hiệu này đã tồn tại!");
             return; // Dừng lại nếu tên đã tồn tại
-        }
-
-        // Kiểm tra nếu mã trống hoặc chỉ chứa khoảng trắng
-        if (!brandCode || brandCode.trim() === "") {
-            alert("Mã brand không được để trống!");
-            return;
         }
 
         // Gọi API thêm brand
         brandService.addBrand($scope.newBrand).then(function(response) {
-            alert("Thêm brand thành công!");
+            alert("Thêm thương hiệu thành công!");
             $scope.getBrands();
             $('#addBrandModal').modal('hide');
+            location.reload();
         }, function(error) {
-            alert("Có lỗi xảy ra khi thêm brand.");
+            alert("Có lỗi xảy ra khi thêm thương hiệu.");
         });
     };
 
@@ -276,32 +271,32 @@ app.controller('brandController', ['$scope', 'brandService', function($scope, br
 
         // Kiểm tra nếu tên trống hoặc chỉ chứa khoảng trắng
         if (!brandName || brandName.trim() === "") {
-            alert("Tên brand không được để trống!");
+            alert("Tên thương hiệu không được để trống!");
             return;
         }
 
         // Kiểm tra độ dài tên
         if (brandName.length > 250) {
-            alert("Tên brand không được quá 250 ký tự!");
+            alert("Tên thương hiệu không được quá 250 ký tự!");
             return;
         }
 
         // Kiểm tra tên không chỉ chứa khoảng trắng
         const trimmedName = brandName.trim();
         if (trimmedName.length === 0) {
-            alert("Tên brand không được chỉ chứa khoảng trắng!");
+            alert("Tên thương hiệu không được chỉ chứa khoảng trắng!");
             return;
         }
 
         const containsNumberRegex = /[0-9]/;
             if (containsNumberRegex.test(trimmedName)) {
-                alert("Tên danh mục không được chứa số!");
+                alert("Tên thương hiệu không được chứa số!");
                 return;
             }
 
             const specialCharAndNumberRegex = /[0-9@#$%^&*()_+={}[\]:;"'<>,.?/\\|~`!]/;
             if (specialCharAndNumberRegex.test(trimmedName)) {
-                alert("Tên danh mục không được chứa ký tự đặc biệt!");
+                alert("Tên thương hiệu không được chứa ký tự đặc biệt!");
                 return;
             }
         // Kiểm tra không trùng tên brand khi sửa
@@ -310,18 +305,18 @@ app.controller('brandController', ['$scope', 'brandService', function($scope, br
         });
 
         if (isDuplicate) {
-            alert("Tên brand này đã tồn tại!");
+            alert("Tên thương hiệu này đã tồn tại!");
             return; // Dừng lại nếu tên đã tồn tại
         }
 
-        if (confirm("Bạn có chắc chắn muốn sửa brand này?")) {
+        if (confirm("Bạn có chắc chắn muốn sửa thương hiệu này?")) {
             brandService.updateBrand($scope.brand.codeBrand, $scope.brand).then(function(response) {
-                alert("Sửa brand thành công!");
+                alert("Sửa thương hiệu thành công!");
                 $scope.getBrands($scope.currentPage);
                 $('#editBrandModal').modal('hide');
                 location.reload();
             }, function(error) {
-                alert("Có lỗi xảy ra khi sửa brand.");
+                alert("Có lỗi xảy ra khi sửa thương hiệu.");
             });
         }
     };
@@ -334,12 +329,12 @@ app.controller('brandController', ['$scope', 'brandService', function($scope, br
     $scope.confirmDeleteBrand = function() {
         if ($scope.brandToDelete) {
             brandService.deleteBrand($scope.brandToDelete).then(function(response) {
-                alert("Xóa brand thành công!");
+                alert("Xóa thương hiệu thành công!");
                 $scope.getBrands($scope.currentPage);
                 $scope.confirmDelete = false;
                 $('#deleteBrandModal').modal('hide');
             }, function(error) {
-                alert("Có lỗi xảy ra khi xóa brand.");
+                alert("Có lỗi xảy ra khi xóa thương hiệu.");
             });
         }
     };
