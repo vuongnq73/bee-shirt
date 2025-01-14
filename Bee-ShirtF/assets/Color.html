@@ -48,6 +48,7 @@
       },
     });
   </script>
+  
 
   <!-- CSS Files -->
   <link rel="stylesheet" href="css/bootstrap.min.css" />
@@ -147,7 +148,7 @@
             <li class="nav-item">
               <a data-bs-toggle="collapse" href="#account">
                 <i class="fas fa-user"></i>
-                <p>Tài Khoản</p>
+                <p>Account</p>
                 <span class="caret"></span>
               </a>
               <div class="collapse" id="account">
@@ -541,6 +542,7 @@
       <thead>
           <tr>
               <th>STT</th>
+              <th>Mã</th>
               <th>Màu Sắc</th>
               <th>
                   Tên Màu Sắc
@@ -552,16 +554,21 @@
           </tr>
       </thead>
       <tbody>
-          <tr ng-repeat="color in colors" ng-class="{'table-warning': $index % 2 === 1}">
-              <td>{{ $index + 1 }}</td>
+          <tr ng-repeat="color in currentPageItems" ng-class="{'table-warning': $index % 2 === 1}">
+            <td>{{ (currentPage * itemsPerPage) + $index + 1 }}</td>  <!-- Tính số thứ tự -->
+            <td>{{ color.codeColor }}</td>
+
               <td style="background-color: #{{ color.codeColor }};" >&nbsp;</td>
               <td>{{ color.nameColor }}</td>
               <td>
                   <button class="btn btn-warning btn-sm me-2" ng-click="editColor(color)" data-bs-toggle="modal" data-bs-target="#editColorModal" aria-label="Chỉnh sửa màu sắc">
-                      Sửa
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                      <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                      <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                  </svg>
                   </button>
                   <button class="btn btn-danger btn-sm" ng-click="deleteColor(color.codeColor)" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" aria-label="Xóa màu sắc">
-                      Xóa
+                    <i class="bi bi-trash3-fill"></i>
                   </button>
               </td>
           </tr>
@@ -570,24 +577,16 @@
 </div>
 
 <!-- Phân trang -->
-<div class="d-flex justify-content-center mt-4">
-  <ul class="pagination">
-      <li class="page-item" ng-disabled="currentPage === 0">
-          <button class="page-link" ng-click="goToPage(0)" aria-label="Trang đầu tiên">Đầu</button>
-      </li>
-      <li class="page-item" ng-disabled="currentPage === 0">
-          <button class="page-link" ng-click="goToPage(currentPage - 1)" aria-label="Trang trước đó">Trước</button>
-      </li>
-      <li class="page-item" ng-repeat="page in pages" ng-class="{'active': currentPage === page}">
-          <button class="page-link" ng-click="goToPage(page)" aria-label="Trang {{ page + 1 }}">{{ page + 1 }}</button>
-      </li>
-      <li class="page-item" ng-disabled="currentPage === totalPages - 1">
-          <button class="page-link" ng-click="goToPage(currentPage + 1)" aria-label="Trang tiếp theo">Tiếp</button>
-      </li>
-      <li class="page-item" ng-disabled="currentPage === totalPages - 1">
-          <button class="page-link" ng-click="goToPage(totalPages - 1)" aria-label="Trang cuối cùng">Cuối</button>
-      </li>
-  </ul>
+<div>
+  <button ng-disabled="currentPage === 0" ng-click="goToPage(currentPage - 1)">Trang trước</button>
+
+  <span ng-repeat="pageNumber in pages">
+      <button ng-click="goToPage(pageNumber)" ng-class="{'active': currentPage === pageNumber}">
+          {{ pageNumber + 1 }}
+      </button>
+  </span>
+
+  <button ng-disabled="currentPage === totalPages - 1" ng-click="goToPage(currentPage + 1)">Trang tiếp</button>
 </div>
 
           <!-- Nút Thêm Màu Sắc -->
@@ -650,7 +649,7 @@
                             <div style="position: relative;">
                               <!-- Div hiển thị màu sắc -->
                               <div ng-click="showColorPicker = true" 
-                                   style="background-color: {{color.codeColor}}; width: 50px; height: 50px; border: 1px solid #000; cursor: pointer;">
+                                   style="background-color: #{{color.codeColor}}; width: 50px; height: 50px; border: 1px solid #000; cursor: pointer;">
                               </div>
                           
                               <!-- Input ẩn, chỉ hiện khi click vào div -->

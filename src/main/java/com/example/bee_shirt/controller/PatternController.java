@@ -32,7 +32,7 @@ public class PatternController {
     @PostMapping("/add")
     public ResponseEntity<Pattern> addPattern(@RequestBody Pattern pattern) {
         String codeCategory = generatePatternCode();
-
+pattern.setStatusPattern(1);
         // Cập nhật mã codeCategory vào đối tượng Category
         pattern.setCodePattern(codeCategory);
 

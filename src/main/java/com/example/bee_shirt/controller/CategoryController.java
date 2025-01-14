@@ -33,7 +33,7 @@ public class CategoryController {
     @PostMapping("/add")
     public ResponseEntity<Category> addCategory(@RequestBody Category category) {
         String codeCategory = generateCategoryCode();
-
+        category.setStatusCategory(1);
         // Cập nhật mã codeCategory vào đối tượng Category
         category.setCodeCategory(codeCategory);
 
