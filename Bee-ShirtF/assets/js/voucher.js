@@ -291,7 +291,7 @@ angular.module("voucherApp", []).controller("voucherController1", [
         return;
       }
 
-      if ($scope.newVoucher.type_voucher === "%") {
+      if ($scope.newVoucher.type_voucher === "Số tiền") {
         $scope.newVoucher.maximum_discount = null; // Reset maximum_discount
       }
 
@@ -307,7 +307,7 @@ angular.module("voucherApp", []).controller("voucherController1", [
         $scope.errorMessage = "Giá trị hóa đơn tối thiểu phải lớn hơn 0!";
         return;
       }
-      if (newVoucher.type_voucher === "Số tiền") {
+      if (newVoucher.type_voucher === "%") {
         if (!newVoucher.maximum_discount || newVoucher.maximum_discount <= 0) {
           $scope.errorMessage = "Giảm giá tối đa phải lớn hơn 0!";
           return;
