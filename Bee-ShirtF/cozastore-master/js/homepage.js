@@ -698,6 +698,55 @@ $scope.addToCart = function(shirtDetailId) {
       addProductToCart($scope.cartId, shirtDetailId, token);
   }
 };
+const token = sessionStorage.getItem("jwtToken");
+      const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      };
+      const formatter = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }); // Định dạng VNĐ
+      const userCode = sessionStorage.getItem("userCode");
+      async function miniCart() {
+			const response = await fetch("http://localhost:8080/cart/get-all-cart-details?codeAccount=" + userCode, {
+				method: 'GET',
+				headers: headers // Thêm headers vào yêu cầu
+			});
+
+			const data = await response.json();
+
+			const cartItemsContainer = document.querySelector('.header-cart-wrapitem');
+			cartItemsContainer.innerHTML = ''; // Xóa các phần tử cũ trong giỏ hàng
+
+			// Duyệt qua danh sách các món hàng và thêm vào HTML
+			let total = 0;
+			let itemCount = 0; // Biến đếm số lượng món hàng
+
+			console.log(data);
+			data.forEach(item => {
+				const itemElement = document.createElement('li');
+				itemElement.classList.add('header-cart-item', 'flex-w', 'flex-t', 'm-b-12');
+				itemElement.innerHTML = `
+            <div class="header-cart-item-img">
+                <img src="${item.shirtDetail.image}" alt="IMG">
+            </div>
+            <div class="header-cart-item-txt p-t-8">
+                <a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">${item.shirtDetail.shirt.nameshirt}</a>
+                <span class="header-cart-item-info">${item.quantity} x ${formatter.format(item.shirtDetail.price)}</span>
+            </div>
+        `;
+				cartItemsContainer.appendChild(itemElement);
+
+				total += item.quantity * item.shirtDetail.price;
+				itemCount +=1; // Cộng dồn số lượng món hàng
+			});
+
+			// Cập nhật tổng giá trị giỏ hàng
+			const totalElement = document.querySelector('.header-cart-total');
+			totalElement.innerHTML = `Tổng tiền: ${formatter.format(total)}`;
+
+			// Cập nhật số lượng giỏ hàng (data-notify)
+			const cartIcon = document.getElementById('itemCount');
+			cartIcon.setAttribute('data-notify', itemCount); // Cập nhật thuộc tính data-notify với số lượng món hàng
+		}
 
 // Hàm phụ để thêm sản phẩm vào giỏ hàng
 function addProductToCart(cartId, shirtDetailId, token) {
@@ -710,6 +759,8 @@ function addProductToCart(cartId, shirtDetailId, token) {
       }
   })
   .then(function(response) {
+   miniCart();
+
       alert('Sản phẩm đã được thêm vào giỏ hàng!');
   })
   .catch(function(error) {

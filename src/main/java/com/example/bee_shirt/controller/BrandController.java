@@ -9,8 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/brands")
 @CrossOrigin(origins = "http://127.0.0.1:5500") // Cấu hình CORS cho endpoint này
@@ -19,10 +17,12 @@ public class BrandController {
     @Autowired
     private BrandRepository brandRepository;
 
+    // Hiển thị danh sách Brand với phân trang 5 phần tử
     @GetMapping("/list")
-    public ResponseEntity<List<Brand>> getAllBrands() {
-        List<Brand> categories = brandRepository.findAll(); // Lấy tất cả các danh mục
-        return ResponseEntity.ok(categories);
+    public ResponseEntity<Page<Brand>> getBrands(@RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 5);
+        Page<Brand> brands = brandRepository.findAll(pageable);
+        return ResponseEntity.ok(brands);
     }
 
     // Thêm Brand
