@@ -31,7 +31,7 @@ public class DeliveryAddressGiang {
     private Integer districtId;
 
     @Column(name = "id_ward")
-    private Integer wardId;
+    private String wardId;
 
     @Column(name = "province")
     private String province;
