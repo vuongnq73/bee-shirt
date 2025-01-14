@@ -133,7 +133,7 @@
             <li class="nav-item">
               <a data-bs-toggle="collapse" href="#account">
                 <i class="fas fa-user"></i>
-                <p>Account</p>
+                <p>Tài Khoản</p>
                 <span class="caret"></span>
               </a>
               <div class="collapse" id="account">
@@ -518,121 +518,151 @@
             </li>
             
           </ul>
-          <select ng-model="statusFilter" ng-change="filterByStatus(statusFilter)">
-            <option value="">Tất cả</option>
-            <option value="0">Không hoạt động</option>
-            <option value="1">Hoạt động</option>
-        </select>
-        
-        <button style="float: right;" class="btn btn-success" ng-click="openAddOriginModal()" data-bs-toggle="modal" data-bs-target="#addOriginModal">Thêm Nguồn Gốc Sản Phẩm</button>
-        <h2>Nguồn Gốc Sản Phẩm</h2>
-        
-        <!-- Bảng hiển thị danh sách Origin -->
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>STT</th>
-                    <th>Mã</th>
-                    <th>Nguồn Gốc 
+          <h2>Danh sách Xuất Xứ</h2>
+
+          <!-- Bảng hiển thị danh sách xuất xứ -->
+             <!-- Bảng hiển thị danh sách xuất xứ -->
+             <table class="table table-bordered">
+              <thead>
+                  <tr>
+                      <th >STT</th>
+                      <th>Mã
+                        
+                      </th>
+                      <th >Xuất Xứ
                         <button class="btn btn-link" ng-click="sortOrigins('nameOrigin')">
-                            <i class="bi bi-arrow-down-up"></i>
-                        </button>
-                    </th>
-                    <th>Trạng Thái</th>
-                    <th>Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="origin in currentPageItems">
-                    <td>{{ (currentPage * itemsPerPage) + $index + 1 }}</td>
-                    <td>{{ origin.codeOrigin }}</td>
-                    <td>{{ origin.nameOrigin }}</td>
-                    <td>{{ origin.statusOrigin == 1 ? 'Hoạt động' : 'Ngừng hoạt động' }}</td>
-                    <td>
-                        <button class="btn btn-warning" ng-click="editOrigin(origin)">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-                                <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-                                <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
-                            </svg>
-                        </button>
-                        <button class="btn btn-danger" ng-click="deleteOrigin(origin.codeOrigin)">
-                            <i class="bi bi-trash3-fill"></i>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <!-- Phân trang -->
-        <div>
-            <button ng-disabled="currentPage === 0" ng-click="goToPage(currentPage - 1)">Trang trước</button>
-            <span>Trang {{ currentPage + 1 }} trên {{ totalPages }}</span>
-            <button ng-disabled="currentPage === totalPages - 1" ng-click="goToPage(currentPage + 1)">Trang tiếp</button>
+                          <i class="bi bi-arrow-down-up"></i>
+                      </button>
+                      </th>
+                      <th>Trạng Thái
+                          
+                      </th>
+                      <th>Hành động</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr ng-repeat="origin in origins ">
+                      <td>{{ $index + 1 }}</td> <!-- Số thứ tự tự động -->
+                      <td>{{ origin.codeOrigin }}</td>
+                      <td>{{ origin.nameOrigin }}</td>
+                      <td>{{ origin.statusOrigin == 1 ? 'Active' : 'Inactive' }}</td>
+                      <td>
+                          <button class="btn btn-warning" ng-click="editOrigin(origin)">Xem Chi Tiết</button>
+                          <button class="btn btn-danger" ng-click="deleteOrigin(origin.codeOrigin)">Xóa</button>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+          <div class="d-flex justify-content-center mt-4">
+              <ul class="pagination">
+                  <!-- Nút Đầu -->
+                  <li class="page-item" ng-class="{'disabled': currentPage === 0}">
+                      <button class="page-link" ng-click="goToPage(0)">Đầu</button>
+                  </li>
+                  
+                  <!-- Nút Previous -->
+                  <li class="page-item" ng-class="{'disabled': currentPage === 0}">
+                      <button class="page-link" ng-click="goToPage(currentPage - 1)">Previous</button>
+                  </li>
+          
+                  <!-- Các trang giữa -->
+                  <li class="page-item" ng-repeat="page in pages" ng-class="{'active': currentPage === page}">
+                      <button class="page-link" ng-click="goToPage(page)">{{ page + 1 }}</button>
+                  </li>
+          
+                  <!-- Nút Next -->
+                  <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
+                      <button class="page-link" ng-click="goToPage(currentPage + 1)">Next</button>
+                  </li>
+          
+                  <!-- Nút Cuối -->
+                  <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
+                      <button class="page-link" ng-click="goToPage(totalPages - 1)">Cuối</button>
+                  </li>
+              </ul>
+          </div>
+  
+          <!-- Nút Mở Modal Thêm Xuất Xứ -->
+          <button class="btn btn-success" ng-click="openAddOriginModal()" data-bs-toggle="modal" data-bs-target="#addOriginModal">Thêm Xuất Xứ</button>
+  
+          <!-- Modal Thêm Xuất Xứ -->
+          <div class="modal fade" id="addOriginModal" tabindex="-1" aria-labelledby="addOriginModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="addOriginModalLabel">Thêm Xuất Xứ</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form ng-submit="saveNewOrigin()">
+                              <div class="mb-3">
+                                  <label for="codeOrigin" class="form-label">Mã Xuất Xứ:</label>
+                                  <input type="text" id="codeOrigin" ng-model="newOrigin.codeOrigin" class="form-control" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="nameOrigin" class="form-label">Tên Xuất Xứ:</label>
+                                  <input type="text" id="nameOrigin" ng-model="newOrigin.nameOrigin" class="form-control" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="statusOrigin" class="form-label">Trạng Thái:</label>
+                                  <div>
+                                      <label>
+                                          <input type="radio" ng-model="newOrigin.statusOrigin" value="1"> Active
+                                      </label>
+                                      <label>
+                                          <input type="radio" ng-model="newOrigin.statusOrigin" value="0"> Inactive
+                                      </label>
+                                  </div>
+                              </div>
+                              <div class="d-flex justify-content-end">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                  <button type="submit" class="btn btn-primary ms-2">Thêm Xuất Xứ</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+  
+          <!-- Modal Sửa Xuất Xứ -->
+          <div class="modal fade" id="editOriginModal" tabindex="-1" aria-labelledby="editOriginModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="editOriginModalLabel">Sửa Xuất Xứ</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form ng-submit="saveEditOrigin()">
+                              <div class="mb-3">
+                                  <label for="codeOrigin" class="form-label">Mã Xuất Xứ:</label>
+                                  <input type="text" id="codeOrigin" ng-model="origin.codeOrigin" class="form-control" disabled>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="nameOrigin" class="form-label">Tên Xuất Xứ:</label>
+                                  <input type="text" id="nameOrigin" ng-model="origin.nameOrigin" class="form-control" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="statusOrigin" class="form-label">Trạng Thái:</label>
+                                  <div>
+                                      <label>
+                                          <input type="radio" ng-model="origin.statusOrigin" value="1" ng-checked="origin.statusOrigin === 1"> Hoạt Động
+                                      </label>
+                                      <label>
+                                          <input type="radio" ng-model="origin.statusOrigin" value="0" ng-checked="origin.statusOrigin === 0"> Ngừng Hoạt Động
+                                      </label>
+                                  </div>
+                              </div>
+                              <div class="d-flex justify-content-end">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                  <button type="submit" class="btn btn-primary ms-2">Cập nhật Xuất Xứ</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
         </div>
-        
-        <!-- Modal Thêm Origin -->
-        <div class="modal fade" id="addOriginModal" tabindex="-1" aria-labelledby="addOriginModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addOriginModalLabel">Thêm Nguồn Gốc</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form ng-submit="saveNewOrigin()">
-                            <div class="mb-3">
-                                <label for="nameOrigin" class="form-label">Tên Nguồn Gốc:</label>
-                                <input type="text" id="nameOrigin" ng-model="newOrigin.nameOrigin" class="form-control" required>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                <button type="submit" class="btn btn-primary ms-2">Thêm Nguồn Gốc</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Modal Sửa Origin -->
-        <div class="modal fade" id="editOriginModal" tabindex="-1" aria-labelledby="editOriginModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editOriginModalLabel">Sửa Nguồn Gốc</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form ng-submit="saveEditOrigin()">
-                            <div class="mb-3">
-                                <label for="codeOrigin" class="form-label">Mã Nguồn Gốc:</label>
-                                <input type="text" id="codeOrigin" ng-model="origin.codeOrigin" class="form-control" disabled>
-                            </div>
-                            <div class="mb-3">
-                                <label for="nameOrigin" class="form-label">Tên Nguồn Gốc:</label>
-                                <input type="text" id="nameOrigin" ng-model="origin.nameOrigin" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="statusOrigin" class="form-label">Trạng Thái:</label>
-                                <div>
-                                    <label>
-                                        <input type="radio" ng-model="origin.statusOrigin" value="1" ng-checked="origin.statusOrigin === 1"> Hoạt Động
-                                    </label>
-                                    <label>
-                                        <input type="radio" ng-model="origin.statusOrigin" value="0" ng-checked="origin.statusOrigin === 0"> Ngừng Hoạt Động
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                <button type="submit" class="btn btn-primary ms-2">Cập nhật Nguồn Gốc</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
     </div>
 
    <!-- end container -->
