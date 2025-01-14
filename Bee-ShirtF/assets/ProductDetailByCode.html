@@ -867,28 +867,21 @@
             <label for="edit-season" class="col-form-label">Mùa</label>
             <select id="edit-season" ng-model="editingShirtDetail.seasonId" ng-options="season.id as season.nameSeason for season in seasons" required class="form-control"></select>
         </div>
-    </div>
-
-    <!-- Trạng Thái và Trạng Thái Xóa -->
-    <div class="row">
-        <div class="col-md-4 mb-3">
-            <label class="col-form-label">Trạng Thái:</label>
-            <div class="custom-radio">
-                <input type="radio" ng-model="editingShirtDetail.statusshirtdetail" value="0" ng-checked="editingShirtDetail.statusshirtdetail === 0"> Ngừng Bán
+        <div class="col-md-8 mb-6">
+          <label class="col-form-label">Trạng Thái:</label>
+          <div class="d-flex align-items-center">
+            <div class="form-check">
+              <input type="radio" class="form-check-input" ng-model="editingShirtDetail.statusshirtdetail" value="1" ng-checked="editingShirtDetail.statusshirtdetail === 1" id="statusSelling">
+              Đang hoạt động
             </div>
-            <div class="custom-radio">
-                <input type="radio" ng-model="editingShirtDetail.statusshirtdetail" value="1" ng-checked="editingShirtDetail.statusshirtdetail === 1"> Đang Bán
+            <div class="form-check ">
+              <input type="radio" class="form-check-input" ng-model="editingShirtDetail.statusshirtdetail" value="0" ng-checked="editingShirtDetail.statusshirtdetail === 0" id="statusStop">
+              Ngừng hoạt động
             </div>
+            
+          </div>
         </div>
-        <div class="col-md-4 mb-3">
-            <label class="col-form-label">Trạng Thái Xóa:</label>
-            <div class="custom-radio">
-                <input type="radio" ng-model="editingShirtDetail.deleted" value="false" ng-checked="editingShirtDetail.deleted === false"> Hoạt Động
-            </div>
-            <div class="custom-radio">
-                <input type="radio" ng-model="editingShirtDetail.deleted" value="true" ng-checked="editingShirtDetail.deleted === true"> Ngừng Hoạt Động
-            </div>
-        </div>
+        
     </div>
 
     <!-- Ảnh 1, Ảnh 2, Ảnh 3 -->
