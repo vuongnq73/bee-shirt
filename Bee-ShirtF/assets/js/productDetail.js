@@ -557,8 +557,10 @@ app.controller('ShirtDetailController', ['$scope', 'shirtDetailService', functio
                     }
                 }
             });
-    
+            if (confirm('Bạn có chắc chắn muốn thêm sản phẩm này không?')) {
+
             $scope.submitVariants(); // Gửi dữ liệu lên backend
+            }
         } else {
             console.log("Người dùng đã hủy hành động.");
         }
@@ -641,16 +643,18 @@ app.controller('ShirtDetailController', ['$scope', 'shirtDetailService', functio
         // Cập nhật trạng thái và đã xóa
         updateShirtDetailed.statusshirtdetail = updateShirtDetailed.statusshirtdetail;
         updateShirtDetailed.deleted = updateShirtDetailed.deleted;
-    
+        if (confirm('Bạn có chắc chắn muốn cập nhật sản phẩm này không?')) {
         // Gửi yêu cầu cập nhật chi tiết áo thun
         shirtDetailService.updateShirtDetail(updateShirtDetailed.codeShirtDetail, updateShirtDetailed).then(function() {
             // Sau khi cập nhật thành công, reset đối tượng đang sửa và tải lại danh sách
             $scope.editingShirtDetail = null;
             $scope.getShirtDetails();
             location.reload();
+            
         }, function(error) {
             console.error("Error updating shirt detail", error);
         });
+    }
     };
     
     

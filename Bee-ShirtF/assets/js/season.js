@@ -244,7 +244,8 @@ app.controller('seasonController', ['$scope', 'seasonService', function($scope, 
             alert("Tên mùa hoặc mã mùa này đã tồn tại!");
             return; // Dừng lại nếu trùng mã hoặc tên
         }
-    
+        if (confirm('Bạn có chắc chắn muốn thêm mùa này không?')) {
+
         seasonService.addSeason($scope.newSeason).then(function(response) {
             alert("Thêm mùa thành công!");
             $('#addSeasonModal').modal('hide');
@@ -253,6 +254,7 @@ app.controller('seasonController', ['$scope', 'seasonService', function($scope, 
         }).catch(function(error) {
             alert("Lỗi khi thêm mùa!");
         });
+    }
     };
     
 
@@ -285,16 +287,17 @@ app.controller('seasonController', ['$scope', 'seasonService', function($scope, 
             alert("Tên mùa này đã tồn tại!");
             return; // Dừng lại nếu trùng tên
         }
-    
-
+        if (confirm('Bạn có chắc chắn muốn cập nhật mùa này không?')) {
         seasonService.updateSeason($scope.season.codeSeason, $scope.season).then(function(response) {
             alert("Cập nhật mùa thành công!");
             $('#editSeasonModal').modal('hide');
             $scope.getSeasons(); // Cập nhật danh sách mùa sau khi sửa
             location.reload();
+
         }).catch(function(error) {
             alert("Lỗi khi cập nhật mùa!");
         });
+    }
     };
     
     $scope.deleteSeason = function() {

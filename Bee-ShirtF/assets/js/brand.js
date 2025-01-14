@@ -255,7 +255,6 @@ app.controller('brandController', ['$scope', 'brandService', function($scope, br
             return; // Dừng lại nếu tên đã tồn tại
         }
 
-      
 
         // Gọi API thêm brand
         brandService.addBrand($scope.newBrand).then(function(response) {
@@ -299,7 +298,8 @@ app.controller('brandController', ['$scope', 'brandService', function($scope, br
 
             const specialCharAndNumberRegex = /[0-9@#$%^&*()_+={}[\]:;"'<>,.?/\\|~`!]/;
             if (specialCharAndNumberRegex.test(trimmedName)) {
-                alert("Tên thương hiệukhông được chứa ký tự đặc biệt!");
+                alert("Tên thương hiệu không được chứa ký tự đặc biệt!");
+
                 return;
             }
         // Kiểm tra không trùng tên brand khi sửa
@@ -319,7 +319,7 @@ app.controller('brandController', ['$scope', 'brandService', function($scope, br
                 $('#editBrandModal').modal('hide');
                 location.reload();
             }, function(error) {
-                alert("Có lỗi xảy ra khi sửa brand.");
+                alert("Có lỗi xảy ra khi sửa thương hiệu.");
             });
         }
     };
@@ -332,12 +332,12 @@ app.controller('brandController', ['$scope', 'brandService', function($scope, br
     $scope.confirmDeleteBrand = function() {
         if ($scope.brandToDelete) {
             brandService.deleteBrand($scope.brandToDelete).then(function(response) {
-                alert("Xóa brand thành công!");
+                alert("Xóa thương hiệu thành công!");
                 $scope.getBrands($scope.currentPage);
                 $scope.confirmDelete = false;
                 $('#deleteBrandModal').modal('hide');
             }, function(error) {
-                alert("Có lỗi xảy ra khi xóa brand.");
+                alert("Có lỗi xảy ra khi xóa thương hiệu.");
             });
         }
     };

@@ -213,62 +213,60 @@ app.controller('genderController', ['$scope', 'genderService', function($scope, 
         const genderName = $scope.newGender.nameGender;
         const genderCode = $scope.newGender.codeGender;
     
-        // Kiểm tra nếu tên màu trống hoặc chỉ chứa khoảng trắng
+        // Kiểm tra nếu tên giới tính trống hoặc chỉ chứa khoảng trắng
         if (!genderName || genderName.trim() === "") {
             alert("Tên giới tính không được để trống!");
             return;
         }
     
-        // Kiểm tra độ dài tên màu
+        // Kiểm tra độ dài tên giới tính
         if (genderName.length > 250) {
             alert("Tên giới tính không được quá 250 ký tự!");
             return;
         }
     
-        // Kiểm tra tên màu không chỉ chứa khoảng trắng
+        // Kiểm tra tên giới tính không chỉ chứa khoảng trắng
         const trimmedName = genderName.trim();
         if (trimmedName.length === 0) {
             alert("Tên giới tính không được chỉ chứa khoảng trắng!");
             return;
         }
     
-        // Kiểm tra nếu tên màu chứa số
+        // Kiểm tra nếu tên giới tính chứa số
         const containsNumberRegex = /[0-9]/;
         if (containsNumberRegex.test(trimmedName)) {
             alert("Tên giới tính không được chứa số!");
             return;
         }
     
-        // Kiểm tra nếu tên màu chứa ký tự đặc biệt
+        // Kiểm tra nếu tên giới tính chứa ký tự đặc biệt
         const specialCharAndNumberRegex = /[0-9@#$%^&*()_+={}[\]:;"'<>,.?/\\|~`!]/;
         if (specialCharAndNumberRegex.test(trimmedName)) {
             alert("Tên giới tính không được chứa ký tự đặc biệt!");
             return;
         }
     
-        // Kiểm tra không trùng tên màu
+        // Kiểm tra không trùng tên giới tính
         if ($scope.genders.some(g => g.nameGender === genderName)) {
             alert("Tên giới tính này đã tồn tại!");
             return;
         }
+        if (confirm('Bạn có chắc chắn muốn xóa giới tính này không?')) {
+
     
-       
-        // Kiểm tra không trùng mã màu
-        if ($scope.genders.some(g => g.codeGender === genderCode)) {
-            alert("Mã giới tính này đã tồn tại!");
-            return;
-        }
-    
-        // Thêm màu mới nếu hợp lệ
+        // Thêm giới tính mới nếu hợp lệ
         genderService.addGender($scope.newGender).then(function() {
             alert("Thêm giới tính thành công!");
             $('#addGenderModal').modal('hide');
             $scope.getGenders();
             location.reload();
+    
         }).catch(function() {
-            alert("Có lỗi xảy ra khi thêm màu.");
+            alert("Có lỗi xảy ra khi thêm giới tính.");
         });
+    }
     };
+    
     
     $scope.saveEditGender = function() {
         const genderName = $scope.gender.nameGender;
@@ -308,12 +306,10 @@ app.controller('genderController', ['$scope', 'genderService', function($scope, 
             alert("Cập nhật gender thành công!");
             $('#editGenderModal').modal('hide');
             $scope.getGenders();
-            location.reload();
         }).catch(function() {
             alert("Có lỗi xảy ra khi cập nhật gender.");
         });
     };
-
 
     $scope.deleteGender = function(codeGender) {
         $scope.genderToDelete = codeGender;
@@ -328,7 +324,6 @@ app.controller('genderController', ['$scope', 'genderService', function($scope, 
             alert("Có lỗi xảy ra khi xóa gender.");
         });
 
-        
         // Đóng modal xác nhận
         $('#confirmDeleteModal').modal('hide');
     };

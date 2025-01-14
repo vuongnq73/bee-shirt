@@ -245,15 +245,18 @@ app.controller('sizeController', ['$scope', 'sizeService', function($scope, size
             alert("Tên kích thước hoặc mã kích thước này đã tồn tại!");
             return;
         }
-    
+        if (confirm('Bạn có chắc chắn muốn thêm kích thước này không?')) {
+
         sizeService.addSize($scope.newSize).then(function(response) {
             alert("Thêm kích thước thành công!");
             $scope.getSizes(); // Cập nhật danh sách kích thước
             $('#addSizeModal').modal('hide');
             location.reload();
+
         }, function(error) {
             alert("Có lỗi xảy ra khi thêm kích thước.");
         });
+    }
     };
     $scope.saveEditSize = function() {
         const sizeName = $scope.size.namesize;
@@ -296,7 +299,8 @@ app.controller('sizeController', ['$scope', 'sizeService', function($scope, size
                 alert("Sửa kích thước thành công!");
                 $scope.getSizes($scope.currentPage); // Cập nhật danh sách kích thước
                 $('#editSizeModal').modal('hide');
-                location.reload();  // Vào trang reload để hiển thị sự thay đ��i
+                location.reload();
+
             }, function(error) {
                 alert("Có lỗi xảy ra khi sửa kích thước.");
             });
@@ -310,6 +314,8 @@ app.controller('sizeController', ['$scope', 'sizeService', function($scope, size
             sizeService.deleteSize(codeSize).then(function(response) {
                 alert("Xóa kích thước thành công!");
                 $scope.getSizes();
+                location.reload();
+
             }, function(error) {
                 alert("Có lỗi xảy ra khi xóa kích thước.");
             });

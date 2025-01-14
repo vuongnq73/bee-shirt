@@ -291,6 +291,7 @@ app.controller('originController', ['$scope', 'originService', function($scope, 
                     alert("Cập nhật nguồn gốc thành công!");
                     $scope.getOrigins($scope.currentPage);
                     $('#editOriginModal').modal('hide');
+                    location.reload();
                 }, function(error) {
                     alert("Có lỗi xảy ra khi cập nhật nguồn gốc.");
                 });
