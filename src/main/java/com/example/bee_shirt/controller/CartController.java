@@ -88,10 +88,13 @@ public class CartController {
         Integer idWard = Integer.parseInt(addressData.get("idWard").toString());
 //        Integer idDistrict = (Integer) addressData.get("idDistrict");
 //        Integer idWard = (Integer) addressData.get("idWard");
+        String province2 = (String) addressData.get("province2");
+        String district2 = (String) addressData.get("district2");
+        String ward2 = (String) addressData.get("ward2");
         String name = (String) addressData.get("name");
         String phone = (String) addressData.get("phone");
         String detailAddress = (String) addressData.get("detailAddress");
-        return cartService.createDeliveryAddress(accCode, idProvince, idDistrict, idWard, name, phone, detailAddress);
+        return cartService.createDeliveryAddress(accCode, idProvince, idDistrict, idWard, name, phone, detailAddress,province2, district2, ward2);
     }
 
     @PostMapping("/checkout")

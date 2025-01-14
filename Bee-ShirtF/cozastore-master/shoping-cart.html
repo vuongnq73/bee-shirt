@@ -1968,7 +1968,7 @@
             <div>
                 <p><strong>Người nhận:</strong> ${address.name}</p>
                 <p><strong>Số điện thoại:</strong> ${address.phone}</p>
-                <p><strong>Địa chỉ chi tiết:</strong> ${address.detailAddress}</p>
+                <p><strong>Địa chỉ chi tiết:</strong> ${address.detailAddress}, ${ address.ward}, ${ address.district}, ${address.province}</p>
             </div>
             <button class="delete-button" onclick="deleteAddress(event, '${address.deliveryAddressCode}')">Xóa</button>
         `;
@@ -2023,35 +2023,35 @@
         <h5>Thông tin địa chỉ đã chọn:</h5>
         <p><strong>Người nhận:</strong> ${selectedAddressData.name}</p>
         <p><strong>Số điện thoại:</strong> ${selectedAddressData.phone}</p>
-        <p><strong>Địa chỉ chi tiết:</strong> ${selectedAddressData.detailAddress}</p>
+        <p><strong>Địa chỉ chi tiết:</strong> ${selectedAddressData.detailAddress}, ${ selectedAddressData.ward}, ${selectedAddressData.district}, ${selectedAddressData.province}</p>
     `;
 		}
 
 
 		// Hàm hiển thị thông tin địa chỉ vào một div
-		function displaySelectedAddressInfo(selectedAddress) {
-			const selectedAddressInfoDiv = document.getElementById("selectedAddressInfo");
+	// 	function displaySelectedAddressInfo(selectedAddress) {
+	// 		const selectedAddressInfoDiv = document.getElementById("selectedAddressInfo");
 
-			// Kiểm tra xem div đã tồn tại chưa, nếu chưa thì tạo mới
-			if (!selectedAddressInfoDiv) {
-				const newDiv = document.createElement("div");
-				newDiv.id = "selectedAddressInfo";
-				document.body.appendChild(newDiv);
-			}
+	// 		// Kiểm tra xem div đã tồn tại chưa, nếu chưa thì tạo mới
+	// 		if (!selectedAddressInfoDiv) {
+	// 			const newDiv = document.createElement("div");
+	// 			newDiv.id = "selectedAddressInfo";
+	// 			document.body.appendChild(newDiv);
+	// 		}
 
-			// Lấy div để cập nhật nội dung
-			const div = document.getElementById("selectedAddressInfo");
+	// 		// Lấy div để cập nhật nội dung
+	// 		const div = document.getElementById("selectedAddressInfo");
 
-			// Cập nhật nội dung của div với thông tin địa chỉ
-			div.innerHTML = `
-        <h3>Thông tin địa chỉ được chọn:</h3>
-        <p><strong>Người nhận:</strong> ${selectedAddress.name}</p>
-        <p><strong>Số điện thoại:</strong> ${selectedAddress.phone}</p>
-        <p><strong>Địa chỉ chi tiết:</strong> ${selectedAddress.detailAddress}</p>
-        <p><strong>Quận/Huyện:</strong> ${selectedAddress.idHuyen}</p>
-        <p><strong>Xã/Phường:</strong> ${selectedAddress.idXa}</p>
-    `;
-		}
+	// 		// Cập nhật nội dung của div với thông tin địa chỉ
+	// 		div.innerHTML = `
+    //     <h3>Thông tin địa chỉ được chọn:</h3>
+    //     <p><strong>Người nhận:</strong> ${selectedAddress.name}</p>
+    //     <p><strong>Số điện thoại:</strong> ${selectedAddress.phone}</p>
+    //     <p><strong>Địa chỉ chi tiết:</strong> ${selectedAddress.detailAddress}</p>
+    //     <p><strong>Quận/Huyện:</strong> ${selectedAddress.idHuyen}</p>
+    //     <p><strong>Xã/Phường:</strong> ${selectedAddress.idXa}</p>
+    // `;
+	// 	}
 
 		function deleteAddress(event, addressCode) {
 			// Ngừng hành động mặc định của nút
@@ -2147,9 +2147,12 @@
 				idProvince: province,
 				idDistrict: district,
 				idWard: ward,
+				province2: province2,
+				district2: district2,
+				ward2: ward2,
 				name: name,
 				phone: phone,
-				detailAddress: fullAddress
+				detailAddress: detailedAddress
 			};
 
 			fetch("http://localhost:8080/cart/create-address", {

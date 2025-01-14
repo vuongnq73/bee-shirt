@@ -103,7 +103,7 @@ public class CartService {
         return cartDetailRepository.findCartDetailByCode(codeCartDetail);
     }
 
-    public DeliveryAddress createDeliveryAddress(String accCode, Integer idProvince, Integer idDistrict, Integer idWard, String name, String phone, String detailAddress) {
+    public DeliveryAddress createDeliveryAddress(String accCode, Integer idProvince, Integer idDistrict, Integer idWard, String name, String phone, String detailAddress, String province2, String district2, String ward2) {
         String randomCode = generateRandomCode();
         DeliveryAddress da = new DeliveryAddress();
         da.setDeliveryAddressCode("DA" + randomCode);
@@ -113,6 +113,9 @@ public class CartService {
         da.setPhone(phone);
         da.setIdDistrict(idDistrict);
         da.setIdWard(idWard);
+        da.setWard(ward2);
+        da.setProvince(province2);
+        da.setDistrict(district2);
         da.setDeleted(false);
         da.setIdProvince(idProvince);
         return deliveryAddressRepository.save(da);
