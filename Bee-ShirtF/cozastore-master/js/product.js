@@ -651,6 +651,97 @@ function addProductToCart(cartId, shirtDetailId, token) {
       }
   });
 }
+$scope.errorMessage = "";
+$scope.email = "";
+$scope.verificationCode = "";
+$scope.isEmailInputVisible = true;  // Hiển thị ô nhập email ban đầu
+$scope.isCodeInputVisible = false;  // Ẩn ô nhập mã xác minh
+
+// Kiểm tra trạng thái đăng nhập và hiển thị modal
+$scope.checkLoginStatus = function() {
+  const token = sessionStorage.getItem("jwtToken");
+  if (!token) {
+    // Nếu chưa đăng nhập, hiển thị modal
+    var modal = new bootstrap.Modal(document.getElementById('emailModal'));
+    modal.show();
+  } else {
+    // Nếu đã đăng nhập, chuyển hướng đến trang myOrder
+    $window.location.href = "myOder.html";
+  }
+};
+
+// Gửi mã xác minh đến email
+$scope.sendVerificationCode = function () {
+  if (!$scope.email) {
+    $scope.errorMessage = "Vui lòng nhập email.";
+    return;
+  }
+
+  const data = { email: $scope.email };
+
+  $http({
+    method: 'POST',
+    url: `http://localhost:8080/auth/send-verification-code`,
+    data: data,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then((response) => {
+    if (response.data.result) {
+      alert("Mã xác nhận đã được gửi đến email của bạn.");
+      // Chuyển sang chế độ nhập mã xác nhận
+      $scope.isEmailInputVisible = false;
+      $scope.isCodeInputVisible = true;
+    } else {
+      $scope.errorMessage = "Không thể gửi mã. Vui lòng thử lại.";
+    }
+  })
+  .catch((error) => {
+    console.error("Lỗi khi gửi mã:", error);
+    $scope.errorMessage = "Lỗi khi gửi mã. Vui lòng thử lại.";
+  });
+};
+
+// Xác nhận mã xác minh và chuyển hướng đến trang myOrderByEmail
+$scope.verifyCode = function () {
+  if (!$scope.verificationCode) {
+      $scope.errorMessage = "Vui lòng nhập mã xác minh.";
+      return;
+  }
+
+  const data = { email: $scope.email, verificationCode: $scope.verificationCode };
+
+  $http({
+      method: 'POST',
+      url: `http://localhost:8080/auth/verify-code?email=${$scope.email}&token=${$scope.verificationCode}`,
+      data: data,
+      headers: {
+          'Content-Type': 'application/json'
+      }
+  })
+  .then((response) => {
+      if (response.data.result) {
+          alert("Mã xác minh thành công.");
+          // Điều hướng đến trang danh sách đơn hàng khi xác nhận thành công
+          $window.location.href = `myOderByEmail.html?email=${$scope.email}`;
+      } else {
+          $scope.errorMessage = "Mã xác minh không đúng. Vui lòng thử lại.";
+      }
+  })
+  .catch((error) => {
+      console.error("Lỗi khi xác minh mã:", error);
+      $scope.errorMessage = "Lỗi khi xác minh mã. Vui lòng thử lại.";
+  });
+};
+
+
+// Hàm ẩn modal khi nhấn "Hủy"
+$scope.closeModal = function () {
+  const emailModal = document.getElementById('emailModal');
+  const modalInstance = bootstrap.Modal.getInstance(emailModal);
+  modalInstance.hide();
+};
     $scope.fetchHomePageData();
     $scope.getMyProfile();
     $scope.getCategories();

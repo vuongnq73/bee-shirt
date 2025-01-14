@@ -23,5 +23,7 @@ public class ShirtResponseDTO {
     private Integer categoryId;
     private Integer brandId;
     private boolean deleted;
+    private  String description;
+
     private long quantity;
 }

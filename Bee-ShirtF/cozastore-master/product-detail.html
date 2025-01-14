@@ -6,7 +6,8 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!--===============================================================================================-->
-	<link rel="icon" type="image/png" href="images/icons/favicon.png" />
+    <link rel="icon" type="image/png" href="/assets/img/kaiadmin/favicon.png" />
+
 	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
 	<!--===============================================================================================-->
@@ -613,25 +614,36 @@
 				<p><strong>Mã SP:</strong> {{shirt.codeShirt}}</p>
 				<br>
 				<p><strong>Chất liệu:</strong> {{shirt.selectedVariant.nameMaterial}}</p>
-				<p style="font-size: 28px;"><strong> {{shirt.selectedVariant.price | currency}}</strong></p>
+				<p style="font-size: 28px;"> Giá :<strong> {{formatCurrency(shirt.selectedVariant.price )}}</strong></p>
 				<p><strong>Số lượng:</strong> {{shirt.selectedVariant.quantity}}</p>
-				<div>
-					<label>Màu sắc:</label>
-					<div ng-repeat="colorGroup in shirt.colorGroups" class="color-box"
-						ng-style="{'background-color': '#' + colorGroup.codeColor}"
-						ng-class="{'selected': colorGroup === shirt.selectedColorGroup}"
-						ng-click="changeColor(shirt, colorGroup)">
+				<div style="display: flex; align-items: center; gap: 10px;">
+					<label style="margin-right: 8px;">Màu sắc:</label>
+					<div 
+					  ng-repeat="colorGroup in shirt.colorGroups" 
+					  class="color-box"
+					  ng-style="{
+						'background-color': '#' + colorGroup.codeColor, 
+						'border-radius': '16px'
+					  }"
+					  ng-class="{'selected': colorGroup === shirt.selectedColorGroup}"
+					  ng-click="changeColor(shirt, colorGroup)">
 					</div>
-				</div>
-				<br>
+				  </div>
+				  
 				<p>Kích thước:<strong> {{shirt.selectedVariant.namesize}}</strong></p>
-				<div ng-repeat="variant in shirt.selectedColorGroup.variants" class="option-button"
-					ng-class="{'selected': variant === shirt.selectedVariant}" ng-click="changeSize(shirt, variant)">
-					{{variant.namesize}}
-				</div>
+				<div 
+				ng-repeat="variant in shirt.selectedColorGroup.variants" 
+				class="option-button"
+				ng-style="{'border-radius': '8px'}"
+				ng-class="{'selected': variant === shirt.selectedVariant}" 
+				ng-click="changeSize(shirt, variant)">
+				{{variant.namesize}}
+			  </div>
+			  
 				<br>
-				<button class="btn btn-primary" style="background-color: red ;"
+				<button class="btn btn-primary" style="background-color: rgb(167, 2, 2) ;"
 					ng-click="addToCart(shirt.selectedVariant.id)">Thêm vào giỏ hàng</button>
+					<a class="btn btn-primary" href="product.html">Tìm ở cửa hàng</a>
 				<br>
 				<hr>
 				<!-- Bao bọc toàn bộ phần mô tả trong một div -->
@@ -971,6 +983,19 @@
 	<script>
 		angular.module('app', [])
 			.controller('ProductDetailController', ['$scope', '$http', function ($scope, $http) {
+				$scope.formatCurrency = function (value) {
+        if (typeof value !== "number" || isNaN(value)) return "N/A";
+        // Cắt bớt phần thập phân mà không làm tròn
+        const fixedValue = Math.floor(value * 1000) / 1000;
+
+        // Định dạng số đã được cắt bớt
+        return fixedValue.toLocaleString("vi-VN", {
+          style: "currency",
+          currency: "VND",
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 1,
+        });
+      };
 				// Lấy dữ liệu các thương hiệu và danh mục từ backend
 				$http.get('http://localhost:8080/shirts/api/brands')
 					.then(function (response) {
