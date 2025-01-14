@@ -57,6 +57,60 @@
 
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link rel="stylesheet" href="css/demo.css" />
+  <style>
+    .pagination {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .page-item {
+        margin: 0 5px;
+    }
+    
+    .page-link {
+        border: none;
+        border-radius: 50%;
+        padding: 10px 15px;
+        font-size: 14px;
+        cursor: pointer;
+        background-color:  #007bff;
+        color: #f6f6f8;
+        text-decoration: none;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        outline: none;
+    }
+    
+    .page-link:hover:not(.disabled):not(.active) {
+        background-color: #ddd;
+        color: #000;
+    }
+    
+    .page-item.disabled .page-link {
+        background-color: #e0e0e0;
+        color: #a0a0a0;
+        cursor: not-allowed;
+    }
+    
+    .page-item.active .page-link {
+        background-color: #007bff;
+        color: #fff;
+        cursor: default;
+    }
+    
+    .page-item:first-child .page-link,
+    .page-item:last-child .page-link {
+        border-radius: 20px;
+        padding: 8px 15px;
+        font-weight: bold;
+    }
+    
+    .mt-4 {
+        margin-top: 1.5rem !important;
+    }
+    </style>
+    
 </head>
 
 <body ng-controller="categoryController">

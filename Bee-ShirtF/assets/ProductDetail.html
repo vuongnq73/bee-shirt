@@ -57,6 +57,38 @@
 
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link rel="stylesheet" href="css/demo.css" />
+  <style>
+    .pagination-btn {
+        border: none;
+        border-radius: 50%;
+        padding: 10px 15px;
+        margin: 0 5px;
+        font-size: 14px;
+        cursor: pointer;
+        background-color: #f0f0f0;
+        color: #333;
+        outline: none;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .pagination-btn:disabled {
+        cursor: not-allowed;
+        background-color: #e0e0e0;
+        color: #a0a0a0;
+    }
+    
+    .pagination-btn.current {
+        background-color: #007bff;
+        color: #fff;
+        cursor: default;
+    }
+    
+    .pagination-btn:hover:not(:disabled):not(.current) {
+        background-color: #ddd;
+        color: #000;
+    }
+    </style>
+    
 </head>
 
 <body ng-controller="ShirtDetailController">
@@ -814,11 +846,17 @@
       </table>
 
 <!-- Phân trang -->
-<div class="pagination">
-<button ng-disabled="currentPage == 1" ng-click="currentPage = currentPage - 1">Trang trước</button>
-<span>Trang {{currentPage}}</span>
-<button ng-disabled="currentPage * itemsPerPage >= shirtDetails.length" ng-click="currentPage = currentPage + 1">Trang sau</button>
+
+<div style="text-align: center;">
+  <button class="pagination-btn prev" ng-disabled="currentPage === 1" ng-click="currentPage = currentPage - 1">
+      Trước
+  </button>
+  <button class="pagination-btn current" disabled>{{ currentPage }}</button>
+  <button class="pagination-btn next" ng-disabled="currentPage === totalPages()" ng-click="currentPage = currentPage + 1">
+      Tiếp
+  </button>
 </div>
+
 
 <!-- Modal sửa áo thun -->
 <div class="modal fade" id="editShirtModal" tabindex="-1" aria-labelledby="editShirtModalLabel" aria-hidden="true">
