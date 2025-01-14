@@ -147,7 +147,7 @@
             <li class="nav-item ">
               <a data-bs-toggle="collapse" href="#account">
                 <i class="fas fa-user"></i>
-                <p>Account</p>
+                <p>Tài Khoản</p>
                 <span class="caret"></span>
               </a>
               <div class="collapse" id="account">
@@ -812,106 +812,120 @@
   <form ng-submit="updateShirtDetail()">
     <div class="row">
         <!-- Mã Áo -->
-        <div class="col-md-4 mb-3">
+        <div class="col-md-6 mb-3">
             <label for="edit-codeshirtdetail" class="col-form-label">Mã Áo:</label>
             <input type="text" id="edit-codeshirtdetail" ng-model="editingShirtDetail.codeShirtDetail" readonly class="form-control">
         </div>
         <!-- Áo -->
-        <div class="col-md-4 mb-3">
+        <div class="col-md-6 mb-3">
             <label for="edit-shirt" class="col-form-label">Áo</label>
             <select id="edit-shirt" ng-model="editingShirtDetail.shirtId" ng-options="shirt.id as shirt.nameshirt for shirt in shirts" required class="form-control"></select>
         </div>
         <!-- Giá -->
-        <div class="col-md-4 mb-3">
+        <div class="col-md-6 mb-3">
             <label for="edit-price" class="col-form-label">Giá:</label>
-            <input type="text" id="edit-price" ng-model="editingShirtDetail.price" class="form-control" required />
-            <span ng-show="!editingShirtDetail.price || isNaN(editingShirtDetail.price)" class="text-danger">Giá phải là một số và không để trống</span>
+            <input type="text" id="edit-price" ng-model="editingShirtDetail.price" class="form-control">
+        </div>
+        <!-- Số lượng -->
+        <div class="col-md-6 mb-3">
+            <label for="edit-quantity" class="col-form-label">Số lượng:</label>
+            <input type="text" id="edit-quantity" ng-model="editingShirtDetail.quantity" class="form-control">
         </div>
     </div>
 
-    <!-- Sắp xếp các mục trên cùng một hàng (Giới tính, Màu sắc, Chất liệu) -->
+    <!-- Sắp xếp các mục trên cùng một hàng (Giới tính, Màu sắc) -->
     <div class="row">
-        <div class="col-md-4 mb-3">
+        <div class="col-md-6 mb-3">
             <label for="edit-gender" class="col-form-label">Giới tính</label>
             <select id="edit-gender" ng-model="editingShirtDetail.genderId" ng-options="gender.id as gender.nameGender for gender in genders" required class="form-control"></select>
         </div>
-        <div class="col-md-4 mb-3">
+        <div class="col-md-6 mb-3">
             <label for="edit-color" class="col-form-label">Màu sắc</label>
             <select id="edit-color" ng-model="editingShirtDetail.colorId" ng-options="color.id as color.nameColor for color in colors" required class="form-control"></select>
         </div>
-        <div class="col-md-4 mb-3">
+    </div>
+
+    <div class="row">
+        <!-- Chất liệu -->
+        <div class="col-md-6 mb-3">
             <label for="edit-material" class="col-form-label">Chất liệu</label>
             <select id="edit-material" ng-model="editingShirtDetail.materialId" ng-options="material.id as material.nameMaterial for material in materials" required class="form-control"></select>
         </div>
-    </div>
-
-    <!-- Kích cỡ, Nguồn gốc, Mẫu áo -->
-    <div class="row">
-        <div class="col-md-4 mb-3">
+        <!-- Kích cỡ -->
+        <div class="col-md-6 mb-3">
             <label for="edit-size" class="col-form-label">Kích cỡ</label>
             <select id="edit-size" ng-model="editingShirtDetail.sizeId" ng-options="size.id as size.namesize for size in sizes" required class="form-control"></select>
         </div>
-        <div class="col-md-4 mb-3">
+    </div>
+
+    <div class="row">
+        <!-- Nguồn gốc -->
+        <div class="col-md-6 mb-3">
             <label for="edit-origin" class="col-form-label">Nguồn gốc</label>
             <select id="edit-origin" ng-model="editingShirtDetail.originId" ng-options="origin.id as origin.nameOrigin for origin in origins" required class="form-control"></select>
         </div>
-        <div class="col-md-4 mb-3">
+        <!-- Mẫu áo -->
+        <div class="col-md-6 mb-3">
             <label for="edit-pattern" class="col-form-label">Mẫu áo</label>
             <select id="edit-pattern" ng-model="editingShirtDetail.patternId" ng-options="pattern.id as pattern.namePattern for pattern in patterns" required class="form-control"></select>
         </div>
     </div>
 
-    <!-- Mùa -->
+    <div class="col-md-6 mb-3">
+        <label for="edit-season" class="col-form-label">Mùa</label>
+        <select id="edit-season" ng-model="editingShirtDetail.seasonId" ng-options="season.id as season.nameSeason for season in seasons" required class="form-control"></select>
+    </div>
+
+    <!-- Tình Trạng -->
     <div class="row">
-        <div class="col-md-4 mb-3">
-            <label for="edit-season" class="col-form-label">Mùa</label>
-            <select id="edit-season" ng-model="editingShirtDetail.seasonId" ng-options="season.id as season.nameSeason for season in seasons" required class="form-control"></select>
+        <div>
+            <label class="col-form-label col-sm-2">Trạng Thái:</label>
+            <div class="col-md-6 mb-3 d-flex">
+                <div class="custom-radio mr-4">
+                    <input type="radio" ng-model="editingShirtDetail.statusshirtdetail" value="0" ng-checked="editingShirtDetail.statusshirtdetail === 0"> Ngừng Bán
+                </div>
+                <div class="custom-radio">
+                    <input type="radio" ng-model="editingShirtDetail.statusshirtdetail" value="1" ng-checked="editingShirtDetail.statusshirtdetail === 1"> Đang Bán
+                </div>
+            </div>
+        </div>
+
+        <!-- Trạng Thái Xóa -->
+        <div>
+            <label class="col-form-label col-sm-2">Trạng Thái:</label>
+            <div class="col-md-6 mb-3 d-flex">
+                <div class="custom-radio mr-4">
+                    <input type="radio" ng-model="editingShirtDetail.deleted" value="false" ng-checked="editingShirtDetail.deleted === false"> Hoạt Động
+                </div>
+                <div class="custom-radio">
+                    <input type="radio" ng-model="editingShirtDetail.deleted" value="true" ng-checked="editingShirtDetail.deleted === true"> Ngừng Hoạt Động
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Trạng Thái và Trạng Thái Xóa -->
-    <div class="row">
-        <div class="col-md-4 mb-3">
-            <label class="col-form-label">Trạng Thái:</label>
-            <div class="custom-radio">
-                <input type="radio" ng-model="editingShirtDetail.statusshirtdetail" value="0" ng-checked="editingShirtDetail.statusshirtdetail === 0"> Ngừng Bán
-            </div>
-            <div class="custom-radio">
-                <input type="radio" ng-model="editingShirtDetail.statusshirtdetail" value="1" ng-checked="editingShirtDetail.statusshirtdetail === 1"> Đang Bán
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <label class="col-form-label">Trạng Thái Xóa:</label>
-            <div class="custom-radio">
-                <input type="radio" ng-model="editingShirtDetail.deleted" value="false" ng-checked="editingShirtDetail.deleted === false"> Hoạt Động
-            </div>
-            <div class="custom-radio">
-                <input type="radio" ng-model="editingShirtDetail.deleted" value="true" ng-checked="editingShirtDetail.deleted === true"> Ngừng Hoạt Động
-            </div>
-        </div>
+      <!-- Ảnh 1 -->
+    <label>Ảnh 1:</label>
+    <input type="file" onchange="angular.element(this).scope().updateImagePreview(this, 1)" />
+    <!-- Hiển thị ảnh cũ nếu có hoặc ảnh mới nếu chọn -->
+    <img ng-if="editingShirtDetail.image" ng-src="{{editingShirtDetail.image}}" alt="Ảnh 1" style="width: 100px; height: 100px;"/>
+
+    <!-- Ảnh 2 -->
+    <div class="form-group">
+        <label>Ảnh 2:</label>
+        <input type="file" onchange="angular.element(this).scope().updateImagePreview(this, 2)" />
+        <!-- Hiển thị ảnh cũ nếu có hoặc ảnh mới nếu chọn -->
+        <img ng-if="editingShirtDetail.image2" ng-src="{{editingShirtDetail.image2}}" alt="Ảnh 2" style="width: 100px; height: 100px;"/>
     </div>
 
-    <!-- Ảnh 1, Ảnh 2, Ảnh 3 -->
-    <div class="row">
-        <div class="col-md-4 mb-3">
-            <label>Ảnh 1:</label>
-            <input type="file" onchange="angular.element(this).scope().updateImagePreview(this, 1)" />
-            <img ng-if="editingShirtDetail.image" ng-src="{{editingShirtDetail.image}}" alt="Ảnh 1" style="width: 100px; height: 100px;"/>
-            <span ng-show="!editingShirtDetail.image" class="text-danger">Ảnh 1 không thể để trống</span>
-        </div>
-        <div class="col-md-4 mb-3">
-            <label>Ảnh 2:</label>
-            <input type="file" onchange="angular.element(this).scope().updateImagePreview(this, 2)" />
-            <img ng-if="editingShirtDetail.image2" ng-src="{{editingShirtDetail.image2}}" alt="Ảnh 2" style="width: 100px; height: 100px;"/>
-            <span ng-show="!editingShirtDetail.image2" class="text-danger">Ảnh 2 không thể để trống</span>
-        </div>
-        <div class="col-md-4 mb-3">
-            <label>Ảnh 3:</label>
-            <input type="file" onchange="angular.element(this).scope().updateImagePreview(this, 3)" />
-            <img ng-if="editingShirtDetail.image3" ng-src="{{editingShirtDetail.image3}}" alt="Ảnh 3" style="width: 100px; height: 100px;"/>
-            <span ng-show="!editingShirtDetail.image3" class="text-danger">Ảnh 3 không thể để trống</span>
-        </div>
+    <!-- Ảnh 3 -->
+    <div class="form-group">
+        <label>Ảnh 3:</label>
+        <input type="file" onchange="angular.element(this).scope().updateImagePreview(this, 3)" />
+        <!-- Hiển thị ảnh cũ nếu có hoặc ảnh mới nếu chọn -->
+        <img ng-if="editingShirtDetail.image3" ng-src="{{editingShirtDetail.image3}}" alt="Ảnh 3" style="width: 100px; height: 100px;"/>
     </div>
+
 
     <!-- Nút Cập Nhật -->
     <div class="mb-3">

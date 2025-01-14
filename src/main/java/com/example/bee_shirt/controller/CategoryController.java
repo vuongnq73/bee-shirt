@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -22,9 +21,11 @@ public class CategoryController {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    // Hiển thị danh sách Category với phân trang 5 phần tử
     @GetMapping("/list")
-    public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categories = categoryRepository.findAll(); // Lấy tất cả các danh mục
+    public ResponseEntity<Page<Category>> getCategories(@RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 5);
+        Page<Category> categories = categoryRepository.findAllCategory(pageable);
         return ResponseEntity.ok(categories);
     }
 
@@ -32,7 +33,7 @@ public class CategoryController {
     @PostMapping("/add")
     public ResponseEntity<Category> addCategory(@RequestBody Category category) {
         String codeCategory = generateCategoryCode();
-
+        category.setStatusCategory(1);
         // Cập nhật mã codeCategory vào đối tượng Category
         category.setCodeCategory(codeCategory);
 

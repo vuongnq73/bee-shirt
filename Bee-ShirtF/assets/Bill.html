@@ -149,7 +149,7 @@
             <li class="nav-item">
               <a data-bs-toggle="collapse" href="#account">
                 <i class="fas fa-user"></i>
-                <p>Account</p>
+                <p>Tài Khoản</p>
                 <span class="caret"></span>
               </a>
               <div class="collapse" id="account">
@@ -585,11 +585,11 @@
         return;
       }
 
-      if (response.result.length === 0) {
-        alert("Không có dữ liệu.");
-        console.log('Dữ liệu trả về là mảng rỗng:', response.result);
-        return;
-      }
+      // if (response.result.length === 0) {
+      //   // alert("Không có dữ liệu.");
+      //   console.log('Dữ liệu trả về là mảng rỗng:', response.result);
+      //   return;
+      // }
 
       // Dữ liệu hợp lệ, tiếp tục xử lý
       const ordersData = response.result.map((order, index) => ({

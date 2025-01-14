@@ -203,11 +203,13 @@ $scope.goToPage = function(page) {
     
         // Thêm màu mới nếu không có lỗi
         colorService.addColor($scope.newColor).then(function(response) {
+            alert("Thêm màu sắc thành công");
             $scope.getColors();
             $('#addColorModal').modal('hide');
             location.reload();
         });
     };
+    
     
     // Edit a color
     $scope.editColor = function(color) {

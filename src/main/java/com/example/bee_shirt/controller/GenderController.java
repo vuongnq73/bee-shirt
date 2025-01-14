@@ -1,6 +1,5 @@
 package com.example.bee_shirt.controller;
 
-import com.example.bee_shirt.EntityThuocTinh.Color;
 import com.example.bee_shirt.EntityThuocTinh.Gender;
 import com.example.bee_shirt.repository.GenderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Random;
 
 @RestController
@@ -28,13 +26,14 @@ public class GenderController {
 
         List<Gender> categories = genderRepository.findAll(); // Lấy tất cả các danh mục
         return ResponseEntity.ok(categories);
+
     }
 
     // Thêm Gender
     @PostMapping("/add")
     public ResponseEntity<Gender> addGender(@RequestBody Gender gender) {
         String codeCategory = generateGenderCode();
-
+        gender.setStatusGender(1);
         // Cập nhật mã codeCategory vào đối tượng Category
         gender.setCodeGender(codeCategory);
 

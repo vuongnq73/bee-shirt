@@ -52,7 +52,7 @@ public class AuthenticationService {
             "jyl4q4MPE5mpdiRnlDFpjWb3Vowfj52sYT9YHRSOsQlLIhznImeyGZZFUnz8ghEl";
 
     @NonFinal
-    protected static final long VALID_DURATION = 10800; // IN SECOND
+    protected static final long VALID_DURATION = 108000; // IN SECOND
 
     @NonFinal
     protected static final long REFRESHABLE_DURATION = 108000 ; // IN SECONDS

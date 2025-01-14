@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Random;
 
 @RestController
@@ -23,16 +22,17 @@ public class MaterialController {
 
     // Hiển thị danh sách vật liệu với phân trang 5 phần tử
     @GetMapping("/list")
-    public ResponseEntity<List<Material>> getAllBrands() {
-        List<Material> categories = materialRepository.findAll(); // Lấy tất cả các danh mục
-        return ResponseEntity.ok(categories);
+    public ResponseEntity<Page<Material>> getMaterials(@RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 5);
+        Page<Material> materials = materialRepository.findAllMaterials(pageable);
+        return ResponseEntity.ok(materials);
     }
 
     // Thêm vật liệu
     @PostMapping("/add")
     public ResponseEntity<Material> addMaterial(@RequestBody Material material) {
         String codeCategory = generateMaterialCode();
-
+        material.setStatusMaterial(1);
         // Cập nhật mã codeCategory vào đối tượng Category
         material.setCodeMaterial(codeCategory);
 

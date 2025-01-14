@@ -251,7 +251,8 @@ app.controller('genderController', ['$scope', 'genderService', function($scope, 
             alert("Tên giới tính này đã tồn tại!");
             return;
         }
-    
+        if (confirm('Bạn có chắc chắn muốn xóa giới tính này không?')) {
+
     
         // Thêm giới tính mới nếu hợp lệ
         genderService.addGender($scope.newGender).then(function() {
@@ -263,6 +264,7 @@ app.controller('genderController', ['$scope', 'genderService', function($scope, 
         }).catch(function() {
             alert("Có lỗi xảy ra khi thêm giới tính.");
         });
+    }
     };
     
     

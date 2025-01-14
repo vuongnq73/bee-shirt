@@ -8,74 +8,63 @@ angular
       email: "",
       username: "",
       pass: "",
-      address: "",
       avatarFile: null, // File ảnh đại diện từ input
     };
+    $scope.address = {
+      provinceId: "",
+      districtId: "",
+      wardId: "",
+      ward: "",
+      district: "",
+      province: "",
+      detailAddress: "",
+    };
 
-    $scope.isSubmitting = false
+    $scope.isSubmitting = false;
 
     $scope.errorMessage = "";
     $scope.successMessage = ""; // Biến để lưu thông báo thành công
 
-    // Hàm đăng ký
-    $scope.register = function () {
-      // Kiểm tra điều kiện
-      if (!validateForm() || $scope.isSubmitting) {
-        return;
-      }
-
-       // Đặt trạng thái đang xử lý
-       $scope.isSubmitting = true;
-
-      // Gọi hàm xử lý đăng ký
-      submitRegistration();
-    };
-
     // Hàm xử lý việc đăng ký
-    function submitRegistration() {
-      const formData = new FormData(); // Tạo FormData để gửi file
-      formData.append("firstName", $scope.user.firstName);
-      formData.append("lastName", $scope.user.lastName);
-      formData.append("phone", $scope.user.phone);
-      formData.append("email", $scope.user.email);
-      formData.append("username", $scope.user.username);
-      formData.append("pass", $scope.user.pass);
-      formData.append("address", $scope.user.address);
-      if ($scope.user.avatarFile) {
-        formData.append("avatarFile", $scope.user.avatarFile); // Chỉ thêm nếu file không null
+    $scope.register = function () {
+      if (!validateForm() || $scope.isSubmitting) return;
+
+      $scope.isSubmitting = true;
+
+      const formData = new FormData();
+      for (const [key, value] of Object.entries($scope.user)) {
+        if (value) formData.append(key, value);
       }
 
-      // Gửi dữ liệu đến API
+      for (const [key, value] of Object.entries($scope.address)) {
+        if (value) formData.append(key, value);
+      }
+
+      console.log($scope.address);
+
       $http
         .post("http://localhost:8080/user/register", formData, {
           transformRequest: angular.identity,
-          headers: { "Content-Type": undefined }, // Để tự động thiết lập kiểu content type
+          headers: { "Content-Type": undefined },
         })
-        .then(function (response) {
-          console.log("Response nhận được từ server:", response);
-          $scope.successMessage =
-            "Đăng ký thành công! Bạn có thể đăng nhập ngay."; // Thông báo thành công
-          $scope.errorMessage = ""; // Xóa thông báo lỗi (nếu có)
-
-          // Đợi 2 giây trước khi chuyển hướng đến trang đăng nhập
+        .then((response) => {
+          $scope.successMessage = "Đăng ký thành công!";
+          $scope.errorMessage = "";
           setTimeout(() => {
             window.location.href = "/assets/account/login.html";
           }, 2000);
         })
-        .catch(function (error) {
-          console.log("Lỗi:", error);
-          // Kiểm tra cấu trúc của đối tượng lỗi
-          if (error.data && error.data.message) {
-            $scope.errorMessage = error.data.message;
-          } else {
-            $scope.errorMessage = "Đăng ký thất bại.";
-          }
-          $scope.successMessage = ""; // Xóa thông báo thành công (nếu có)
+        .catch((error) => {
+          $scope.errorMessage =
+            error.data && error.data.message
+              ? error.data.message
+              : "Đăng ký thất bại.";
+          $scope.successMessage = "";
         })
-        .finally(function () {
-          $scope.isSubmitting = false; // Kích hoạt lại nút sau khi xử lý xong
+        .finally(() => {
+          $scope.isSubmitting = false;
         });
-    }
+    };
 
     // Hàm xác thực dữ liệu
     function validateForm() {
@@ -106,6 +95,223 @@ angular
       $scope.errorMessage = ""; // Xóa thông báo lỗi
       return true; // Tất cả các điều kiện hợp lệ
     }
+    // Token và shop_id để gửi trong header
+    const TOKEN = "778ca0c9-ca77-11ef-8aa3-5afc7ca5b5c0"; // Thay bằng token của bạn
+    const SHOP_ID = "5569909"; // Thay bằng shop_id của bạn
+    const FROM_DISTRICT_ID = 3440; // ID Quận/Huyện người gửi
+
+    // Hàm gọi API danh sách tỉnh/thành phố
+    async function fetchProvinces() {
+      try {
+        const response = await fetch(
+          "https://online-gateway.ghn.vn/shiip/public-api/master-data/province",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Token: TOKEN,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          populateProvinceSelect(data.data);
+          $scope.provinces = data.data || [];
+
+        } else {
+          console.error(
+            "Lỗi khi lấy danh sách tỉnh/thành phố:",
+            response.statusText
+          );
+        }
+      } catch (error) {
+        console.error("Lỗi kết nối:", error);
+      }
+    }
+
+    // Hàm gọi API danh sách quận/huyện
+    async function fetchDistricts(provinceId) {
+      try {
+        const response = await fetch(
+          `https://online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=${provinceId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Token: TOKEN,
+            },
+          }
+        );
+    
+        if (response.ok) {
+          const data = await response.json();
+    
+          // Kiểm tra xem dữ liệu có đúng định dạng không
+          if (data && Array.isArray(data.data)) {
+            $scope.districts = data.data;
+          } else {
+            console.error("Dữ liệu quận/huyện không đúng định dạng.");
+          }
+        } else {
+          console.error("Lỗi khi lấy danh sách quận/huyện:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Lỗi kết nối:", error);
+      }
+    }
+
+    // Hàm gọi API danh sách phường/xã
+    async function fetchWards(districtId) {
+      try {
+        const response = await fetch(
+          `https://online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=${districtId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Token: TOKEN,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+    
+          // Kiểm tra xem dữ liệu có đúng định dạng không
+          if (data && Array.isArray(data.data)) {
+            $scope.wards = data.data;
+          } else {
+            console.error("Dữ liệu phường/xã không đúng định dạng.");
+          }
+        } else {
+          console.error("Lỗi khi lấy danh sách quận/huyện:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Lỗi kết nối:", error);
+      }
+    }
+
+    // Xử lý chọn địa chỉ
+    $scope.onProvinceChange = function () {
+      console.log($scope.address.provinceId); // Kiểm tra giá trị provinceId đã thay đổi
+
+      // Tìm tỉnh từ danh sách provinces
+      const selectedProvince = $scope.provinces.find(
+        (province) =>
+          parseInt(province.ProvinceID) === parseInt($scope.address.provinceId)
+      );
+
+      if (selectedProvince) {
+        // Cập nhật cả tên và ID của tỉnh
+        $scope.address.province = selectedProvince.ProvinceName;
+        console.log("Selected province:", selectedProvince.ProvinceName);
+        console.log("Province ID:", selectedProvince.ProvinceID); // Kiểm tra ID tỉnh
+      } else {
+        console.log("No province found");
+      }
+
+      // Reset các giá trị của quận và phường
+      $scope.address.districtId = "";
+      $scope.address.wardId = "";
+      $scope.address.district = "";
+      $scope.address.ward = "";
+
+      $scope.districts = []; // Xóa danh sách quận đã chọn
+      $scope.wards = []; // Xóa danh sách phường đã chọn
+
+      // Lấy danh sách quận/huyện nếu có tỉnh được chọn
+      if ($scope.address.provinceId) {
+        fetchDistricts($scope.address.provinceId);
+      }
+    };
+
+    $scope.onDistrictChange = function () {
+      console.log($scope.address.districtId);
+
+      const selectedDistrict = $scope.districts.find(
+        (district) =>
+          parseInt(district.DistrictID) === parseInt($scope.address.districtId)
+      );
+
+      if (selectedDistrict) {
+        $scope.address.district = selectedDistrict.DistrictName;
+        console.log("Selected district:", selectedDistrict.DistrictName);
+        console.log("District ID:", selectedDistrict.DistrictID); // Kiểm tra ID quận
+      }
+
+      // Reset phường
+      $scope.address.wardId = "";
+      $scope.address.ward = "";
+
+      $scope.wards = []; // Xóa danh sách phường đã chọn
+
+      // Lấy danh sách phường nếu có quận được chọn
+      if ($scope.address.districtId) {
+        fetchWards($scope.address.districtId);
+      }
+    };
+
+    $scope.onWardChange = function () {
+      const selectedWard = $scope.wards.find(
+        (ward) => ward.WardCode === $scope.address.wardId
+      );
+
+      if (selectedWard) {
+        $scope.address.ward = selectedWard.WardName;
+        console.log("Selected ward:", selectedWard.WardName);
+        console.log("Ward ID:", selectedWard.WardCode); // Kiểm tra ID phường
+      }
+    };
+
+    // Điền danh sách tỉnh/thành phố vào select
+    function populateProvinceSelect(provinces) {
+      const provinceSelect = document.getElementById("provinceSelect");
+      provinces.forEach((province) => {
+        const option = document.createElement("option");
+        option.value = province.ProvinceID;
+        option.textContent = province.ProvinceName;
+        provinceSelect.appendChild(option);
+      });
+    }
+
+    // Xử lý khi người dùng chọn tỉnh/thành phố
+    document
+      .getElementById("provinceSelect")
+      .addEventListener("change", function () {
+        const provinceId = this.value;
+        if (provinceId) {
+          fetchDistricts(provinceId);
+        } else {
+          const districtSelect = document.getElementById("districtSelect");
+          districtSelect.innerHTML =
+            '<option value="">-- Chọn quận/huyện --</option>';
+          districtSelect.disabled = true;
+
+          const wardSelect = document.getElementById("wardSelect");
+          wardSelect.innerHTML =
+            '<option value="">-- Chọn phường/xã --</option>';
+          wardSelect.disabled = true;
+        }
+      });
+
+    // Xử lý khi người dùng chọn quận/huyện
+    document
+      .getElementById("districtSelect")
+      .addEventListener("change", function () {
+        const districtId = this.value;
+        if (districtId) {
+          fetchWards(districtId);
+        } else {
+          const wardSelect = document.getElementById("wardSelect");
+          wardSelect.innerHTML =
+            '<option value="">-- Chọn phường/xã --</option>';
+          wardSelect.disabled = true;
+        }
+      });
+
+    // Tải danh sách tỉnh/thành phố khi trang được load
+    window.addEventListener("DOMContentLoaded", fetchProvinces);
   })
 
   // Directive để xử lý input file

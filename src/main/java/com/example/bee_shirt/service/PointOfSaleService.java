@@ -102,7 +102,7 @@ public class PointOfSaleService {
         String randomCode = generateRandomCode();
         Bill bill = new Bill();
         bill.setCodeBill("CB" + randomCode);
-
+        bill.setCustomer(accountRepository.findByUsername("khachvanglai").get());
         bill.setCreateAt(LocalDateTime.now());
         bill.setStatusBill(0);
         bill.setDeleted(false);
@@ -184,16 +184,20 @@ public class PointOfSaleService {
         return "Update customer info successfully";
     }
 
-    public String checkout(String codeBill, String codeVoucher, String username) {
+    public String checkout(String codeBill, String codeVoucher, String username, String userCode) {
         Bill bill = billRepository.findBillByCode(codeBill);
         Voucher1 voucher = voucherRepository.findVoucherByCode(codeVoucher).orElse(null);
         Account account = bill.getCustomer();
+        bill.setAccount(accountRepository.findByCode(userCode).get());
         bill.setVoucher(voucher);
         bill.setCustomer(account);
         bill.setTypeBill("In-Store");
         bill.setCustomerName(account.getFirstName() + account.getLastName());
         bill.setPhoneNumber(account.getPhone());
+
+
         bill.setAddressCustomer("hanoi");
+
         bill.setMoneyShip(BigDecimal.ZERO);
         double subtotalBeforeDiscount = 0.0;
         double moneyReduce = 0.0;
@@ -297,7 +301,8 @@ public class PointOfSaleService {
     }
 
     public List<Voucher1> findAvailableVoucher(Integer money) {
-        return voucherRepository.findAvailableVoucher(money);
+
+        return voucherRepository.findAvailableVoucher(money, LocalDateTime.now());
     }
 }
 

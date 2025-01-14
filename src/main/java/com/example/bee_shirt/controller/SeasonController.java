@@ -1,6 +1,5 @@
 package com.example.bee_shirt.controller;
 
-import com.example.bee_shirt.EntityThuocTinh.Material;
 import com.example.bee_shirt.EntityThuocTinh.Season;
 import com.example.bee_shirt.repository.SeasonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Random;
 
 @RestController
@@ -24,16 +22,17 @@ public class SeasonController {
 
     // Hiển thị danh sách mùa với phân trang 5 phần tử
     @GetMapping("/list")
-    public ResponseEntity<List<Season>> getAllBrands() {
-        List<Season> categories = seasonRepository.findAll(); // Lấy tất cả các danh mục
-        return ResponseEntity.ok(categories);
+    public ResponseEntity<Page<Season>> getSeasons(@RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 5);
+        Page<Season> seasons = seasonRepository.findAllSeasons(pageable);
+        return ResponseEntity.ok(seasons);
     }
 
     // Thêm mùa
     @PostMapping("/add")
     public ResponseEntity<Season> addSeason(@RequestBody Season season) {
         String codeCategory = generateSizeCode();
-
+season.setStatusSeason(1);
         // Cập nhật mã codeCategory vào đối tượng Category
         season.setCodeSeason(codeCategory);
 
