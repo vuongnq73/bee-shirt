@@ -802,7 +802,7 @@ $scope.updateImagePreview = function(element, imageNumber) {
     $scope.updateShirtDetail = function() {
         // Xóa thông báo lỗi trước khi kiểm tra
         $scope.errorMessage = '';
-        
+    
         // Sao chép dữ liệu từ đối tượng editingShirtDetail
         let updateShirtDetailed = angular.copy($scope.editingShirtDetail);
     
@@ -811,44 +811,38 @@ $scope.updateImagePreview = function(element, imageNumber) {
             $scope.errorMessage = "Vui lòng nhập giá.";
             return;
         } 
-        // Giá phải là số và không có ký tự đặc biệt
         if (isNaN(updateShirtDetailed.price)) {
             $scope.errorMessage = "Giá phải là một số hợp lệ.";
             return;
         }
-        // Giá phải lớn hơn 0
         if (updateShirtDetailed.price <= 0) {
             $scope.errorMessage = "Giá phải lớn hơn 0.";
             return;
         }
-        // Giá không được vượt quá 999999999
         if (updateShirtDetailed.price > 999999999) {
             $scope.errorMessage = "Giá không được vượt quá 999999999.";
             return;
         }
     
-        // Kiểm tra giá trị của số lượng
+        // Kiểm tra số lượng
         if (!updateShirtDetailed.quantity) {
             $scope.errorMessage = "Vui lòng nhập số lượng.";
             return;
         }
-        // Số lượng phải là số nguyên và không có ký tự đặc biệt
         if (!Number.isInteger(updateShirtDetailed.quantity)) {
             $scope.errorMessage = "Số lượng phải là một số nguyên hợp lệ.";
             return;
         }
-        // Số lượng phải lớn hơn 0
         if (updateShirtDetailed.quantity <= 0) {
             $scope.errorMessage = "Số lượng phải lớn hơn 0.";
             return;
         }
-        // Số lượng không được vượt quá 999999999
         if (updateShirtDetailed.quantity > 999999999) {
             $scope.errorMessage = "Số lượng không được vượt quá 999999999.";
             return;
         }
     
-        // Kiểm tra ảnh (nếu có ảnh thì phải hợp lệ)
+        // Kiểm tra ảnh
         if (updateShirtDetailed.image && !updateShirtDetailed.image.match(/\.(jpg|jpeg|png|gif)$/)) {
             $scope.errorMessage = "Vui lòng tải lên ảnh hợp lệ (JPEG, PNG, GIF).";
             return;
@@ -872,23 +866,40 @@ $scope.updateImagePreview = function(element, imageNumber) {
         updateShirtDetailed.season = { id: updateShirtDetailed.seasonId };
         updateShirtDetailed.size = { id: updateShirtDetailed.sizeId };
     
-        // Cập nhật trạng thái và đã xóa
-        updateShirtDetailed.statusshirtdetail = updateShirtDetailed.statusshirtdetail;
-        updateShirtDetailed.deleted = updateShirtDetailed.deleted;
-        if (confirm('Bạn có chắc chắn muốn sửa sản phẩm này không?')) {
-
-        // Gửi yêu cầu cập nhật chi tiết áo thun
-        shirtDetailService.updateShirtDetail(updateShirtDetailed.codeShirtDetail, updateShirtDetailed).then(function() {
-            // Sau khi cập nhật thành công, reset đối tượng đang sửa và tải lại danh sách
-            $scope.editingShirtDetail = null;
-            $scope.getShirtDetails();
-            location.reload();
-        }, function(error) {
-            console.error("Error updating shirt detail", error);
-        });
-    }
-    };
+        // Gọi API kiểm tra trùng
+        let params = {
+            shirtId: updateShirtDetailed.shirtId,
+            patternId: updateShirtDetailed.patternId,
+            genderId: updateShirtDetailed.genderId,
+            originId: updateShirtDetailed.originId,
+            seasonId: updateShirtDetailed.seasonId,
+            sizeIds: [updateShirtDetailed.sizeId],
+            materialId: updateShirtDetailed.materialId,
+            colorIds: [updateShirtDetailed.colorId]
+        };
     
+        // Gọi API kiểm tra trùng
+        shirtDetailService.checkDuplicate(params).then(function(response) {
+            if (response.data.message === "Có sản phẩm đã tồn tại") {
+                alert("Sản phẩm này đã tồn tại với các thuộc tính đã chọn.");
+                return;
+            } else {
+                // Tiến hành cập nhật sản phẩm
+                if (confirm('Bạn có chắc chắn muốn cập nhật sản phẩm này không?')) {
+                    shirtDetailService.updateShirtDetail(updateShirtDetailed.codeShirtDetail, updateShirtDetailed).then(function() {
+                        $scope.editingShirtDetail = null;
+                        $scope.getShirtDetails();
+                        location.reload();
+                    }, function(error) {
+                        console.error("Error updating shirt detail", error);
+                    });
+                }
+            }
+        }).catch(function(error) {
+            console.error("Error checking duplicate", error);
+        });
+    };
+
 
     $scope.deleteShirtDetail = function(codeShirtDetail) {
         console.log("Deleting shirt detail with code:", codeShirtDetail); // Debugging
