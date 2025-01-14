@@ -75,7 +75,6 @@ angular.module("voucherApp", []).controller("voucherController1", [
             console.log($scope.voucherList);
 
             $scope.totalPages = responseData.totalPages || 1;
-  
           } else {
             console.error("Dữ liệu không hợp lệ:", responseData);
             $scope.errorMessage =
@@ -198,13 +197,19 @@ angular.module("voucherApp", []).controller("voucherController1", [
             JSON.stringify(response.data)
           );
           $scope.successMessage = "Voucher details loaded successfully.";
-          console.log(response.data);
           window.location.href = "/assets/VoucherDetail.html";
         })
         .catch(function (error) {
           console.error("Error fetching voucher details:", error);
           $scope.errorMessage = "Unable to fetch voucher details.";
         });
+    };
+
+    $scope.formatDate = function (utcDate) {
+      const localDate = new Date(utcDate); // Tạo đối tượng Date từ UTC
+      return localDate.toLocaleString("en-GB", {
+        timeZone: "Asia/Ho_Chi_Minh",
+      }); // Đảm bảo múi giờ là Asia/Ho_Chi_Minh
     };
 
     window.onload = function () {
@@ -227,17 +232,12 @@ angular.module("voucherApp", []).controller("voucherController1", [
         document.getElementById("maximum_discount").value =
           voucherDetail.maximum_discount;
 
-        // Chuyển đổi thời gian startdate và enddate thành định dạng YYYY-MM-DD
-        const startDate = new Date(voucherDetail.startdate);
-        const endDate = new Date(voucherDetail.enddate);
-
         // Gán giá trị vào các input type="date"
-        document.getElementById("startDate").value = startDate
-          .toISOString()
-          .split("T")[0];
-        document.getElementById("endDate").value = endDate
-          .toISOString()
-          .split("T")[0];
+        document.getElementById("startDate").value = voucherDetail.startdate;
+        document.getElementById("endDate").value = voucherDetail.enddate;
+
+        console.log(voucherDetail.enddate);
+
         console.log(voucherDetail.status_voucher);
         // Set the status
         if (voucherDetail.status_voucher === 1) {
@@ -341,7 +341,7 @@ angular.module("voucherApp", []).controller("voucherController1", [
         method: "POST",
         url: "http://localhost:8080/voucher/add",
         headers: {
-Authorization: "Bearer " + token,
+          Authorization: "Bearer " + token,
           "Content-Type": "application/json",
         },
         data: {
@@ -421,59 +421,81 @@ Authorization: "Bearer " + token,
         });
     };
 
-    // $scope.updateVoucher = function (voucherDetail) {
-    //   const token = sessionStorage.getItem("jwtToken");
+    $scope.updateVoucher = function (newVoucher, id) {
+      const token = sessionStorage.getItem("jwtToken");
 
-    //   if (!token) {
-    //     $scope.errorMessage = "You are not logged in!";
-    //     return;
-    //   }
-    //   $scope.errorMessage = "";
-    //   $scope.successMessage = "";
+      // Check if user is logged in
+      if (!token) {
+        $scope.errorMessage = "Bạn chưa đăng nhập!";
+        return;
+      }
+      $scope.errorMessage = "";
+      $scope.successMessage = "";
 
-    //   // Validate form fields
-    //   if (!voucherDetail || !voucherDetail.code_voucher || !voucherDetail.type_voucher || !voucherDetail.name_voucher) {
-    //     $scope.errorMessage = "Voucher code, type, and name are required!";
-    //     return;
-    //   }
+      if (!newVoucher.quantity || newVoucher.quantity <= 0) {
+        $scope.errorMessage = "Số lượng phải lớn hơn 0!";
+        return;
+      }
 
-    //   if (!voucherDetail.quantity || voucherDetail.quantity <= 0) {
-    //     $scope.errorMessage = "Quantity must be greater than 0!";
-    //     return;
-    //   }
-    //   if (!voucherDetail.min_bill_value || voucherDetail.min_bill_value <= 0) {
-    //     $scope.errorMessage = "Minimum bill value must be greater than 0!";
-    //     return;
-    //   }
-    //   if (!voucherDetail.maximum_discount || voucherDetail.maximum_discount <= 0) {
-    //     $scope.errorMessage = "Maximum discount must be greater than 0!";
-    //     return;
-    //   }
+      // Chuyển đổi startdate và enddate thành chuỗi ISO cho cả ngày và giờ
+      const now = new Date().toISOString();
 
-    //   if (new Date(voucherDetail.enddate) < new Date()) {
-    //     $scope.errorMessage = "Voucher has expired and cannot be updated.";
-    //     return;
-    //   }
+      const startDateTime = new Date(newVoucher.startdate).toISOString();
+      const endDateTime = new Date(newVoucher.enddate).toISOString();
+      // Check if startDateTime is in the past
+      if (startDateTime < now) {
+        $scope.errorMessage =
+          "Ngày giờ bắt đầu không được sớm hơn ngày giờ hiện tại!";
+        return;
+      }
 
-    //   // Send updated voucher data to the server
-    //   $http({
-    //     method: "PUT",
-    //     url: `http://localhost:8080/voucher/update/${voucherDetail.id}`,
-    //     headers: {
-    //       Authorization: "Bearer " + token,
-    //       "Content-Type": "application/json"
-    //     },
-    //     data: voucherDetail
-    //   })
-    //     .then(function (response) {
-    //       $scope.successMessage = "Voucher updated successfully!";
-    //       window.location.href = "/assets/Voucher.html"; // Redirect after update
-    //     })
-    //     .catch(function (error) {
-    //       console.error("Error updating voucher:", error);
-    //       $scope.errorMessage = "Failed to update voucher.";
-    //     });
-    // };
+      // Check if endDateTime is earlier than startDateTime
+      if (endDateTime < startDateTime) {
+        $scope.errorMessage =
+          "Ngày giờ kết thúc không được sớm hơn ngày giờ bắt đầu!";
+        return;
+      }
+
+      // Optional description check
+      newVoucher.description_voucher = newVoucher.description_voucher || ""; // If empty, set it as an empty string
+
+      // Send data to server
+      $http({
+        method: "PUT",
+        url: `http://localhost:8080/voucher/update/${id}`,
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+        data: {
+          code_voucher: newVoucher.code_voucher,
+          type_voucher: newVoucher.type_voucher,
+          name_voucher: newVoucher.name_voucher,
+          discount_value: newVoucher.discount_value,
+          quantity: newVoucher.quantity,
+          min_bill_value: newVoucher.min_bill_value,
+          maximum_discount: newVoucher.maximum_discount,
+          startdate: newVoucher.startdate,
+          enddate: newVoucher.enddate,
+          description_voucher: newVoucher.description_voucher,
+        },
+      })
+        .then(function (response) {
+          $scope.successMessage = "Voucher đã được thêm thành công!";
+          // Refresh the list of vouchers after successful addition
+
+          $scope.voucherList.unshift(response.data); // Dùng unshift để thêm vào đầu mảng
+
+          // $scope.getVouchers();
+          // Optionally redirect to the voucher list page
+          window.location.href = "/assets/Voucher.html";
+        })
+        .catch(function (error) {
+          console.error("Lỗi khi thêm voucher:", error);
+          $scope.errorMessage = "Không thể thêm voucher.";
+        });
+    };
+
     // Hàm xem profile
     $scope.viewProfile = function () {
       const token = sessionStorage.getItem("jwtToken");

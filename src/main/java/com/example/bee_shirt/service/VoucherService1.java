@@ -13,11 +13,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -110,12 +108,48 @@ public List<Voucher1> findByDateRange(LocalDateTime batdau, LocalDateTime ketthu
         if (voucher.getEnddate() != null) {
             voucher.setEnddate(voucher.getEnddate().atZone(ZoneOffset.ofHours(-7)).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime());
         }
-        if (voucher.getType_voucher().equals("Amount") ) {
+        if (voucher.getType_voucher().equals("Amount")) {
             voucher.setMaximum_discount(voucher.getDiscount_value());
         }
         voucher.setStatus_voucher(1);
         // Lưu đối tượng voucher vào cơ sở dữ liệu
         return voucherRepository.save(voucher);
+    }
+
+    public Voucher1 updateVoucher(Voucher1 voucher, Long id) {
+        Voucher1 update = voucherRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
+        update.setStatus_voucher(voucher.getStatus_voucher());
+
+        if(voucher.getName_voucher() != null){
+            update.setName_voucher(voucher.getName_voucher());
+        }
+        if(voucher.getCode_voucher() != null){
+            update.setCode_voucher(voucher.getCode_voucher());
+        }
+        if(voucher.getMin_bill_value() != null){
+            update.setMin_bill_value(voucher.getMin_bill_value());
+        }
+        if(voucher.getMaximum_discount() != null){
+            update.setMaximum_discount(voucher.getMaximum_discount());
+        }
+        if(voucher.getDiscount_value() != null){
+            update.setDiscount_value(voucher.getDiscount_value());
+        }
+        if(voucher.getQuantity() != null){
+            update.setQuantity(voucher.getQuantity());
+        }
+        if(voucher.getDescription_voucher() != null){
+            update.setDescription_voucher(voucher.getDescription_voucher());
+        }
+        if (voucher.getStartdate() != null) {
+            update.setStartdate(voucher.getStartdate().atZone(ZoneOffset.ofHours(-7)).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime());
+        }
+        if (voucher.getEnddate() != null) {
+            update.setEnddate(voucher.getEnddate().atZone(ZoneOffset.ofHours(-7)).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime());
+        }
+        update.setStatus_voucher(voucher.getStatus_voucher());
+        return voucherRepository.save(update);
     }
 
     public void deleteVoucher(Long id) {
