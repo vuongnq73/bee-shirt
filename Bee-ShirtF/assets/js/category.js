@@ -338,6 +338,7 @@ $scope.saveEditCategory = function() {
             alert("Tên danh mục không được chỉ chứa khoảng trắng!");
             return;
         }
+        
     
         // Kiểm tra có ít nhất một ký tự là chữ (bao gồm ký tự tiếng Việt)
         const regex = /[a-zA-Zàáạảãạâầấẩẫàáăắằẳẵắâầçćèéêẹẻẽìíîĩìíòóôỗốồỏỏồúùûủũưứừửữùủỳýỹỵý]/;
