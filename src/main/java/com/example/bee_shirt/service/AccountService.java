@@ -15,7 +15,7 @@ import com.example.bee_shirt.exception.ErrorCode;
 import com.example.bee_shirt.mapper.AccountMapper;
 import com.example.bee_shirt.repository.AccountRepository;
 import com.example.bee_shirt.repository.CartRepository;
-import com.example.bee_shirt.repository.DeliveryAddressRepository;
+import com.example.bee_shirt.repository.DeliveryAddressGiangRepository;
 import com.example.bee_shirt.repository.RoleRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +44,7 @@ public class AccountService {
     RoleRepository roleRepository;
     Cloudinary cloudinary;
     CartRepository cartRepository;
-    DeliveryAddressRepository deliveryAddressRepository;
+    DeliveryAddressGiangRepository deliveryAddressGiangRepository;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
@@ -156,7 +156,7 @@ public class AccountService {
         deliveryAddressGiang.setWardId(deliveryAddressRequest.getWardId());
         deliveryAddressGiang.setPhone(request.getPhone());
         deliveryAddressGiang.setName(request.getLastName());
-        deliveryAddressRepository.save(deliveryAddressGiang);
+        deliveryAddressGiangRepository.save(deliveryAddressGiang);
 
 
         //Tạo giỏ hàng cho account
@@ -188,7 +188,7 @@ public class AccountService {
         Account account = accountRepository.findByCode(code)
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
 
-        DeliveryAddressGiang addressGiang = deliveryAddressRepository.findByAccountId(account.getId());
+        DeliveryAddressGiang addressGiang = deliveryAddressGiangRepository.findByAccountId(account.getId());
 
         if(addressGiang == null){
             throw new AppException(ErrorCode.ADDRESS_NOT_FOUND);
@@ -240,7 +240,7 @@ public class AccountService {
         account.setUpdateBy(this.getMyInfo().getCode());
         account.setUpdateAt(LocalDate.now());
 
-        DeliveryAddressGiang addressGiang = deliveryAddressRepository.findByAccountId(account.getId());
+        DeliveryAddressGiang addressGiang = deliveryAddressGiangRepository.findByAccountId(account.getId());
 
         if(addressGiang == null){
             throw new AppException(ErrorCode.ADDRESS_NOT_FOUND);
@@ -256,7 +256,7 @@ public class AccountService {
         addressGiang.setWardId(deliveryAddressRequest.getWardId());
         addressGiang.setPhone(account.getPhone());
         addressGiang.setName(account.getLastName());
-        deliveryAddressRepository.save(addressGiang);
+        deliveryAddressGiangRepository.save(addressGiang);
 
         return accountMapper.toUserResponse(accountRepository.save(account));
     }
@@ -317,7 +317,7 @@ public class AccountService {
     }
 
     private String generateAddressCode() {
-        String lastCode = Optional.ofNullable(deliveryAddressRepository.getTop1())
+        String lastCode = Optional.ofNullable(deliveryAddressGiangRepository.getTop1())
                 .map(DeliveryAddressGiang::getDeliveryAddressCode)
                 .orElse("ADDRESS0");
 

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface DeliveryAddressRepository extends JpaRepository<DeliveryAddressGiang, Integer> {
+public interface DeliveryAddressGiangRepository extends JpaRepository<DeliveryAddressGiang, Integer> {
     @Query(value = """
                 SELECT TOP 1 * FROM delivery_address ORDER BY id DESC
             """, nativeQuery = true)
