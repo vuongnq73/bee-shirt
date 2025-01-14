@@ -194,6 +194,7 @@
           <label for="phone">SĐT:</label>
           <input type="text" id="phone" ng-model="user.phone" />
         </div>
+
        <!-- Địa chỉ -->
        <div id="newAddressSection" ng-init="onProvinceChange()">
         <select ng-model="address.provinceId" ng-change="onProvinceChange()" id="provinceSelect">
@@ -220,6 +221,7 @@
         <input type="text" ng-model="address.detailAddress" placeholder="Tên đường - Số nhà" class="form-control" required />
       </div>
       
+
         <div class="form-group">
           <label for="status">Trạng thái:</label>
           <select

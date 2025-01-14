@@ -10,5 +10,5 @@ import lombok.*;
 public class AddToCartRequestDTO {
     private Integer cartId;
     private Integer shirtDetailId;
-
+    private Integer statusCartDetail;
 }

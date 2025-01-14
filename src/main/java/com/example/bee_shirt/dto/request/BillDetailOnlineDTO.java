@@ -34,6 +34,9 @@ public class BillDetailOnlineDTO {
     private String note;
     private Integer statusBill;
     private BigDecimal moneyReduce;
+    private String notes;
+    private String codeShirtDetail;
+    private String nameColor;
 
 
 }

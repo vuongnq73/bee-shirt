@@ -46,6 +46,7 @@ public class Account {
     String lastName;
     @Column(name = "avatar")
     String avatar;
+
     @Column(name = "phone_number")
     String phone;
     @Column(name = "email")

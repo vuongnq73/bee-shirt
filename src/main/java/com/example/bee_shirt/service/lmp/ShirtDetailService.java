@@ -14,13 +14,23 @@ import com.example.bee_shirt.exception.AppException;
 import com.example.bee_shirt.exception.ErrorCode;
 import com.example.bee_shirt.mapper.AccountMapper;
 import com.example.bee_shirt.repository.*;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -42,8 +52,7 @@ public class ShirtDetailService {
     @Autowired private ShirtRepository shirtRepository;
     @Autowired private CategoryRepository categoryRepository;
     @Autowired private AccountRepository accountRepository;
-
-    private AccountMapper accountMapper;
+    @Autowired private AccountMapper accountMapper;
     @Autowired
     private BrandRepository brandRepository;
 
@@ -103,9 +112,7 @@ public class ShirtDetailService {
 
         return result;
     }
-
     public List<ShirtDetail> addShirtDetails(List<ShirtDetailDTO> shirtDetailDTOs) {
-        // Chuyển đổi từ DTO sang entity và xử lý liên kết
         List<ShirtDetail> shirtDetails = shirtDetailDTOs.stream().map(dto -> {
             ShirtDetail shirtDetail = new ShirtDetail();
 
@@ -116,7 +123,7 @@ public class ShirtDetailService {
             // Gán các giá trị từ DTO vào entity
             shirtDetail.setQuantity(dto.getQuantity());
             shirtDetail.setPrice(dto.getPrice());
-            shirtDetail.setStatusshirtdetail(dto.getStatusshirtdetail());
+            shirtDetail.setStatusshirtdetail(1);
             shirtDetail.setCreateBy(dto.getCreateBy());
             shirtDetail.setCreateAt(dto.getCreateAt());
             shirtDetail.setUpdateBy(dto.getUpdateBy());
@@ -124,7 +131,6 @@ public class ShirtDetailService {
             shirtDetail.setDeleted(dto.isDeleted());
 
             // Gán các đối tượng từ ID trong DTO
-            // Lấy các đối tượng từ repository và gán vào entity
             Shirt shirt = shirtRepository.findById(dto.getShirtId())
                     .orElseThrow(() -> new RuntimeException("Shirt not found"));
             shirtDetail.setShirt(shirt);
@@ -156,15 +162,37 @@ public class ShirtDetailService {
             Color color = colorRepository.findById(dto.getColorId())
                     .orElseThrow(() -> new RuntimeException("Color not found"));
             shirtDetail.setColor(color);
+
+            // Set hình ảnh
             shirtDetail.setImage("/assets/img/" + dto.getImage());
-            shirtDetail.setImage2("/assets/img/" +dto.getImage2());
-            shirtDetail.setImage3("/assets/img/" +dto.getImage3());
+            shirtDetail.setImage2("/assets/img/" + dto.getImage2());
+            shirtDetail.setImage3("/assets/img/" + dto.getImage3());
+
+            // Tạo mã QR và lưu vào thư mục
+            try {
+                String qrCodeDirectory = "D:\\1a_DATN_2024\\bee-shirt\\src\\QRShirtDetail\\"; // Thay đổi thành thư mục bạn muốn lưu mã QR
+                String qrCodeFileName = generatedCode + ".png";
+                generateQRCodeImage(generatedCode, qrCodeDirectory + qrCodeFileName);
+            } catch (WriterException | IOException e) {
+                throw new RuntimeException("Error generating QR Code: " + e.getMessage());
+            }
+
             return shirtDetail;
         }).collect(Collectors.toList());
 
         // Lưu tất cả vào cơ sở dữ liệu và trả về
         return shirtDetailRepository.saveAll(shirtDetails);
     }
+
+    // Phương thức tạo mã QR
+    private void generateQRCodeImage(String text, String filePath) throws WriterException, IOException {
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 300, 300);
+
+        Path path = new File(filePath).toPath();
+        MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
+    }
+
 
 
     public List<ShirtDetail> saveAll(List<ShirtDetail> shirtDetails) {
@@ -361,7 +389,9 @@ public class ShirtDetailService {
     public Iterable<Shirt> getAllShirts() {
         return shirtRepository.findAll();
     }
-
+    public Shirt getShirtByCodeShirt(String codeShirt) {
+        return shirtRepository.findByCodeshirt(codeShirt);
+    }
 
 
     public List<HomePageResponse> getTop5ShirtDetail() {
@@ -463,5 +493,10 @@ public class ShirtDetailService {
     public void updateQuantityByCodeBill(String codeBill) {
         shirtDetailRepository.updateQuantityByCodeBill(codeBill);
     }
+//Kểm tra số lwuongj sẩn phâ có ở triong kho
+public List<Object[]> getShirtDetailsByBillCode(String codeBill) {
+    return shirtDetailRepository.findShirtDetailsByBillCode(codeBill);
+}
+
 }
 

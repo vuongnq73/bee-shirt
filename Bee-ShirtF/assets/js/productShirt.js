@@ -126,7 +126,7 @@ ShirtApp.controller('ShirtController', ['$scope', 'shirtService', function($scop
     };
     $scope.viewDetails = function (codeshirt) {
         // Chuyển hướng đến trang chi tiết sản phẩm với mã sản phẩm (codeShirt) như tham số query
-        window.location.href = `ProductDetail.html?codeShirt=${codeshirt}`;
+        window.location.href = `ProductDetailByCode.html?codeShirt=${codeshirt}`;
     };
     $scope.getShirts = function() {
         shirtService.getShirts().then(function(response) {

@@ -37,13 +37,19 @@ public class PointOfSaleService {
     @Autowired
     private BillDetailRepository billDetailRepository;
 
+    @Autowired
+    private BillPaymentRepo billPaymentRepository;
+
+    @Autowired
+    private PaymentMethodRepo paymentMethodRepository;
+
     public List<ShirtDetail> searchShirtDetails(String query, int page, int size) {
         return shirtDetailRepository.findListShirtDetailByCodeOrName("%" + query + "%", PageRequest.of(page, size)).getContent();
     }
 
     public List<Bill> getPendingBills() {
         List<BillDetail> oldBillDetails = billDetailRepository.findOldPendingBillDetails();
-        for (BillDetail obd : oldBillDetails){
+        for (BillDetail obd : oldBillDetails) {
             obd.getShirtDetail().setQuantity(obd.getShirtDetail().getQuantity() + obd.getQuantity());
             shirtDetailRepository.save(obd.getShirtDetail());
         }
@@ -52,7 +58,7 @@ public class PointOfSaleService {
     }
 
     public List<ShirtDetail> getAllShirtDetail() {
-        return shirtDetailRepository.findAll();
+        return shirtDetailRepository.findAllAvaiable();
     }
 
     public List<BillDetail> getBillDetails(String codeBill) {
@@ -96,7 +102,7 @@ public class PointOfSaleService {
         String randomCode = generateRandomCode();
         Bill bill = new Bill();
         bill.setCodeBill("CB" + randomCode);
-
+        bill.setCustomer(accountRepository.findByUsername("khachvanglai").get());
         bill.setCreateAt(LocalDateTime.now());
         bill.setStatusBill(0);
         bill.setDeleted(false);
@@ -124,7 +130,7 @@ public class PointOfSaleService {
             billDetailRepository.save(billDetail);
         }
 
-        shirtDetail.setQuantity(shirtDetail.getQuantity()-quantity);
+        shirtDetail.setQuantity(shirtDetail.getQuantity() - quantity);
         shirtDetailRepository.save(shirtDetail);
         return "Add to cart successfully";
     }
@@ -139,7 +145,7 @@ public class PointOfSaleService {
         billDetail.setQuantity(quantity);
         billDetailRepository.save(billDetail);
 
-        billDetail.getShirtDetail().setQuantity(billDetail.getShirtDetail().getQuantity()+oldQuantity-quantity);
+        billDetail.getShirtDetail().setQuantity(billDetail.getShirtDetail().getQuantity() + oldQuantity - quantity);
         shirtDetailRepository.save(billDetail.getShirtDetail());
         return "Change quantity successfully";
     }
@@ -162,8 +168,8 @@ public class PointOfSaleService {
         bill.setStatusBill(10);
         billRepository.save(bill);
 
-        List<BillDetail> oldCart = billDetailRepository.findBillDetailByBillCodeAndStatusBillDetail(codeBill,0);
-        for (BillDetail oc : oldCart){
+        List<BillDetail> oldCart = billDetailRepository.findBillDetailByBillCodeAndStatusBillDetail(codeBill, 0);
+        for (BillDetail oc : oldCart) {
             oc.getShirtDetail().setQuantity(oc.getShirtDetail().getQuantity() + oc.getQuantity());
             shirtDetailRepository.save(oc.getShirtDetail());
         }
@@ -178,31 +184,35 @@ public class PointOfSaleService {
         return "Update customer info successfully";
     }
 
-    public String checkout(String codeBill, String codeVoucher, String username) {
+    public String checkout(String codeBill, String codeVoucher, String username, String userCode) {
         Bill bill = billRepository.findBillByCode(codeBill);
         Voucher1 voucher = voucherRepository.findVoucherByCode(codeVoucher).orElse(null);
         Account account = bill.getCustomer();
+        bill.setAccount(accountRepository.findByCode(userCode).get());
         bill.setVoucher(voucher);
         bill.setCustomer(account);
         bill.setTypeBill("In-Store");
-        bill.setCustomerName(account.getFirstName()+account.getLastName());
+        bill.setCustomerName(account.getFirstName() + account.getLastName());
         bill.setPhoneNumber(account.getPhone());
+
+        bill.setAddressCustomer("hanoi");
+
         bill.setMoneyShip(BigDecimal.ZERO);
         double subtotalBeforeDiscount = 0.0;
         double moneyReduce = 0.0;
         for (BillDetail bd : billDetailRepository.findBillDetailByBillCodeAndStatusBillDetail(codeBill, 0)) {
             subtotalBeforeDiscount += bd.getQuantity() * bd.getShirtDetail().getPrice().doubleValue();
         }
-        if (voucher!=null) {
-            if(Objects.equals(voucher.getType_voucher(), "Amount")){
-                if (!(voucher.getMin_bill_value() >subtotalBeforeDiscount)) {
-                    moneyReduce=voucher.getDiscount_value();
+        if (voucher != null) {
+            if (Objects.equals(voucher.getType_voucher(), "Amount")) {
+                if (!(voucher.getMin_bill_value() > subtotalBeforeDiscount)) {
+                    moneyReduce = voucher.getDiscount_value();
                 }
             } else {
-                if (!(voucher.getMin_bill_value() >subtotalBeforeDiscount)) {
-                    moneyReduce=voucher.getDiscount_value()*subtotalBeforeDiscount/100;
-                    if (moneyReduce>voucher.getMaximum_discount()){
-                        moneyReduce=voucher.getMaximum_discount();
+                if (!(voucher.getMin_bill_value() > subtotalBeforeDiscount)) {
+                    moneyReduce = voucher.getDiscount_value() * subtotalBeforeDiscount / 100;
+                    if (moneyReduce > voucher.getMaximum_discount()) {
+                        moneyReduce = voucher.getMaximum_discount();
                     }
                 }
             }
@@ -215,10 +225,19 @@ public class PointOfSaleService {
         bill.setStatusBill(6);
         bill.setUpdateAt(LocalDate.now());
         bill.setNote("None");
-        if (voucher!=null){
-            voucher.setQuantity(voucher.getQuantity()-1);
+        if (voucher != null) {
+            voucher.setQuantity(voucher.getQuantity() - 1);
             voucherRepository.save(voucher);
         }
+
+        BillPayment bp = new BillPayment();
+        bp.setBill(bill);
+        bp.setPaymentAmount(bill.getTotalMoney());
+        bp.setDeleted(false);
+
+        bp.setPaymentMethod(paymentMethodRepository.findPaymentMethodByCode("PM001"));
+
+        billPaymentRepository.save(bp);
         billRepository.save(bill);
         return "Checkout successfully";
     }
@@ -234,10 +253,15 @@ public class PointOfSaleService {
     public String scanBarcode() {
         webcamStat = true;
         webcam.open();
+
+        long startTime = System.currentTimeMillis(); // Lưu thời gian bắt đầu
+        long timeout = 15000; // Thời gian chờ (15 giây)
+
         try {
             while (webcamStat) {
                 BufferedImage image = webcam.getImage();
                 if (image == null) continue;
+
                 LuminanceSource source = new BufferedImageLuminanceSource(image);
                 BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
 
@@ -246,7 +270,14 @@ public class PointOfSaleService {
                     if (result.getText() != null) {
                         return result.getText();
                     }
-                } catch (NotFoundException ignored) {}
+                } catch (NotFoundException ignored) {
+                }
+
+                // Kiểm tra thời gian hiện tại so với thời gian bắt đầu
+                if (System.currentTimeMillis() - startTime > timeout) {
+                    webcamStat = false; // Kết thúc vòng lặp
+                    return "Timeout";
+                }
 
                 try {
                     Thread.sleep(500);
@@ -259,13 +290,17 @@ public class PointOfSaleService {
                 webcam.close();
             }
         }
+
         return "Webcam end";
     }
+
 
     public List<Account> getAllCustomer() {
         return accountRepository.getAllCustomer();
     }
 
-    public List<Voucher1> findAvailableVoucher(Integer money){return voucherRepository.findAvailableVoucher(money);}
+    public List<Voucher1> findAvailableVoucher(Integer money) {
+        return voucherRepository.findAvailableVoucher(money);
+    }
 }
 

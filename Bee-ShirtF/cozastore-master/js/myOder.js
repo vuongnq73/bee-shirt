@@ -107,8 +107,105 @@ angular.module('MyOderApp', [])
             fetchOrdersByCustomerId($scope.user.id, tabIndex); // Lấy dữ liệu cho tab đã chọn
         };
 
+    $scope.myProfile = null;
+    $scope.logout = function () {
+        // Lấy token từ sessionStorage
+        const token = sessionStorage.getItem("jwtToken");
+        if (!token) {
+          alert("Không tìm thấy token, vui lòng đăng nhập lại.");
+          window.location.href = "/assets/account/login.html";
+          return;
+        }
+  
+        // Tạo payload cho API logout
+        const logoutRequest = {
+          token: token, // Gửi token của người dùng hiện tại
+        };
+  
+        // Gửi yêu cầu logout đến backend
+        $http
+          .post("http://localhost:8080/auth/logout", logoutRequest)
+          .then(function (response) {
+            // Xóa token khỏi sessionStorage
+            sessionStorage.removeItem("jwtToken");
+  
+            // Chuyển hướng về trang đăng nhập
+            alert("Đăng xuất thành công!");
+            window.location.href = "/assets/account/login.html";
+          })
+          .catch(function (error) {
+            // Xử lý lỗi khi không logout được
+            console.error("Lỗi khi đăng xuất:", error);
+            alert("Có lỗi xảy ra khi đăng xuất. Vui lòng thử lại!");
+          });
+      };
+  
+      $scope.logout = function () {
+        $scope.myProfile = null;
+        window.location.href = "/assets/account/login.html";
+      };
+  
+      $scope.viewProfile = function () {
+        const token = sessionStorage.getItem("jwtToken");
+  
+        if (!token || token.split(".").length !== 3) {
+          console.log("Token không hợp lệ hoặc không tồn tại");
+          return;
+        }
+  
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        if (payload && payload["user Code"]) {
+          const userCode = payload["user Code"];
+          sessionStorage.setItem("userCode", userCode);
+          console.log("userCode đã được lưu vào sessionStorage:", userCode);
+        } else {
+          console.log("Không tìm thấy userCode trong payload");
+        }
+  
+        $window.location.href = "/assets/staff/Profile.html";
+      };
+  
+      $scope.getMyProfile = function () {
+        const token = sessionStorage.getItem("jwtToken");
+  
+        if (!token) {
+          $scope.errorMessage = "Bạn cần đăng nhập trước.";
+          $scope.loading = false;
+          return;
+        }
+  
+        $http({
+          method: "GET",
+          url: "http://localhost:8080/admin/myProfile",
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        })
+          .then(function (response) {
+            if (response.data && response.data.result) {
+              $scope.myProfile = response.data.result;
+            } else {
+              $scope.errorMessage = "Không thể lấy thông tin người dùng.";
+            }
+          })
+          .catch(function (error) {
+            console.error("Lỗi khi lấy thông tin người dùng:", error);
+            $scope.errorMessage = "Có lỗi xảy ra khi lấy dữ liệu.";
+          })
+          .finally(function () {
+            $scope.loading = false;
+          });
+      };
+  
+      $scope.goBack = function () {
+  $window.history.back();
+      };
+
+      $scope.getMyProfile();
+      
         // Khi tài liệu sẵn sàng, gọi hàm load profile
         angular.element(document).ready(() => {
             loadUserProfile();
+
         });
     });

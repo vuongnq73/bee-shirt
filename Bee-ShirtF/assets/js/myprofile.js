@@ -79,6 +79,7 @@ angular
       }
 
           // Hàm lấy quyền cao nhất
+
           function getHighestRole(scopes) {
             const roles = scopes ? scopes.split(" ") : [];
             const rolePriority = {
@@ -90,6 +91,7 @@ angular
             const validRoles = roles.filter((role) => rolePriority[role]);
             validRoles.sort((a, b) => rolePriority[a] - rolePriority[b]);
         
+
             return validRoles[0] || null;
           }
           
@@ -267,6 +269,7 @@ angular
       return highestRole === "USER";
     };
     
+
     $scope.isUser = function () {
       const token = sessionStorage.getItem("jwtToken");
       if (!token) return false;
