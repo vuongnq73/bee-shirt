@@ -16,6 +16,7 @@ import java.util.Optional;
 public interface CartDetailRepository extends JpaRepository<CartDetail,Integer> {
     @Query("SELECT cd FROM CartDetail cd WHERE cd.cart.account.code LIKE :query AND cd.statusCartDetail = :status AND cd.deleted = false")
     List<CartDetail> findCartDetailByAccountCodeAndStatusCartDetail(String query, Integer status);
+
     Optional<CartDetail> findByCartAndShirtDetailAndStatusCartDetail(Cart cart, ShirtDetail shirtDetail, int statusCartDetail);
 
 
@@ -24,6 +25,12 @@ public interface CartDetailRepository extends JpaRepository<CartDetail,Integer> 
     @Query("UPDATE CartDetail cd SET cd.quantity = cd.shirtDetail.quantity WHERE cd.cart.account.code LIKE :query AND cd.statusCartDetail = 0 AND cd.deleted = false AND cd.quantity > cd.shirtDetail.quantity")
     int updateInvalidQuantity(@Param("query") String query);
 
+
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE CartDetail cd SET cd.deleted = TRUE ,cd.statusCartDetail=2 WHERE cd.shirtDetail.quantity = 0 OR cd.shirtDetail.statusshirtdetail != 1 OR cd.shirtDetail.deleted = true OR cd.shirtDetail.shirt.statusshirt != 1 OR cd.shirtDetail.shirt.deleted = true")
+    int updateInvalidCartDetails();
 
 
     @Query("SELECT cd FROM CartDetail cd WHERE cd.codeCartDetail LIKE %:query%")
@@ -36,7 +43,7 @@ public interface CartDetailRepository extends JpaRepository<CartDetail,Integer> 
 
     @Transactional
     @Modifying
-    @Query("UPDATE CartDetail cd SET cd.deleted = true WHERE cd.codeCartDetail LIKE %:query%")
+    @Query("UPDATE CartDetail cd SET cd.deleted = true,cd.statusCartDetail=2 WHERE cd.codeCartDetail LIKE %:query%")
     int cancelCartDetail(@Param("query") String query);
 
 

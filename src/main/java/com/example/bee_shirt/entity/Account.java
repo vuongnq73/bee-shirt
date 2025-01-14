@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -45,6 +46,7 @@ public class Account {
     String lastName;
     @Column(name = "avatar")
     String avatar;
+
     @Column(name = "phone_number")
     String phone;
     @Column(name = "email")

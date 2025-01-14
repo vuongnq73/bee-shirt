@@ -56,12 +56,8 @@ public class SendEmailService {
     }
 
 
-    public String forgotPassword(String email, String username){
+    public String forgotPassword(String email){
         Optional<Account> account = accountRepository.findByEmail(email);
-        Optional<Account> check = accountRepository.findByUsername(username);
-        if(!account.equals(check) ){
-            throw new AppException(ErrorCode.EMAIL_EXISTED);
-        }
         if(account.isEmpty()){
             throw new AppException(ErrorCode.ACCOUNT_NOT_FOUND);
         }
@@ -116,6 +112,7 @@ public class SendEmailService {
     }
 
 
+
     //Kiểm tra token
     public String verifyVerificationCode(String email, String token) {
     log.info("Verifying code for email: {}", email);
@@ -132,6 +129,7 @@ public class SendEmailService {
 
     // Nếu mã hợp lệ, trả về thông báo thành công
     return "Verification code is valid.";
+
     }
 
 }

@@ -672,13 +672,7 @@
       <div>
         <div class="filter-container">
           <!-- Bộ lọc -->
-          <div class="filter-column">
-              <label for="productCode">Mã sản phẩm:</label>
-              <select id="shirt" ng-model="filters.shirtId" style="border-radius: 5px;width: 220px;">
-                  <option value="">Tất cả</option>
-                  <option ng-repeat="shirt in shirts" ng-value="{{shirt.id}}">{{shirt.nameshirt}}</option>
-              </select>
-          </div>
+          
       
           <div class="filter-column">
               <label for="color">Màu sắc:</label>
@@ -703,16 +697,17 @@
                   <option ng-repeat="size in sizes" ng-value="{{size.id}}">{{size.namesize}}</option>
               </select>
           </div>
+          <div class="filter-column">
+            <label for="origin">Xuất xứ:</label>
+            <select id="origin" ng-model="filters.originId"style="border-radius: 5px;width: 220px;">
+                <option value="">Tất cả</option>
+                <option ng-repeat="origin in origins" ng-value="{{origin.id}}">{{origin.nameOrigin}}</option>
+            </select>
+        </div>
       </div>
       
       <div class="filter-container">
-        <div class="filter-column">
-          <label for="origin">Xuất xứ:</label>
-          <select id="origin" ng-model="filters.originId"style="border-radius: 5px;width: 220px;">
-              <option value="">Tất cả</option>
-              <option ng-repeat="origin in origins" ng-value="{{origin.id}}">{{origin.nameOrigin}}</option>
-          </select>
-      </div>
+       
         <div class="filter-column">
           <label for="pattern">Mẫu áo:</label>
           <select id="pattern" ng-model="filters.patternId"style="border-radius: 5px;width: 220px;">
@@ -785,8 +780,8 @@
           <td>{{shirtDetail.nameSize}}</td>
           <td><img ng-src="{{shirtDetail.image }}" alt="Ảnh sản phẩm" width="100" height="100"></td>
           <td>
-              <span ng-if="shirtDetail.statusshirtdetail === 0">Đang bán</span>
-              <span ng-if="shirtDetail.statusshirtdetail === 1">Ngừng bán</span>
+              <span ng-if="shirtDetail.statusshirtdetail === 1">Đang bán</span>
+              <span ng-if="shirtDetail.statusshirtdetail === 0">Ngừng bán</span>
           </td>
           <td>
               <button type="button" class="btn btn-primary" ng-click="editShirtDetail(shirtDetail)" data-bs-toggle="modal" data-bs-target="#editShirtModal"> <i class="bi bi-table"></i></button>                        
@@ -886,10 +881,10 @@
             <label class="col-form-label col-sm-2">Trạng Thái:</label>
             <div class="col-md-6 mb-3 d-flex">
                 <div class="custom-radio mr-4">
-                    <input type="radio" ng-model="editingShirtDetail.statusshirtdetail" value="0" ng-checked="editingShirtDetail.statusshirtdetail === 0"> Đang Bán
+                    <input type="radio" ng-model="editingShirtDetail.statusshirtdetail" value="0" ng-checked="editingShirtDetail.statusshirtdetail === 0"> Ngừng Bán
                 </div>
                 <div class="custom-radio">
-                    <input type="radio" ng-model="editingShirtDetail.statusshirtdetail" value="1" ng-checked="editingShirtDetail.statusshirtdetail === 1"> Ngừng Bán
+                    <input type="radio" ng-model="editingShirtDetail.statusshirtdetail" value="1" ng-checked="editingShirtDetail.statusshirtdetail === 1"> Đang Bán
                 </div>
             </div>
         </div>

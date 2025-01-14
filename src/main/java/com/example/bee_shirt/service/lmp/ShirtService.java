@@ -51,7 +51,7 @@ public class ShirtService {
         // Tạo mã sản phẩm ngẫu nhiên
         String generatedCode = "S" + generateRandomNumber(6);
         shirt.setCodeshirt(generatedCode);
-
+        shirt.setStatusshirt(1);
         // Lưu vào cơ sở dữ liệu
         return shirtRepository.save(shirt);
     }

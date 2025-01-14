@@ -503,9 +503,7 @@
         <!-- Nút mở modal -->
       <div class="page-inner">
 
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addVariantModal">
-      Thêm Sản Phẩm Chi Tiết
-      </button>
+    
 
       <!-- Modal -->
       <div class="modal fade" id="addVariantModal" tabindex="-1" aria-labelledby="addVariantModalLabel" aria-hidden="true">
@@ -804,8 +802,8 @@
           <td>{{shirtDetail.nameSize}}</td>
           <td><img ng-src="{{shirtDetail.image }}" alt="Ảnh sản phẩm" width="100" height="100"></td>
           <td>
-              <span ng-if="shirtDetail.statusshirtdetail === 0">Đang bán</span>
-              <span ng-if="shirtDetail.statusshirtdetail === 1">Ngừng bán</span>
+              <span ng-if="shirtDetail.statusshirtdetail === 1">Đang bán</span>
+              <span ng-if="shirtDetail.statusshirtdetail === 0">Ngừng bán</span>
           </td>
           <td>
               <button type="button" class="btn btn-primary" ng-click="editShirtDetail(shirtDetail)" data-bs-toggle="modal" data-bs-target="#editShirtModal"> <i class="bi bi-table"></i></button>                        
@@ -905,10 +903,10 @@
             <label class="col-form-label col-sm-2">Trạng Thái:</label>
             <div class="col-md-6 mb-3 d-flex">
                 <div class="custom-radio mr-4">
-                    <input type="radio" ng-model="editingShirtDetail.statusshirtdetail" value="0" ng-checked="editingShirtDetail.statusshirtdetail === 0"> Đang Bán
+                    <input type="radio" ng-model="editingShirtDetail.statusshirtdetail" value="0" ng-checked="editingShirtDetail.statusshirtdetail === 0"> Ngừng Bán
                 </div>
                 <div class="custom-radio">
-                    <input type="radio" ng-model="editingShirtDetail.statusshirtdetail" value="1" ng-checked="editingShirtDetail.statusshirtdetail === 1"> Ngừng Bán
+                    <input type="radio" ng-model="editingShirtDetail.statusshirtdetail" value="1" ng-checked="editingShirtDetail.statusshirtdetail === 1"> Đang Bán
                 </div>
             </div>
         </div>

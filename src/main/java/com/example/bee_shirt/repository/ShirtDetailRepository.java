@@ -347,6 +347,14 @@ ORDER BY
         "WHERE b.code_bill = :codeBill",
         nativeQuery = true)
 void updateQuantityByCodeBill(@Param("codeBill") String codeBill);
-
+//kiểm tra số lượng sản phâm trong kho
+    @Modifying
+    @Query(value = "SELECT sd.code_shirt_detail, sd.quantity " +
+            "FROM shirt_detail sd " +
+            "JOIN bill_detail bd ON sd.id = bd.shirt_detail_id " +
+            "JOIN bill b ON bd.bill_id = b.id " +
+            "WHERE b.code_bill = :codeBill",
+            nativeQuery = true)
+    List<Object[]> findShirtDetailsByBillCode(@Param("codeBill") String codeBill);
 
 }

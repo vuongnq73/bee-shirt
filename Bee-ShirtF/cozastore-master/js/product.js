@@ -31,8 +31,8 @@ angular.module("productApp", []).controller("ProductController", [
           if (response.data && response.data.code === 1000) {
             $scope.shirtDetails = response.data.result;
             // Giới hạn chỉ hiển thị 8 sản phẩm
+            
             $scope.filteredShirtList = $scope.shirtDetails.slice(0, 8);
-
             // Gọi API để lấy tổng số sản phẩm
             $http
               .get("http://localhost:8080/homepage/countall")

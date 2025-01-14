@@ -4,6 +4,7 @@ import com.example.bee_shirt.entity.BillDetail;
 import com.example.bee_shirt.entity.CartDetail;
 import com.example.bee_shirt.entity.DeliveryAddress;
 import com.example.bee_shirt.entity.ShirtDetail;
+import com.example.bee_shirt.repository.CartDetailRepository;
 import com.example.bee_shirt.service.CartService;
 import com.example.bee_shirt.service.PointOfSaleService;
 import lombok.AccessLevel;
@@ -34,6 +35,7 @@ public class CartController {
     @GetMapping("/update-invalid-quantity")
     @ResponseBody
     public int updateInvalidQuantity(@RequestParam("codeAccount") String codeAccount) {
+//        cartService.up
         return cartService.updateInvalidQuantity(codeAccount);
     }
 

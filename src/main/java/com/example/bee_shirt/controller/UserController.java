@@ -1,6 +1,7 @@
 package com.example.bee_shirt.controller;
 
 import com.example.bee_shirt.dto.request.AccountCreationRequest;
+import com.example.bee_shirt.dto.request.DeliveryAddressRequest;
 import com.example.bee_shirt.dto.response.AccountResponse;
 import com.example.bee_shirt.dto.response.ApiResponse;
 import com.example.bee_shirt.service.AccountService;
@@ -22,7 +23,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<AccountResponse>> register(
-            @Valid @ModelAttribute AccountCreationRequest request,
+            @Valid @ModelAttribute AccountCreationRequest request, @Valid @ModelAttribute DeliveryAddressRequest addressRequest,
             @RequestParam(value = "avatarFile", required = false) MultipartFile avatarFile) {
 
         // Kiểm tra avatarFile trong request
@@ -34,7 +35,7 @@ public class UserController {
         }
 
         // Tạo tài khoản
-        AccountResponse accountResponse = accountService.createAccount(request, false);
+        AccountResponse accountResponse = accountService.createAccount(request, false, addressRequest);
 
         ApiResponse<AccountResponse> response = ApiResponse.<AccountResponse>builder()
                 .code(1000)

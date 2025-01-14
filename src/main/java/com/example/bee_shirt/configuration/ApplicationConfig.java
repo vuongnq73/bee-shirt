@@ -95,6 +95,7 @@ public class ApplicationConfig {
                         .updateBy("ad")
                         .deleted(false)
                         .updateAt(LocalDate.now())
+                        .code("ACC0000")
                         .build();
 
                 Set<Role> guestRoles = new HashSet<>();
