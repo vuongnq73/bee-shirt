@@ -81,6 +81,7 @@ public class ShirtService {
                     existingShirt.setCategory(category);
                 }
             }
+            existingShirt.setDescription(updatedShirt.getDescription());
 
             // Cập nhật các trường khác
             existingShirt.setStatusshirt(updatedShirt.getStatusshirt());

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Random;
 
 @RestController
@@ -22,17 +23,18 @@ public class GenderController {
 
     // Hiển thị danh sách Gender với phân trang 5 phần tử
     @GetMapping("/list")
-    public ResponseEntity<Page<Gender>> getGenders(@RequestParam(defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 5);
-        Page<Gender> genders = genderRepository.findAllGender(pageable);
-        return ResponseEntity.ok(genders);
+    public ResponseEntity<List<Gender>> getAllBrands() {
+
+        List<Gender> categories = genderRepository.findAll(); // Lấy tất cả các danh mục
+        return ResponseEntity.ok(categories);
+
     }
 
     // Thêm Gender
     @PostMapping("/add")
     public ResponseEntity<Gender> addGender(@RequestBody Gender gender) {
         String codeCategory = generateGenderCode();
-
+        gender.setStatusGender(1);
         // Cập nhật mã codeCategory vào đối tượng Category
         gender.setCodeGender(codeCategory);
 

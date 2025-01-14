@@ -146,7 +146,7 @@
             <li class="nav-item">
               <a data-bs-toggle="collapse" href="#account">
                 <i class="fas fa-user"></i>
-                <p>Tài Khoản</p>
+                <p>Account</p>
                 <span class="caret"></span>
               </a>
               <div class="collapse" id="account">
@@ -531,124 +531,102 @@
             </li>
             
           </ul>
-            <h2>Danh sách Kích Thước</h2>
-
-        <!-- Bảng hiển thị danh sách kích thước -->
+          <select ng-model="statusFilter" ng-change="filterByStatus(statusFilter)">
+            <option value="">Tất cả</option>
+            <option value="0">Không hoạt động</option>
+            <option value="1">Hoạt động</option>
+        </select>
+        
+        <button style="float: right;" class="btn btn-success" ng-click="openAddSizeModal()" data-bs-toggle="modal" data-bs-target="#addSizeModal">Thêm Kích Cỡ</button>
+        <h2>Kích Cỡ Sản Phẩm</h2>
+        
+        <!-- Bảng hiển thị danh sách Size -->
         <table class="table table-bordered">
             <thead>
                 <tr>
-                  <th>STT</th>
+                    <th>STT</th>
                     <th>Mã</th>
-                    <th>Kích thước <button class="btn btn-link" ng-click="sortSize('namesize')">
-                      <i class="bi bi-arrow-down-up"></i>
-                  </button></th>
+                    <th>Kích Cỡ 
+                        <button class="btn btn-link" ng-click="sortSizes('nameSize')">
+                            <i class="bi bi-arrow-down-up"></i>
+                        </button>
+                    </th>
                     <th>Trạng Thái</th>
                     <th>Hành động</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="size in sizes">
-                  <td>{{$index + 1}}</td>
+                <tr ng-repeat="size in currentPageItems">
+                    <td>{{ (currentPage * itemsPerPage) + $index + 1 }}</td>
                     <td>{{ size.codeSize }}</td>
                     <td>{{ size.namesize }}</td>
-                    <td>{{ size.statussize == 1 ? 'Active' : 'Inactive' }}</td>
+                    <td>{{ size.statusSize == 1 ? 'Hoạt động' : 'Ngừng hoạt động' }}</td>
                     <td>
-                        <button class="btn btn-warning" ng-click="editSize(size)">Xem Chi Tiết</button>
-                        <button class="btn btn-danger" ng-click="deleteSize(size.codeSize)">Xóa</button>
+                        <button class="btn btn-warning" ng-click="editSize(size)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                                <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                            </svg>
+                        </button>
+                        <button class="btn btn-danger" ng-click="deleteSize(size.codeSize)">
+                            <i class="bi bi-trash3-fill"></i>
+                        </button>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <div class="d-flex justify-content-center mt-4">
-            <ul class="pagination">
-                <!-- Nút Đầu -->
-                <li class="page-item" ng-class="{'disabled': currentPage === 0}">
-                    <button class="page-link" ng-click="goToPage(0)">Đầu</button>
-                </li>
-                
-                <!-- Nút Previous -->
-                <li class="page-item" ng-class="{'disabled': currentPage === 0}">
-                    <button class="page-link" ng-click="goToPage(currentPage - 1)">Previous</button>
-                </li>
         
-                <!-- Các trang giữa -->
-                <li class="page-item" ng-repeat="page in pages" ng-class="{'active': currentPage === page}">
-                    <button class="page-link" ng-click="goToPage(page)">{{ page + 1 }}</button>
-                </li>
-        
-                <!-- Nút Next -->
-                <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
-                    <button class="page-link" ng-click="goToPage(currentPage + 1)">Next</button>
-                </li>
-        
-                <!-- Nút Cuối -->
-                <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
-                    <button class="page-link" ng-click="goToPage(totalPages - 1)">Cuối</button>
-                </li>
-            </ul>
+        <!-- Phân trang -->
+        <div>
+            <button ng-disabled="currentPage === 0" ng-click="goToPage(currentPage - 1)">Trang trước</button>
+            <span>Trang {{ currentPage + 1 }} trên {{ totalPages }}</span>
+            <button ng-disabled="currentPage === totalPages - 1" ng-click="goToPage(currentPage + 1)">Trang tiếp</button>
         </div>
         
-        
-
-        <!-- Nút Mở Modal Thêm Kích Thước -->
-        <button class="btn btn-success" ng-click="openAddSizeModal()" data-bs-toggle="modal" data-bs-target="#addSizeModal">Thêm Kích Thước</button>
-
-        <!-- Modal Thêm Kích Thước -->
+        <!-- Modal Thêm Size -->
         <div class="modal fade" id="addSizeModal" tabindex="-1" aria-labelledby="addSizeModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addSizeModalLabel">Thêm Kích Thước</h5>
+                        <h5 class="modal-title" id="addSizeModalLabel">Thêm Kích Cỡ</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form ng-submit="saveNewSize()">
-                      
                             <div class="mb-3">
-                                <label for="namesize" class="form-label">Tên Kích Thước:</label>
-                                <input type="text" id="namesize" ng-model="newSize.namesize" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="statussize" class="form-label">Trạng Thái:</label>
-                                <div>
-                                    <label>
-                                        <input type="radio" ng-model="newSize.statussize" value="1"> Active
-                                    </label>
-                                    <label>
-                                        <input type="radio" ng-model="newSize.statussize" value="0"> Inactive
-                                    </label>
-                                </div>
+                                <label for="nameSize" class="form-label">Tên Kích Cỡ:</label>
+                                <input type="text" id="nameSize" ng-model="newSize.namesize" class="form-control" required>
                             </div>
                             <div class="d-flex justify-content-end">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                <button type="submit" class="btn btn-primary ms-2">Thêm Kích Thước</button>
+                                <button type="submit" class="btn btn-primary ms-2">Thêm Kích Cỡ</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Modal Sửa Kích Thước -->
+        
+        <!-- Modal Sửa Size -->
         <div class="modal fade" id="editSizeModal" tabindex="-1" aria-labelledby="editSizeModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editSizeModalLabel">Sửa Kích Thước</h5>
+                        <h5 class="modal-title" id="editSizeModalLabel">Sửa Kích Cỡ</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form ng-submit="saveEditSize()">
                             <div class="mb-3">
-                                <label for="codeSize" class="form-label"disable>Mã Kích Thước:</label>
+                                <label for="codeSize" class="form-label">Mã Kích Cỡ:</label>
                                 <input type="text" id="codeSize" ng-model="size.codeSize" class="form-control" disabled>
                             </div>
                             <div class="mb-3">
-                                <label for="namesize" class="form-label">Tên Kích Thước:</label>
-                                <input type="text" id="namesize" ng-model="size.namesize" class="form-control" required>
+                                <label for="nameSize" class="form-label">Tên Kích Cỡ:</label>
+                                <input type="text" id="nameSize" ng-model="size.namesize" class="form-control" required>
                             </div>
                             <div class="mb-3">
-                                <label for="statussize" class="form-label">Trạng Thái:</label>
+                                <label for="statusSize" class="form-label">Trạng Thái:</label>
                                 <div>
                                     <label>
                                         <input type="radio" ng-model="size.statussize" value="1" ng-checked="size.statussize === 1"> Hoạt Động
@@ -660,32 +638,15 @@
                             </div>
                             <div class="d-flex justify-content-end">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                <button type="submit" class="btn btn-primary ms-2">Cập nhật Kích Thước</button>
+                                <button type="submit" class="btn btn-primary ms-2">Cập nhật Kích Cỡ</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Modal Confirm Xóa -->
-        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="confirmDeleteModalLabel">Xác Nhận Xóa</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Bạn có chắc chắn muốn xóa kích thước này?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Không</button>
-                        <button type="button" class="btn btn-danger" ng-click="confirmDeleteSize()">Có</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
+        
       </div>
    <!-- end container -->
       
