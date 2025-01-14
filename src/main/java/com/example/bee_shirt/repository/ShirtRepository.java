@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ShirtRepository extends JpaRepository<Shirt, Integer> {
@@ -62,5 +63,6 @@ public interface ShirtRepository extends JpaRepository<Shirt, Integer> {
     ShirtResponseDTO findByCode(String codeshirt);
     //check trùng tên
     boolean existsByNameshirt(String nameshirt);
+    boolean existsByCodeshirt(String codeShirt);  // Kiểm tra trùng mã áo thun
 
 }

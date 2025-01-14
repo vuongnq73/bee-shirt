@@ -26,14 +26,12 @@ public interface CartDetailRepository extends JpaRepository<CartDetail,Integer> 
     int updateInvalidQuantity(@Param("query") String query);
 
 
-<<<<<<< Updated upstream
-=======
+
     @Transactional
     @Modifying
     @Query("UPDATE CartDetail cd SET cd.deleted = TRUE ,cd.statusCartDetail=2 WHERE cd.shirtDetail.quantity = 0 OR cd.shirtDetail.statusshirtdetail != 1 OR cd.shirtDetail.deleted = true OR cd.shirtDetail.shirt.statusshirt != 1 OR cd.shirtDetail.shirt.deleted = true")
     int updateInvalidCartDetails();
 
->>>>>>> Stashed changes
 
     @Query("SELECT cd FROM CartDetail cd WHERE cd.codeCartDetail LIKE %:query%")
     CartDetail findCartDetailByCode(@Param("query") String query);

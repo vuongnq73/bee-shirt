@@ -704,7 +704,92 @@ $scope.updateImagePreview = function(element, imageNumber) {
         $scope.editingShirtDetail.deleted = $scope.editingShirtDetail.deleted;
     };
     
+    $scope.editShirtDetail = function(shirtdetail) {
+        // Sao chép đối tượng chi tiết áo thun để tránh thay đổi trực tiếp
+        $scope.editingShirtDetail = angular.copy(shirtdetail);
+        
+        // Chuyển dữ liệu các dropdown thuộc tính
+        $scope.editingShirtDetail.colorId = $scope.editingShirtDetail.color.id;
+        $scope.editingShirtDetail.genderId = $scope.editingShirtDetail.gender.id;
+        $scope.editingShirtDetail.materialId = $scope.editingShirtDetail.material.id;
+        $scope.editingShirtDetail.originId = $scope.editingShirtDetail.origin.id;
+        $scope.editingShirtDetail.shirtId = $scope.editingShirtDetail.shirt.id;
+        $scope.editingShirtDetail.patternId = $scope.editingShirtDetail.pattern.id;
+        $scope.editingShirtDetail.seasonId = $scope.editingShirtDetail.season.id;
+        $scope.editingShirtDetail.sizeId = $scope.editingShirtDetail.size.id;
+        
+        // Các ảnh
+        $scope.editingShirtDetail.image = $scope.editingShirtDetail.image;   // Ảnh 1
+        $scope.editingShirtDetail.image2 = $scope.editingShirtDetail.image2; // Ảnh 2
+        $scope.editingShirtDetail.image3 = $scope.editingShirtDetail.image3; // Ảnh 3
+    
+        // Trạng thái và đã xóa
+        $scope.editingShirtDetail.statusshirtdetail = $scope.editingShirtDetail.statusshirtdetail;
+        $scope.editingShirtDetail.deleted = $scope.editingShirtDetail.deleted;
+    };
+    
     $scope.updateShirtDetail = function() {
+        // Xóa thông báo lỗi trước khi kiểm tra
+        $scope.errorMessage = '';
+    
+        // Kiểm tra giá trị của giá
+        if (!updateShirtDetailed.price) {
+            $scope.errorMessage = "Vui lòng nhập giá.";
+            return;
+        } 
+        // Giá phải là số và không có ký tự đặc biệt
+        if (isNaN(updateShirtDetailed.price)) {
+            $scope.errorMessage = "Giá phải là một số hợp lệ.";
+            return;
+        }
+        // Giá phải lớn hơn 0
+        if (updateShirtDetailed.price <= 0) {
+            $scope.errorMessage = "Giá phải lớn hơn 0.";
+            return;
+        }
+        // Giá không được vượt quá 999999999
+        if (updateShirtDetailed.price > 999999999) {
+            $scope.errorMessage = "Giá không được vượt quá 999999999.";
+            return;
+        }
+    
+        // Kiểm tra giá trị của số lượng
+        if (!updateShirtDetailed.quantity) {
+            $scope.errorMessage = "Vui lòng nhập số lượng.";
+            return;
+        }
+        // Số lượng phải là số nguyên và không có ký tự đặc biệt
+        if (!Number.isInteger(updateShirtDetailed.quantity)) {
+            $scope.errorMessage = "Số lượng phải là một số nguyên hợp lệ.";
+            return;
+        }
+        // Số lượng phải lớn hơn 0
+        if (updateShirtDetailed.quantity <= 0) {
+            $scope.errorMessage = "Số lượng phải lớn hơn 0.";
+            return;
+        }
+        // Số lượng không được vượt quá 999999999
+        if (updateShirtDetailed.quantity > 999999999) {
+            $scope.errorMessage = "Số lượng không được vượt quá 999999999.";
+            return;
+        }
+    
+        // Kiểm tra ảnh (nếu có ảnh thì phải hợp lệ)
+        if (updateShirtDetailed.image && !updateShirtDetailed.image.match(/\.(jpg|jpeg|png|gif)$/)) {
+            $scope.errorMessage = "Vui lòng tải lên ảnh hợp lệ (JPEG, PNG, GIF).";
+            return;
+        }
+         // Kiểm tra ảnh (nếu có ảnh thì phải hợp lệ)
+         if (updateShirtDetailed.image2 && !updateShirtDetailed.image3.match(/\.(jpg|jpeg|png|gif)$/)) {
+            $scope.errorMessage = "Vui lòng tải lên ảnh hợp lệ (JPEG, PNG, GIF).";
+            return;
+        }
+         // Kiểm tra ảnh (nếu có ảnh thì phải hợp lệ)
+         if (updateShirtDetailed.image2 && !updateShirtDetailed.image3.match(/\.(jpg|jpeg|png|gif)$/)) {
+            $scope.errorMessage = "Vui lòng tải lên ảnh hợp lệ (JPEG, PNG, GIF).";
+            return;
+        }
+    
         // Sao chép dữ liệu từ đối tượng editingShirtDetail
         let updateShirtDetailed = angular.copy($scope.editingShirtDetail);
     

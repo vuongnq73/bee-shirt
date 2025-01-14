@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/shirt-details/online/hienthi").permitAll()
                         .requestMatchers(HttpMethod.GET,"/shirts/api/categories").permitAll()
                         .requestMatchers(HttpMethod.GET,"/shirt-details/api/sizes").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/shirt-details//check-duplicate").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/cart/add").permitAll()
                         .requestMatchers(HttpMethod.GET,"/cart/getIDCart").permitAll()
                         .requestMatchers(HttpMethod.GET,"/shirts/api/brands").permitAll()

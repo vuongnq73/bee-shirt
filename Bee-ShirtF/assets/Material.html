@@ -532,160 +532,126 @@
             </li>
             
           </ul>
-            <h2>Danh sách Chất Liệu</h2>
-
-            <!-- Bảng hiển thị danh sách vật liệu -->
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Mã</th>
-                        <th>Chất Liệu
-                          <button class="btn btn-link" ng-click="sortMaterials('nameMaterial')">
+          <select ng-model="statusFilter" ng-change="filterByStatus(statusFilter)">
+            <option value="">Tất cả</option>
+            <option value="0">Không hoạt động</option>
+            <option value="1">Hoạt động</option>
+        </select>
+        
+        <button style="float: right;" class="btn btn-success" ng-click="openAddMaterialModal()" data-bs-toggle="modal" data-bs-target="#addMaterialModal">Thêm Vật Liệu</button>
+        <h2>Vật Liệu</h2>
+        
+        <!-- Bảng hiển thị danh sách Material -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã</th>
+                    <th>Vật Liệu 
+                        <button class="btn btn-link" ng-click="sortMaterials('nameMaterial')">
                             <i class="bi bi-arrow-down-up"></i>
                         </button>
-                        
-                        </th>
-                        <th>Trạng Thái</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="material in materials">
-                        <td>{{ material.codeMaterial }}</td>
-                        <td>{{ material.nameMaterial }}</td>
-                        <td>{{ material.statusMaterial == 1 ? 'Active' : 'Inactive' }}</td>
-                        <td>
-                            <button class="btn btn-warning" ng-click="editMaterial(material)">Xem Chi Tiết</button>
-                            <button class="btn btn-danger" ng-click="deleteMaterial(material.codeMaterial)">Xóa</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="d-flex justify-content-center mt-4">
-                <ul class="pagination">
-                    <!-- Nút Đầu -->
-                    <li class="page-item" ng-class="{'disabled': currentPage === 0}">
-                        <button class="page-link" ng-click="goToPage(0)">Đầu</button>
-                    </li>
-                    
-                    <!-- Nút Previous -->
-                    <li class="page-item" ng-class="{'disabled': currentPage === 0}">
-                        <button class="page-link" ng-click="goToPage(currentPage - 1)">Previous</button>
-                    </li>
-            
-                    <!-- Các trang giữa -->
-                    <li class="page-item" ng-repeat="page in pages" ng-class="{'active': currentPage === page}">
-                        <button class="page-link" ng-click="goToPage(page)">{{ page + 1 }}</button>
-                    </li>
-            
-                    <!-- Nút Next -->
-                    <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
-                        <button class="page-link" ng-click="goToPage(currentPage + 1)">Next</button>
-                    </li>
-            
-                    <!-- Nút Cuối -->
-                    <li class="page-item" ng-class="{'disabled': currentPage === totalPages - 1}">
-                        <button class="page-link" ng-click="goToPage(totalPages - 1)">Cuối</button>
-                    </li>
-                </ul>
-            </div>
-    
-            <!-- Nút Mở Modal Thêm Vật Liệu -->
-            <button class="btn btn-success" ng-click="openAddMaterialModal()" data-bs-toggle="modal" data-bs-target="#addMaterialModal">Thêm Vật Liệu</button>
-    
-            <!-- Modal Thêm Vật Liệu -->
-            <div class="modal fade" id="addMaterialModal" tabindex="-1" aria-labelledby="addMaterialModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addMaterialModalLabel">Thêm Vật Liệu</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form ng-submit="saveNewMaterial()">
-                             
-                                <div class="mb-3">
-                                    <label for="nameMaterial" class="form-label">Tên Vật Liệu:</label>
-                                    <input type="text" id="nameMaterial" ng-model="newMaterial.nameMaterial" class="form-control" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="statusMaterial" class="form-label">Trạng Thái:</label>
-                                    <div>
-                                        <label>
-                                            <input type="radio" ng-model="newMaterial.statusMaterial" value="1"> Active
-                                        </label>
-                                        <label>
-                                            <input type="radio" ng-model="newMaterial.statusMaterial" value="0"> Inactive
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-end">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                    <button type="submit" class="btn btn-primary ms-2">Thêm Vật Liệu</button>
-                                </div>
-                            </form>
-                        </div>
+                    </th>
+                    <th>Trạng Thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="material in currentPageItems">
+                    <td>{{ (currentPage * itemsPerPage) + $index + 1 }}</td>
+                    <td>{{ material.codeMaterial }}</td>
+                    <td>{{ material.nameMaterial }}</td>
+                    <td>{{ material.statusMaterial == 1 ? 'Hoạt động' : 'Ngừng hoạt động' }}</td>
+                    <td>
+                        <button class="btn btn-warning" ng-click="editMaterial(material)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                                <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                            </svg>
+                        </button>
+                        <button class="btn btn-danger" ng-click="deleteMaterial(material.codeMaterial)">
+                            <i class="bi bi-trash3-fill"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Phân trang -->
+        <div>
+            <!-- Nút trang trước -->
+            <button ng-disabled="currentPage === 0" ng-click="goToPage(currentPage - 1)">Trang trước</button>
+        
+            <!-- Hiển thị thông tin trang hiện tại trên tổng số trang -->
+            <span>Trang {{ currentPage + 1 }} trên {{ totalPages }}</span>
+        
+            <!-- Nút trang tiếp theo -->
+            <button ng-disabled="currentPage === totalPages - 1" ng-click="goToPage(currentPage + 1)">Trang tiếp</button>
+        </div>
+        
+        <!-- Modal Thêm Material -->
+        <div class="modal fade" id="addMaterialModal" tabindex="-1" aria-labelledby="addMaterialModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addMaterialModalLabel">Thêm Vật Liệu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form ng-submit="saveNewMaterial()">
+                            <div class="mb-3">
+                                <label for="nameMaterial" class="form-label">Tên Vật Liệu:</label>
+                                <input type="text" id="nameMaterial" ng-model="newMaterial.nameMaterial" class="form-control" required>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                <button type="submit" class="btn btn-primary ms-2">Thêm Vật Liệu</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-    
-            <!-- Modal Sửa Vật Liệu -->
-            <div class="modal fade" id="editMaterialModal" tabindex="-1" aria-labelledby="editMaterialModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="editMaterialModalLabel">Sửa Vật Liệu</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form ng-submit="saveEditMaterial()">
-                                <div class="mb-3">
-                                    <label for="codeMaterial" class="form-label"disable>Mã Vật Liệu:</label>
-                                    <input type="text" id="codeMaterial" ng-model="material.codeMaterial" class="form-control" disabled>
+        </div>
+        
+        <!-- Modal Sửa Material -->
+        <div class="modal fade" id="editMaterialModal" tabindex="-1" aria-labelledby="editMaterialModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editMaterialModalLabel">Sửa Vật Liệu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form ng-submit="saveEditMaterial()">
+                            <div class="mb-3">
+                                <label for="codeMaterial" class="form-label" disable>Mã Vật Liệu:</label>
+                                <input type="text" id="codeMaterial" ng-model="material.codeMaterial" class="form-control" disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label for="nameMaterial" class="form-label">Tên Vật Liệu:</label>
+                                <input type="text" id="nameMaterial" ng-model="material.nameMaterial" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="statusMaterial" class="form-label">Trạng Thái:</label>
+                                <div>
+                                    <label>
+                                        <input type="radio" ng-model="material.statusMaterial" value="1" ng-checked="material.statusMaterial === 1"> Hoạt Động
+                                    </label>
+                                    <label>
+                                        <input type="radio" ng-model="material.statusMaterial" value="0" ng-checked="material.statusMaterial === 0"> Ngừng Hoạt Động
+                                    </label>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="nameMaterial" class="form-label">Tên Vật Liệu:</label>
-                                    <input type="text" id="nameMaterial" ng-model="material.nameMaterial" class="form-control" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="statusMaterial" class="form-label">Trạng Thái:</label>
-                                    <div>
-                                        <label>
-                                            <input type="radio" ng-model="material.statusMaterial" value="1" ng-checked="material.statusMaterial === 1"> Hoạt Động
-                                        </label>
-                                        <label>
-                                            <input type="radio" ng-model="material.statusMaterial" value="0" ng-checked="material.statusMaterial === 0"> Ngừng Hoạt Động
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-end">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                    <button type="submit" class="btn btn-primary ms-2">Cập nhật Vật Liệu</button>
-                                </div>
-                            </form>
-                        </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                <button type="submit" class="btn btn-primary ms-2">Cập nhật Vật Liệu</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-    
-            <!-- Modal Confirm Xóa -->
-            <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="confirmDeleteModalLabel">Xác Nhận Xóa</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Bạn có chắc chắn muốn xóa vật liệu này?</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Không</button>
-                            <button type="button" class="btn btn-danger" ng-click="confirmDeleteMaterial()">Có</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        </div>
+        
       </div>
    <!-- end container -->
       
