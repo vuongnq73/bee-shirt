@@ -21,6 +21,8 @@ app.service('originService', ['$http', function($http) {
     
         return true; // Cho phép tiếp tục nếu có quyền
     }
+
+    
     
     if (!checkPermission()) return; // Kiểm tra quyền trước khi thực hiện bất kỳ hành động nào
     // Lấy token từ sessionStorage sau khi đã kiểm tra quyền
