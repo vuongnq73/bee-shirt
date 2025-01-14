@@ -85,7 +85,7 @@ public class CartController {
         String accCode = (String) addressData.get("accCode");
         Integer idProvince = Integer.parseInt(addressData.get("idProvince").toString());
         Integer idDistrict = Integer.parseInt(addressData.get("idDistrict").toString());
-        Integer idWard = Integer.parseInt(addressData.get("idWard").toString());
+        String idWard = (String) addressData.get("idWard");
 //        Integer idDistrict = (Integer) addressData.get("idDistrict");
 //        Integer idWard = (Integer) addressData.get("idWard");
         String province2 = (String) addressData.get("province2");
