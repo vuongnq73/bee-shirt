@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("point-of-sale")
@@ -103,6 +104,25 @@ public class PointOfSaleController {
         return ResponseEntity.ok(pointOfSaleService.createNewBill());
     }
 
+    @PostMapping("/quick-add")
+    public ResponseEntity<Map<String, Object>> quickAdd(
+            @RequestParam("activeBillCode") String activeBillCode,
+            @RequestBody Map<String, Object> request) {
+
+        List<Map<String, Object>> selectedData = (List<Map<String, Object>>) request.get("selectedData");
+
+        for (Map<String, Object> item : selectedData) {
+            String codeShirtDetail = (String) item.get("codeShirtDetail");
+            int quantity = Integer.parseInt((String) item.get("quantity"));
+
+            // Gọi hàm addItemToCart của service
+            pointOfSaleService.addItemToCart(codeShirtDetail, activeBillCode, quantity);
+        }
+
+        // Trả về phản hồi dưới dạng JSON
+        Map<String, Object> response = Map.of("message", "Dữ liệu đã được nhận và sản phẩm đã được thêm vào giỏ hàng.");
+        return ResponseEntity.ok(response);    }
+
     @PostMapping("add-to-cart")
     @ResponseBody
     public ResponseEntity<String> addItemToCart(@RequestParam String codeShirtDetail, @RequestParam String codeBill, @RequestParam Integer quantity) {
@@ -129,12 +149,12 @@ public class PointOfSaleController {
     @PostMapping("update-customer-info")
     public ResponseEntity<String> updateCustomerInfo(@RequestParam String codeBill, @RequestParam String username) {
 
-        return ResponseEntity.ok(pointOfSaleService.updateCustomerInfo(codeBill,username));
+        return ResponseEntity.ok(pointOfSaleService.updateCustomerInfo(codeBill, username));
     }
 
     @PostMapping("checkout")
-    public ResponseEntity<String> checkout(@RequestParam String codeBill, @RequestParam(required = false) String codeVoucher, @RequestParam(required = false) String username) {
-        return ResponseEntity.ok(pointOfSaleService.checkout(codeBill, codeVoucher, username));
+    public ResponseEntity<String> checkout(@RequestParam String codeBill, @RequestParam(required = false) String codeVoucher, @RequestParam(required = false) String username, @RequestParam(required = false) String userCode) {
+        return ResponseEntity.ok(pointOfSaleService.checkout(codeBill, codeVoucher, username, userCode));
     }
 
     @GetMapping("/close")

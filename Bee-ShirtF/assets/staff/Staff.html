@@ -300,9 +300,6 @@
               <input type="text" ng-model="user.phone" placeholder="Phone" required class="form-control" />
             </div>
             <div class="form-group">
-              <input type="text" ng-model="user.address" placeholder="Address" required class="form-control" />
-            </div>
-            <div class="form-group">
               <input type="password" ng-model="user.pass" placeholder="Password" required class="form-control" />
             </div>
             <div class="form-group">
@@ -338,7 +335,6 @@
                 <th>Tên đăng nhập</th>
                 <th>Email</th>
                 <th>SĐT</th>
-                <th>Địa chỉ</th>
                 <th>Trạng thái</th>
                 <th>Hành động</th>
               </tr>
@@ -349,7 +345,6 @@
                 <td>{{ staff.username }}</td>
                 <td>{{ staff.email }}</td>
                 <td>{{ staff.phone }}</td>
-                <td>{{ staff.address }}</td>
                 <td>{{ staff.status === 0 ? 'Hoạt động' : 'Ngưng hoạt động' }}</td>
                 <td>
                   <button  ng-click="goToUpdateProfile(staff.code)" class="btn btn-warning btn-sm">Chi tiết</button>

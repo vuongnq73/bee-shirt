@@ -1931,26 +1931,34 @@ input.num-product::-webkit-inner-spin-button {
 }
 
 .table-shopping-cart .column-1 {
-  width: 200px;
+  width: 149px;
 }
 
-.table-shopping-cart .column-2 {
-  width: 90px;
+.table-shopping-cart .column-21 {
+  width: 71px;
+  font-size: 15px;
+}
+.table-shopping-cart .column-22 {
+  width: 36px;
+  font-size: 15px;
+}
+.table-shopping-cart .column-23 {
+  width: 46px;
   font-size: 15px;
 }
 
 .table-shopping-cart .column-3 {
-  width: 60px;
+  width: 74px;
   font-size: 16px;
 }
 
 .table-shopping-cart .column-4 {
-  width: 75px;
+  width: 79px;
   text-align: center;
 }
 
 .table-shopping-cart .column-5 {
-  width: 145px;
+  width: 115px;
   text-align: right;
   padding-right: 20px;
 }

@@ -29,6 +29,155 @@
 	<link rel="stylesheet" type="text/css" href="css/util.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 	<!--===============================================================================================-->
+	<style>
+		.address-container {
+			margin: 10px 0;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			display: flex;
+			align-items: center;
+			/* Căn giữa theo chiều dọc */
+			justify-content: space-between;
+			/* Tách các phần tử về hai phía */
+			cursor: pointer;
+		}
+
+		.address-container div {
+			flex-grow: 1;
+			/* Mở rộng để chiếm tối đa không gian bên trái */
+			text-align: left;
+			/* Căn chữ về bên trái */
+		}
+
+		.radio-button {
+			margin-right: 10px;
+		}
+
+		.delete-button {
+			background-color: red;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			padding: 10px 20px;
+			height: auto;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: auto;
+		}
+
+		.delete-button:hover {
+			background-color: darkred;
+		}
+
+		.hidden {
+			display: none;
+		}
+
+		/* Style cho phần thông tin địa chỉ đã chọn */
+		#selectedAddressInfo {
+			background-color: #f4f4f4;
+			padding: 20px;
+			border-radius: 8px;
+			margin-top: 20px;
+			border: 1px solid #ccc;
+			width: 100%;
+			max-width: 600px;
+			box-sizing: border-box;
+		}
+
+		/* Tiêu đề của thông tin địa chỉ */
+		#selectedAddressInfo h3 {
+			color: #333;
+			font-size: 18px;
+			font-weight: bold;
+			margin-bottom: 15px;
+		}
+
+		/* Các dòng thông tin địa chỉ */
+		#selectedAddressInfo p {
+			font-size: 14px;
+			color: #555;
+			margin: 5px 0;
+		}
+
+		/* Định dạng cho các nhãn trong thông tin địa chỉ */
+		#selectedAddressInfo p strong {
+			font-weight: bold;
+			color: #000;
+		}
+
+		/* Style cho phần thông tin địa chỉ đã chọn khi có sự kiện hover */
+		#selectedAddressInfo:hover {
+			background-color: #e9e9e9;
+			transition: background-color 0.3s ease;
+		}
+
+		/* Style cho toàn bộ phần tóm tắt giỏ hàng */
+		#cart-summary {
+			background-color: #fff;
+			padding: 20px;
+			border-radius: 10px;
+			border: 1px solid #ddd;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+			width: 100%;
+			max-width: 500px;
+			margin: 20px auto;
+			box-sizing: border-box;
+		}
+
+		/* Style cho mỗi item trong giỏ hàng */
+		#cart-summary li {
+			font-size: 16px;
+			color: #333;
+			margin: 10px 0;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		/* Style cho các phần span hiển thị giá trị */
+		#cart-summary span {
+			font-weight: bold;
+			color: #2c3e50;
+		}
+
+		/* Style cho tổng giá trị giỏ hàng và tổng tiền */
+		#cart-summary li:last-child span {
+			font-size: 18px;
+			color: #e74c3c;
+			font-weight: bold;
+		}
+
+		/* Style cho các thông tin phụ khi người dùng di chuột qua */
+		#cart-summary li:hover {
+			background-color: #f8f8f8;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		.hover-effect {
+			color: #ff0000;
+			/* Màu chữ ban đầu */
+			text-decoration: none;
+			/* Không gạch chân mặc định */
+			cursor: pointer;
+			/* Đổi loại trỏ chuột thành tay */
+			transition: all 0.3s ease;
+			/* Hiệu ứng mượt */
+		}
+
+		.hover-effect:hover {
+			color: #ff6600;
+			/* Màu chữ khi hover */
+			text-decoration: underline;
+			/* Thêm gạch chân khi hover */
+			font-weight: bold;
+			/* Đậm hơn khi hover (tùy chọn) */
+		}
+	</style>
 </head>
 
 <body class="animsition">
@@ -38,31 +187,16 @@
 		<!-- Header desktop -->
 		<div class="container-menu-desktop">
 			<!-- Topbar -->
-			<!-- <div class="top-bar">
+			<div class="top-bar">
 				<div class="content-topbar flex-sb-m h-full container">
-					<div class="left-top-bar">
-						Free shipping for standard order over $100
-					</div>
-
-					<div class="right-top-bar flex-w h-full">
-						<a href="#" class="flex-c-m trans-04 p-lr-25">
-							Help & FAQs
-						</a>
-
-						<a href="#" class="flex-c-m trans-04 p-lr-25">
-							My Account
-						</a>
-
-						<a href="#" class="flex-c-m trans-04 p-lr-25">
-							EN
-						</a>
-
-						<a href="#" class="flex-c-m trans-04 p-lr-25">
-							USD
-						</a>
-					</div>
+				  <div class="left-top-bar">
+					Nhanh tay mua sắm để nhận đưuọc nhiều ưu đãi lên đến 50%
+				  </div>
+	  
+				
 				</div>
-			</div> -->
+			  </div>
+	  
 
 			<div class="wrap-menu-desktop how-shadow1">
 				<nav class="limiter-menu-desktop container">
@@ -70,38 +204,30 @@
 					<!-- Logo desktop -->
 					<a href="#" class="logo">
 						<img src="/assets/img/kaiadmin/logo_dark.png" alt="IMG-LOGO">
+
 					</a>
 
 					<!-- Menu desktop -->
 					<div class="menu-desktop">
 						<ul class="main-menu">
 							<li>
-								<a href="index.html">Home</a>
-								<ul class="sub-menu">
-									<li><a href="index.html">Homepage 1</a></li>
-									<li><a href="home-02.html">Homepage 2</a></li>
-									<li><a href="home-03.html">Homepage 3</a></li>
-								</ul>
+								<a href="index.html">Trang Chủ</a>
+
 							</li>
 
 							<li>
-								<a href="product.html">Shop</a>
+								<a href="product.html">Cửa Hàng</a>
 							</li>
-
-							<li class="label1" data-label1="hot">
-								<a href="shoping-cart.html">Features</a>
-							</li>
-
 							<li>
 								<a href="blog.html">Blog</a>
 							</li>
 
 							<li>
-								<a href="about.html">About</a>
+								<a href="about.html">Giới Thiệu</a>
 							</li>
 
 							<li>
-								<a href="contact.html">Contact</a>
+								<a href="contact.html">Liên Hệ</a>
 							</li>
 						</ul>
 					</div>
@@ -130,7 +256,8 @@
 		<div class="wrap-header-mobile">
 			<!-- Logo moblie -->
 			<div class="logo-mobile">
-				<a href="index.html"><img src="images/icons/logo-01.png" alt="IMG-LOGO"></a>
+				<a href="index.html">						<img src="/assets/img/kaiadmin/logo_dark.png" alt="IMG-LOGO">
+				</a>
 			</div>
 
 			<!-- Icon header -->
@@ -164,7 +291,7 @@
 			<ul class="topbar-mobile">
 				<li>
 					<div class="left-top-bar">
-						Free shipping for standard order over $100
+						Nhanh tay mua sắm để nhận đưuọc nhiều ưu đãi lên đến 50%
 					</div>
 				</li>
 
@@ -357,7 +484,9 @@
 										<input type="checkbox" id="select-all">
 									</th>
 									<th class="column-1">SẢN PHẨM</th>
-									<th class="column-2"></th>
+									<th class="column-21">Tên</th>
+									<th class="column-22">Cỡ</th>
+									<th class="column-23">Màu</th>
 									<th class="column-3">Đơn giá</th>
 									<th class="column-4">Số lượng</th>
 									<th class="column-5">Số tiền</th>
@@ -434,9 +563,9 @@
 								</div> -->
 							</div>
 
-							<a href="http://127.0.0.1:5500/cozastore-master/shoping-cart.html"
+							<a href="http://127.0.0.1:5500/cozastore-master/product.html"
 								class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10">
-								Update Cart
+								Tiếp tục mua sắm
 							</a>
 						</div>
 					</div>
@@ -452,6 +581,11 @@
 							Địa chỉ
 						</h5>
 
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+							Chọn địa chỉ
+						</button>
+						<div id="selectedAddressInfo"></div>
+
 						<!-- Lựa chọn kiểu địa chỉ
 						<label>
 							<input type="radio" name="addressOption" value="default" checked>
@@ -463,7 +597,7 @@
 							Chọn địa chỉ mới
 						</label> -->
 
-						<!-- Chọn địa chỉ mới -->
+						<!-- Chọn địa chỉ mới
 						<div id="newAddressSection">
 							<select id="provinceSelect" class="form-select" style="margin-top: 10px;">
 								<option value="">-- Chọn tỉnh/thành phố --</option>
@@ -482,17 +616,15 @@
 								style="margin-top: 10px;">
 							<input type="text" id="phone" placeholder="Số điện thoại" class="form-control"
 								style="margin-top: 10px;">
-							<!-- <input class="billing_address_1" name="billing_address_1" type="hidden" value="">
-							<input class="billing_address_2" name="billing_address_2" type="hidden" value=""> -->
-						</div>
+						</div> -->
 
 						<div class="flex-w flex-t bor12 p-b-13" style="margin-top: 10px;">
 							<!-- <div class="size-208"> -->
-							<span class="stext-110 cl2">
-								<select id="voucherSelect" style="width: 100%" class="form-select" disabled>
-									<!-- Các option sẽ được thêm động -->
-								</select>
-							</span>
+							<!-- <span class="stext-110 cl2"> -->
+							<select id="voucherSelect" style="width: 100%" class="form-select">
+								<!-- Các option sẽ được thêm động -->
+							</select>
+							<!-- </span> -->
 							<!-- </div> -->
 						</div>
 
@@ -519,149 +651,117 @@
 	<footer class="bg3 p-t-75 p-b-32">
 		<div class="container">
 			<div class="row">
-				<div class="col-sm-6 col-lg-3 p-b-50">
+				<div class="col-md-4 ">
 					<h4 class="stext-301 cl0 p-b-30">
-						Categories
+					Website bán áo phông Bee-Shirt
 					</h4>
-
-					<ul>
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Women
-							</a>
-						</li>
-
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Men
-							</a>
-						</li>
-
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Shoes
-							</a>
-						</li>
-
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Watches
-							</a>
-						</li>
-					</ul>
-				</div>
-
-				<div class="col-sm-6 col-lg-3 p-b-50">
-					<h4 class="stext-301 cl0 p-b-30">
-						Help
-					</h4>
-
-					<ul>
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Track Order
-							</a>
-						</li>
-
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Returns
-							</a>
-						</li>
-
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Shipping
-							</a>
-						</li>
-
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								FAQs
-							</a>
-						</li>
-					</ul>
-				</div>
-
-				<div class="col-sm-6 col-lg-3 p-b-50">
-					<h4 class="stext-301 cl0 p-b-30">
-						GET IN TOUCH
-					</h4>
-
-					<p class="stext-107 cl7 size-201">
-						Any questions? Let us know in store at 8th floor, 379 Hudson St, New York, NY 10018 or call us
-						on (+1) 96 716 6879
+	
+				<p style="color: azure;">
+					Website bán áo phông Bee-Shirt
 					</p>
+					<p style="color: azure;">
+					Bắt đầu lên ý tưởng và xây dựng từ ngày 15/10/2024
+					
+					</p>
+					<p style="color: azure;">
+					Địa chỉ trụ sở tại số 688 Đường Quang Trung, Phường La Khê, Quận Hà Đông, Thành phố Hà Nội.
+					
+					</p>
+					<p style="color: azure;">
+					Địa chỉ liên hệ:  số 170 La Thành, Phường Ô Chợ Dừa, Quận Đống Đa, Thành Phố Hà Nội.
+					</p>
+					<p style="color: azure;">
+					Điện thoại: +84363652758
+					</p>
+					<p style="color: azure;">
+					Email: nguyenquocvuong27042002@gmail.com</p>
+				</div>
+	
+				<div class="col-md-4  ">
+					<h4 class="stext-301 cl0 p-b-30">
+						Hỗ Trợ
+					</h4>
+	
+					<ul>
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04" style="text-decoration: none;">
+								Theo dõi đơn hàng
+							</a>
+						</li>
+	
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04" style="text-decoration: none;">
+								Vận chuyển
+							</a>
+						</li>
+	
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04" style="text-decoration: none;">
+								Câu hỏi thường gặp
+							</a>
+						</li>
+					</ul>
+				</div>
+	
+				<div class="col-md-4 ">
+					<h4 class="stext-301 cl0 p-b-30">
+						Liên Hệ
+					</h4>
+	
+					<p class="stext-107 cl7 size-201">
+						Có câu hỏi nào? Hãy liên hệ với chúng tôi tại cửa hàng số 170 La Thành, Phường Ô Chợ Dừa, Quận Đống Đa, Thành Phố Hà Nội.Hoặc Liên hệ đến sđt:0363652758
 
+					</p>
+	
 					<div class="p-t-27">
-						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
-							<i class="fa fa-facebook"></i>
+						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16" style="text-decoration: none;">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+								<path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/>
+							  </svg>
 						</a>
-
-						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
-							<i class="fa fa-instagram"></i>
+	
+						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16" style="text-decoration: none;">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-at-fill" viewBox="0 0 16 16">
+								<path d="M2 2A2 2 0 0 0 .05 3.555L8 8.414l7.95-4.859A2 2 0 0 0 14 2zm-2 9.8V4.698l5.803 3.546zm6.761-2.97-6.57 4.026A2 2 0 0 0 2 14h6.256A4.5 4.5 0 0 1 8 12.5a4.49 4.49 0 0 1 1.606-3.446l-.367-.225L8 9.586zM16 9.671V4.697l-5.803 3.546.338.208A4.5 4.5 0 0 1 12.5 8c1.414 0 2.675.652 3.5 1.671"/>
+								<path d="M15.834 12.244c0 1.168-.577 2.025-1.587 2.025-.503 0-1.002-.228-1.12-.648h-.043c-.118.416-.543.643-1.015.643-.77 0-1.259-.542-1.259-1.434v-.529c0-.844.481-1.4 1.26-1.4.585 0 .87.333.953.63h.03v-.568h.905v2.19c0 .272.18.42.411.42.315 0 .639-.415.639-1.39v-.118c0-1.277-.95-2.326-2.484-2.326h-.04c-1.582 0-2.64 1.067-2.64 2.724v.157c0 1.867 1.237 2.654 2.57 2.654h.045c.507 0 .935-.07 1.18-.18v.731c-.219.1-.643.175-1.237.175h-.044C10.438 16 9 14.82 9 12.646v-.214C9 10.36 10.421 9 12.485 9h.035c2.12 0 3.314 1.43 3.314 3.034zm-4.04.21v.227c0 .586.227.8.581.8.31 0 .564-.17.564-.743v-.367c0-.516-.275-.708-.572-.708-.346 0-.573.245-.573.791"/>
+							  </svg>
 						</a>
-
-						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
-							<i class="fa fa-pinterest-p"></i>
+	
+						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16" style="text-decoration: none;">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
+								<path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/>
+							  </svg>
 						</a>
 					</div>
 				</div>
-
-				<div class="col-sm-6 col-lg-3 p-b-50">
-					<h4 class="stext-301 cl0 p-b-30">
-						Newsletter
-					</h4>
-
-					<form>
-						<div class="wrap-input1 w-full p-b-4">
-							<input class="input1 bg-none plh1 stext-107 cl7" type="text" name="email"
-								placeholder="email@example.com">
-							<div class="focus-input1 trans-04"></div>
-						</div>
-
-						<div class="p-t-18">
-							<a class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn2 p-lr-15 trans-04">
-								Subscribe
-							</a>
-						</div>
-					</form>
-				</div>
+	
+				
 			</div>
-
+	
 			<div class="p-t-40">
 				<div class="flex-c-m flex-w p-b-18">
 					<a href="#" class="m-all-1">
 						<img src="images/icons/icon-pay-01.png" alt="ICON-PAY">
 					</a>
-
+	
 					<a href="#" class="m-all-1">
 						<img src="images/icons/icon-pay-02.png" alt="ICON-PAY">
 					</a>
-
+	
 					<a href="#" class="m-all-1">
 						<img src="images/icons/icon-pay-03.png" alt="ICON-PAY">
 					</a>
-
+	
 					<a href="#" class="m-all-1">
 						<img src="images/icons/icon-pay-04.png" alt="ICON-PAY">
 					</a>
-
+	
 					<a href="#" class="m-all-1">
 						<img src="images/icons/icon-pay-05.png" alt="ICON-PAY">
 					</a>
 				</div>
-
-				<p class="stext-107 cl6 txt-center">
-					<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-					Copyright &copy;
-					<script>document.write(new Date().getFullYear());</script> All rights reserved | Made with <i
-						class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com"
-						target="_blank">Colorlib</a> &amp; distributed by <a href="https://themewagon.com"
-						target="_blank">ThemeWagon</a>
-					<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-
-				</p>
+	
+			
 			</div>
 		</div>
 	</footer>
@@ -673,6 +773,58 @@
 			<i class="zmdi zmdi-chevron-up"></i>
 		</span>
 	</div>
+
+	<!-- The Modal -->
+	<div class="modal" id="myModal" style="z-index: 9999;">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Chọn địa chỉ</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+
+				<!-- Modal body -->
+				<div class="modal-body">
+					<div>
+						<div id="addressList"></div>
+					</div>
+					<!-- Nút để hiển thị phần chọn địa chỉ mới -->
+					<div style="margin-top: 10px;">
+						<button type="button" id="toggleNewAddress" class="btn btn-primary">Thêm địa chỉ mới</button>
+					</div>
+					<!-- Chọn địa chỉ mới -->
+					<div id="newAddressSection">
+						<select id="provinceSelect" class="form-select" style="margin-top: 10px;">
+							<option value="">-- Chọn tỉnh/thành phố --</option>
+						</select>
+
+						<select id="districtSelect" class="form-select" style="margin-top: 10px;" disabled>
+							<option value="">-- Chọn quận/huyện --</option>
+						</select>
+
+						<select id="wardSelect" class="form-select" style="margin-top: 10px;" disabled>
+							<option value="">-- Chọn phường/xã --</option>
+						</select>
+						<input type="text" id="detailedAddress" placeholder="Tên đường - Số nhà" class="form-control"
+							style="margin-top: 10px;">
+						<input type="text" id="name" placeholder="Họ và tên" class="form-control"
+							style="margin-top: 10px;">
+						<input type="text" id="phone" placeholder="Số điện thoại" class="form-control"
+							style="margin-top: 10px;">
+					</div>
+				</div>
+
+				<!-- Modal footer -->
+				<div class="modal-footer">
+					<button id="addNewAddressBtn" onclick="createNewAddress()" type="button" class="btn btn-primary">Thêm mới</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
 
 	<!--===============================================================================================-->
 	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
@@ -813,13 +965,31 @@
 		const userCode = sessionStorage.getItem("userCode");
 		let selectedCartDetails = [];
 		let selectedTotal = 0;
+		let selectedQuantity = 0;
+		let discount = 0;
 		let ship = 0;
 		let shipToOldAddress = 30000;
 		let shipToNewAddress = 30000;
 		let timeoutId = null;  // Biến toàn cục để lưu trữ ID của setTimeout
 		let activeVoucherCode = null;
+		let activeDACode = null;
 		let pm = 'card';
 		let allowed = true
+		var vouchers;
+		let selectedAddress = {
+			idHuyen: null,
+			idXa: null
+		};
+		let addresses = null
+
+		let selectedAddressCode = null;
+
+		let selectedDiv = null;
+
+		let allowedAddresses = true
+
+		const formatter = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }); // Định dạng VNĐ
+
 
 		async function miniCart() {
 			const response = await fetch("http://localhost:8080/cart/get-all-cart-details?codeAccount=" + userCode, {
@@ -844,7 +1014,7 @@
                 </div>
                 <div class="header-cart-item-txt p-t-8">
                     <a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">${item.shirtDetail.shirt.nameshirt}</a>
-                    <span class="header-cart-item-info">${item.quantity} x ${item.shirtDetail.price} VNĐ</span>
+                    <span class="header-cart-item-info">${item.quantity} x ${formatter.format(item.shirtDetail.price)}</span>
                 </div>
             `;
 				cartItemsContainer.appendChild(itemElement);
@@ -854,7 +1024,7 @@
 
 			// Cập nhật tổng giá trị giỏ hàng
 			const totalElement = document.querySelector('.header-cart-total');
-			totalElement.innerHTML = `Tổng tiền: ${total} VNĐ`;
+			totalElement.innerHTML = `Tổng tiền: ${formatter.format(total)}`;
 
 		}
 
@@ -909,11 +1079,13 @@
                             </td>
 							<td class="column-1">
 								<div class="how-itemcart1">
-									<img src="img/shop-cart/cp-${item.shirtDetail.image}.jpg" alt="IMG">
+									<img src="${item.shirtDetail.image}" alt="IMG">
 								</div>
 							</td>
-							<td class="column-2">${item.shirtDetail.shirt.nameshirt}</td>
-							<td class="column-3">${item.shirtDetail.price} VNĐ</td>
+							<td class="column-21">${item.shirtDetail.shirt.nameshirt}</td>
+							<td class="column-22">${item.shirtDetail.size.namesize}</td>
+							<td class="column-23">${item.shirtDetail.color.nameColor}</td>
+							<td class="column-3">${formatter.format(item.shirtDetail.price)}</td>
 							<td class="column-4">
 								<div class="wrap-num-product flex-w m-l-auto m-r-0">
 									<div onclick="decreaseQuantity(this)" class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
@@ -927,9 +1099,9 @@
 											</div>
 								</div>
 							</td>
-							<td class="column-5">${total} VNĐ</td>
+							<td class="column-5">${formatter.format(total)}</td>
 							<td class="column-6">
-								<a onclick="remove('${item.codeCartDetail}')">Xóa</a>
+								<a class="hover-effect" onclick="remove('${item.codeCartDetail}')">Xóa</a>
 							</td>
 						</tr>
 					`;
@@ -940,10 +1112,10 @@
 
 				// Populate the summary
 				cartSummaryElement.innerHTML = `
-                    <li>Tổng giá trị giỏ hàng: <span>${subtotal} VNĐ</span></li>
-                    <li>Tổng tiền hàng: <span id="selected-total">${selectedTotal} VNĐ</span></li>
-                    <li>Phí ship: <span id="ship-money">${ship} VNĐ</span></li>
-                    <li>Tổng : <span id="all-the-money">${ship + selectedTotal} VNĐ</span></li>
+                    <li>Tổng giá trị giỏ hàng: <span>${formatter.format(subtotal)}</span></li>
+                    <li>Tổng tiền hàng: <span id="selected-total">${formatter.format(selectedTotal)}</span></li>
+                    <li>Phí ship: <span id="ship-money">${formatter.format(ship)}</span></li>
+                    <li>Tổng : <span id="all-the-money">${formatter.format(ship + selectedTotal)}</span></li>
                 `;
 
 				selectedTotal > 50000000 ? allowed = false : allowed = true;
@@ -976,9 +1148,10 @@
 					selectAllCheckbox.checked = allChecked;
 					selectAllCheckbox.indeterminate = !allChecked && someChecked; // Hiển thị trạng thái "không xác định"
 				}
-
+				let selectedAddress = JSON.parse(localStorage.getItem('selectedAddress')) || {};
+				selectedQuantity = 0;
+				fetchShippingFee(selectedAddress.idHuyen, selectedAddress.idXa)
 				attachQuantityChangeEvent();
-
 			} catch (error) {
 				console.error("Failed to load cart details:", error);
 			}
@@ -992,6 +1165,7 @@
 				headers: headers // Thêm headers vào yêu cầu
 			});
 			setTimeout(function () {
+				selectedCartDetails = []
 				loadCartDetails()
 			}, 100);
 
@@ -1015,7 +1189,7 @@
 
 			quantity4Change = quantity
 
-			if (quantity <= 0) {
+			if (quantity <= 0 || quantity % 1 != 0 || quantity > 2147483647) {
 				toastr.error('Số lượng không hợp lệ', 'Lỗi');
 				quantityInput.value = 1; // Đặt lại giá trị tối thiểu
 				quantity4Change = 1;
@@ -1031,6 +1205,7 @@
 				method: 'POST',
 				headers: headers // Thêm headers vào yêu cầu
 			});
+			selectedCartDetails = []
 			loadCartDetails()
 		}
 
@@ -1077,15 +1252,23 @@
 		function updateSelectedTotal() {
 			const checkboxes = document.querySelectorAll('.select-item:checked');
 			selectedTotal = 0;
+			selectedQuantity = 0;
 			selectedCartDetails = [];
 
 			checkboxes.forEach(checkbox => {
 				selectedTotal += parseFloat(checkbox.dataset.total);
+				// Xác định input số lượng liên kết với checkbox
+				const quantityInput = document.querySelector(`input.num-product[data-code="${checkbox.dataset.code}"]`);
+				if (quantityInput) {
+					selectedQuantity += parseInt(quantityInput.value); // Cộng số lượng
+				}
+
 				selectedCartDetails.push(checkbox.dataset.code); // Lấy giá trị thuộc tính name và thêm vào danh sách
-				selectedTotal > 50000000 ? allowed = false : allowed = true;
+				// selectedTotal > 50000000 ? allowed = false : allowed = true;
 			});
-
-
+			allowed = selectedTotal <= 50000000;
+			let selectedAddress = JSON.parse(localStorage.getItem('selectedAddress')) || {};
+			fetchShippingFee(selectedAddress.idHuyen, selectedAddress.idXa)
 			updateVoucherOptions(selectedTotal)
 			console.log(selectedTotal)
 		}
@@ -1101,7 +1284,7 @@
 				});
 				if (!response.ok) throw new Error("Không thể lấy danh sách voucher");
 
-				const vouchers = await response.json();
+				vouchers = await response.json();
 
 				// Xóa các tùy chọn cũ
 				voucherSelect.innerHTML = "";
@@ -1110,12 +1293,13 @@
 				// Kiểm tra nếu không có voucher
 				if (vouchers.length === 0) {
 					voucherSelect.innerHTML = "<option value=''>Không có voucher khả dụng</option>";
-					document.getElementById('selected-total').innerText = `${money} VNĐ`;
-					document.getElementById('ship-money').innerText = `${ship} VNĐ`;
-					document.getElementById('all-the-money').innerText = `${ship + money} VNĐ`;
+					document.getElementById('selected-total').innerText = `${formatter.format(money)}`;
+					document.getElementById('ship-money').innerText = `${formatter.format(ship)}`;
+					document.getElementById('all-the-money').innerText = `${formatter.format(ship + money)}`;
 					activeVoucherCode = null;
 					const checkboxes = document.querySelectorAll('.select-item:checked');
 					selectedTotal = 0;
+					discount = 0
 
 					checkboxes.forEach(checkbox => {
 						selectedTotal += parseFloat(checkbox.dataset.total);
@@ -1131,9 +1315,15 @@
 				let lastMoney = money;
 				console.log(money)
 
+				if (vouchers.length > 0) {
+					const defaultOption = document.createElement("option");
+					defaultOption.value = "";
+					defaultOption.textContent = "Không chọn voucher";
+					voucherSelect.appendChild(defaultOption);
+				}
 
 				vouchers.forEach((voucher) => {
-					const discountValue = voucher.type_voucher === "Percent"
+					discountValue = voucher.type_voucher === "Percent"
 						? Math.min(voucher.maximum_discount, money * (voucher.discount_value / 100))
 						: Math.min(voucher.discount_value, voucher.maximum_discount);
 
@@ -1141,23 +1331,23 @@
 						maxDiscount = discountValue;
 						bestVoucher = voucher;
 						lastMoney = money - discountValue
+						discount = maxDiscount;
 					}
 
 					const option = document.createElement("option");
 					option.value = voucher.code_voucher;
-					option.textContent = `Đơn tối thiểu: ${voucher.min_bill_value} - Giảm tối đa: ${voucher.maximum_discount}`;
+					option.textContent = `Đơn tối thiểu: ${formatter.format(voucher.min_bill_value)} - Giảm tối đa: ${formatter.format(voucher.maximum_discount)}`;
 					voucherSelect.appendChild(option);
 				});
 
 				// Tự động chọn voucher giảm nhiều nhất
 				if (bestVoucher) {
-					selectedTotal = lastMoney
 					voucherSelect.value = bestVoucher.code_voucher;
 					// document.getElementById("codeVoucher").value = voucherSelect.value;
 					activeVoucherCode = bestVoucher.code_voucher;
-					document.getElementById('selected-total').innerText = `${lastMoney} VNĐ`;
-					document.getElementById('ship-money').innerText = `${ship} VNĐ`;
-					document.getElementById('all-the-money').innerText = `${ship + lastMoney} VNĐ`;
+					document.getElementById('selected-total').innerText = `${formatter.format(lastMoney)}`;
+					document.getElementById('ship-money').innerText = `${formatter.format(ship)}`;
+					document.getElementById('all-the-money').innerText = `${formatter.format(ship + selectedTotal - discount)}`;
 				}
 			} catch (error) {
 				console.error("Lỗi khi cập nhật voucher:", error);
@@ -1175,6 +1365,11 @@
 				return
 			}
 
+			if (!allowedAddresses) {
+				toastr.error('Đang không có địa chỉ, vui lòng thêm trước khi đặt hàng');
+				return
+			}
+
 			// const selectedAddressOption = document.querySelector('input[name="addressOption"]:checked').value;
 			// if (selectedAddressOption === 'new') {
 			const province = document.getElementById('provinceSelect').value;
@@ -1185,10 +1380,10 @@
 			const phone = document.getElementById('phone').value;
 
 			// Kiểm tra nếu thiếu thông tin
-			if (!province || !district || !ward || !detailedAddress || !name || !phone) {
-				toastr.error('Vui lòng điền đầy đủ thông tin địa chỉ, tên và số điện thoại.');
-				return;
-			}
+			// if (!province || !district || !ward || !detailedAddress || !name || !phone) {
+			// 	toastr.error('Vui lòng điền đầy đủ thông tin địa chỉ, tên và số điện thoại.');
+			// 	return;
+			// }
 			// }
 			const selectedMethod = document.getElementById("paymentMethod").value;
 
@@ -1221,20 +1416,17 @@
 				const ward2 = document.getElementById('wardSelect').options[document.getElementById('wardSelect').selectedIndex].text;
 				console.log(123);
 
-				console.log(province2, district2, ward2);
+				console.log(province, district, ward);
 				console.log(312);
 
+				selectedAddressCode = JSON.parse(localStorage.getItem('selectedAddressCode')).code
 
 				// Gộp địa chỉ thành một chuỗi
 				const fullAddress = `${detailedAddress}, ${ward2}, ${district2}, ${province2}`;
 
 				bodyData = {
 					...bodyData,
-					address: {
-						fullAddress,
-						name,
-						phone
-					},
+					selectedAddressCode,
 					pm
 				};
 				// } else {
@@ -1245,8 +1437,9 @@
 				// }
 
 				console.log(bodyData)
+				console.log(123321)
 
-				const response = await fetch("http://localhost:8080/cart/checkout?accCode=" + userCode + "&voucherCode=" + activeVoucherCode + "&ship=" + ship, {
+				const response = await fetch("http://localhost:8080/cart/checkout?accCode=" + userCode + "&voucherCode=" + activeVoucherCode + "&ship=" + Number(localStorage.getItem('ship')), {
 					method: 'POST', // Sử dụng POST để gửi dữ liệu
 					headers: headers,
 					body: JSON.stringify(bodyData) // Gửi danh sách dưới dạng JSON
@@ -1268,6 +1461,8 @@
 			document.getElementById('select-all').checked = false;
 			localStorage.removeItem('selectedCartDetails');
 			localStorage.removeItem('activeVoucherCode');
+			// localStorage.removeItem('selectedAddressCode');
+			localStorage.removeItem('ship');
 			console.log(123)
 		}
 
@@ -1311,9 +1506,10 @@
 		function submitOrder(money) {
 			localStorage.setItem('selectedCartDetails', JSON.stringify(selectedCartDetails));
 			localStorage.setItem('activeVoucherCode', activeVoucherCode);
+			localStorage.setItem('ship', ship);
 
 			const orderData = {
-				amount: money + ship,  // Số tiền (VND)
+				amount: money - discount + Number(ship),  // Số tiền (VND)
 				orderInfo: 'Online Payment'  // Thông tin đơn hàng
 			};
 
@@ -1340,6 +1536,8 @@
 		function handlePaymentResponse() {
 			const params = new URLSearchParams(window.location.search);
 			if (!params.toString()) {
+				selectedCartDetails = []
+				localStorage.removeItem('selectedCartDetails');
 				return;
 			}
 
@@ -1518,11 +1716,12 @@
 					"from_district_id": 3440,
 					"to_district_id": Number(toDistrictId),
 					"to_ward_code": `${toWardCode}`,
-					"height": 10,
+					"height": selectedQuantity * 2 + 1,
 					"length": 30,
-					"weight": 1000,
+					"weight": selectedQuantity * 100 + 1,
 					"width": 20
 				};
+
 				console.log(JSON.stringify(payload));
 
 				const response = await fetch('https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee', {
@@ -1539,8 +1738,8 @@
 					const data = await response.json();
 					ship = data.data.total
 					shipToNewAddress = data.data.total
-					document.getElementById('ship-money').innerText = `${ship} VNĐ`;
-					document.getElementById('all-the-money').innerText = `${ship + selectedTotal} VNĐ`;
+					document.getElementById('ship-money').innerText = `${formatter.format(ship)}`;
+					document.getElementById('all-the-money').innerText = `${formatter.format(ship + selectedTotal - discount)}`;
 					console.log(ship)
 					console.log(shipToNewAddress)
 					// displayShippingFee(data.data.total);
@@ -1600,9 +1799,9 @@
 			const provinceId = this.value;
 			if (provinceId) {
 				fetchDistricts(provinceId);
-				ship = 0;
-				document.getElementById('ship-money').innerText = `${ship} VNĐ`;
-				document.getElementById('all-the-money').innerText = `${ship + selectedTotal} VNĐ`;
+				// ship = 0;
+				// document.getElementById('ship-money').innerText = `${ship} VNĐ`;
+				// document.getElementById('all-the-money').innerText = `${ship + selectedTotal - discount} VNĐ`;
 			} else {
 				const districtSelect = document.getElementById('districtSelect');
 				districtSelect.innerHTML = '<option value="">-- Chọn quận/huyện --</option>';
@@ -1619,9 +1818,9 @@
 			const districtId = this.value;
 			if (districtId) {
 				fetchWards(districtId);
-				ship = 0;
-				document.getElementById('ship-money').innerText = `${ship} VNĐ`;
-				document.getElementById('all-the-money').innerText = `${ship + selectedTotal} VNĐ`;
+				// ship = 0;
+				// document.getElementById('ship-money').innerText = `${ship} VNĐ`;
+				// document.getElementById('all-the-money').innerText = `${ship + selectedTotal - discount} VNĐ`;
 			} else {
 				const wardSelect = document.getElementById('wardSelect');
 				wardSelect.innerHTML = '<option value="">-- Chọn phường/xã --</option>';
@@ -1634,7 +1833,7 @@
 			const toWardCode = this.value;
 			const toDistrictId = document.getElementById('districtSelect').value;
 			if (toWardCode && toDistrictId) {
-				fetchShippingFee(toDistrictId, toWardCode);
+				// fetchShippingFee(toDistrictId, toWardCode);
 			} else {
 				document.getElementById('shippingFee').textContent = '';
 			}
@@ -1657,8 +1856,8 @@
 
 			// Reset phí giao hàng
 			ship = 0;
-			document.getElementById('ship-money').innerText = `${ship} VNĐ`;
-			document.getElementById('all-the-money').innerText = `${ship + selectedTotal} VNĐ`;
+			document.getElementById('ship-money').innerText = `${formatter.format(ship)}`;
+			document.getElementById('all-the-money').innerText = `${formatter.format(ship + selectedTotal - discount)}`;
 
 			// Reset phần nhập liệu
 			document.getElementById('detailedAddress').value = "";;
@@ -1667,12 +1866,339 @@
 
 		}
 
+		const vs = document.getElementById('voucherSelect');
+
+		vs.addEventListener('change', async function () {
+			try {
+				// Lấy mã voucher được chọn
+				activeVoucherCode = this.value;
+
+				// Nếu không có voucher được chọn (giá trị rỗng), cập nhật lại tổng tiền và dừng xử lý
+				if (!activeVoucherCode) {
+					console.log("Không có voucher được chọn");
+					document.getElementById('selected-total').innerText = `${formatter.format(selectedTotal)}`;
+					document.getElementById('ship-money').innerText = `${formatter.format(ship)}`;
+					document.getElementById('all-the-money').innerText = `${formatter.format(ship + selectedTotal)}`;
+					return;
+				}
+
+
+				// Tìm thông tin voucher từ danh sách đã tải
+				const selectedVoucher = vouchers.find(voucher => voucher.code_voucher === activeVoucherCode);
+
+				if (!selectedVoucher) {
+					console.warn("Voucher không tồn tại trong danh sách đã tải.");
+					return;
+				}
+
+				// Tính giá trị giảm giá
+				const discountValue = selectedVoucher.type_voucher === "Percent"
+					? Math.min(selectedVoucher.maximum_discount, selectedTotal * (selectedVoucher.discount_value / 100))
+					: Math.min(selectedVoucher.discount_value, selectedVoucher.maximum_discount);
+
+				const lastMoney = selectedTotal - discountValue;
+
+				discount = discountValue
+
+				// Cập nhật các thông tin hiển thị liên quan
+				document.getElementById('selected-total').innerText = `${formatter.format(lastMoney)}`;
+				document.getElementById('ship-money').innerText = `${formatter.format(ship)}`;
+				document.getElementById('all-the-money').innerText = `${formatter.format(ship + lastMoney)}`;
+
+				console.log(`Voucher selected: ${activeVoucherCode}, giảm giá: ${formatter.format(discountValue)}`);
+			} catch (error) {
+				console.error("Lỗi khi xử lý thay đổi voucher:", error);
+			}
+		});
+
+
+		async function getDeliveryAddresses() {
+			try {
+				const response = await fetch(`http://localhost:8080/cart/get-delivery-address?accCode=${userCode}`, {
+					method: "GET",
+					headers: headers,
+				});
+
+				if (!response.ok) {
+					throw new Error("Không thể lấy danh sách địa chỉ.");
+				}
+
+				addresses = await response.json();
+				displayAddresses(addresses);
+			} catch (error) {
+				console.error("Lỗi:", error);
+				alert("Đã xảy ra lỗi khi lấy danh sách địa chỉ.");
+			}
+		}
+
+		function displayAddresses(addresses) {
+			const addressList = document.getElementById("addressList");
+			addressList.innerHTML = ""; // Xóa danh sách cũ
+
+			if (addresses.length === 0) {
+				addressList.innerHTML = "<p>Không có địa chỉ nào được tìm thấy.</p>";
+				allowedAddresses = false
+				return;
+			}
+			allowedAddresses = true
+
+			// Lấy giá trị đã lưu trong localStorage
+			let savedCode = JSON.parse(localStorage.getItem('selectedAddressCode'))?.code;
+
+			// Nếu không còn địa chỉ khớp với savedCode, chọn địa chỉ đầu tiên làm mặc định
+			if (!addresses.some(address => address.deliveryAddressCode === savedCode)) {
+				savedCode = addresses[0].deliveryAddressCode;
+				localStorage.setItem('selectedAddressCode', JSON.stringify({ code: savedCode }));
+				localStorage.setItem('selectedAddress', JSON.stringify({
+					idHuyen: addresses[0].idDistrict,
+					idXa: addresses[0].idWard
+				}));
+			}
+
+			addresses.forEach((address, index) => {
+				const isSelected = savedCode === address.deliveryAddressCode ? "checked" : "";
+
+				const addressDiv = document.createElement("div");
+				addressDiv.className = "address-container";
+				addressDiv.innerHTML = `
+            <input type="radio" name="address" class="radio-button" 
+                   data-code="${address.deliveryAddressCode}" 
+                   value="${address.idDistrict},${address.idWard}" ${isSelected} 
+                   onclick="selectAddress(event)">
+            <div>
+                <p><strong>Người nhận:</strong> ${address.name}</p>
+                <p><strong>Số điện thoại:</strong> ${address.phone}</p>
+                <p><strong>Địa chỉ chi tiết:</strong> ${address.detailAddress}</p>
+            </div>
+            <button class="delete-button" onclick="deleteAddress(event, '${address.deliveryAddressCode}')">Xóa</button>
+        `;
+
+				// Thêm sự kiện click vào div
+				addressDiv.addEventListener("click", () => {
+					const radioButton = addressDiv.querySelector("input[type='radio']");
+					if (radioButton) {
+						radioButton.checked = true;
+						selectAddress({ target: radioButton });
+					}
+				});
+
+				addressList.appendChild(addressDiv);
+
+				// Nếu là địa chỉ được chọn, tự động gọi hàm selectAddress
+				if (isSelected) {
+					const selectedRadioButton = addressDiv.querySelector("input[type='radio']");
+					selectAddress({ target: selectedRadioButton });
+				}
+			});
+		}
+
+
+		function selectAddress(event) {
+			const selectedValue = event.target.value;
+			const [idHuyen, idXa] = selectedValue.split(',');
+
+			// Khởi tạo đối tượng selectedAddress
+			let selectedAddress = JSON.parse(localStorage.getItem('selectedAddress')) || {};
+			selectedAddress.idHuyen = idHuyen;
+			selectedAddress.idXa = idXa;
+
+			const selectedAddressCode = event.target.dataset.code;
+
+			// Lưu thông tin vào localStorage
+			localStorage.setItem('selectedAddressCode', JSON.stringify({ code: selectedAddressCode }));
+			localStorage.setItem('selectedAddress', JSON.stringify(selectedAddress));
+
+			console.log("Selected Address Code:", selectedAddressCode);
+			console.log("Selected Address:", selectedAddress);
+
+			// Gọi fetchShippingFee hoặc xử lý logic khác
+			fetchShippingFee(selectedAddress.idHuyen, selectedAddress.idXa);
+
+			// Hiển thị thông tin người nhận, số điện thoại và địa chỉ chi tiết vào một div
+			const selectedAddressContainer = document.getElementById('selectedAddressInfo');
+			const selectedAddressData = addresses.find(address => address.deliveryAddressCode === selectedAddressCode);
+
+			// Cập nhật nội dung của div
+			selectedAddressContainer.innerHTML = `
+        <h5>Thông tin địa chỉ đã chọn:</h5>
+        <p><strong>Người nhận:</strong> ${selectedAddressData.name}</p>
+        <p><strong>Số điện thoại:</strong> ${selectedAddressData.phone}</p>
+        <p><strong>Địa chỉ chi tiết:</strong> ${selectedAddressData.detailAddress}</p>
+    `;
+		}
+
+
+		// Hàm hiển thị thông tin địa chỉ vào một div
+		function displaySelectedAddressInfo(selectedAddress) {
+			const selectedAddressInfoDiv = document.getElementById("selectedAddressInfo");
+
+			// Kiểm tra xem div đã tồn tại chưa, nếu chưa thì tạo mới
+			if (!selectedAddressInfoDiv) {
+				const newDiv = document.createElement("div");
+				newDiv.id = "selectedAddressInfo";
+				document.body.appendChild(newDiv);
+			}
+
+			// Lấy div để cập nhật nội dung
+			const div = document.getElementById("selectedAddressInfo");
+
+			// Cập nhật nội dung của div với thông tin địa chỉ
+			div.innerHTML = `
+        <h3>Thông tin địa chỉ được chọn:</h3>
+        <p><strong>Người nhận:</strong> ${selectedAddress.name}</p>
+        <p><strong>Số điện thoại:</strong> ${selectedAddress.phone}</p>
+        <p><strong>Địa chỉ chi tiết:</strong> ${selectedAddress.detailAddress}</p>
+        <p><strong>Quận/Huyện:</strong> ${selectedAddress.idHuyen}</p>
+        <p><strong>Xã/Phường:</strong> ${selectedAddress.idXa}</p>
+    `;
+		}
+
+		function deleteAddress(event, addressCode) {
+			// Ngừng hành động mặc định của nút
+			event.stopPropagation();
+
+			// Lấy danh sách địa chỉ hiện tại
+			const addressList = document.querySelectorAll('.address-container');
+
+			// Kiểm tra nếu chỉ còn 1 địa chỉ thì không xóa
+			if (addressList.length === 1) {
+				toastr.info("Không thể xóa. Cần ít nhất một địa chỉ để giao hàng.");
+				return;
+			}
+
+			// Lấy địa chỉ hiện tại đang được chọn
+			const selectedAddressCode = JSON.parse(localStorage.getItem('selectedAddressCode'))?.code;
+
+			// Gọi API hoặc xử lý xóa địa chỉ
+			fetch(`http://localhost:8080/cart/delete-address?addressCode=${addressCode}`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${sessionStorage.getItem('jwtToken')}`
+				}
+			})
+				.then(response => {
+					if (response.ok) {
+						// Kiểm tra xem địa chỉ bị xóa có phải là địa chỉ đang chọn không
+						if (addressCode === selectedAddressCode) {
+							localStorage.removeItem('selectedAddressCode'); // Xóa địa chỉ đã chọn trong localStorage
+							localStorage.removeItem('selectedAddress');     // Xóa thông tin chi tiết đã chọn
+						}
+
+						// Lấy lại danh sách địa chỉ sau khi xóa
+						getDeliveryAddresses();
+					} else {
+						throw new Error('Không thể xóa địa chỉ.');
+					}
+				})
+				.catch(error => {
+					console.error("Lỗi xóa địa chỉ:", error);
+					alert("Đã xảy ra lỗi khi xóa địa chỉ.");
+				});
+		}
+
+
+		function createNewAddress() {
+			// Lấy nút "Thêm mới"
+			const addNewAddressBtn = document.getElementById('addNewAddressBtn');
+			addNewAddressBtn.disabled = true; // Disable nút ngay lập tức
+
+			if (addresses.length > 10) {
+				toastr.error('Không thể thêm địa chỉ mới, đã đạt giới hạn 10 địa chỉ.');
+				addNewAddressBtn.disabled = false; // Enable lại nếu lỗi
+				return;
+			}
+
+			const province = document.getElementById('provinceSelect').value;
+			const district = document.getElementById('districtSelect').value;
+			const ward = document.getElementById('wardSelect').value;
+			const detailedAddress = document.getElementById('detailedAddress').value;
+			const name = document.getElementById('name').value;
+			const phone = document.getElementById('phone').value;
+
+			const phoneRegex = /^0\d{9}$/;
+			if (!phoneRegex.test(phone)) {
+				toastr.error('Số điện thoại phải là 10 chữ số bắt đầu bằng 0.');
+				addNewAddressBtn.disabled = false; // Enable lại nếu lỗi
+				return;
+			}
+
+			const province2 = document.getElementById('provinceSelect').options[document.getElementById('provinceSelect').selectedIndex].text;
+			const district2 = document.getElementById('districtSelect').options[document.getElementById('districtSelect').selectedIndex].text;
+			const ward2 = document.getElementById('wardSelect').options[document.getElementById('wardSelect').selectedIndex].text;
+
+			const fullAddress = `${detailedAddress}, ${ward2}, ${district2}, ${province2}`;
+
+			if (!province || !district || !ward || !detailedAddress || !name || !phone) {
+				toastr.error('Vui lòng điền đầy đủ thông tin địa chỉ, tên và số điện thoại.');
+				addNewAddressBtn.disabled = false; // Enable lại nếu lỗi
+				return;
+			}
+
+			const isDuplicate = addresses.some(address => address.idWard == ward && address.phone == phone && address.detailAddress == fullAddress);
+
+			if (isDuplicate) {
+				toastr.error('Địa chỉ này đã tồn tại.');
+				addNewAddressBtn.disabled = false; // Enable lại nếu lỗi
+				return;
+			}
+			const addressData = {
+				accCode: userCode,
+				idProvince: province,
+				idDistrict: district,
+				idWard: ward,
+				name: name,
+				phone: phone,
+				detailAddress: fullAddress
+			};
+
+			fetch("http://localhost:8080/cart/create-address", {
+				method: 'POST',
+				headers: headers,
+				body: JSON.stringify(addressData)
+			}).then(response => {
+				if (response.ok) {
+					// Gọi lại danh sách địa chỉ sau khi thêm
+					setTimeout(() => {
+						getDeliveryAddresses();
+						addNewAddressBtn.disabled = false; // Enable lại nút sau khi cập nhật thành công
+					}, 100);
+				} else {
+					toastr.error('Đã xảy ra lỗi khi thêm địa chỉ.');
+					addNewAddressBtn.disabled = false; // Enable lại nếu lỗi
+				}
+			}).catch(error => {
+				toastr.error('Không thể kết nối đến máy chủ.');
+				addNewAddressBtn.disabled = false; // Enable lại nếu lỗi
+			});
+		}
+
+
+
+		document.addEventListener("DOMContentLoaded", () => {
+			const toggleButton = document.getElementById("toggleNewAddress");
+			const newAddressSection = document.getElementById("newAddressSection");
+
+			// Ẩn phần địa chỉ mới ban đầu
+			newAddressSection.classList.add("hidden");
+
+			toggleButton.addEventListener("click", () => {
+				if (newAddressSection.classList.contains("hidden")) {
+					newAddressSection.classList.remove("hidden");
+					toggleButton.textContent = "Ẩn địa chỉ mới";
+				} else {
+					newAddressSection.classList.add("hidden");
+					toggleButton.textContent = "Thêm địa chỉ mới";
+				}
+			});
+		});
+
 
 		// Tải danh sách tỉnh/thành phố khi trang được load
 		window.addEventListener('DOMContentLoaded', fetchProvinces);
 
 		// Load cart details when the page loads
-		document.addEventListener('DOMContentLoaded', loadCartDetails);
+		document.addEventListener('DOMContentLoaded', loadCartDetails, getDeliveryAddresses());
 
 		toastr.options = {
 			"closeButton": true,               // Hiển thị nút đóng

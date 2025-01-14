@@ -328,46 +328,67 @@ angular.module("billDetailApp", []).controller("BillDetailController", ["$scope"
       $http({
         method: "GET",
         url: `http://localhost:8080/bills/detailsOnline/${codeBill}`,
-        headers: { Authorization: "Bearer " + token },
       })
-        .then(function success(response) {
-          const data = response.data;
-          if (data.code === 1000 && Array.isArray(data.result) && data.result.length > 0) {
-            const billDetail = data.result[0];
-            $scope.billInfo.statusBill = billDetail.statusBill;
-            $scope.updateTimeline($scope.billInfo.statusBill);
-            $scope.currentStatusLabel = $scope.statusLabels[$scope.billInfo.statusBill - 1];
-  
-            // Kiểm tra nếu trạng thái là 5 hoặc 6 và chưa cập nhật
-            if ((billDetail.statusBill === 5 || billDetail.statusBill === 6) && !isUpdated) {
-              // Gọi API cập nhật số lượng
-              $http({
-                method: "PUT",
-                url: `http://localhost:8080/bills/updateStock/${codeBill}`,
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': "Bearer " + token,
-                }
-              })
+      .then(function success(response) {
+        const data = response.data;
+        if (data.code === 1000 && Array.isArray(data.result) && data.result.length > 0) {
+          const billDetail = data.result[0];
+          $scope.billInfo.statusBill = billDetail.statusBill;
+          $scope.updateTimeline($scope.billInfo.statusBill);
+          $scope.currentStatusLabel = $scope.statusLabels[$scope.billInfo.statusBill - 1];
+    
+          // Kiểm tra nếu trạng thái là 5 hoặc 6 và chưa cập nhật
+          if ((billDetail.statusBill === 5 || billDetail.statusBill === 6) && !isUpdated) {
+            // Gọi API kiểm tra số lượng trong kho
+            $http({
+              method: "GET",
+              url: `http://localhost:8080/products/stock/${billDetail.productId}`, // Giả sử sản phẩm có productId
+            })
+            .then(function(response) {
+              const availableStock = response.data.availableStock; // Số lượng trong kho
+              const requiredQuantity = billDetail.quantity; // Số lượng trong đơn hàng
+    
+              if (availableStock < requiredQuantity) {
+                // Nếu số lượng trong kho không đủ
+                alert("Không đủ số lượng trong kho. Vui lòng kiểm tra lại."); 
+                clearInterval(intervalId); // Dừng polling
+              } else {
+                // Gọi API để cập nhật số lượng nếu đủ
+                $http({
+                  method: "PUT",
+                  url: `http://localhost:8080/bills/updateStock/${codeBill}`,
+                  headers: {
+                    'Content-Type': 'application/json',
+                  }
+                })
                 .then(function(response) {
                   console.log("Cập nhật số lượng thành công.");
                 })
                 .catch(function(error) {
                   console.error("Lỗi khi cập nhật số lượng:", error);
+                  alert("Đã xảy ra lỗi khi cập nhật số lượng.");
                 });
-  
-              // Đánh dấu là đã cập nhật
-              isUpdated = true;
-  
-              // Dừng polling sau khi cập nhật một lần
-              clearInterval(intervalId);
-            }
+    
+                // Đánh dấu là đã cập nhật
+                isUpdated = true;
+    
+                // Dừng polling sau khi cập nhật một lần
+                clearInterval(intervalId);
+              }
+            })
+            .catch(function(error) {
+              console.error("Lỗi khi kiểm tra số lượng kho:", error);
+              alert("Lỗi khi kiểm tra số lượng trong kho.");
+            });
           }
-        })
-        .catch(function error(err) {
-          console.error("Lỗi khi kiểm tra trạng thái hóa đơn:", err);
-        });
-    }, 1000);  // Chạy mỗi 5 giây
+        }
+      })
+      .catch(function error(err) {
+        console.error("Lỗi khi kiểm tra trạng thái hóa đơn:", err);
+      });
+    }, 1000);
+    
+      // Chạy mỗi 1 giây
   };
   
   // Gọi hàm load khi controller khởi tạo

@@ -1,15 +1,22 @@
 package com.example.bee_shirt.repository;
 
 import com.example.bee_shirt.entity.Voucher1;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface VoucherRepository1 extends JpaRepository<Voucher1, Long> {
+    @Query(value = """
+        SELECT * FROM  voucher v WHERE v.deleted = 0
+""", nativeQuery = true)
+    Page<Voucher1> findAll(Pageable pageable);
 //
     @Query("SELECT v FROM  Voucher1 v WHERE v.code_voucher = :code")
 
@@ -31,8 +38,8 @@ public interface VoucherRepository1 extends JpaRepository<Voucher1, Long> {
             "OR CAST(v.status_voucher AS string) LIKE CONCAT('%', :keyword, '%')")
     List<Voucher1> searchAllFields(@Param("keyword") String keyword);
 
-    @Query("SELECT v FROM Voucher1 v WHERE v.startdate >= :batdau AND v.enddate <= :ketthuc")
-    List<Voucher1> findByDateRange(@Param("batdau") LocalDate batdau, @Param("ketthuc") LocalDate ketthuc);
+    @Query("SELECT v FROM Voucher1 v WHERE v.startdate >= :batdau AND v.enddate <= :ketthuc and v.deleted = false")
+    List<Voucher1> findByDateRange(@Param("batdau") LocalDateTime batdau, @Param("ketthuc") LocalDateTime ketthuc);
 
     @Query("SELECT v FROM Voucher1 v WHERE v.code_voucher LIKE :query")
     Optional<Voucher1> findVoucherByCode(String query);
