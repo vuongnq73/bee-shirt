@@ -71,9 +71,9 @@ public List<Voucher1> findByDateRange(LocalDateTime batdau, LocalDateTime ketthu
                 LocalDateTime endDate = voucher.getEnddate();
 
                 if (startDate.isAfter(now)) {
-                    voucher.setStatus_voucher(0); //  Đang hoạt động
+                    voucher.setStatus_voucher(0);  // Hết hạn
                 } else if (!startDate.isAfter(now) && !endDate.isBefore(now)) {
-                    voucher.setStatus_voucher(1); // Hết hạn
+                    voucher.setStatus_voucher(1); //  Đang hoạt động
                 } else if (endDate.isBefore(now)) {
                     voucher.setStatus_voucher(2); //  Chưa kích hoạt
                 }

@@ -72,8 +72,10 @@ angular.module("voucherApp", []).controller("voucherController1", [
                 updateAt: voucher.updateAt,
               };
             });
+            console.log($scope.voucherList);
 
             $scope.totalPages = responseData.totalPages || 1;
+  
           } else {
             console.error("Dữ liệu không hợp lệ:", responseData);
             $scope.errorMessage =
@@ -238,9 +240,9 @@ angular.module("voucherApp", []).controller("voucherController1", [
           .split("T")[0];
         console.log(voucherDetail.status_voucher);
         // Set the status
-        if (voucherDetail.status_voucher === 0) {
+        if (voucherDetail.status_voucher === 1) {
           document.getElementById("statusActive").checked = true;
-        } else if (voucherDetail.status_voucher === 1) {
+        } else if (voucherDetail.status_voucher === 0) {
           document.getElementById("statusInactive").checked = true;
         } else if (voucherDetail.status_voucher === 2) {
           document.getElementById("statusPending").checked = true;
@@ -317,7 +319,6 @@ angular.module("voucherApp", []).controller("voucherController1", [
 
       const startDateTime = new Date(newVoucher.startdate).toISOString();
       const endDateTime = new Date(newVoucher.enddate).toISOString();
-
       // Check if startDateTime is in the past
       if (startDateTime < now) {
         $scope.errorMessage =
