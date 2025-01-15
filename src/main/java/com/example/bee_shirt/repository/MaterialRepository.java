@@ -11,5 +11,6 @@ public interface MaterialRepository extends JpaRepository<Material, Integer> {
     @Query("SELECT m.codeMaterial, m.nameMaterial, m.statusMaterial FROM Material m WHERE m.deleted = false")
     Page<Material> findAllMaterials(Pageable pageable);
 
+
     Material findByCodeMaterial(String codeMaterial);
 }

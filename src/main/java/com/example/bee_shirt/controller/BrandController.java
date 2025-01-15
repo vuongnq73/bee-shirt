@@ -28,6 +28,7 @@ public class BrandController {
         return ResponseEntity.ok(brands);
     }
 
+
     // Thêm Brand
     @PostMapping("/add")
     public ResponseEntity<Brand> addBrand(@RequestBody Brand brand) {

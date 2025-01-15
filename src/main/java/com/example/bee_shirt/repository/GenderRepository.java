@@ -11,6 +11,7 @@ public interface GenderRepository extends JpaRepository<Gender, Integer> {
     @Query("SELECT g.codeGender, g.nameGender, g.statusGender FROM Gender g WHERE g.deleted = false")
     Page<Gender> findAllGender(Pageable pageable);
 
+
     Gender findByCodeGender(String codeGender);
 
 }

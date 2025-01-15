@@ -17,6 +17,7 @@ import java.util.Random;
 
 public class SizeController {
 
+    
     @Autowired
     private SizeRepository sizeRepository;
 

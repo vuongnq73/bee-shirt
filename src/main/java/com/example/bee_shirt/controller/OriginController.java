@@ -28,6 +28,7 @@ public class OriginController {
         return ResponseEntity.ok(origins);
     }
 
+
     // Thêm nguồn gốc
     @PostMapping("/add")
     public ResponseEntity<Origin> addOrigin(@RequestBody Origin origin) {

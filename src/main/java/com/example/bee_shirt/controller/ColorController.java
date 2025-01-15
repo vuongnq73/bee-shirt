@@ -21,6 +21,7 @@ public class ColorController {
     @Autowired
     private ColorRepository colorRepository;
 
+
     // Hiển thị danh sách Color với phân trang 5 phần tử
     @GetMapping("/list")
     public ResponseEntity<Page<Color>> getColors(@RequestParam(defaultValue = "0") int page) {

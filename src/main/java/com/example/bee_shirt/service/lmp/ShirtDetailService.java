@@ -170,7 +170,8 @@ public class ShirtDetailService {
 
             // Tạo mã QR và lưu vào thư mục
             try {
-                String qrCodeDirectory = "E:\\DATN\\bee-shirt\\src\\QRShirtDetail\\"; // Thay đổi thành thư mục bạn muốn lưu mã QR
+                String qrCodeDirectory = "D:\\InDiaCD\\bee-shirt\\src\\QRShirtDetail\\"; // Thay đổi thành thư mục bạn muốn lưu mã QR
+
                 String qrCodeFileName = generatedCode + ".png";
                 generateQRCodeImage(generatedCode, qrCodeDirectory + qrCodeFileName);
             } catch (WriterException | IOException e) {

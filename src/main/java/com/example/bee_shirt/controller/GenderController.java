@@ -28,6 +28,7 @@ public class GenderController {
         return ResponseEntity.ok(categories);
     }
 
+
     // Thêm Gender
     @PostMapping("/add")
     public ResponseEntity<Gender> addGender(@RequestBody Gender gender) {

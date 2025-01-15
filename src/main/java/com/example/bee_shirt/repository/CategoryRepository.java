@@ -11,6 +11,7 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     @Query("SELECT c.codeCategory, c.nameCategory, c.statusCategory FROM Category c WHERE c.deleted = false")
     Page<Category> findAllCategory(Pageable pageable);
 
+
     Category findByCodeCategory(String codeCategory);
 
     Category findCategoryByNameCategory(String Name);

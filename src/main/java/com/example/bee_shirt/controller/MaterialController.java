@@ -28,6 +28,7 @@ public class MaterialController {
         return ResponseEntity.ok(materials);
     }
 
+
     // Thêm vật liệu
     @PostMapping("/add")
     public ResponseEntity<Material> addMaterial(@RequestBody Material material) {
