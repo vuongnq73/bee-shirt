@@ -78,6 +78,13 @@ public class PointOfSaleController {
         return pointOfSaleService.getShirtDetail(codeShirtDetail);
     }
 
+
+    @GetMapping("/get-shirt-detail-for-scan")
+    @ResponseBody
+    public ShirtDetail getShirtDetail4Scan(@RequestParam("codeShirtDetail") String codeShirtDetail) {
+        return pointOfSaleService.getShirtDetail4Scan(codeShirtDetail);
+    }
+
     @GetMapping("/get-voucher")
     @ResponseBody
     public Voucher1 getVoucher(@RequestParam("codeVoucher") String codeVoucher) {

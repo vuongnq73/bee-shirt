@@ -1584,7 +1584,7 @@
           // Gán kết quả quét vào phần tử shirtCodeDetail
           document.getElementById("shirtCodeDetail").innerText = result;
 
-          const rppp = await fetch(`http://localhost:8080/point-of-sale/get-shirt-detail?codeShirtDetail=${result}`, {
+          const rppp = await fetch(`http://localhost:8080/point-of-sale/get-shirt-detail-for-scan?codeShirtDetail=${result}`, {
             method: 'GET',
             headers: headers
           });

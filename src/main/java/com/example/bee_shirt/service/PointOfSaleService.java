@@ -330,5 +330,9 @@ public class PointOfSaleService {
     public List<Voucher1> findAvailableVoucher(Integer money) {
         return voucherRepository.findAvailableVoucher(money, LocalDateTime.now());
     }
+
+    public ShirtDetail getShirtDetail4Scan(String codeShirtDetail) {
+        return shirtDetailRepository.getShirtDetail4Scan(codeShirtDetail);
+    }
 }
 
