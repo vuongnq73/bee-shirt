@@ -48,9 +48,9 @@ public class Voucher1 {
     private LocalDateTime startdate;
     @Column(name = "enddate")
     private LocalDateTime enddate;
-    public LocalDateTime getEnddate() {
-        return enddate == null ? LocalDateTime.now() : enddate;  // Trả về ngày tối đa nếu enddate là null
-    }
+//    public LocalDateTime getEnddate() {
+//        return enddate == null ? LocalDateTime.now() : enddate;  // Trả về ngày tối đa nếu enddate là null
+//    }
     @Column(name = "status_voucher")
     private int status_voucher;
     @Column(name = "description_voucher")

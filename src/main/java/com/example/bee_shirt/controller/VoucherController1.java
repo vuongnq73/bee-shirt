@@ -104,6 +104,25 @@ public class VoucherController1 {
             return ResponseEntity.ok(voucherService.updateVoucher(voucherDetails,id));
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<String> updateStatusVoucher() {
+        voucherService.updateStatus();
+        return ResponseEntity.ok("update");
+    }
+
+
+    @PostMapping("/update-status")
+    public ResponseEntity<String> updateVoucherStatusManually() {
+        try {
+            voucherService.updateVoucherStatus();
+            return ResponseEntity.ok("Voucher statuses updated successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to update voucher statuses: " + e.getMessage());
+        }
+    }
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteVoucher(@PathVariable Long id) {
@@ -116,27 +135,6 @@ public class VoucherController1 {
 
 
 
-    @GetMapping("/updateVoucherStatus")
-    public ResponseEntity<Void> updateVoucherStatus(@RequestParam Long voucherId) {
-        // Lấy voucher từ cơ sở dữ liệu
-        Voucher1 voucher = voucherRepository.findById(voucherId)
-                .orElseThrow(() -> new ResourceNotFoundException("Voucher not found with id: " + voucherId));
 
-        // Lấy ngày hiện tại
-        LocalDate currentDate = LocalDate.now();
-
-        // Cập nhật trạng thái voucher dựa trên ngày hiện tại
-        if (voucher.getStartdate().isAfter(ChronoLocalDateTime.from(currentDate))) {
-            voucher.setStatus_voucher(2); // Trạng thái "Sắp hoạt động"
-        } else if (voucher.getEnddate().isBefore(ChronoLocalDateTime.from(currentDate))) {
-            voucher.setStatus_voucher(0); // Trạng thái "Ngưng hoạt động"
-        } else {
-            voucher.setStatus_voucher(1); // Trạng thái "Hoạt động"
-        }
-
-        // Lưu lại trạng thái mới
-        voucherRepository.save(voucher);
-        return ResponseEntity.ok().build();
-    }
 
 }

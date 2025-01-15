@@ -1,9 +1,11 @@
 package com.example.bee_shirt.repository;
 
 import com.example.bee_shirt.entity.Voucher1;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -17,6 +19,21 @@ public interface VoucherRepository1 extends JpaRepository<Voucher1, Long> {
         SELECT * FROM  voucher v WHERE v.deleted = 0
 """, nativeQuery = true)
     Page<Voucher1> findAll(Pageable pageable);
+
+    @Transactional
+    @Modifying
+    @Query( "update Voucher1 v set v.status_voucher = 2  where v.startdate > :now")
+            Integer updateStatusAuto2( LocalDateTime now);
+
+    @Transactional
+    @Modifying
+    @Query( "update Voucher1 v set v.status_voucher = 0  where v.enddate < :now")
+    Integer updateStatusAuto0( LocalDateTime now);
+
+    @Transactional
+    @Modifying
+    @Query( "update Voucher1 v set v.status_voucher = 1  where v.enddate >= :now and v.startdate <= :now")
+    Integer updateStatusAuto1( LocalDateTime now);
 //
     @Query("SELECT v FROM  Voucher1 v WHERE v.code_voucher = :code")
 

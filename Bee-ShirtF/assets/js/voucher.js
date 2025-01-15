@@ -8,7 +8,6 @@ const app = angular.module("voucherApp", []);
     $scope.totalPages = 0;
     $scope.searchKeyword = ""; // Lưu từ khóa tìm kiếm
 
-
     $scope.getVouchers = function () {
       const token = sessionStorage.getItem("jwtToken");
 
@@ -24,7 +23,7 @@ const app = angular.module("voucherApp", []);
 
           if (responseData && Array.isArray(responseData.content)) {
             $scope.voucherList = responseData.content.map((voucher) => {
-              // Xác định trạng thái của voucher
+              // // Xác định trạng thái của voucher
               const currentDate = new Date();
               let status = 0; // Ngưng hoạt động
 
@@ -187,6 +186,54 @@ const app = angular.module("voucherApp", []);
           $scope.errorMessage = "Unable to fetch voucher details.";
         });
     };
+
+    $scope.updateStatus = function () {
+      const token = sessionStorage.getItem("jwtToken");
+      if (!token) {
+        $scope.errorMessage = "Bạn chưa đăng nhập!";
+        return;
+      }
+      $scope.errorMessage = "";
+      $scope.successMessage = "";
+
+      $http({
+        method: "PUT",
+        url: `http://localhost:8080/voucher/update`,
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+    };
+    $scope.updateStatus();
+
+    // Hàm cập nhật trạng thái voucher
+    $scope.updateVoucherStatus = function () {
+      const token = sessionStorage.getItem("jwtToken"); // Lấy JWT token từ sessionStorage
+
+      $http({
+        method: "POST",
+        url: "http://localhost:8080/vouchers/update-status", // URL API
+        headers: {
+          Authorization: "Bearer " + token, // Thêm token vào header
+        },
+      })
+        .then(function (response) {
+          // Xử lý khi gọi API thành công
+          console.log("Voucher statuses updated successfully:", response.data);
+
+          // Tùy chọn: Gọi lại danh sách voucher sau khi cập nhật
+          $scope.getVouchers();
+        })
+        .catch(function (error) {
+          // Xử lý khi có lỗi
+          console.error("Failed to update voucher statuses:", error);
+        });
+    };
+
+    // Gọi API tự động mỗi 5 giây
+    const updateInterval = 5 * 1000; // 5 giây
+
+    setInterval($scope.status_voucher, updateInterval);
 
     $scope.formatDate = function (utcDate) {
       const localDate = new Date(utcDate); // Tạo đối tượng Date từ UTC
@@ -369,11 +416,10 @@ const app = angular.module("voucherApp", []);
       $scope.errorMessage = "";
       $scope.successMessage = "";
 
-      const id = sessionStorage.getItem("voucherId")
-      
+      const id = sessionStorage.getItem("voucherId");
 
       // Send data to server
-      if(confirm("Bạn chắc chắn muốn sửa voucher này chứ?")){
+      if (confirm("Bạn chắc chắn muốn sửa voucher này chứ?")) {
         $http({
           method: "PUT",
           url: `http://localhost:8080/voucher/update/${id}`,
@@ -395,21 +441,21 @@ const app = angular.module("voucherApp", []);
             status_voucher: voucherDetail.status_voucher,
           },
         })
-        .then(function (response) {
+          .then(function (response) {
+            $scope.successMessage = "Voucher đã được thêm thành công!";
+            // Refresh the list of vouchers after successful addition
 
-          $scope.successMessage = "Voucher đã được thêm thành công!";
-          // Refresh the list of vouchers after successful addition
+            $scope.voucherList.unshift(response.data); // Dùng unshift để thêm vào đầu mảng
+            $scope.getVouchers();
 
-          $scope.voucherList.unshift(response.data); // Dùng unshift để thêm vào đầu mảng
-
-          // $scope.getVouchers();
-          // Optionally redirect to the voucher list page
-          window.location.href = "/assets/Voucher.html";
-        })
-        .catch(function (error) {
-          console.error("Lỗi khi thêm voucher:", error);
-          $scope.errorMessage = "Không thể thêm voucher.";
-        });
+            // $scope.getVouchers();
+            // Optionally redirect to the voucher list page
+            window.location.href = "/assets/Voucher.html";
+          })
+          .catch(function (error) {
+            console.error("Lỗi khi thêm voucher:", error);
+            $scope.errorMessage = "Không thể thêm voucher.";
+          });
       }
     };
 
