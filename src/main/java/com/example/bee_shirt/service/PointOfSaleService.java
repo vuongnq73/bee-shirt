@@ -167,6 +167,11 @@ public class PointOfSaleService {
         Bill bill = billRepository.findBillByCode(codeBill);
         bill.setStatusBill(10);
         billRepository.save(bill);
+        List<BillDetail> oldCart = billDetailRepository.findBillDetailByBillCodeAndStatusBillDetail(codeBill, 0);
+        for (BillDetail oc : oldCart) {
+            oc.setStatusBillDetail(2);
+            billDetailRepository.save(oc);
+        }
 
 //        List<BillDetail> oldCart = billDetailRepository.findBillDetailByBillCodeAndStatusBillDetail(codeBill, 0);
 //        for (BillDetail oc : oldCart) {
@@ -325,6 +330,10 @@ public class PointOfSaleService {
     public List<Voucher1> findAvailableVoucher(Integer money) {
 
         return voucherRepository.findAvailableVoucher(money, LocalDateTime.now());
+    }
+
+    public ShirtDetail getShirtDetail4Scan(String codeShirtDetail) {
+        return shirtDetailRepository.getShirtDetail4Scan(codeShirtDetail);
     }
 }
 

@@ -311,6 +311,9 @@ ORDER BY
 
     @Query("SELECT sd FROM ShirtDetail sd WHERE sd.codeShirtDetail LIKE %:query%")
     ShirtDetail findShirtDetailByCode(@Param("query") String query);
+
+    @Query("SELECT sd FROM ShirtDetail sd WHERE sd.codeShirtDetail LIKE %:query% AND sd.quantity>0 and sd.statusshirtdetail = 1 and sd.deleted = false and sd.shirt.statusshirt = 1 and sd.shirt.deleted = false")
+    ShirtDetail getShirtDetail4Scan(@Param("query") String query);
     //
 
     @Query("SELECT sd FROM ShirtDetail sd WHERE (sd.codeShirtDetail LIKE %:query% OR sd.shirt.nameshirt LIKE %:query% OR sd.color.nameColor LIKE %:query% OR sd.size.namesize LIKE %:query% OR sd.pattern.namePattern LIKE %:query% )AND sd.deleted = false AND sd.quantity > 0 and sd.shirt.deleted = false and sd.statusshirtdetail = 1 and sd.shirt.statusshirt = 1")
