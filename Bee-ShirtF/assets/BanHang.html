@@ -623,7 +623,8 @@
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                       <button type="button" class="btn btn-primary" onclick="generateSelectedProducts()">Tạo
                         mới</button>
-                      <button type="button" class="btn btn-success" onclick="logSelectedProducts()">Thêm vào giỏ hàng</button>
+                      <button type="button" class="btn btn-success" onclick="logSelectedProducts()">Thêm vào giỏ
+                        hàng</button>
                     </div>
 
                     <!-- Khu vực hiển thị danh sách sản phẩm đã chọn -->
@@ -1478,40 +1479,56 @@
     async function checkout() {
       let codeVoucherCheckout = document.getElementById("codeVoucher").value;
       const username = document.getElementById("codeCustomer").value;
-      console.log(activeVoucherCode)
 
-
-      const resp = await fetch(`http://localhost:8080/point-of-sale/get-bill-detail?codeBill=${activeBillCode}`, {
+      // Kiểm tra trạng thái hóa đơn
+      const checkResp = await fetch(`http://localhost:8080/point-of-sale/check-bill-detail-before-checkout?codeBill=${activeBillCode}`, {
         method: 'GET',
-        headers: headers // Thêm headers vào yêu cầu
+        headers: headers,
       });
 
-      if (!resp.ok) {
+      if (!checkResp.ok) {
         toastr.error('Không thể kết nối tới máy chủ hoặc xảy ra lỗi', 'Lỗi');
         return;
       }
 
-      const data = await resp.json(); // Parse dữ liệu trả về dưới dạng JSON
+      const checkStatus = await checkResp.json();
+      if (checkStatus > 0) {
+        toastr.error('Có sản phẩm không đủ số lượng hoặc đã hết hàng. Vui lòng kiểm tra lại!', 'Lỗi');
+        fetchBillDetails(activeBillCode)
+        return;
+      }
 
+      // Tiếp tục xử lý thanh toán
+      const resp = await fetch(`http://localhost:8080/point-of-sale/get-bill-detail?codeBill=${activeBillCode}`, {
+        method: 'GET',
+        headers: headers,
+      });
+
+
+      const data = await resp.json();
       if (!Array.isArray(data) || data.length === 0) {
         toastr.error('Hóa đơn chưa có sản phẩm nào', 'Lỗi');
         return;
       }
-      if (noVoucher) { codeVoucherCheckout = 'none'; }
+
+      if (noVoucher) {
+        codeVoucherCheckout = 'none';
+      }
 
       fetch(`http://localhost:8080/point-of-sale/checkout?codeBill=${activeBillCode}&codeVoucher=${activeVoucherCode}&username=${username}&userCode=${userCode}`, {
         method: 'POST',
-        headers: headers
-      }).then(data => {
-        console.log("Check out successfully", data);
-        currentCodeShirtDetail = 'none';
-        fetchBills()
-        document.getElementById('closeModal3').click()
-        toastr.success('Đã hoàn tất thanh toán!', 'Thành công');
-        
-      }
-      ).catch(error => console.error("Error with checkout", error));
+        headers: headers,
+      })
+        .then(data => {
+          console.log("Check out successfully", data);
+          currentCodeShirtDetail = 'none';
+          fetchBills();
+          document.getElementById('closeModal3').click();
+          toastr.success('Đã hoàn tất thanh toán!', 'Thành công');
+        })
+        .catch(error => console.error("Error with checkout", error));
     }
+
 
     function cancel() {
       if (activeBillCode == 'none') {
@@ -2528,7 +2545,7 @@
 
         // Kiểm tra nếu không có voucher
         if (vouchers.length === 0) {
-          activeVoucherCode=null;
+          activeVoucherCode = null;
           voucherSelect.innerHTML = "<option value=''>Không có voucher khả dụng</option>";
           return;
         }

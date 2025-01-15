@@ -130,8 +130,8 @@ public class PointOfSaleService {
             billDetailRepository.save(billDetail);
         }
 
-        shirtDetail.setQuantity(shirtDetail.getQuantity() - quantity);
-        shirtDetailRepository.save(shirtDetail);
+//        shirtDetail.setQuantity(shirtDetail.getQuantity() - quantity);
+//        shirtDetailRepository.save(shirtDetail);
         return "Add to cart successfully";
     }
 
@@ -146,7 +146,7 @@ public class PointOfSaleService {
         billDetailRepository.save(billDetail);
 
         billDetail.getShirtDetail().setQuantity(billDetail.getShirtDetail().getQuantity() + oldQuantity - quantity);
-        shirtDetailRepository.save(billDetail.getShirtDetail());
+//        shirtDetailRepository.save(billDetail.getShirtDetail());
         return "Change quantity successfully";
     }
 
@@ -158,8 +158,8 @@ public class PointOfSaleService {
         billDetail.setStatusBillDetail(2);
         billDetailRepository.save(billDetail);
 
-        billDetail.getShirtDetail().setQuantity(billDetail.getShirtDetail().getQuantity() + billDetail.getQuantity());
-        shirtDetailRepository.save(billDetail.getShirtDetail());
+//        billDetail.getShirtDetail().setQuantity(billDetail.getShirtDetail().getQuantity() + billDetail.getQuantity());
+//        shirtDetailRepository.save(billDetail.getShirtDetail());
         return "Remove item from cart successfully";
     }
 
@@ -168,12 +168,29 @@ public class PointOfSaleService {
         bill.setStatusBill(10);
         billRepository.save(bill);
 
+//        List<BillDetail> oldCart = billDetailRepository.findBillDetailByBillCodeAndStatusBillDetail(codeBill, 0);
+//        for (BillDetail oc : oldCart) {
+//            oc.getShirtDetail().setQuantity(oc.getShirtDetail().getQuantity() + oc.getQuantity());
+//            shirtDetailRepository.save(oc.getShirtDetail());
+//        }
+        return "Cancel successfully";
+    }
+
+    public int checkBillDetailBeforeCheckout(String codeBill) {
+        int status = 0;
         List<BillDetail> oldCart = billDetailRepository.findBillDetailByBillCodeAndStatusBillDetail(codeBill, 0);
         for (BillDetail oc : oldCart) {
-            oc.getShirtDetail().setQuantity(oc.getShirtDetail().getQuantity() + oc.getQuantity());
-            shirtDetailRepository.save(oc.getShirtDetail());
+            if (oc.getQuantity() > oc.getShirtDetail().getQuantity()) {
+                oc.setQuantity(oc.getShirtDetail().getQuantity());
+                status +=1;
+            }
+            if (oc.getShirtDetail().getQuantity() == 0){
+                oc.setStatusBillDetail(2);
+                status +=1;
+            }
+            billDetailRepository.save(oc);
         }
-        return "Cancel successfully";
+        return status;
     }
 
     public String updateCustomerInfo(String codeBill, String username) {
@@ -240,6 +257,11 @@ public class PointOfSaleService {
 
         billPaymentRepository.save(bp);
         billRepository.save(bill);
+        List<BillDetail> oldCart = billDetailRepository.findBillDetailByBillCodeAndStatusBillDetail(codeBill, 0);
+        for (BillDetail oc : oldCart) {
+            oc.getShirtDetail().setQuantity(oc.getShirtDetail().getQuantity() - oc.getQuantity());
+            shirtDetailRepository.save(oc.getShirtDetail());
+        }
         return "Checkout successfully";
     }
 
