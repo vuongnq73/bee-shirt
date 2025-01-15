@@ -60,6 +60,12 @@ public class PointOfSaleController {
         return pointOfSaleService.getBillDetails(codeBill);
     }
 
+    @GetMapping("/check-bill-detail-before-checkout")
+    @ResponseBody
+    public int checkBillDetailBeforeCheckout(@RequestParam("codeBill") String codeBill) {
+        return pointOfSaleService.checkBillDetailBeforeCheckout(codeBill);
+    }
+
     @GetMapping("/get-bill")
     @ResponseBody
     public Bill getBill(@RequestParam("codeBill") String codeBill) {
@@ -128,6 +134,8 @@ public class PointOfSaleController {
     public ResponseEntity<String> addItemToCart(@RequestParam String codeShirtDetail, @RequestParam String codeBill, @RequestParam Integer quantity) {
         return ResponseEntity.ok(pointOfSaleService.addItemToCart(codeShirtDetail, codeBill, quantity));
     }
+
+
 
     @PostMapping("change-quantity")
     @ResponseBody
