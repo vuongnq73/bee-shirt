@@ -1571,11 +1571,13 @@
 
           if (result === "Webcam end") {
             console.log("Webcam đã kết thúc, không mở modal.");
+            camStat = true;
             return; // Kết thúc hàm mà không làm gì thêm
           }
 
           if (result === "Timeout") {
             toastr.error("Quá thời gian, đã tự động tắt");
+            camStat = true;
             return; // Kết thúc hàm mà không làm gì thêm
           }
 
@@ -1769,6 +1771,36 @@
         document.getElementById("quantityInput").value = sd.quantity
         return;
       }
+
+
+      // Lấy danh sách các sản phẩm trong hóa đơn
+      const billDetailResponse = await fetch(`http://localhost:8080/point-of-sale/get-bill-detail?codeBill=${codeBill}`, {
+        method: 'GET',
+        headers: headers,
+      });
+
+      if (!billDetailResponse.ok) {
+        toastr.error('Không thể kết nối tới máy chủ hoặc xảy ra lỗi', 'Lỗi');
+        return;
+      }
+
+      const billDetails = await billDetailResponse.json();
+
+      // Kiểm tra nếu sản phẩm đã tồn tại trong billDetail
+      const existingItem = billDetails.find(item => item.shirtDetail.codeShirtDetail === codeShirtDetail);
+      if (existingItem) {
+        const totalQuantity = Number(existingItem.quantity) + Number(quantity);
+        console.log(totalQuantity)
+        console.log(totalQuantity)
+        console.log(sd.quantity)
+        if (totalQuantity > sd.quantity) {
+          toastr.error('Tổng số lượng vượt quá số lượng tồn kho', 'Lỗi');
+          document.getElementById("quantityInput").value = 1;
+          return;
+        }
+      }
+
+
 
       // Send a POST request to the /add/ endpoint with the item ID
       fetch(`http://localhost:8080/point-of-sale/add-to-cart?codeShirtDetail=${codeShirtDetail}&codeBill=${codeBill}&quantity=${quantity}`, {
