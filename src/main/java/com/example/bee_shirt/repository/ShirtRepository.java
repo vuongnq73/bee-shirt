@@ -31,6 +31,7 @@ public interface ShirtRepository extends JpaRepository<Shirt, Integer> {
             "COALESCE(c.id, 0), " +                     // Thay thế null id danh mục bằng 0
             "COALESCE(b.id, 0), " +                     // Thay thế null id thương hiệu bằng 0
             "s.deleted, " +
+            "s.description, " +
             "COALESCE((SELECT SUM(sd.quantity) FROM ShirtDetail sd WHERE sd.shirt.id = s.id), 0) " +  // Thay thế null số lượng bằng 0
             ") " +
             "FROM Shirt s " +
@@ -53,6 +54,7 @@ public interface ShirtRepository extends JpaRepository<Shirt, Integer> {
             "COALESCE(c.id, 0), " +                     // Thay thế null id danh mục bằng 0
             "COALESCE(b.id, 0), " +                     // Thay thế null id thương hiệu bằng 0
             "s.deleted, " +
+            "s.description, " +
             "COALESCE((SELECT SUM(sd.quantity) FROM ShirtDetail sd WHERE sd.shirt.id = s.id), 0) " +  // Thay thế null số lượng bằng 0
             ") " +
             "FROM Shirt s " +

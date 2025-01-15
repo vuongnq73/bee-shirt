@@ -13,5 +13,6 @@ public interface MaterialRepository extends JpaRepository<Material, Integer> {
     @Override
     List<Material> findAll();
 
+
     Material findByCodeMaterial(String codeMaterial);
 }

@@ -22,6 +22,7 @@ public class SeasonController {
     @Autowired
     private SeasonRepository seasonRepository;
 
+
     // Hiển thị danh sách mùa với phân trang 5 phần tử
     @GetMapping("/list")
     public ResponseEntity<List<Season>> getAllBrands() {

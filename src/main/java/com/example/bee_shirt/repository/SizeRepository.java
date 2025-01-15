@@ -11,5 +11,6 @@ public interface SizeRepository extends JpaRepository<Size, Integer> {
     @Query("SELECT s.codeSize, s.namesize, s.statussize FROM Size s WHERE s.deleted = false")
     Page<Size> findAllSizes(Pageable pageable);
 
+
     Size findByCodeSize(String codeSize);
 }

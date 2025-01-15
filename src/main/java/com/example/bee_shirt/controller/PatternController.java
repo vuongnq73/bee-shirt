@@ -22,6 +22,7 @@ public class PatternController {
     @Autowired
     private PatternRepository patternRepository;
 
+
     @GetMapping("/list")
     public ResponseEntity<List<Pattern>> getAllBrands() {
         List<Pattern> categories = patternRepository.findAll(); // Lấy tất cả các danh mục

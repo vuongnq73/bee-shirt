@@ -11,5 +11,6 @@ public interface SeasonRepository extends JpaRepository<Season, Integer> {
     @Query("SELECT s.codeSeason, s.nameSeason, s.statusSeason FROM Season s WHERE s.deleted = false")
     Page<Season> findAllSeasons(Pageable pageable);
 
+
     Season findByCodeSeason(String codeSeason);
 }

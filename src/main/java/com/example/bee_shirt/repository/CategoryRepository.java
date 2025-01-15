@@ -13,6 +13,7 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     // Truy vấn danh mục không bị xóa
     List<Category> findAll();
 
+
     Category findByCodeCategory(String codeCategory);
 
     Category findCategoryByNameCategory(String Name);
