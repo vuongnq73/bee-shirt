@@ -339,6 +339,7 @@ app.controller('brandController', ['$scope', 'brandService', function($scope, br
         }
     };
 
+    
     $scope.cancelDelete = function() {
         $scope.confirmDelete = false;
     };

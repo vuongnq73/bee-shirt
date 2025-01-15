@@ -848,19 +848,6 @@ $scope.updateImagePreview = function(element, imageNumber) {
             return;
         }
     
-        // Kiểm tra ảnh (nếu có ảnh thì phải hợp lệ)
-        if (updateShirtDetailed.image && !updateShirtDetailed.image.match(/\.(jpg|jpeg|png|gif)$/)) {
-            $scope.errorMessage = "Vui lòng tải lên ảnh hợp lệ (JPEG, PNG, GIF).";
-            return;
-        }
-        if (updateShirtDetailed.image2 && !updateShirtDetailed.image2.match(/\.(jpg|jpeg|png|gif)$/)) {
-            $scope.errorMessage = "Vui lòng tải lên ảnh hợp lệ (JPEG, PNG, GIF).";
-            return;
-        }
-        if (updateShirtDetailed.image3 && !updateShirtDetailed.image3.match(/\.(jpg|jpeg|png|gif)$/)) {
-            $scope.errorMessage = "Vui lòng tải lên ảnh hợp lệ (JPEG, PNG, GIF).";
-            return;
-        }
     
         // Chuyển các ID thuộc tính thành đối tượng
         updateShirtDetailed.color = { id: updateShirtDetailed.colorId };

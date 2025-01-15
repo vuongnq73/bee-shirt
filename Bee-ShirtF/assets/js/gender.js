@@ -253,6 +253,7 @@ app.controller('genderController', ['$scope', 'genderService', function($scope, 
         }
         if (confirm('Bạn có chắc chắn muốn xóa giới tính này không?')) {
 
+            
     
         // Thêm giới tính mới nếu hợp lệ
         genderService.addGender($scope.newGender).then(function() {

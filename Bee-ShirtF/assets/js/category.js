@@ -354,6 +354,7 @@ app.controller('categoryController', ['$scope', 'categoryService', function($sco
         }
     };
     
+    
 
     // Load categories initially
     $scope.getCategories();

@@ -84,6 +84,7 @@ app.controller('patternController', ['$scope', 'patternService', function($scope
         $scope.getPatterns(); // Gọi lại getPatterns để lọc và cập nhật mẫu
     };
     
+    
     $scope.getPatterns = function() {
         patternService.getPatterns().then(function(response) {
             $scope.patterns = response.data;  // Lấy tất cả mẫu từ API

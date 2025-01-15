@@ -243,6 +243,7 @@ $scope.goToPage = function(page) {
             return;
         }
     
+        
         // Kiểm tra trùng tên (ngoại trừ màu sắc hiện tại)
         if ($scope.colors.some(function(color) {
             return color.nameColor.toLowerCase() === $scope.color.nameColor.toLowerCase() && color.id !== $scope.color.id;

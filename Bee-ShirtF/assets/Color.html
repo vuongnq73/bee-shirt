@@ -553,6 +553,7 @@
           </tr>
       </thead>
       <tbody>
+        
           <tr ng-repeat="color in currentPageItems" ng-class="{'table-warning': $index % 2 === 1}">
             <td>{{ (currentPage * itemsPerPage) + $index + 1 }}</td>  <!-- Tính số thứ tự -->
             <td>{{ color.codeColor }}</td>

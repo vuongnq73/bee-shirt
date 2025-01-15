@@ -274,6 +274,7 @@ app.controller('materialController', ['$scope', 'materialService', function($sco
         $('#confirmDeleteModal').modal('show');
     };
 
+    
     $scope.confirmDeleteMaterial = function() {
         materialService.deleteMaterial($scope.materialToDelete).then(function() {
             alert("Xóa chất liệu thành công!");

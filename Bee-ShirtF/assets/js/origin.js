@@ -244,6 +244,7 @@ app.controller('originController', ['$scope', 'originService', function($scope, 
         }
     };
 
+    
     $scope.saveEditOrigin = function() {
         const originName = $scope.origin.nameOrigin;
 

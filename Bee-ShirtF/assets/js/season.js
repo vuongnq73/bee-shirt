@@ -258,6 +258,7 @@ app.controller('seasonController', ['$scope', 'seasonService', function($scope, 
     }
     };
     
+    
 
     $scope.saveEditSeason = function() {
         const seasonName = $scope.season.nameSeason;
