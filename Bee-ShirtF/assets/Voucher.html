@@ -40,7 +40,51 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-route/1.8.3/angular-route.min.js"></script>
   <script src="/assets/js/voucher.js"></script>
-
+  <style>
+    .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+        gap: 10px;
+    }
+    
+    .pagination span {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+    }
+    
+    .btn {
+        border: none;
+        border-radius: 20px;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: bold;
+        background-color: #eaedee; /* Màu xanh nhạt (info) */
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        outline: none;
+    }
+    
+    .btn:hover:not(:disabled) {
+        background-color: #f1f6f7; /* Màu đậm hơn khi hover */
+        color: #fff;
+    }
+    
+    .btn:disabled {
+        background-color: #e6edef; /* Màu nhạt hơn khi disabled */
+        color: #e0e0e0;
+        cursor: not-allowed;
+    }
+    
+    .pagination[style*="margin-left"] {
+        margin-left: 0 !important; /* Reset margin-left inline-style */
+        justify-content: flex-start; /* Căn về bên trái nếu cần */
+    }
+    </style>
+    
 </head>
 
 <body ng-app="voucherApp" ng-controller="voucherController1">
@@ -353,7 +397,6 @@
                             <button ng-click="getVoucherDetail(voucher.id)"
                               class="btn btn-secondary btn-sm">Detail</button>
                             <button ng-click="deleteVoucher(voucher.id)" class="btn btn-danger btn-sm">Remove</button>
-                            {{voucher.id}}
                           </div>
                         </td>
                       </div>
@@ -362,12 +405,12 @@
                   </tbody>
                 </table>
                 <br>
-                <div class="pagination" style="margin-left: 750px;">
+                <div class="pagination" style="text-align: center;">
                   <button ng-disabled="currentPage === 0" class="btn btn-info" style="margin-right: 10px;"
-                    ng-click="currentPage = currentPage - 1; getVouchers()">Previous</button>
-                  <span>Page {{currentPage + 1}} of {{totalPages}}</span>
+                    ng-click="currentPage = currentPage - 1; getVouchers()">Trước</button>
+                  <span>{{currentPage + 1}}</span>
                   <button ng-disabled="currentPage === totalPages - 1" class="btn btn-info" style=" margin-left: 10px;"
-                    ng-click="currentPage = currentPage + 1; getVouchers()">Next</button>
+                    ng-click="currentPage = currentPage + 1; getVouchers()">Tếp</button>
                 </div>
               </div>
             </div>

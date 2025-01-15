@@ -102,18 +102,27 @@ public List<Voucher1> findByDateRange(LocalDateTime batdau, LocalDateTime ketthu
 
     @PrePersist
     public Voucher1 saveVoucher(Voucher1 voucher) {
+        Voucher1 add = new Voucher1();
         if (voucher.getStartdate() != null) {
-            voucher.setStartdate(voucher.getStartdate().atZone(ZoneOffset.ofHours(-7)).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime());
+            add.setStartdate(voucher.getStartdate().atZone(ZoneOffset.ofHours(-7)).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime());
         }
         if (voucher.getEnddate() != null) {
-            voucher.setEnddate(voucher.getEnddate().atZone(ZoneOffset.ofHours(-7)).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime());
+            add.setEnddate(voucher.getEnddate().atZone(ZoneOffset.ofHours(-7)).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime());
         }
         if (voucher.getType_voucher().equals("Amount")) {
-            voucher.setMaximum_discount(voucher.getDiscount_value());
+            add.setMaximum_discount(voucher.getDiscount_value());
         }
-        voucher.setStatus_voucher(1);
+        add.setDescription_voucher(voucher.getDescription_voucher());
+        add.setType_voucher(voucher.getType_voucher());
+        add.setName_voucher(voucher.getName_voucher());
+        add.setMin_bill_value(voucher.getMin_bill_value());
+        add.setMaximum_discount(voucher.getMaximum_discount());
+        add.setDeleted(false);
+        add.setQuantity(voucher.getQuantity());
+        add.setDiscount_value(voucher.getDiscount_value());
+        add.setStatus_voucher(2);
         // Lưu đối tượng voucher vào cơ sở dữ liệu
-        return voucherRepository.save(voucher);
+        return voucherRepository.save(add);
     }
 
     public Voucher1 updateVoucher(Voucher1 voucher, Long id) {
@@ -150,6 +159,12 @@ public List<Voucher1> findByDateRange(LocalDateTime batdau, LocalDateTime ketthu
         }
         update.setStatus_voucher(voucher.getStatus_voucher());
         return voucherRepository.save(update);
+    }
+
+    public void updateStatus(){
+        voucherRepository.updateStatusAuto0(LocalDateTime.now());
+        voucherRepository.updateStatusAuto1(LocalDateTime.now());
+        voucherRepository.updateStatusAuto2(LocalDateTime.now());
     }
 
     public void deleteVoucher(Long id) {
