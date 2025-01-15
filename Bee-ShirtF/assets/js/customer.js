@@ -80,7 +80,6 @@ angular.module("customerApp", []).controller("CustomerController", [
               email: client.email,
               phone: client.phone,
               avatar: client.avatar,
-              address: client.address,
               status: client.status,
             }));
 

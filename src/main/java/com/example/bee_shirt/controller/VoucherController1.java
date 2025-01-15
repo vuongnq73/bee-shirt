@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -54,14 +56,29 @@ public class VoucherController1 {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate batdau,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ketthuc) {
 
-        // Kiểm tra nếu cả hai ngày đều có giá trị
-        if (batdau != null && ketthuc != null && batdau.isAfter(ketthuc)) {
+        LocalDateTime batdauDateTime = null;
+        LocalDateTime ketthucDateTime = null;
+
+        // Chuyển LocalDate thành LocalDateTime (thêm thời gian mặc định)
+        if (batdau != null) {
+            batdauDateTime = batdau.atStartOfDay(); // Chuyển thành LocalDateTime với thời gian là 00:00:00
+        }
+
+        if (ketthuc != null) {
+            ketthucDateTime = ketthuc.atTime(23, 59, 59); // Chuyển thành LocalDateTime với thời gian là 23:59:59
+        }
+
+        // Kiểm tra nếu cả hai ngày đều có giá trị và ngày bắt đầu lớn hơn ngày kết thúc
+        if (batdauDateTime != null && ketthucDateTime != null && batdauDateTime.isAfter(ketthucDateTime)) {
             return ResponseEntity.badRequest().body(Collections.emptyList()); // Trả về lỗi nếu ngày bắt đầu lớn hơn ngày kết thúc
         }
 
-        List<Voucher1> vouchers = voucherService.findByDateRange(batdau, ketthuc);
+        // Gọi phương thức tìm kiếm với LocalDateTime
+        List<Voucher1> vouchers = voucherService.findByDateRange(batdauDateTime, ketthucDateTime);
         return ResponseEntity.ok(vouchers);
     }
+
+
 
 
     @GetMapping("/detail/{code_voucher}")
@@ -81,38 +98,10 @@ public class VoucherController1 {
         // Khi gửi yêu cầu, code_voucher sẽ tự động được tạo ra ở phía server.
         return voucherService.saveVoucher(voucher);
     }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<Voucher1> updateVoucher(@PathVariable Long id, @RequestBody Voucher1 voucherDetails) {
-        // Tìm voucher theo ID
-        Optional<Voucher1> voucherOpt = voucherService.getVoucherById(id);
-
-        if (voucherOpt.isPresent()) {
-            // Lấy voucher cũ từ cơ sở dữ liệu
-            Voucher1 existingVoucher = voucherOpt.get();
-
-            // Cập nhật các trường của voucher
-            existingVoucher.setCode_voucher(voucherDetails.getCode_voucher());
-            existingVoucher.setName_voucher(voucherDetails.getName_voucher());
-            existingVoucher.setType_voucher(voucherDetails.getType_voucher());
-            existingVoucher.setDiscount_value(voucherDetails.getDiscount_value());
-            existingVoucher.setQuantity(voucherDetails.getQuantity());
-            existingVoucher.setMin_bill_value(voucherDetails.getMin_bill_value());
-            existingVoucher.setMaximum_discount(voucherDetails.getMaximum_discount());
-            existingVoucher.setStartdate(voucherDetails.getStartdate());
-            existingVoucher.setEnddate(voucherDetails.getEnddate());
-            existingVoucher.setStatus_voucher(voucherDetails.getStatus_voucher());
-            existingVoucher.setDescription_voucher(voucherDetails.getDescription_voucher());
-            existingVoucher.setUpdateAt(voucherDetails.getUpdateAt());
-
-            // Lưu voucher đã cập nhật
-            Voucher1 updatedVoucher = voucherService.saveVoucher(existingVoucher);
-
-            // Trả về voucher đã cập nhật
-            return ResponseEntity.ok(updatedVoucher);
-        }
-
-        // Nếu không tìm thấy voucher, trả về lỗi 404
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.ok(voucherService.updateVoucher(voucherDetails,id));
     }
 
 
@@ -120,13 +109,11 @@ public class VoucherController1 {
     public ResponseEntity<?> deleteVoucher(@PathVariable Long id) {
         if (voucherService.getVoucherById(id).isPresent()) {
             voucherService.deleteVoucher(id);
-            return ResponseEntity.ok("Voucher đã được xóa thành công!");  // Thêm thông báo
-
-
-            // Trả về 200 OK khi xóa thành công
+            return ResponseEntity.ok(Collections.singletonMap("message", "Voucher đã được xóa thành công!"));
         }
-        return ResponseEntity.notFound().build();  // Trả về 404 nếu không tìm thấy voucher
+        return ResponseEntity.notFound().build();
     }
+
 
 
     @GetMapping("/updateVoucherStatus")
@@ -139,9 +126,9 @@ public class VoucherController1 {
         LocalDate currentDate = LocalDate.now();
 
         // Cập nhật trạng thái voucher dựa trên ngày hiện tại
-        if (voucher.getStartdate().isAfter(currentDate)) {
+        if (voucher.getStartdate().isAfter(ChronoLocalDateTime.from(currentDate))) {
             voucher.setStatus_voucher(2); // Trạng thái "Sắp hoạt động"
-        } else if (voucher.getEnddate().isBefore(currentDate)) {
+        } else if (voucher.getEnddate().isBefore(ChronoLocalDateTime.from(currentDate))) {
             voucher.setStatus_voucher(0); // Trạng thái "Ngưng hoạt động"
         } else {
             voucher.setStatus_voucher(1); // Trạng thái "Hoạt động"

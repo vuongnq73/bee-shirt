@@ -258,6 +258,7 @@ app.controller('materialController', ['$scope', 'materialService', function($sco
         
         if (confirm('Bạn có chắc chắn muốn sửa chất liệu này không?')) {
 
+
         materialService.updateMaterial($scope.material.codeMaterial, $scope.material).then(function() {
             alert("Cập nhật chất liệu thành công!");
             $('#editMaterialModal').modal('hide');
@@ -269,6 +270,7 @@ app.controller('materialController', ['$scope', 'materialService', function($sco
         });
     };
 
+    
     $scope.deleteMaterial = function(codeMaterial) {
         $scope.materialToDelete = codeMaterial;
         $('#confirmDeleteModal').modal('show');

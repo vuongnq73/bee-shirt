@@ -1,6 +1,5 @@
 package com.example.bee_shirt.controller;
 
-import com.example.bee_shirt.EntityThuocTinh.Brand;
 import com.example.bee_shirt.EntityThuocTinh.Color;
 import com.example.bee_shirt.repository.ColorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Random;
 
 @RestController
@@ -26,15 +24,16 @@ public class ColorController {
 
     // Hiển thị danh sách Color với phân trang 5 phần tử
     @GetMapping("/list")
-    public ResponseEntity<List<Color>> getAllBrands() {
-        List<Color> categories = colorRepository.findAll(); // Lấy tất cả các danh mục
-        return ResponseEntity.ok(categories);
+    public ResponseEntity<Page<Color>> getColors(@RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 5);
+        Page<Color> colors = colorRepository.findAllByColor(pageable);
+        return ResponseEntity.ok(colors);
     }
 
     // Thêm Color
     @PostMapping("/add")
     public ResponseEntity<Color> addColor(@RequestBody Color color) {
-
+        color.setStatusColor(1);
         Color savedColor = colorRepository.save(color);
         return ResponseEntity.ok(savedColor);
     }

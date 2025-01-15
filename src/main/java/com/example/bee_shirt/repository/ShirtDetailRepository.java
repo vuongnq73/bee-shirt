@@ -89,12 +89,11 @@ public interface ShirtDetailRepository extends JpaRepository<ShirtDetail, Intege
             RIGHT JOIN shirt s ON sd.shirt_id = s.id AND s.status_shirt = 1
             LEFT JOIN bill_detail bd ON bd.shirt_detail_id = sd.id
             LEFT JOIN bill bl ON bd.bill_id = bl.id
-            AND bl.create_at BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()) - 1, 0)
-                                    AND DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0)
             LEFT JOIN brand b ON s.brand_id = b.id
             LEFT JOIN size sz ON sd.size_id = sz.id
             LEFT JOIN color cl ON sd.color_id = cl.id
-            WHERE sd.status_shirt_detail = 1
+            WHERE sd.status_shirt_detail = 1 AND bl.create_at BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()) - 1, 0)
+                                    AND DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0)
             GROUP BY
             s.code_shirt,
               sd.image,
@@ -314,7 +313,7 @@ ORDER BY
     ShirtDetail findShirtDetailByCode(@Param("query") String query);
     //
 
-    @Query("SELECT sd FROM ShirtDetail sd WHERE (sd.codeShirtDetail LIKE %:query% OR sd.shirt.nameshirt LIKE %:query% )AND sd.deleted = false AND sd.quantity > 0 and sd.shirt.deleted = false and sd.statusshirtdetail = 1 and sd.shirt.statusshirt = 1")
+    @Query("SELECT sd FROM ShirtDetail sd WHERE (sd.codeShirtDetail LIKE %:query% OR sd.shirt.nameshirt LIKE %:query% OR sd.color.nameColor LIKE %:query% OR sd.size.namesize LIKE %:query% OR sd.pattern.namePattern LIKE %:query% )AND sd.deleted = false AND sd.quantity > 0 and sd.shirt.deleted = false and sd.statusshirtdetail = 1 and sd.shirt.statusshirt = 1")
     Page<ShirtDetail> findListShirtDetailByCodeOrName(@Param("query") String query, Pageable pageable);
 
     @Query("SELECT sd FROM ShirtDetail sd WHERE sd.deleted = false AND sd.quantity > 0 and sd.shirt.deleted = false and sd.statusshirtdetail = 1 and sd.shirt.statusshirt = 1")
@@ -347,25 +346,14 @@ ORDER BY
         "WHERE b.code_bill = :codeBill",
         nativeQuery = true)
 void updateQuantityByCodeBill(@Param("codeBill") String codeBill);
-
-    @Query("SELECT s FROM ShirtDetail s " +
-            "WHERE s.shirt.id = :shirtId " +
-            "AND s.pattern.id = :patternId " +
-            "AND s.gender.id = :genderId " +
-            "AND s.origin.id = :originId " +
-            "AND s.season.id = :seasonId " +
-            "AND s.size.id IN :sizeIds " +
-            "AND s.material.id = :materialId " +
-            "AND s.color.id IN :colorIds")
-    List<ShirtDetail> findExistingShirtDetails(
-            @Param("shirtId") int shirtId,
-            @Param("patternId") int patternId,
-            @Param("genderId") int genderId,
-            @Param("originId") int originId,
-            @Param("seasonId") int seasonId,
-            @Param("sizeIds") List<Integer> sizeIds,
-            @Param("materialId") int materialId,
-            @Param("colorIds") List<Integer> colorIds
-    );
+//kiểm tra số lượng sản phâm trong kho
+    @Modifying
+    @Query(value = "SELECT sd.code_shirt_detail, sd.quantity " +
+            "FROM shirt_detail sd " +
+            "JOIN bill_detail bd ON sd.id = bd.shirt_detail_id " +
+            "JOIN bill b ON bd.bill_id = b.id " +
+            "WHERE b.code_bill = :codeBill",
+            nativeQuery = true)
+    List<Object[]> findShirtDetailsByBillCode(@Param("codeBill") String codeBill);
 
 }

@@ -144,7 +144,7 @@
                         <li class="nav-item">
                             <a data-bs-toggle="collapse" href="#account">
                                 <i class="fas fa-user"></i>
-                                <p>Account</p>
+                                <p>Tài Khoản</p>
                                 <span class="caret"></span>
                             </a>
                             <div class="collapse" id="account">
@@ -259,121 +259,98 @@
             </div>
             <!-- container -->
             <div class="container">
-                <div class="page-inner">
-                    <div class="page-header">
-                        <h3 class="fw-bold mb-3">Voucher</h3>
-                        <ul class="breadcrumbs mb-3">
-                            <li class="nav-home">
-                                <a href="/assets/Voucher.html">
-                                    <i class="fas fa-layer-group"></i>
-                                </a>
-                            </li>
-                            <li class="separator">
-                                <i class="icon-arrow-right"></i>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/assets/Bill.html">Voucher Detail</a>
-                            </li>
-
-                        </ul>
-                    
-                    </div>
                 <h1 style="margin-left: 700px;">Voucher Details</h1>
-                <form class="mx-auto" style="width: 700px;">
+                <form class="mx-auto" style="width: 700px" name="voucherForm">
                     <!-- Voucher ID -->
                     <div class="form-group">
                         <label for="voucherId">ID</label>
-                        <input type="text" id="id" class="form-control" disabled>
+                        <input type="text" id="id" class="form-control" ng-model="voucher.id" disabled>
                     </div>
-
+            
                     <!-- Code Voucher -->
                     <div class="form-group">
                         <label for="codeVoucher">Mã Voucher</label>
-                        <input type="text" id="code_voucher" class="form-control">
+                        <input type="text" id="code_voucher" class="form-control" ng-model="voucher.code_voucher" disabled>
                     </div>
-
+            
                     <!-- Type Voucher -->
                     <div class="form-group">
                         <label for="typeVoucher">Hình thức Voucher</label>
-                        <input type="text" id="type_voucher" class="form-control">
+                        <input type="text" id="type_voucher" class="form-control" ng-model="voucher.type_voucher" disabled>
                     </div>
-
+            
                     <!-- Name Voucher -->
                     <div class="form-group">
                         <label for="nameVoucher">Tên Voucher</label>
-                        <input type="text" id="name_voucher" class="form-control">
+                        <input type="text" id="name_voucher" class="form-control" ng-model="voucher.name_voucher" required>
                     </div>
-
+            
                     <!-- Discount Value -->
                     <div class="form-group">
-                        <label for="discountValue">Giá trị giảm giá </label>
-                        <input type="number" id="discount_value" class="form-control">
+                        <label for="discountValue">Giá trị giảm giá</label>
+                        <input type="number" id="discount_value" class="form-control" ng-model="voucher.discount_value" required>
                     </div>
-
+            
                     <!-- Quantity -->
                     <div class="form-group">
                         <label for="quantity">Số lượng</label>
-                        <input type="number" id="quantity" class="form-control">
+                        <input type="number" id="quantity" class="form-control" ng-model="voucher.quantity" required>
                     </div>
-
+            
                     <!-- Min Bill Value -->
                     <div class="form-group">
                         <label for="minBillValue">Giá trị tối thiểu</label>
-                        <input type="number" id="min_bill_value" class="form-control">
+                        <input type="number" id="min_bill_value" class="form-control" ng-model="voucher.min_bill_value" required>
                     </div>
-
+            
                     <!-- Maximum Discount -->
                     <div class="form-group">
                         <label for="maximumDiscount">Giá trị tối đa</label>
-                        <input type="number" id="maximum_discount" class="form-control">
+                        <input type="number" id="maximum_discount" class="form-control" ng-model="voucher.maximum_discount">
                     </div>
-
+            
                     <!-- Start Date -->
                     <div class="form-group">
                         <label for="startDate">Ngày bắt đầu</label>
-                        <input type="date" id="startDate" class="form-control">
+                        <input type="datetime-local" id="startDate" class="form-control" ng-model="voucher.startdate" required>
                     </div>
-
+            
                     <!-- End Date -->
                     <div class="form-group">
                         <label for="endDate">Ngày kết thúc</label>
-                        <input type="date" id="endDate" class="form-control">
+                        <input type="datetime-local" id="endDate" class="form-control" ng-model="voucher.enddate" required>
                     </div>
-
+            
                     <!-- Status Voucher -->
-                    <div class="form-group">
-                        <label>Trạng thái</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="statusVoucher" id="statusActive"
-                                value="1" ng-model="voucher.status_voucher">
-                            <label class="form-check-label" for="statusActive"ng-checked="voucher.status_voucher===1">Hoạt động</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="statusVoucher" id="statusInactive"
-                                value="0" ng-model="voucher.status_voucher" ng-checked="voucher.status_voucher===0">
-                            <label class="form-check-label" for="statusInactive">Ngưng hoạt động</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="statusVoucher" id="statusPending"
-                                value="2" ng-model="voucher.status_voucher"ng-checked="voucher.status_voucher===0">
-                            <label class="form-check-label" for="statusPending">Sắp hoạt động</label>
-                        </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="statusVoucher" id="statusActive" value="1" ng-model="voucher.status_voucher">
+                        <label class="form-check-label" for="statusActive">Hoạt động</label>
                     </div>
-
-                    <!-- Submit Button -->
-
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="statusVoucher" id="statusInactive" value="0" ng-model="voucher.status_voucher">
+                        <label class="form-check-label" for="statusInactive">Ngưng hoạt động</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="statusVoucher" id="statusPending" value="2" ng-model="voucher.status_voucher">
+                        <label class="form-check-label" for="statusPending">Sắp hoạt động</label>
+                    </div>
                 </form>
+            
                 <div style="text-align: center; display: flex; justify-content: center; gap: 10px;">
-                    <button type="submit" class="btn btn-warning mt-4">Sửa</button>
+                    <!-- Update Button -->
+                    <button type="button" ng-click="updateVoucher(voucher)" class="btn btn-warning mt-4">Sửa</button>
                     <a class="btn btn-secondary mt-4" href="/assets/Voucher.html">Quay lại</a>
                 </div>
-                <!-- Back Button -->
-
+            
                 <!-- Display success or error message -->
-
+                <div ng-if="errorMessage" style="color: red; text-align: center;">
+                    <strong>{{ errorMessage }}</strong>
+                </div>
+                <div ng-if="successMessage" style="color: green; text-align: center;">
+                    <strong>{{ successMessage }}</strong>
+                </div>
             </div>
-
-            </div>
+            
 
             <!-- end container -->
          
@@ -514,37 +491,55 @@
 
     </script>
 
-    <script>
-        // Lấy dữ liệu từ sessionStorage
-        const voucherDetail = JSON.parse(sessionStorage.getItem("voucherDetail"));
+<script>
+    // Hàm định dạng ngày giờ
+    function formatDateTime(dateTime) {
+        if (!dateTime) return ""; // Trả về chuỗi rỗng nếu giá trị không hợp lệ
+        const date = new Date(dateTime);
+        if (isNaN(date.getTime())) return ""; // Kiểm tra nếu không phải ngày hợp lệ
+        return date.toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
+    }
 
-        if (voucherDetail) {
-            // Gán dữ liệu vào form
-            document.getElementById("id").value = voucherDetail.id;
-            document.getElementById("code_voucher").value = voucherDetail.code_voucher;
-            document.getElementById("name_voucher").value = voucherDetail.name_voucher;
-            document.getElementById("type_voucher").value = voucherDetail.type_voucher;
+    // Lấy dữ liệu từ sessionStorage
+    const voucherDetail = JSON.parse(sessionStorage.getItem("voucherDetail"));
 
-            document.getElementById("discount_value").value = voucherDetail.discount_value;
-            document.getElementById("quantity").value = voucherDetail.quantity;
-            document.getElementById("min_bill_value").value = voucherDetail.min_bill_value;
-            document.getElementById("maximum_discount").value = voucherDetail.maximum_discount;
-            // Gán ngày bắt đầu
-            document.getElementById("startDate").value = voucherDetail.startdate || "";
+    if (voucherDetail) {
+        console.log("Voucher Detail:", voucherDetail); // Kiểm tra log chi tiết
+        // Gán dữ liệu vào form
+        document.getElementById("id").value = voucherDetail.id || "";
+        document.getElementById("code_voucher").value = voucherDetail.code_voucher || "";
+        document.getElementById("name_voucher").value = voucherDetail.name_voucher || "";
+        document.getElementById("type_voucher").value = voucherDetail.type_voucher || "";
 
-            // Gán ngày kết thúc
-            document.getElementById("endDate").value = voucherDetail.enddate || "";
-            // Gán giá trị cho trạng thái (radio button)
-            if (voucherDetail.status_voucher) {
+        document.getElementById("discount_value").value = voucherDetail.discount_value || "";
+        document.getElementById("quantity").value = voucherDetail.quantity || "";
+        document.getElementById("min_bill_value").value = voucherDetail.min_bill_value || "";
+        document.getElementById("maximum_discount").value = voucherDetail.maximum_discount || "";
+
+        // Gán ngày bắt đầu và kết thúc (định dạng ngày giờ)
+        document.getElementById("startDate").value = formatDateTime(voucherDetail.startdate);
+        document.getElementById("endDate").value = formatDateTime(voucherDetail.enddate);
+
+        // Gán giá trị cho trạng thái (radio button)
+        // Gán giá trị cho trạng thái trong form chỉnh sửa
+        switch (voucherDetail.status_voucher) {
+            case 1:
                 document.getElementById("statusActive").checked = true;
-            } else {
+                break;
+            case 0:
                 document.getElementById("statusInactive").checked = true;
-            }
-        } else {
-            alert("No voucher details found.");
+                break;
+            case 2:
+                document.getElementById("statusPending").checked = true;
+                break;
+            default:
+                console.log("Invalid status value");
         }
-    </script>
 
+    } else {
+        alert("No voucher details found.");
+    }
+</script>
 </body>
 
 

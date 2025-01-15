@@ -25,5 +25,6 @@ public class ShirtResponseDTO {
     private boolean deleted;
     private String description;
 
+
     private long quantity;
 }

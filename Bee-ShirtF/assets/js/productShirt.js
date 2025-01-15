@@ -254,6 +254,7 @@ ShirtApp.controller('ShirtController', ['$scope',  'shirtService','$location', f
         // Chuyển dữ liệu cho các dropdown (brand và category) để hiển thị đúng thông tin
         $scope.editingShirt.brandId = $scope.editingShirt.brand.id;
         $scope.editingShirt.categoryId = $scope.editingShirt.category.id;
+        $scope.editingShirt.description = $scope.editingShirt.description;  // Trạng thái áo
 
         // Đảm bảo trạng thái đúng
         $scope.editingShirt.statusshirt = $scope.editingShirt.statusshirt;  // Trạng thái áo
@@ -297,7 +298,8 @@ ShirtApp.controller('ShirtController', ['$scope',  'shirtService','$location', f
         // Chuyển brandId và categoryId thành đối tượng tương ứng
         updatedShirt.brand = { id: updatedShirt.brandId };  // Chuyển brandId thành đối tượng brand
         updatedShirt.category = { id: updatedShirt.categoryId };  // Chuyển categoryId thành đối tượng category
-    
+        updatedShirt.description = $scope.editingShirt.description;  // Trạng thái áo
+
         // Đảm bảo trạng thái đúng
         updatedShirt.statusshirt = $scope.editingShirt.statusshirt;  // Trạng thái áo
         updatedShirt.deleted = $scope.editingShirt.deleted;  // Trạng thái xóa

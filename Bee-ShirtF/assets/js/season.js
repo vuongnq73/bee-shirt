@@ -251,7 +251,6 @@ app.controller('seasonController', ['$scope', 'seasonService', function($scope, 
             $('#addSeasonModal').modal('hide');
             $scope.getSeasons(); // Cập nhật danh sách mùa sau khi thêm
             location.reload();
-
         }).catch(function(error) {
             alert("Lỗi khi thêm mùa!");
         });
@@ -289,7 +288,6 @@ app.controller('seasonController', ['$scope', 'seasonService', function($scope, 
             return; // Dừng lại nếu trùng tên
         }
         if (confirm('Bạn có chắc chắn muốn cập nhật mùa này không?')) {
-
         seasonService.updateSeason($scope.season.codeSeason, $scope.season).then(function(response) {
             alert("Cập nhật mùa thành công!");
             $('#editSeasonModal').modal('hide');
@@ -317,6 +315,7 @@ app.controller('seasonController', ['$scope', 'seasonService', function($scope, 
         });
     };
 
+    
     // Lấy danh sách mùa ngay khi trang được tải
     $scope.getSeasons();
 }]);

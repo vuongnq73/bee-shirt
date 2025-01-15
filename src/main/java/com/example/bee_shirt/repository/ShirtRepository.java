@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ShirtRepository extends JpaRepository<Shirt, Integer> {
@@ -32,6 +31,7 @@ public interface ShirtRepository extends JpaRepository<Shirt, Integer> {
             "COALESCE(b.id, 0), " +                     // Thay thế null id thương hiệu bằng 0
             "s.deleted, " +
             "s.description, " +
+
             "COALESCE((SELECT SUM(sd.quantity) FROM ShirtDetail sd WHERE sd.shirt.id = s.id), 0) " +  // Thay thế null số lượng bằng 0
             ") " +
             "FROM Shirt s " +
@@ -65,6 +65,5 @@ public interface ShirtRepository extends JpaRepository<Shirt, Integer> {
     ShirtResponseDTO findByCode(String codeshirt);
     //check trùng tên
     boolean existsByNameshirt(String nameshirt);
-    boolean existsByCodeshirt(String codeShirt);  // Kiểm tra trùng mã áo thun
 
 }

@@ -307,6 +307,8 @@ app.controller('sizeController', ['$scope', 'sizeService', function($scope, size
         }
     };
         
+
+    
     $scope.deleteSize = function(codeSize) {
         if (confirm("Bạn có chắc chắn muốn xóa kích thước này?")) {
             sizeService.deleteSize(codeSize).then(function(response) {

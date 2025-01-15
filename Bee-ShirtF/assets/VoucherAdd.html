@@ -151,7 +151,7 @@
                         <li class="nav-item">
                             <a data-bs-toggle="collapse" href="#account">
                                 <i class="fas fa-user"></i>
-                                <p>Account</p>
+                                <p>Tài Khoản</p>
                                 <span class="caret"></span>
                             </a>
                             <div class="collapse" id="account">
@@ -286,9 +286,9 @@
                     
                     </div>
                   <div>
-                    <h1 style="margin-left: 750px;">Thêm Voucher Mới</h1>
+                    <h1 style="margin-left: 300px;">Thêm Voucher Mới</h1>
                     <form name="voucherForm" ng-submit="addVoucher(newVoucher)"
-                        style="width: 700px; margin-left: 550px;" novalidate>
+                        style="width: 700px; margin-left: 300px;" novalidate>
 
                         <!-- <div>
                     <label for="code_voucher">Code Voucher:</label>
@@ -298,14 +298,14 @@
                     </div>
                   </div> -->
 
-                        <div>
+                        <div style="justify-content: center;">
                             <label for="type_voucher">Loại Voucher:</label>
                             <select id="type_voucher" class="form-control" ng-model="newVoucher.type_voucher"
                                 ng-change="onVoucherTypeChange()" required>
                                 <option value="" disabled selected>Chọn loại
                                     voucher</option>
                                 <option value="%">%</option>
-                                <option value="Số tiền">Số tiền</option>
+                                <option value="Amount">Số tiền</option>
                             </select>
                             <div ng-show="voucherForm.$submitted && voucherForm.type_voucher.$error.required"
                                 style="color: red;">
@@ -338,9 +338,6 @@
                             </div>
                         </div>
 
-
-
-
                         <div>
                             <label for="quantity">Số lượng:</label>
                             <input type="number" id="quantity" class="form-control" ng-model="newVoucher.quantity"
@@ -361,7 +358,7 @@
                             </div>
                         </div>
 
-                        <div ng-if="newVoucher.type_voucher === 'Số tiền'">
+                        <div ng-if="newVoucher.type_voucher === '%'">
                             <label for="maximum_discount">Giá trị tối đa:</label>
                             <input type="number" id="maximum_discount" class="form-control"
                                 ng-model="newVoucher.maximum_discount" ng-required="true" min="1">
@@ -373,15 +370,12 @@
                         </div>
 
 
-
-
-
                         <div>
                             <label for="startdate">Ngày bắt đầu:</label>
                             <input type="datetime-local" id="startdate" class="form-control"
-                                ng-model="newVoucher.startdate" required min="{{today}}">
+                                   ng-model="newVoucher.startdate" required min="{{today}}">
                             <div ng-show="voucherForm.$submitted && voucherForm.startdate.$error.required"
-                                style="color: red;">
+                                 style="color: red;">
                                 <small>Ngày bắt đầu không được sớm hơn ngày hiện tại!</small>
                             </div>
                         </div>

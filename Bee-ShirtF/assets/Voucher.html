@@ -40,7 +40,51 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-route/1.8.3/angular-route.min.js"></script>
   <script src="/assets/js/voucher.js"></script>
-
+  <style>
+    .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+        gap: 10px;
+    }
+    
+    .pagination span {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+    }
+    
+    .btn {
+        border: none;
+        border-radius: 20px;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: bold;
+        background-color: #eaedee; /* Màu xanh nhạt (info) */
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        outline: none;
+    }
+    
+    .btn:hover:not(:disabled) {
+        background-color: #f1f6f7; /* Màu đậm hơn khi hover */
+        color: #fff;
+    }
+    
+    .btn:disabled {
+        background-color: #e6edef; /* Màu nhạt hơn khi disabled */
+        color: #e0e0e0;
+        cursor: not-allowed;
+    }
+    
+    .pagination[style*="margin-left"] {
+        margin-left: 0 !important; /* Reset margin-left inline-style */
+        justify-content: flex-start; /* Căn về bên trái nếu cần */
+    }
+    </style>
+    
 </head>
 
 <body ng-app="voucherApp" ng-controller="voucherController1">
@@ -132,7 +176,7 @@
             <li class="nav-item">
               <a data-bs-toggle="collapse" href="#account">
                 <i class="fas fa-user"></i>
-                <p>Account</p>
+                <p>Tài Khoản</p>
                 <span class="caret"></span>
               </a>
               <div class="collapse" id="account">
@@ -277,17 +321,15 @@
                 <div class="row align-items-center">
                   <!-- Cột Tìm kiếm theo ngày -->
                   <div class="col-md-6">
-                    <form ng-submit="searchVouchers()">
+                    <form ng-submit="searchByDateRange()">
                       <div style="display: flex; align-items: center; gap: 10px; font-size: 0.9em;">
-                        <label for="startDate" style="margin-right: 5px;">Từ ngày:</label>
-                        <input type="date" ng-model="search.batdau" class="form-control"
-                          style="width: 150px; padding: 2px 5px;" />
+                        <label for="startDate">Từ ngày:</label>
+                        <input type="date" ng-model="search.batdau" id="startDate">
                 
-                        <label for="endDate" style="margin-left: 10px; margin-right: 5px;">Đến ngày:</label>
-                        <input type="date" ng-model="search.ketthuc" class="form-control"
-                          style="width: 150px; padding: 2px 5px;" />
+                        <label for="endDate">Đến ngày:</label>
+                        <input type="date" ng-model="search.ketthuc" id="endDate">
                 
-                        <button ng-click="searchByDateRange()" class="btn btn-primary"
+                        <button type="submit" class="btn btn-primary"
                           style="padding: 3px 10px; font-size: 0.9em;">Lọc</button>
                       </div>
                       <!-- Hiển thị thông báo lỗi nếu có -->
@@ -355,6 +397,7 @@
                             <button ng-click="getVoucherDetail(voucher.id)"
                               class="btn btn-secondary btn-sm">Detail</button>
                             <button ng-click="deleteVoucher(voucher.id)" class="btn btn-danger btn-sm">Remove</button>
+                            {{voucher.id}}
                           </div>
                         </td>
                       </div>
@@ -363,12 +406,12 @@
                   </tbody>
                 </table>
                 <br>
-                <div class="pagination" style="margin-left: 750px;">
+                <div class="pagination" style="text-align: center;">
                   <button ng-disabled="currentPage === 0" class="btn btn-info" style="margin-right: 10px;"
-                    ng-click="currentPage = currentPage - 1; getVouchers()">Previous</button>
-                  <span>Page {{currentPage + 1}} of {{totalPages}}</span>
+                    ng-click="currentPage = currentPage - 1; getVouchers()">Trước</button>
+                  <span>{{currentPage + 1}}</span>
                   <button ng-disabled="currentPage === totalPages - 1" class="btn btn-info" style=" margin-left: 10px;"
-                    ng-click="currentPage = currentPage + 1; getVouchers()">Next</button>
+                    ng-click="currentPage = currentPage + 1; getVouchers()">Tếp</button>
                 </div>
               </div>
             </div>

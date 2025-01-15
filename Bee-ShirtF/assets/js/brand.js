@@ -183,6 +183,7 @@ app.controller('brandController', ['$scope', 'brandService', function($scope, br
                 }
                 return 0;
             });
+
             $scope.sortOrder = 'asc';  // Sau khi sắp xếp xong, đổi sang tăng dần
         }
     };
@@ -254,6 +255,7 @@ app.controller('brandController', ['$scope', 'brandService', function($scope, br
             return; // Dừng lại nếu tên đã tồn tại
         }
 
+
         // Gọi API thêm brand
         brandService.addBrand($scope.newBrand).then(function(response) {
             alert("Thêm thương hiệu thành công!");
@@ -297,6 +299,7 @@ app.controller('brandController', ['$scope', 'brandService', function($scope, br
             const specialCharAndNumberRegex = /[0-9@#$%^&*()_+={}[\]:;"'<>,.?/\\|~`!]/;
             if (specialCharAndNumberRegex.test(trimmedName)) {
                 alert("Tên thương hiệu không được chứa ký tự đặc biệt!");
+
                 return;
             }
         // Kiểm tra không trùng tên brand khi sửa
@@ -338,6 +341,7 @@ app.controller('brandController', ['$scope', 'brandService', function($scope, br
             });
         }
     };
+    
 
     $scope.cancelDelete = function() {
         $scope.confirmDelete = false;

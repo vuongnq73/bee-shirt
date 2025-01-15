@@ -36,7 +36,10 @@ public class BillDetailService {
                 (String) result[9],      // Customer_Name
                 (String) result[10],     // Address_Customer
                 (String) result[11],     // Phone_Number
-        ((BigDecimal) result[12]).doubleValue()
+                ((BigDecimal) result[12]).doubleValue(),
+                (String) result[13],     // Address_Customer
+                (String) result[14],
+                (String) result[15]
         )).collect(Collectors.toList());
     }
     public List<BillDetailOnlineDTO> getBillDetailsOnline(String codeBill) {
@@ -67,8 +70,9 @@ public class BillDetailService {
                         (String) result[18] ,
                         (Integer) result[19],
                         (BigDecimal) result[20],
-                        (String) result[21]
-
+                        (String) result[21],
+                        (String) result[22],
+                        (String) result[23]
                         // note
                 ))
                 .collect(Collectors.toList());
